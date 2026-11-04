@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Deal-Monitor</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%88%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="#deals" aria-label="Deal-Monitor – zu den Deals"><span aria-hidden="true">✈️</span> Deal-Monitor</a>
+
+    <nav class="main-nav" aria-label="Hauptnavigation">
+      <a href="#deals" data-route="deals">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="8" cy="8" r="1.6"/></svg>
+        <span>Deals</span>
+      </a>
+      <a href="#alarme" data-route="alarme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
+        <span>Alarme</span>
+      </a>
+      <a href="#meldungen" data-route="meldungen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1Z"/></svg>
+        <span>Meldungen</span>
+        <span class="nav-badge" id="unread-badge" hidden></span>
+      </a>
+      <a href="#einstellungen" data-route="einstellungen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+        <span>Einstellungen</span>
+      </a>
+    </nav>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" id="run-btn">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="run-label">Jetzt prüfen</span>
+      </button>
+    </div>
+  </div>
+  <div class="status-line" id="status-line" aria-live="polite">Lade Status …</div>
+</header>
+
+<div class="banners" id="banners">
+  <div class="banner banner-demo" id="demo-banner" hidden>
+    <strong>DEMO</strong> – Beispieldaten, keine echten Preise
+  </div>
+  <div class="banner banner-info" id="onboarding-banner" hidden>
+    Für Preise brauchst du einen kostenlosen Travelpayouts-Token → <a href="#einstellungen">Einstellungen</a>
+  </div>
+  <div class="banner banner-error" id="conn-banner" hidden role="alert">
+    Keine Verbindung zum Deal-Monitor-Server. Läuft er noch? Neuer Versuch in wenigen Sekunden …
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+
+  <!-- ================= Deals ================= -->
+  <section class="view" id="view-deals" aria-labelledby="h-deals" hidden>
+    <div class="view-head">
+      <div>
+        <h1 id="h-deals">Aktuelle Deals</h1>
+        <p class="lead">Preise pro Person. Rabatt nur gegen eigene Preisbeobachtung – nie gegen Werbeversprechen.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="show-expired" role="switch">
+        <span class="switch-track" aria-hidden="true"></span>
+        <span>Abgelaufene zeigen</span>
+      </label>
+    </div>
+    <div class="chips" id="deal-filters" role="group" aria-label="Nach Alarm filtern"></div>
+    <div class="deal-grid" id="deal-list" aria-live="polite"></div>
+  </section>
+
+  <!-- ================= Alarme ================= -->
+  <section class="view" id="view-alarme" aria-labelledby="h-alarme" hidden>
+    <div class="view-head">
+      <div>
+        <h1 id="h-alarme">Deal-Alarme</h1>
+        <p class="lead">Ein Alarm beschreibt, welche Flüge dich interessieren und ab welchem Preis es ein Deal ist.</p>
+      </div>
+      <button type="button" class="btn btn-primary" id="new-alert-btn">+ Neuer Alarm</button>
+    </div>
+    <div class="alert-list" id="alert-list"></div>
+  </section>
+
+  <!-- ================= Meldungen ================= -->
+  <section class="view" id="view-meldungen" aria-labelledby="h-meldungen" hidden>
+    <div class="view-head">
+      <div>
+        <h1 id="h-meldungen" tabindex="-1">Meldungen</h1>
+        <p class="lead">Hier landet jeder gefundene Deal – auch wenn kein anderer Kanal eingerichtet ist.</p>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn" id="desktop-notify-btn" hidden>Desktop-Benachrichtigungen aktivieren</button>
+        <button type="button" class="btn" id="mark-all-read-btn">Alle als gelesen markieren</button>
+      </div>
+    </div>
+    <ul class="note-list" id="note-list"></ul>
+  </section>
+
+  <!-- ================= Einstellungen ================= -->
+  <section class="view" id="view-einstellungen" aria-labelledby="h-einstellungen" hidden>
+    <div class="view-head">
+      <div>
+        <h1 id="h-einstellungen">Einstellungen</h1>
+        <p class="lead">Änderungen gelten ab der nächsten Prüfung. Geheime Werte werden nie vollständig angezeigt.</p>
+      </div>
+    </div>
+
+    <form id="settings-form" class="settings-form" novalidate>
+      <fieldset class="panel">
+        <legend>Preisquelle</legend>
+        <p class="help">Die Preise kommen aus der kostenlosen Travelpayouts-Daten-API.
+          Anleitung: auf <a href="https://www.travelpayouts.com/" target="_blank" rel="noopener noreferrer">travelpayouts.com</a>
+          ein Konto anlegen → „Tools“ → „API“ → Token kopieren und hier einfügen.</p>
+        <div class="field-grid" data-group="source"></div>
+        <div class="field">
+          <span class="field-label" id="sources-label">Quellen</span>
+          <div class="check-row" role="group" aria-labelledby="sources-label" id="sources-group">
+            <label class="check"><input type="checkbox" name="src" value="travelpayouts"> Travelpayouts (Preis-API)</label>
+            <label class="check"><input type="checkbox" name="src" value="feed"> Travel-Dealz-Artikel (RSS-Feed)</label>
+          </div>
+          <p class="help locked-hint" id="sources-locked" hidden>per Umgebungsvariable gesetzt</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Zeitplan</legend>
+        <div class="field-grid" data-group="schedule"></div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Benachrichtigungen</legend>
+        <p class="help">Die Meldungen hier in der Oberfläche sind immer aktiv. Zusätzlich kannst du einen eigenen
+          Benachrichtigungsserver (Webhook), ntfy (Push aufs Handy) oder Telegram verbinden.</p>
+        <div class="field-grid" data-group="notify"></div>
+        <div class="btn-row">
+          <button type="button" class="btn" id="test-notify-btn">Testmeldung senden</button>
+        </div>
+        <ul class="channel-results" id="test-notify-result" aria-live="polite"></ul>
+      </fieldset>
+
+      <details class="panel" id="advanced-panel">
+        <summary>Erweitert</summary>
+        <div class="field-grid" data-group="advanced"></div>
+      </details>
+
+      <p class="form-error" id="settings-error" role="alert" hidden></p>
+      <div class="form-actions sticky-actions">
+        <button type="submit" class="btn btn-primary" id="settings-save">Einstellungen speichern</button>
+      </div>
+    </form>
+
+    <section class="panel runs-panel" aria-labelledby="h-runs">
+      <h2 id="h-runs">Letzte Läufe</h2>
+      <div id="runs-table"></div>
+    </section>
+  </section>
+</main>
+
+<!-- ================= Dialog: Alarm ================= -->
+<dialog id="alert-dialog" aria-labelledby="alert-dialog-title">
+  <form id="alert-form" method="dialog" novalidate>
+    <div class="dialog-head">
+      <h2 id="alert-dialog-title">Neuer Alarm</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Dialog schließen">×</button>
+    </div>
+    <div class="dialog-body">
+      <p class="help" id="alert-id-info" hidden></p>
+
+      <div class="field">
+        <label for="f-name">Name</label>
+        <input id="f-name" name="name" type="text" required maxlength="120" placeholder="z. B. Zürich → Hamburg unter 110 €" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="f-origins-input">Von</label>
+        <div class="chip-input" id="f-origins" data-field="origins"></div>
+        <p class="help">Flughafen- oder Stadtcode (z. B. FRA, BER) eintippen und Enter drücken – oder eine Region wählen.</p>
+      </div>
+
+      <div class="field">
+        <label for="f-destinations-input">Nach</label>
+        <div class="chip-input" id="f-destinations" data-field="destinations"></div>
+      </div>
+
+      <label class="check" id="f-reverse-wrap">
+        <input type="checkbox" id="f-reverse"> Gegenrichtung auch anlegen
+        <span class="help-inline">(zweiter Alarm mit vertauschtem Von/Nach)</span>
+      </label>
+
+      <div class="field-grid">
+        <div class="field">
+          <span class="field-label" id="trip-label">Reiseart</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="trip-label">
+            <label><input type="radio" name="trip" value="roundtrip" checked><span>Hin- und Rückflug</span></label>
+            <label><input type="radio" name="trip" value="oneway"><span>one-way</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-cabin">Kabine</label>
+          <select id="f-cabin" name="cabin">
+            <option value="economy">Economy</option>
+            <option value="premium">Premium Economy</option>
+            <option value="business">Business Class</option>
+            <option value="first">First Class</option>
+          </select>
+        </div>
+      </div>
+
+      <h3 class="form-section">Wann ist es ein Deal?</h3>
+      <div class="field-grid">
+        <div class="field">
+          <label for="f-max-price">Preisgrenze (€ pro Person)</label>
+          <input id="f-max-price" name="max_price" type="text" inputmode="decimal" autocomplete="off" data-min="1" placeholder="z. B. 110">
+          <p class="help">Alles darüber wird nie gemeldet.</p>
+        </div>
+        <div class="field">
+          <label for="f-baseline">Normalpreis (€)</label>
+          <input id="f-baseline" name="baseline_price" type="text" inputmode="decimal" autocomplete="off" data-min="1" placeholder="z. B. 190">
+          <p class="help">Üblicher Preis, solange noch keine eigene Preis-Historie existiert.</p>
+        </div>
+        <div class="field">
+          <label for="f-discount">Mindest-Rabatt (%)</label>
+          <input id="f-discount" name="min_discount" type="text" inputmode="decimal" autocomplete="off" data-min="1" data-max="95">
+          <p class="help">1–95 %. Nur wenn keine Preisgrenze gesetzt ist.</p>
+        </div>
+      </div>
+      <p class="help">Bitte Preisgrenze und/oder Normalpreis angeben.</p>
+
+      <h3 class="form-section">Würde ich das selbst buchen?</h3>
+      <div class="field-grid">
+        <div class="field">
+          <label for="f-stops">Max. Umstiege</label>
+          <input id="f-stops" name="max_stops" type="text" inputmode="numeric" autocomplete="off" data-min="0" data-max="3">
+          <p class="help">0 = nur Direktflüge, höchstens 3.</p>
+        </div>
+        <div class="field">
+          <label for="f-duration">Max. Flugdauer (h pro Richtung)</label>
+          <input id="f-duration" name="max_duration_hours" type="text" inputmode="decimal" autocomplete="off" data-min="1">
+        </div>
+        <div class="field">
+          <label for="f-min-nights">Nächte von</label>
+          <input id="f-min-nights" name="min_nights" type="text" inputmode="numeric" autocomplete="off" data-min="0">
+        </div>
+        <div class="field">
+          <label for="f-max-nights">Nächte bis</label>
+          <input id="f-max-nights" name="max_nights" type="text" inputmode="numeric" autocomplete="off" data-min="0">
+        </div>
+        <div class="field">
+          <label for="f-months">Monate voraus</label>
+          <input id="f-months" name="months_ahead" type="text" inputmode="numeric" autocomplete="off" data-min="1" data-max="12">
+          <p class="help">Leer = Standard aus den Einstellungen.</p>
+        </div>
+        <div class="field">
+          <label for="f-airlines">Ausgeschlossene Airlines</label>
+          <input id="f-airlines" name="exclude_airlines" type="text" placeholder="z. B. FR, W6" autocomplete="off">
+          <p class="help">2-stellige IATA-Airline-Codes, kommagetrennt (z. B. FR = Ryanair, W6 = Wizz Air, U2 = easyJet).</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-keywords">Stichwörter für den Travel-Dealz-Feed</label>
+        <textarea id="f-keywords" name="feed_keywords" rows="3" placeholder="Zürich, Hamburg&#10;China, Business"></textarea>
+        <p class="help">Pro Zeile eine Gruppe. Innerhalb einer Zeile müssen alle Wörter (kommagetrennt) im Artikel vorkommen, von den Zeilen reicht eine. Leer = Feed für diesen Alarm ignorieren.</p>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="f-enabled" name="enabled" checked> Alarm ist aktiv
+      </label>
+
+      <p class="form-error" id="alert-form-error" role="alert" hidden></p>
+    </div>
+    <div class="dialog-foot">
+      <button type="button" class="btn" data-close>Abbrechen</button>
+      <button type="submit" class="btn btn-primary" id="alert-save">Speichern</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ================= Dialog: Bestätigung ================= -->
+<dialog id="confirm-dialog" class="confirm" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+  <form method="dialog">
+    <div class="dialog-body">
+      <h2 id="confirm-title">Bist du sicher?</h2>
+      <p id="confirm-text"></p>
+    </div>
+    <div class="dialog-foot">
+      <button type="submit" class="btn" value="cancel">Abbrechen</button>
+      <button type="submit" class="btn btn-danger" value="ok" id="confirm-ok">Löschen</button>
+    </div>
+  </form>
+</dialog>
+
+<datalist id="airport-list"></datalist>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

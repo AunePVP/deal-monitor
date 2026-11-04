@@ -1,0 +1,109 @@
+# Deal-Alarme
+# =========
+# Preise immer pro Person in EUR. trip = "roundtrip" (Hin- und Rückflug) oder "oneway".
+# origins/destinations: IATA-Codes (Stadtcodes bevorzugt: BER, BJS, SHA ...) oder
+# Regionen mit @, siehe dealmonitor/regions.py:
+#   @DE, @DE_HUBS, @CH, @AT, @DACH, @CN, @CN_MAJOR, @CN_HK
+#
+# Wann ist es ein Deal?
+#   max_price      harte Obergrenze. Alles darüber wird nie gemeldet.
+#   baseline_price Normalpreis der Strecke, solange noch keine eigene Preis-Historie
+#                  existiert. Danach wird der Median der beobachteten Preise genutzt.
+#   min_discount   wird nur genutzt, wenn KEIN max_price gesetzt ist: so viel unter
+#                  dem Referenzpreis muss der Flug liegen (0.30 = 30 %).
+#
+# "Würde ich das selbst buchen?"
+#   max_stops, max_duration_hours (pro Richtung), min_nights/max_nights, exclude_airlines
+#
+# feed_keywords: Stichwort-Gruppen für den Travel-Dealz-Feed. Innerhalb einer Gruppe
+#   müssen alle Wörter vorkommen (UND), zwischen den Gruppen reicht eine (ODER).
+
+[settings]
+currency = "eur"
+scan_months = 6
+history_days = 60
+min_history_samples = 8
+renotify_drop = 0.05
+max_deals_per_alert = 5
+request_delay = 0.35
+database = "data/deals.sqlite"
+report = "data/report.html"
+feeds = ["https://travel-dealz.de/feed/"]
+feed_max_age_days = 14
+
+
+# --- Zürich ⇄ Hamburg --------------------------------------------------------
+[[alert]]
+id = "zrh-ham"
+name = "Zürich → Hamburg (und zurück)"
+origins = ["ZRH"]
+destinations = ["HAM"]
+trip = "roundtrip"
+max_price = 110
+baseline_price = 190
+max_stops = 1
+max_duration_hours = 6
+min_nights = 1
+max_nights = 21
+feed_keywords = [["Zürich", "Hamburg"]]
+
+[[alert]]
+id = "ham-zrh"
+name = "Hamburg → Zürich (und zurück)"
+origins = ["HAM"]
+destinations = ["ZRH"]
+trip = "roundtrip"
+max_price = 110
+baseline_price = 190
+max_stops = 1
+max_duration_hours = 6
+min_nights = 1
+max_nights = 21
+feed_keywords = [["Hamburg", "Zürich"]]
+
+# Einzelflüge lohnen sich auf der Kurzstrecke oft - eigener Alarm, klar als one-way markiert
+[[alert]]
+id = "zrh-ham-oneway"
+name = "Zürich ⇄ Hamburg one-way"
+origins = ["ZRH", "HAM"]
+destinations = ["HAM", "ZRH"]
+trip = "oneway"
+max_price = 45
+baseline_price = 95
+max_stops = 0
+months_ahead = 4
+
+
+# --- Deutschland → China ------------------------------------------------------
+[[alert]]
+id = "de-cn-economy"
+name = "Deutschland → China (Economy)"
+origins = ["@DE"]
+destinations = ["@CN_MAJOR"]
+trip = "roundtrip"
+cabin = "economy"
+max_price = 499
+baseline_price = 750
+max_stops = 1
+max_duration_hours = 20
+min_nights = 5
+max_nights = 30
+feed_keywords = [["China"], ["Peking"], ["Beijing"], ["Shanghai"], ["Guangzhou"],
+                 ["Chengdu"], ["Shenzhen"], ["Hangzhou"], ["Chongqing"], ["Xiamen"]]
+
+[[alert]]
+id = "de-cn-business"
+name = "Deutschland → China (Business Class)"
+origins = ["@DE_HUBS"]
+destinations = ["@CN_MAJOR"]
+trip = "roundtrip"
+cabin = "business"
+max_price = 1999
+baseline_price = 3200
+max_stops = 1
+max_duration_hours = 20
+min_nights = 5
+max_nights = 30
+feed_keywords = [["China", "Business"], ["Peking", "Business"], ["Beijing", "Business"],
+                 ["Shanghai", "Business"], ["Guangzhou", "Business"], ["Chengdu", "Business"],
+                 ["Shenzhen", "Business"]]

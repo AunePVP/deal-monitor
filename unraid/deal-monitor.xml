@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>deal-monitor</Name>
+  <Repository>ghcr.io/aunepvp/deal-monitor:latest</Repository>
+  <Registry>https://github.com/AunePVP/deal-monitor/pkgs/container/deal-monitor</Registry>
+  <Network>bridge</Network>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/AunePVP/deal-monitor</Support>
+  <Project>https://github.com/AunePVP/deal-monitor</Project>
+  <Overview>Flug-Deal-Monitor mit Deal-Alarmen im Stil von Travel-Dealz. Weboberfläche für Deals, Alarme und Meldungen, prüft automatisch alle 3 Stunden. Nach dem Start in der Weboberfläche unter Einstellungen den kostenlosen Travelpayouts-Token eintragen.</Overview>
+  <Category>Tools: Other</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <Config Name="Weboberfläche" Target="8080" Default="8080" Mode="tcp" Description="Port der Weboberfläche" Type="Port" Display="always" Required="true" Mask="false">8080</Config>
+  <Config Name="Daten" Target="/data" Default="/mnt/user/appdata/deal-monitor" Mode="rw" Description="Datenbank mit Alarmen, Deals und Einstellungen" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/deal-monitor</Config>
+  <Config Name="Passwort" Target="DEALMONITOR_PASSWORD" Default="" Mode="" Description="Optional: schützt die Oberfläche (Benutzername beliebig)" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Erlaubte Hostnamen" Target="DEALMONITOR_ALLOWED_HOSTS" Default="*" Mode="" Description="Hostnamen, unter denen die Oberfläche aufgerufen werden darf (kommagetrennt, z. B. tower.local). * = alle. Aufruf per IP geht immer." Type="Variable" Display="advanced" Required="false" Mask="false">*</Config>
+  <Config Name="Zeitzone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Zeitzone für alle Zeitangaben" Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Berlin</Config>
+  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="Benutzer-ID für die Dateien in appdata (Unraid: 99)" Type="Variable" Display="advanced" Required="false" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="Gruppen-ID für die Dateien in appdata (Unraid: 100)" Type="Variable" Display="advanced" Required="false" Mask="false">100</Config>
+</Container>

@@ -1,0 +1,23 @@
+# Start:   docker compose up -d      → http://localhost:8080
+# Stopp:   docker compose down
+# Update:  docker compose up -d --build
+services:
+  deal-monitor:
+    build: .
+    image: deal-monitor:latest
+    container_name: deal-monitor
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/data          # Datenbank, Einstellungen, Alarme
+    env_file:
+      - path: .env            # optional, Vorlage: .env.example
+        required: false
+    environment:
+      # fest für den Container (Port-Änderung oben bei "ports" vornehmen, z. B. "9000:8080")
+      DEALMONITOR_DATA: /data
+      DEALMONITOR_HOST: 0.0.0.0
+      DEALMONITOR_PORT: "8080"
+      # Zeitzone für alle Zeitangaben (in .env mit TZ=... änderbar)
+      TZ: ${TZ:-Europe/Berlin}
+    restart: unless-stopped
