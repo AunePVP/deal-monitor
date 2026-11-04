@@ -1,0 +1,35 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+server: nginx
+date: Wed, 04 Nov 2026 21:51:16 GMT
+content-type: text/html
+content-length: 162
+location: https://travelfree.info/feed/
+strict-transport-security: max-age=31536000
+x-remembering: Eric Binnion <https://friendsofericbinnion.wordpress.com/>
+alt-svc: clear
+server-timing: a8c-cdn, dc;desc=dca, cache;desc=BYPASS;dur=1.0
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+server: nginx
+date: Wed, 04 Nov 2026 21:51:17 GMT
+content-type: application/rss+xml; charset=UTF-8
+strict-transport-security: max-age=31536000
+vary: Accept-Encoding
+x-nananana: Batcache-Hit
+x-hacker: Want root?  Visit join.a8c.com and mention this header.
+host-header: WordPress.com
+cf-edge-cache: cache,platform=wordpress
+vary: accept, content-type, cookie
+last-modified: Wed, 04 Nov 2026 20:07:51 GMT
+etag: "4d23ad2569098af0a37ce73dd3a059f1"
+link: <https://travelfree.info/wp-json/>; rel="https://api.w.org/"
+link: <https://travelfree.info/>; rel="canonical"
+x-ac: 1.dca _atomic_dca STALE
+x-remembering: Eric Binnion <https://friendsofericbinnion.wordpress.com/>
+alt-svc: clear
+server-timing: a8c-cdn, dc;desc=dca, cache;desc=STALE;dur=8.0
+

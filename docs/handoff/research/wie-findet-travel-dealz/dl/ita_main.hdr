@@ -1,0 +1,19 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Wed, 04 Nov 2026 22:00:54 GMT
+cross-origin-resource-policy: same-origin
+x-frame-options: SAMEORIGIN
+report-to: {"group":"alkali_matrix_reporting","max_age":2592000,"endpoints":[{"url":"https://csp.withgoogle.com/csp/report-to/alkali-matrix"}]}
+content-security-policy: base-uri 'self';object-src 'none';report-uri https://csp.withgoogle.com/csp/alkali-matrix;script-src 'report-sample' 'nonce-FVortIJnHtfCDhJR5ftCag' 'unsafe-inline' 'unsafe-eval';worker-src 'self';require-trusted-types-for 'script'
+content-security-policy: report-uri https://csp.withgoogle.com/csp/alkali-matrix;script-src 'report-sample' 'unsafe-inline' 'unsafe-eval' 'self' https://apis.google.com https://static.corp.google.com https://ssl.gstatic.com https://www.google.com https://www.gstatic.com https://www.google-analytics.com https://accounts.google.com https://www.googletagmanager.com https://maps.googleapis.com http://www.gstatic.com http://www.google-analytics.com http://www.google.com https://translate-pa.googleapis.com https://translate.google.com https://translate.googleapis.com https://ssl.google-analytics.com;worker-src * blob:
+content-security-policy: frame-ancestors 'self';report-uri https://csp.withgoogle.com/csp/alkali-matrix
+content-encoding: gzip
+server: ESF
+x-xss-protection: 0
+x-content-type-options: nosniff
+

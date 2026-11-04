@@ -1,0 +1,39 @@
+td_home | 200 https://travel-dealz.de/ text/html; charset=utf-8 253815
+td_wpcats | 200 https://travel-dealz.de/wp-json/wp/v2/categories?per_page=100 application/json; charset=UTF-8 38228
+td_wptags | 200 https://travel-dealz.de/wp-json/wp/v2/tags?per_page=100&orderby=count&order=desc application/json; charset=UTF-8 161568
+td_sitemapidx | 200 https://travel-dealz.de/sitemap_index.xml text/xml; charset=UTF-8 2276
+td_tag_hamburg | 404 https://travel-dealz.de/tag/hamburg/feed/ application/rss+xml; charset=UTF-8 22192
+td_tag_china | 200 https://travel-dealz.de/tag/china/feed/ application/rss+xml; charset=UTF-8 4634
+fliegensparen_feed | curl: (60) SSL certificate problem: certificate has expired
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 https://www.fliegen-sparen.de/feed/  0
+frankfurtflyer_feed | 200 https://frankfurtflyer.de/feed/ application/octet-stream; charset=UTF-8 0
+meilenoptimieren_feed | 200 https://meilenoptimieren.com/feed/ application/rss+xml; charset=UTF-8 24975
+yhbu_feed | curl: (60) SSL: no alternative certificate subject name matches target host name 'yhbu.de'
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 https://yhbu.de/feed/  0
+fcam_feed | 200 https://app.rebrandly.com/broken-links text/html 8052
+travelzoo_de_home | 200 https://www.travelzoo.com/de/ text/html; charset=utf-8 236775
+ferienpiraten_feed | 200 https://www.ferienpiraten.ch/feed application/xml 7965
+flugdeals_ch_feed | curl: (35) Recv failure: Connection reset by peer
+000 https://www.flugdeals.ch/feed/  0
+urlaubstracker_feed | 200 https://www.urlaubstracker.de/feed/ application/rss+xml; charset=UTF-8 167345
+travelbook_feed | 403 https://www.travelbook.de/feed text/html 373
+insideflyer_feed | 200 https://insideflyer.de/feed/ application/rss+xml; charset=UTF-8 160201
+reiseuhu_feed | 403 https://www.reiseuhu.de/feed/ application/json; charset=UTF-8 162
+urlaubsheld_feed | curl: (35) Recv failure: Connection reset by peer
+000 https://urlaubsheld.de/ text/html; charset=utf-8 0
+holidayguru_ch_feed | 401 https://www.holidayguru.ch/feed/ text/html 590
+urlaubsguru_at_feed | 401 https://www.urlaubsguru.at/feed/ text/html 590
+preisjaeger_fluege | 200 https://www.preisjaeger.at/rss/gruppe/fluege text/xml; charset=utf-8 158852
+airguru_de_feed | 500 https://airguru.de/feed/ application/json; charset=UTF-8 4931
+dealdoktor_feed | 200 https://www.dealdoktor.de/feed/ application/rss+xml; charset=UTF-8 69667
+schnaeppchenfuchs_feed | 404 https://schnaeppchenfuchs.com/feed/ application/json 51

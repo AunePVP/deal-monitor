@@ -1,0 +1,2228 @@
+<!doctype html><html
+class="nojs" xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head><base
+href="https://www.fluege.de/" /><title>Günstige Flüge online buchen – Flug-Angebote vergleichen | fluege.de</title><meta
+name="description" content="Buchen Sie Ihren Flug bei fluege.de! Flüge vergleichen von über 550 Airlines und den Urlaub mit einem günstigen Flug starten | fluege.de" />
+<meta
+name="keywords" content="Flüge, Reisen, Urlaub, Last-Minute, Schnäppchen- und Pauschalreisen, Hotels, Mietwagen, Lastminute, Hotelbewertung" />
+<meta
+http-equiv="content-type" content="text/html; charset=UTF-8" /><meta
+http-equiv="content-language" content="de" /><meta
+http-equiv="expires" content="0" /><meta
+name="msapplication-tap-highlight" content="no" /><meta
+name="msapplication-config" content="none"/><meta
+name="google" value="notranslate" /><meta
+name="page-type" content="html"/><meta
+name="generator" content="fluege.de" /><meta
+name="publisher" content="fluege.de" /><meta
+name="copyright" content="copyright(c) 2026 fluege.de, fluege.de" /><meta
+name="language" content="de_DE" /><meta
+name="author" content="fluege.de" /><meta
+name="expires" content="0" /><meta
+name="revisit-after" content="3 days" /><meta
+http-equiv="X-UA-Compatible" content="IE=edge" /><link
+rel="preconnect" href="https://static.fluege.de/"><link
+rel="preconnect" href="https://fonts.gstatic.com"><link
+rel="preconnect" href="https://v1.api.service.cmp.usercentrics.eu"><meta
+name="facebook-domain-verification" content="bhmjgoct68c9bz61t6zjimlg7880i8" />
+<meta
+name="google-site-verification" content="jIk4ZzzxVf5BuOUyrOdVY_BY5h0w4_I9nsU0ps9zVfQ" />
+<meta
+name="verify-v1" content="y32jonb3fxIaC2LkaJzoSFAuyTGugolzBPvPiqSomEI=" /><meta
+name="page-topic" content="Urlaub Reisen und Lastminute finden Sie auf fluege.de" /><meta
+content="https://static.fluege.de/img/fox/_meta/logo_128x128.png" itemprop="image" />
+<meta
+name="format-detection" content="telephone=no"><meta
+name="viewport" content="width=device-width, initial-scale=1.0" /> <script type="text/javascript">if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration('https://www.fluege.de').then(function(reg) {
+                if (!reg || !reg.active || reg.active.state !== 'activated') {
+                    navigator.serviceWorker.register('https://www.fluege.de/service-worker.js')
+                        .then(function(reg) { })
+                        .catch(function(err) {  });
+                }
+            });
+        }</script> <link rel="stylesheet" type="text/css" href="https://static.fluege.de/css/fluege_de_kingfisher_desktop_index___600b1c37.css"  media="all"/><meta
+property="og:title" content="Günstige Flüge online buchen – Flug-Angebote vergleichen | fluege.de"/><meta
+property="og:url" content="https://www.fluege.de/"><meta
+property="og:image" content="https://static.fluege.de/img/fox/GERMAN/fb_logo__600b1c37.png"/><meta
+property="og:site_name" content="fluege.de"/>
+<meta
+property="og:description" content="Buchen Sie Ihren Flug bei fluege.de! Flüge vergleichen von über 550 Airlines und den Urlaub mit einem günstigen Flug starten | fluege.de"/>
+<meta
+name="robots" content="index,follow" />
+<link
+rel="shortcut icon" href="https://static.fluege.de/img/kingfisher/favicon.ico" type="image/x-icon" /><link
+rel="icon" href="https://static.fluege.de/img/favicon/fluegede.ico" type="image/ico" /><link
+rel="canonical" href="https://www.fluege.de/"/>
+<link
+rel="alternate" type="text/markdown" title="llms.txt" hreflang="de" href="https://www.fluege.de/llms.txt" /><link
+rel="alternate" type="text/markdown" title="llms.txt (English)" hreflang="en" href="https://www.fluege.de/llms-en.txt" /> <script type="application/ld+json">{
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://www.fluege.de/#organization",
+        "name": "fluege.de",
+        "url": "https://www.fluege.de/",
+        "logo": "https://static.fluege.de/img/fox/_meta/logo_128x128.png",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+49 (0)341 - 35575 85530",
+            "contactType": "customer service",
+            "availableLanguage": ["German"]
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.4",
+            "bestRating": "5",
+            "worstRating": "1",
+            "reviewCount": "10883",
+            "url": "https://de.trustpilot.com/review/fluege.de"        }    }</script> <script type="text/javascript" src="https://static.fluege.de/js/loader___600b1c37.js"></script> <script type="text/javascript">var ua = navigator.userAgent;
+    // define CONSTANTS
+    PLSTART = new Date(), DOMAIN = 'fluege', DOMAIN_SALT = 'fluege', BASE_URL = 'https://www.fluege.de', SECURE_URL = 'https://www.fluege.de', LANGUAGE = 'GERMAN', ACTION = 'index', MEDIA_URL = 'https://static.fluege.de/', CONTROLLER = 'index', PORTAL = 'fluege.de', CURRENCY_LOCALE = 'de_DE', TIME_SEPERATOR = ':', RUN_MODE = 'online',
+    TF = "EU",
+    HTMLCLASS = 'js ',
+    BROWSER = (ua.indexOf("MSIE") > -1 || !!ua.match(/Trident.*rv[ :]*11\./) ) ? 'ie' : 'noie nooldie',
+    LAYOUT = 'kingfisher';
+    if (BROWSER === 'ie') {
+        var rv = ua.indexOf('rv:');
+        BROWSER += (navigator.appVersion.indexOf("MSIE 10") != -1 || parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10) == 11) ? ' ie10' : ' ltie10';
+    }
+
+    document.documentElement.className += ' ' + HTMLCLASS + BROWSER;
+
+    window.touchDevice = (('ontouchstart' in window)
+        || (navigator.MaxTouchPoints > 0)
+        || (navigator.msMaxTouchPoints > 0));
+    window.aImages = [];
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        var lazyBackgrounds = [].slice.call(document.querySelectorAll('.lazy-background'));
+        for (var i = 0; i < lazyBackgrounds.length; i++) {
+            lazyBackgrounds[i].classList.remove('lazy-background');
+        }
+    });
+
+    window.aLoader = ['https://static.fluege.de/js/postscribe___600b1c37.js', function() { lp.c(); }];
+nbl.l(window.aLoader);</script> <link
+rel="search" type="application/opensearchdescription+xml" href="https://www.fluege.de/cms-sitemaps/wp-json/opensearch/1.1/document" title="Flugsuche" />
+<link
+rel="alternate" media="only screen and (max-width: 640px)" href="https://go.fluege.de/">
+ <script type="text/javascript">window.addEventListener('UC_UI_INITIALIZED', function() {
+        try {
+            var controllerIdPromise = window.__ucCmp && typeof window.__ucCmp.getControllerId === 'function'
+                ? window.__ucCmp.getControllerId()
+                : null;
+
+            Promise.resolve(controllerIdPromise).then(function(controllerId) {
+                if (controllerId) {
+                    
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        event: 'custom_event',
+                        event_name: 'uc_controller_id_ready',
+                        uc_controller_id: controllerId,
+                        uc_controller_id_ready: {
+                            uc_controller_id: controllerId
+                        }
+                    });
+                }
+            });
+        } catch (e) {
+                    }
+    }, {once: true});</script> <script type="text/javascript">function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    function domReady(fn) {
+        document.addEventListener("DOMContentLoaded", fn);
+        if (document.readyState === "interactive" || document.readyState === "complete" ) {
+            fn();
+        }
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    gtag("consent", "default", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        personalization_storage: "denied",
+        functionality_storage: "denied",
+        security_storage: "denied",
+        wait_for_update: 2000
+    });
+
+    gtag("set", "ads_data_redaction", true);
+
+    window.addEventListener("UC_CONSENT", function (e) {
+        if (e.detail && e.detail.categories) {
+
+            
+            // Updated category keys
+            var ucPersonal = "customcategory-aa72f2b8-4091-4964-b6fc-8f5829fa30f7",
+                ucAnalytics = "customcategory-d1792c0d-b860-4ec4-8e34-864e94325024",
+                ucMarketing = "customcategory-dc5c2a6e-79ba-4795-bbd8-2d8ef2be278f",
+                deniedValue = "ALL_DENIED",
+                dataLayer = window.dataLayer || [],
+                consentState = 0,
+                scriptMapping = {
+                    'marketing': ucMarketing,
+                    'statistics': ucAnalytics,
+                    'necessary': true
+                };
+
+            // Check if all three categories are present
+            if (e.detail.categories.hasOwnProperty(ucPersonal)
+                && e.detail.categories.hasOwnProperty(ucAnalytics)
+                && e.detail.categories.hasOwnProperty(ucMarketing)
+            ) {
+                gtag("consent", "update", {
+                    ad_storage: (e.detail.categories[ucMarketing].state !== deniedValue) ? 'granted' : 'denied',
+                    ad_user_data: (e.detail.categories[ucMarketing].state !== deniedValue) ? 'granted' : 'denied',
+                    ad_personalization: (e.detail.categories[ucMarketing].state !== deniedValue) ? 'granted' : 'denied',
+                    analytics_storage: (e.detail.categories[ucAnalytics].state !== deniedValue) ? 'granted' : 'denied',
+                    personalization_storage: (e.detail.categories[ucPersonal].state !== deniedValue) ? 'granted' : 'denied',
+                    functionality_storage: 'granted',
+                    security_storage: 'granted'
+                });
+
+                consentState |= ((e.detail.categories[ucMarketing].state !== deniedValue) ? 4 : 0);
+                consentState |= ((e.detail.categories[ucAnalytics].state !== deniedValue) ? 2 : 0);
+                consentState |= ((e.detail.categories[ucPersonal].state !== deniedValue) ? 1 : 0);
+            } else {
+                // Marketing only
+                if (e.detail.categories.hasOwnProperty(ucMarketing)) {
+                    gtag("consent", "update", {
+                        ad_storage: (e.detail.categories[ucMarketing].state !== deniedValue) ? 'granted' : 'denied',
+                        ad_user_data: (e.detail.categories[ucMarketing].state !== deniedValue) ? 'granted' : 'denied',
+                        ad_personalization: (e.detail.categories[ucMarketing].state !== deniedValue) ? 'granted' : 'denied',
+                        functionality_storage: 'granted',
+                        security_storage: 'granted'
+                    });
+
+                    consentState |= ((e.detail.categories[ucMarketing].state !== deniedValue) ? 4 : 0);
+                }
+
+                // Analytisch only
+                if (e.detail.categories.hasOwnProperty(ucAnalytics)) {
+                    gtag("consent", "update", {
+                        analytics_storage: (e.detail.categories[ucAnalytics].state !== deniedValue) ? 'granted' : 'denied',
+                        functionality_storage: 'granted',
+                        security_storage: 'granted'
+                    });
+
+                    consentState |= ((e.detail.categories[ucAnalytics].state !== deniedValue) ? 2 : 0);
+                }
+
+                // Personalisierung only
+                if (e.detail.categories.hasOwnProperty(ucPersonal)) {
+                    gtag("consent", "update", {
+                        personalization_storage: (e.detail.categories[ucPersonal].state !== deniedValue) ? 'granted' : 'denied',
+                        functionality_storage: 'granted',
+                        security_storage: 'granted'
+                    });
+
+                    consentState |= ((e.detail.categories[ucPersonal].state !== deniedValue) ? 1 : 0);
+                }
+            }
+
+            try {
+                if (e.detail.consent
+                    && e.detail.consent.type
+                    && e.detail.consent.type === "EXPLICIT"
+                ) {
+                    document.cookie = "CookieConsent=" + consentState + "; Secure; SameSite=Lax; Path=/; Max-Age=2628000";
+                }
+            }
+            catch (e) {
+                            }
+
+                        Object.entries(scriptMapping).forEach(([index, consent]) => {
+                if (true === (consent === true
+                    || (Object.prototype.hasOwnProperty.call(e.detail.categories, consent)
+                        && e.detail.categories[consent].state !== deniedValue)
+                    )
+                ) {
+                    domReady(() => {
+                        var scripts = document.querySelectorAll('script[data-cookieconsent="' + index + '"]');
+                        
+                        scripts.forEach((el) => {
+                            var isTextPlain = el.getAttribute("type") === "text/plain",
+                                usercentrics = el.getAttribute("data-usercentrics");
+
+                            
+                            if (true === isTextPlain && !usercentrics) {
+                                var s = document.createElement("script");
+                                s.type = "text/javascript";
+                                s.async = false;
+
+                                // Copy all attributes except "type"
+                                for (var {name, value} of el.attributes) {
+                                    if (name !== "type") s.setAttribute(name, value);
+                                }
+
+                                // If there's no src, copy inline code
+                                if (!s.src) {
+                                    s.textContent = el.textContent || "";
+                                }
+
+                                // Replace the original <script type="text/plain"> with an executable one
+                                if (el.replaceWith) {
+                                    el.replaceWith(s);
+                                } else if (el.parentNode) {
+                                    el.parentNode.replaceChild(s, el);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        }
+    });</script> <script id="usercentrics-cmp" src="//web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="mXzp62PyjeXSBJ" async></script> <script type="text/plain" data-cookieconsent="statistics" data-usercentrics="Atatus">
+        !function(window) {
+            var shouldRun = function () {
+                try {
+                    var run = window.sessionStorage.getItem('loadApm');
+                    if (null === run) {
+                        run = (Math.floor(Math.random() * 100) <= parseInt('20', 10));
+                        window.sessionStorage.setItem('loadApm', run);
+                    }
+
+                    return (true === run || "true" === run);
+                }
+                catch (err) {
+                    return false;
+                }
+            };
+
+            // NoCache/refresh views are deliberate cache bypasses and must not skew RUM metrics
+            var bypassesCache = /[?&](NoCache=(?!0?(&|$))|refresh(=|&|$))/.test(window.location.search);
+
+            if (!bypassesCache && ( !!shouldRun())) {
+                nbl.l(['https://dmc1acwvwny3.cloudfront.net/atatus.js', function() {
+                    if (window.atatus) {
+                        window.atatus.onBeforeSend(function (payload) {
+                            if (payload && payload.request && payload.request.url) {
+                                payload.request.url = payload.request.url.replace('/#/', '/').replace('#/', '/');
+                            }
+
+                            return true;
+                        });
+                        window.atatus.config('612dce63565d48139195b48f88915919', {
+                            tags: ['online', 'index/index', 'desktop'],
+                            version: '600b1c37',
+                            allowedDomains: ['www.fluege.de', 'static.fluege.de', 'secure.upayment.net']
+                        }).install();
+                    }
+                }]);
+            }
+
+        }(window);</script> 
+<body
+class="application
+
+index_index
+coIndex
+desktop
+ acIndex"><div
+id="wrapper" class="page-wrapper ">
+<div
+class="main" role="main"><div
+class="container">
+<noscript><div
+id="nojsAdvice" class="content clearfix">
+Bitte aktivieren Sie Javascript um den vollen Funktionsumfang von fluege.de nutzen zu k&ouml;nnen! Weitere Informationen <a
+href="https://support.google.com/websearch/bin/answer.py?hl=de&answer=23852">hier</a>!</div>
+</noscript>
+</div><div
+class="form-wrapper "><div
+class="destination-background">
+<picture>
+<source
+srcset="https://static.fluege.de/img/kingfisher/form-background__600b1c37.webp" type="image/webp">
+<img
+width="100%" height="745" alt="fluege.de Suche" fetchpriority="high" src="https://static.fluege.de/img/kingfisher/form-background__600b1c37.jpg">
+</picture>
+</div><div
+class="container logo"><h1 class="aria-heading">Hier finden sie den besten Flug!</h1>
+<a
+href="https://www.fluege.de" title="fluege.de">
+<img
+width="175" height="50" id="logo" src="https://static.fluege.de/img/logo/fluege.de_white_xs.svg" alt="fluege.de Logo" />
+</a><div
+class="customer-account-header js-customer-account customer-account-header-stand-alone">
+<a
+href="https://mein.fluege.de"
+data-event-category="Page_header"
+data-event-action="Button_Account"
+data-event-label="Click"
+data-amp-mask
+class="customer-account-privat-area-link customer-account-header-links js-open-customer-account-dropdown"
+rv-class-customer-account-privat-area-link-show="customer.loggedIn | eq true"
+title="Zum Kundenkonto"
+>
+<span
+rv-text="customer.welcomeText"></span>
+</a><span
+rv-unless="customer.loggedIn">
+<a
+href="javascript:;" class="customer-account-header-links js-open-customer-account-registration-layer" title="Registrieren" data-login-position="header">Registrieren</a>
+<a
+href="javascript:;" class="customer-account-header-links js-open-customer-account-login-layer" title="Einloggen" data-login-position="header">Einloggen</a>
+</span><a
+href="javascript:;"
+class="customer-account-header-links js-currency-switch-dropdown"
+title="Preise in Euro (EUR)"
+>
+<span>EUR</span>
+</a><div
+class="data-layer currency-switch-layer" style="display: none" data-layer>
+<bold
+class="caption">Währung auswählen</bold>
+<a
+class="data-row currency-switch-link" href="https://www.fluege.de/ch" data-currency="CHF">
+<span
+class="code">CHF</span>
+<span
+class="name">Schweizer Franken</span>
+</a>
+<a
+class="data-row currency-switch-link" href="https://www.fluege.de/cz" data-currency="CZK">
+<span
+class="code">CZK</span>
+<span
+class="name">Tschechische Krone</span>
+</a>
+<a
+class="data-row currency-switch-link" href="https://www.fluege.de/dk" data-currency="DKK">
+<span
+class="code">DKK</span>
+<span
+class="name">Dänische Krone</span>
+</a>
+<a
+class="data-row currency-switch-link" href="https://www.fluege.de/pl" data-currency="PLN">
+<span
+class="code">PLN</span>
+<span
+class="name">Zloty</span>
+</a>
+</div><div
+class=" js_registered-notice-layer simple-note-layer customer-note-layer hidden" aria-hidden="true" inert><div
+class="container">
+Vielen Dank für Ihre Registrierung. Wir haben soeben eine E-Mail an {customer.account.email_address} gesendet. Bitte bestätigen Sie die Registrierung mit Klick auf den Link.
+<button
+aria-label="Schließen" class="js_close-registered-notice-layer close-note-layer icon-close"></button></div></div><div
+id="customer-account-login-modal-content" style="display:none" class="customer-account-layer customer-account-login-layer js-customer-account-login-layer"><div
+class="modal-box"><div
+class="icon-close modal-close js-close-modal">&nbsp;</div>
+<div
+class="social js-social-login-bar">
+<div
+class="social-bar">
+<a
+href="#" class="js-customer-login-google google social-button" title="Mit Google anmelden">
+<img
+src="https://static.fluege.de/img/svg/google_round.svg" alt="Google Login Button"/>
+<span
+class="button-text">Mit Google anmelden</span>
+</a>
+<a
+href="#" class="js-customer-login-facebook facebook social-button" title="Mit Facebook anmelden">
+<img
+src="https://static.fluege.de/img/svg/facebook_round.svg" alt="Facebook Login Button"/>
+<span
+class="button-text">Mit Facebook anmelden</span>
+</a>
+<a
+href="#" class="js-customer-login-apple apple social-button" title="Mit Apple anmelden">
+<img
+src="https://static.fluege.de/img/svg/apple.svg" alt="Apple Login Button"/>
+<span
+class="button-text">Mit Apple anmelden</span>
+</a>
+</div>
+<div
+class="headline">oder</div></div><form
+method="post" class="js-customer-account-login js-customer-account-login-form"><div
+class="row-fluid"><div
+class="control-group large item">
+<input
+type="text"
+name="email"
+class="validate[custom[email]] text text control"
+data-prompt-position="topLeft"
+ /><label
+class="label " for="email">E-Mail-Adresse</label>
+
+</div></div><div
+class="row-fluid"><div
+class="control-group large item">
+<input
+type="password"
+name="password"
+class="validate[required] text text control"
+ /><label
+class="label " for="password">Passwort</label>
+
+</div></div><div
+class="password-reset">
+<a
+class="default-link js-password-reset-link" href="https://mein.fluege.de/reset-password">Passwort vergessen?</a></div><button
+type="submit" class="btn btn-a">
+<span
+class="button-text-wrap">
+Jetzt Einloggen
+</span>
+</button>
+</form><form
+method="post" class="js-customer-account-login js-customer-account-two-factor-form" style="display: none"><div
+class="headline">2-Faktor-Authentifizierung</div><p
+class="two-factor-text"></p><div
+class="row-fluid form-otp-fields"><div
+class="control-group large item">
+<input
+type="text"
+name="otp"
+maxlength="6"
+class="validate[required,length[6,6]] input-uppercase text text control"
+/>
+</div></div><div
+class="row-fluid form-otp-fields">
+<button
+type="submit" class="btn btn-a">
+<span
+class="button-text-wrap">
+Fortfahren
+</span>
+</button>
+</div><div
+class="resend-code js-two-factor-resend-code form-otp-fields" style="display: none">
+<a
+class="default-link js-two-factor-resend-code-link" href="#">Code erneut senden</a></div><p
+class="two-factor-lifetime">
+<span
+class="bold">Hinweis:</span>
+Der Code ist <span
+class="js-challenge-lifetime">5</span> Minuten gültig und kann nur einmal verwendet werden.</p></form><div
+class="customer-account-footer js-customer-account-footer">
+Noch kein Kundenkonto? <a
+class="default-link js-open-customer-account-registration-layer" href="" data-login-position="content_box">Hier kostenlos registrieren</a></div></div></div><div
+id="customer-account-login-modal-content-block" style="display:none" class="customer-account-layer customer-account-login-layer js-customer-account-login-layer"><div
+class="modal-box"><div
+class="icon-close modal-close js-close-modal js-close-login-modal-blocker">&nbsp;</div>
+<div
+class="social js-social-login-bar">
+<div
+class="social-bar">
+<a
+href="#" class="js-customer-login-google google social-button" title="Mit Google anmelden">
+<img
+src="https://static.fluege.de/img/svg/google_round.svg" alt="Google Login Button"/>
+<span
+class="button-text">Mit Google anmelden</span>
+</a>
+<a
+href="#" class="js-customer-login-facebook facebook social-button" title="Mit Facebook anmelden">
+<img
+src="https://static.fluege.de/img/svg/facebook_round.svg" alt="Facebook Login Button"/>
+<span
+class="button-text">Mit Facebook anmelden</span>
+</a>
+<a
+href="#" class="js-customer-login-apple apple social-button" title="Mit Apple anmelden">
+<img
+src="https://static.fluege.de/img/svg/apple.svg" alt="Apple Login Button"/>
+<span
+class="button-text">Mit Apple anmelden</span>
+</a>
+</div>
+<div
+class="headline">oder</div></div><form
+method="post" class="js-customer-account-login js-customer-account-login-form"><div
+class="row-fluid"><div
+class="control-group large item">
+<input
+type="text"
+name="email"
+class="validate[custom[email]] text text control"
+data-prompt-position="topLeft"
+ /><label
+class="label " for="email">E-Mail-Adresse</label>
+
+</div></div><div
+class="row-fluid"><div
+class="control-group large item">
+<input
+type="password"
+name="password"
+class="validate[required] text text control"
+ /><label
+class="label " for="password">Passwort</label>
+
+</div></div><div
+class="password-reset">
+<a
+class="default-link js-password-reset-link" href="https://mein.fluege.de/reset-password">Passwort vergessen?</a></div><button
+type="submit" class="btn btn-a">
+<span
+class="button-text-wrap">
+Jetzt Einloggen
+</span>
+</button>
+</form><form
+method="post" class="js-customer-account-login js-customer-account-two-factor-form" style="display: none"><div
+class="headline">2-Faktor-Authentifizierung</div><p
+class="two-factor-text"></p><div
+class="row-fluid form-otp-fields"><div
+class="control-group large item">
+<input
+type="text"
+name="otp"
+maxlength="6"
+class="validate[required,length[6,6]] input-uppercase text text control"
+/>
+</div></div><div
+class="row-fluid form-otp-fields">
+<button
+type="submit" class="btn btn-a">
+<span
+class="button-text-wrap">
+Fortfahren
+</span>
+</button>
+</div><div
+class="resend-code js-two-factor-resend-code form-otp-fields" style="display: none">
+<a
+class="default-link js-two-factor-resend-code-link" href="#">Code erneut senden</a></div><p
+class="two-factor-lifetime">
+<span
+class="bold">Hinweis:</span>
+Der Code ist <span
+class="js-challenge-lifetime">5</span> Minuten gültig und kann nur einmal verwendet werden.</p></form></div></div><div
+id="customer-account-registration-modal-content" style="display:none" class="customer-account-layer customer-account-registration-layer"><div
+class="modal-box"><div
+class="icon-close modal-close js-close-modal">&nbsp;</div><div
+class="modal-content row-fluid"><div
+class="modal-content-register span13">
+<div
+class="social js-social-login-bar">
+<div
+class="social-bar">
+<a
+href="#" class="js-customer-login-google google social-button" title="Mit Google anmelden">
+<img
+src="https://static.fluege.de/img/svg/google_round.svg" alt="Google Login Button"/>
+<span
+class="button-text">Mit Google anmelden</span>
+</a>
+<a
+href="#" class="js-customer-login-facebook facebook social-button" title="Mit Facebook anmelden">
+<img
+src="https://static.fluege.de/img/svg/facebook_round.svg" alt="Facebook Login Button"/>
+<span
+class="button-text">Mit Facebook anmelden</span>
+</a>
+<a
+href="#" class="js-customer-login-apple apple social-button" title="Mit Apple anmelden">
+<img
+src="https://static.fluege.de/img/svg/apple.svg" alt="Apple Login Button"/>
+<span
+class="button-text">Mit Apple anmelden</span>
+</a>
+</div>
+<div
+class="headline">oder</div></div><form
+method="post" class="js-customer-account-register"><div
+class="row-fluid" rv-hide="showRegistrationLoading">
+<div
+class="control-group large item">
+<input
+type="text"
+name="email"
+class="validate[custom[email]] text text control"
+data-prompt-position="topLeft"
+ /><label
+class="label " for="email">E-Mail-Adresse</label>
+
+</div>
+</div><div
+rv-show="showRegistrationLoading" class="register-load"><p>Bitte haben Sie einen Moment Geduld.</p>
+<div
+class="loading-animation-wrapper js_loading-animation "><div
+class="loading-animation">
+<span
+class="side side-left">
+<span
+class="fill"></span>
+</span>
+<span
+class="side side-right">
+<span
+class="fill"></span>
+</span></div></div></div><div
+class="terms-privacy">
+Es gelten unsere <a
+href="https://mein.fluege.de/terms-of-use" class="default-link regulation-link js-regulation-link" title="Nutzungsbestimmungen" target="_blank">Nutzungsbestimmungen</a> und <a
+href="https://www.fluege.de/service/privacy" class="default-link privacy-link" title="Datenschutzinformationen" target="_blank">Datenschutzinformationen</a></div><button
+type="submit" class="btn btn-a" rv-hide="showRegistrationLoading">Jetzt Registrieren</button>
+</form><div
+class="customer-account-footer">
+Sie haben bereits ein Kundenkonto? <a
+class="default-link js-open-customer-account-login-layer" href="" data-login-position="content_box">Hier einloggen</a></div></div><div
+class="modal-content-advantages span11"><h3 class="advantages-headline">
+Mein fluege.de Kundenkonto</h3><p
+class="advantages-text">
+Registrieren Sie sich jetzt schnell und einfach und profitieren Sie!</p><ul
+class="advantages-list"><li>
+<span
+class="icon-check"></span>
+<span
+class="list-text">Alle Flugbuchungen auf einen Blick</span></li><li>
+<span
+class="icon-check"></span>
+<span
+class="list-text">Kontaktdaten für Ihre nächste Reise speichern</span></li><li>
+<span
+class="icon-check"></span>
+<span
+class="list-text">Aktuelle Informationen zu Ihrem Flugstatus jederzeit einsehbar</span></li></ul></div></div></div></div><div
+rv-if="customer.loggedIn" class="js-customer-account-actions-dropdown close-customer-account-dropdown"><div
+class="customer-account-dropdown wide top"><div
+class="account-actions">
+<a
+class="js-account-action-my-account" href="https://mein.fluege.de/my-account">
+<span
+class="icon icon-gear">Mein Konto</span>
+</a><a
+class="js-account-action-my-flights" href="https://mein.fluege.de/my-flights">
+<span
+class="icon icon-plane-bold">Meine Flüge</span>
+</a><a
+class="js-account-action-credit-card" href="https://www.fluege.de/card" target="_blank">
+<span
+class="icon icon-credit-card">fluege.de Mastercard GOLD</span>
+</a>
+<a
+class="js-account-action-flight-search" href="https://www.fluege.de" >
+<span
+class="icon icon-zoom">Flugsuche</span>
+</a>
+<span
+class="customer-account-footer">
+<a
+href="" class="js-customer-account-logout" data-login-position="menu">
+<span
+class="icon icon-logout">Abmelden</span>
+</a>
+</span></div></div></div></div></div><div
+class="container"><p
+class="hero-tagline">Ihr nächster Flug zum besten Preis.</p></div>
+<div
+class="section-multiform"><div
+class="container">
+<div
+class="multiform"
+id="multiformData"><ul
+class="multiform-tabs" id="muliform-tabs">
+<li
+class="item  active "
+data-traveltype="flight">
+<input
+type="radio" class="radio js_multiFormSelect" value="flight"
+id="radioButtons-flight" name="radioButtons"
+checked="checked"/>
+<label
+class="label" for="radioButtons-flight">Flug</label>
+</li>
+<li
+class="item   "
+data-traveltype="flattrip">
+<a
+href="https://reisen.fluege.de/?utm_source=fluege.de&utm_medium=referral&utm_campaign=cross-selling_navigation" id="flattrip" target="_blank" class="link label">Pauschalurlaub</a>
+</li>
+<li
+class="item   "
+data-traveltype="cityhotel">
+<a
+href="https://sp.booking.com/index.html?aid=1882317&lang=de&label=fluege-navigation-homepage" id="cityhotel" target="_blank" class="link label">Hotel</a>
+</li>
+<li
+class="item   "
+data-traveltype="flighthotel">
+<a
+href="https://fluege.lastminute.de/?utm_source=fluege.de&utm_medium=whitelabel&utm_campaign=homepage_tab" id="flighthotel" target="_blank" class="link label">Flug + Hotel</a>
+</li>
+<li
+class="item   "
+data-traveltype="rentcar">
+<a
+href="https://car.fluege.de/?aid=fluegecar&afid=multiform" id="rentcar" target="_blank" class="link label">Mietwagen</a>
+</li>
+<li
+class="item   "
+data-traveltype="activities">
+<a
+href="https://www.getyourguide.com/?partner_id=DNDSXRX&partner_id=DNDSXRX&utm_medium=travel_agent&cmp=homepage_tab " id="activities" target="_blank" class="link label">Aktivitäten</a>
+</li>
+<li
+class="item   "
+data-traveltype="parking">
+<a
+href="https://www.holidayextras.com/de/partner-wl/fluege-de-parkplatz.html?custref=tab_homepage_parken" id="parking" target="_blank" class="link label">Parkplätze am Flughafen</a>
+</li>
+<li
+class="item last  "
+data-traveltype="card">
+<a
+href="https://www.fluege.de/card" id="card" target="_blank" class="link label">Mastercard GOLD</a>
+</li>
+</ul><div
+class="multiform-box"><div
+id="multiForm">
+<form
+action="https://www.fluege.de/flight/wait" method="get" name="sflight" id="sflight"
+data-use-search-history="1"
+data-fetch-departure-airports="1"
+data-fetch-top-destinations="1"
+data-departure-prefill-enabled="true"
+data-traveller-single="Reisender"
+data-traveller-multi="Reisende"
+data-date-format="dd.mm.yy"
+class="clearfix"
+><div
+class="multiform-flight" id="flightForm"><div
+class="flight-type-wrapper">
+<div
+class="js_flight-type flight-type return-flight active">
+<input
+type="radio"
+class="radio "
+name="sFlightInput[flightType]"
+id="RT"
+value="RT"
+checked="checked" tabindex="2"
+data-role="none"
+/>
+<label
+for="RT" class="label ">Hin- und Rückflug</label></div><div
+class="js_flight-type flight-type oneway">
+<input
+type="radio"
+class="radio "
+name="sFlightInput[flightType]"
+id="OW"
+value="OW"
+tabindex="3"
+data-role="none"
+/>
+<label
+for="OW" class="label ">nur Hinflug</label></div><div
+class="js_flight-type flight-type open-jaw">
+<input
+type="radio" class="radio " name="sFlightInput[flightType]" id="OJ" value="OJ"  tabindex="4" />
+<label
+for="OJ" class="label  oj-hint js_tooltip" data-tooltip-posmy="center bottom-10" data-tooltip-posat="center top" title="Bei Gabelflügen können Sie für Hin- und Rückflug unterschiedliche Flugstrecken angeben, z.B. Hinflug von Berlin nach New York, Rückflug von Washington D.C. nach Frankfurt. <br
+/><br
+/> Gabelflüge sind meist günstiger, als das separate Buchen einzelner Flüge. Außerdem ist der Buchungsvorgang bequemer, da Sie auf einen Klick die Verfügbarkeit von Hin- und Rückflug prüfen und beide gemeinsam buchen können.">Gabelflug</label>
+</div></div><div
+class="js_oj row" style="display:none"><div
+class="size5of6">
+<div
+class="control-group item first size3of6"><input
+value=""
+name="sFlightInput[f0][depLocation]"
+id="f0-dep-location-Oj"
+class="text js-search-location validate[required, custom[airportSelection], custom[checkAirport]] control
+"
+type="text"
+autocomplete="off"
+maxlength="255"
+
+tabindex="5" /><label
+class="label " for="f0-dep-location-Oj">
+Hinflug von
+</label>
+
+</div><input
+type="hidden" name="sFlightInput[f0][accMultiAirportDep]" id="f0-dep-multiAirport-Oj" value="" />
+<input
+type="hidden" name="sFlightInput[f0][depAirport]" value="" id="f0-dep-airport-Oj" /><div
+class="control-group item size3of6"><input
+value=""
+name="sFlightInput[f0][arrLocation]"
+id="f0-arr-location-Oj"
+class="text js-search-location validate[required, custom[airportSelection], custom[checkAirport]] control
+"
+type="text"
+autocomplete="off"
+maxlength="255"
+
+tabindex="6" /><label
+class="label " for="f0-arr-location-Oj">
+Hinflug nach
+</label>
+
+</div><input
+type="hidden" name="sFlightInput[f0][accMultiAirportArr]" id="f0-arr-multiAirport-Oj" value="" />
+<input
+type="hidden" name="sFlightInput[f0][arrAirport]" value="" id="f0-arr-airport-Oj" /></div><div
+class="date-wrapper size1of6">
+<div
+class="control-group"><input
+class="text js-search-date validate[required] control validate[custom[futureDate],custom[dateDepartureBeforeArrival[#f1DateOj]]] filled"
+type="text"
+name="sFlightInput[f0][date]"
+id="f0DateOj"
+value="06.11.2026"
+autocomplete="off"
+aria-label="Hinflugdatum auswählen"
+tabindex="7" /><label
+class="label " for="f0DateOj">Hinflug</label>
+
+</div><div
+class="pc-legend pc-legend--hidden" aria-hidden="true">
+<span
+class="pc-legend-label">Voraussichtliche Preise:</span>
+<i
+class="pc-swatch pc-green"></i>
+<i
+class="pc-swatch pc-orange"></i>
+<i
+class="pc-swatch pc-red"></i>
+</div></div></div>
+<div
+class="js_oj row" style="display:none"><div
+class="size5of6">
+<div
+class="control-group first size3of6"><input
+value=""
+name="sFlightInput[f1][depLocation]"
+id="f1-dep-location-Oj"
+class="text js-search-location validate[required, custom[airportSelection], custom[checkAirport]] control
+"
+type="text"
+autocomplete="off"
+maxlength="255"
+
+tabindex="8" /><label
+class="label " for="f1-dep-location-Oj">
+Rückflug von
+</label>
+
+</div><input
+type="hidden" name="sFlightInput[f1][accMultiAirportDep]" id="f1-dep-multiAirport-Oj" value="" />
+<input
+type="hidden" name="sFlightInput[f1][depAirport]" value="" id="f1-dep-airport-Oj" /><div
+class="control-group size3of6"><input
+value=""
+name="sFlightInput[f1][arrLocation]"
+id="f1-arr-location-Oj"
+class="text js-search-location validate[required, custom[airportSelection], custom[checkAirport]] control
+"
+type="text"
+autocomplete="off"
+maxlength="255"
+
+tabindex="9" /><label
+class="label " for="f1-arr-location-Oj">
+Rückflug nach
+</label>
+
+</div><input
+type="hidden" name="sFlightInput[f1][accMultiAirportArr]" id="f1-arr-multiAirport-Oj" value="" />
+<input
+type="hidden" name="sFlightInput[f1][arrAirport]" value="" id="f1-arr-airport-Oj" /></div><div
+class="date-wrapper size1of6">
+<div
+class="control-group"><input
+class="text js-search-date validate[required] control validate[custom[futureDate]] filled"
+type="text"
+name="sFlightInput[f1][date]"
+id="f1DateOj"
+value="09.11.2026"
+autocomplete="off"
+aria-label="Rückflugdatum auswählen"
+tabindex="10" /><label
+class="label " for="f1DateOj">Rückflug</label>
+
+</div></div></div>
+<input
+type="hidden" id="storeSearch" name="sFlightInput[storeSearch]" value="true">
+<input
+type="hidden" id="searchSource" name="sFlightInput[searchSource]" value="index"><div
+class="form-item-wrapper search-extension-container"><div
+class="js_non-oj">
+<div
+class="control-group large item first"><input
+value=""
+name="sFlightInput[f0][depLocation]"
+id="f0-dep-location-"
+class="text js-search-location validate[required, custom[airportSelection], custom[checkAirport]] control
+"
+type="text"
+autocomplete="off"
+maxlength="255"
+
+tabindex="11" /><label
+class="label " for="f0-dep-location-">
+Abflughafen eingeben
+</label>
+
+</div><input
+type="hidden" name="sFlightInput[f0][accMultiAirportDep]" id="f0-dep-multiAirport-" value="" />
+<input
+type="hidden" name="sFlightInput[f0][depAirport]" value="" id="f0-dep-airport-" /><div
+class="control-group large item"><input
+value=""
+name="sFlightInput[f0][arrLocation]"
+id="f0-arr-location-"
+class="text js-search-location validate[required, custom[airportSelection], custom[checkAirport]] control
+"
+type="text"
+autocomplete="off"
+maxlength="255"
+
+tabindex="12" /><label
+class="label " for="f0-arr-location-">
+Zielflughafen eingeben
+</label>
+
+</div><input
+type="hidden" name="sFlightInput[f0][accMultiAirportArr]" id="f0-arr-multiAirport-" value="" />
+<input
+type="hidden" name="sFlightInput[f0][arrAirport]" value="" id="f0-arr-airport-" /><div
+class="date-wrapper item short">
+<div
+class="control-group"><input
+class="text js-search-date validate[required] control validate[custom[futureDate],custom[dateDepartureBeforeArrival[#f1Date]]] filled"
+type="text"
+name="sFlightInput[f0][date]"
+id="f0Date"
+value="06.11.2026"
+autocomplete="off"
+aria-label="Hinflugdatum auswählen"
+tabindex="13" /><label
+class="label " for="f0Date">Hinflug</label>
+
+</div><div
+class="pc-legend pc-legend--hidden" aria-hidden="true">
+<span
+class="pc-legend-label">Voraussichtliche Preise:</span>
+<i
+class="pc-swatch pc-green"></i>
+<i
+class="pc-swatch pc-orange"></i>
+<i
+class="pc-swatch pc-red"></i>
+</div></div><div
+class="date-wrapper item short">
+<div
+class="control-group"><input
+class="text js-search-date validate[required] control validate[custom[futureDate]] filled"
+type="text"
+name="sFlightInput[f1][date]"
+id="f1Date"
+value="09.11.2026"
+autocomplete="off"
+aria-label="Rückflugdatum auswählen"
+tabindex="14" /><label
+class="label " for="f1Date">Rückflug</label>
+
+</div></div></div><div
+class="js-customer-account js-saved-search-history-layer" style="display: none"><div
+class="customer-search-history-layer data-layer" rv-show="customer.loggedIn" data-layer><div
+class="caption">Bisherige Suchen</div><div
+rv-each-search="customer.searchHistory" rv-on-click="fillSearchFields"><div
+class="history-row"><div
+class="history-column">
+<span
+rv-text="search.legs.0.departure" class="highlighted"></span>
+<span
+rv-text="search.departure_city"></span>
+-
+<span
+rv-text="search.legs.0.arrival" class="highlighted"></span>
+<span
+rv-text="search.arrival_city"></span></div><div
+class="history-column">
+<span
+class="highlighted" rv-text="search.legs.0.depart_at|date 'd.m'"></span>
+<span
+rv-text="search.legs.0.depart_at|date 'Y'"></span>
+-
+<span
+class="highlighted" rv-text="search.legs.1.depart_at|date 'd.m'"></span>
+<span
+rv-text="search.legs.1.depart_at|date 'Y'"></span></div><div
+class="history-column">
+<span
+rv-text="search.pax"></span>
+<span
+rv-show="search.pax | eq 1">Reisender,</span>
+<span
+rv-show="search.pax | lt 1">Reisende,</span>
+<span
+rv-text="search.cabin_class|default 'Y'|cabinClass"></span>,
+<span
+rv-text="search.airline|default 'egal'"></span></div><span
+class="icon-arrow-right"></span></div></div></div></div><div
+class="search-history-layer data-layer" style="display: none" data-layer>
+<bold
+class="caption">Kürzlich gesuchte Reisedaten auswählen</bold><div
+class="prototype"><div
+class="history-airports short-history"></div><div
+class="history-dates"></div><div
+class="history-other-info short-history"></div><div
+class="icon-cross remove-history"></div></div></div><div
+class="airports-departure airports-layer data-layer" style="display: none" data-layer>
+<strong
+class="caption">Häufig genutzte Abflughäfen</strong><div
+class="prototype">
+<span
+class="iata-code"></span> <span
+class="airport-name"></span></div></div><div
+class="airports-destinations airports-layer data-layer" style="display: none" data-layer>
+<strong
+class="caption">Häufig gebuchte Ziele</strong><div
+class="prototype">
+<span
+class="iata-code"></span> <span
+class="airport-name"></span></div></div><div
+id="searchExtension" class="item large search-extension-wrapper control-group select"><div
+class="control fake-select filled" data-fakeSelect></div><div
+class="label" title="Reisende, Klasse, Airline">
+Reisende, Klasse, Airline</div>
+<div
+class="search-extension-layer " style="display: none" data-layer><div
+class="part js_passengerSelection"><div
+class="part-left"><div
+class="row">
+<label
+class="label item" for="adultSelector">Erwachsene</label><div
+id="adt" class="stepper-wrapper item js-adult-wrapper">
+<button
+type="button" aria-label="weniger Erwachsene" class="js_decrement setter icon-minus"></button>
+<input
+data-role="none" id="adultSelector" name="sFlightInput[paxAdt]" class="js_stepper_input input" value="1" type="text" placeholder="1"/>
+<button
+type="button" aria-label="weiterer Erwachsener" class="js_increment setter icon-plus-medium"></button></div><div
+class="hint item hint-non-oj">
+&ge; 12 Jahre
+<div
+class="icon-info js_tooltip"
+data-tooltip-posmy="center bottom-10" data-tooltip-hookalign="center"
+title="Bitte beachten Sie, dass mindestens ein Erwachsener bei einem Billigflug oder bei einem Charterflug 18 Jahre alt sein muss.">&nbsp;</div>
+</div><div
+class="hint item hint-oj">
+&ge; 12 Jahre
+<div
+class="icon-info js_tooltip"
+data-tooltip-posmy="center bottom-10" data-tooltip-hookalign="center"
+title="Bitte beachten Sie, dass mindestens ein Erwachsener bei einem Billigflug oder bei einem Charterflug 18 Jahre alt sein muss.">&nbsp;</div>
+</div>
+</div><div
+class="row">
+<label
+class="label item" for="childSelector">Kinder</label><div
+id="chd" class="stepper-wrapper item js-child-wrapper">
+<button
+type="button" aria-label="weniger Kinder" class="js_decrement setter icon-minus"></button>
+<input
+data-role="none"  id="childSelector" name="sFlightInput[paxChd]" class="js_stepper_input input" value="0" type="text" placeholder="0"/>
+<button
+type="button" aria-label="weiterers Kind" class="js_increment setter icon-plus-medium"></button></div><div
+class="hint item hint-non-oj">
+2 - 11 Jahre
+<div
+class="icon-info js_tooltip"
+data-tooltip-posmy="center bottom-10" data-tooltip-hookalign="center"
+title="Bitte beachten Sie, dass das Alter des Kindes bei Rückreise entscheidend ist.">&nbsp;</div>
+</div><div
+class="hint item hint-oj">
+2 - 11 Jahre
+<div
+class="icon-info js_tooltip"
+data-tooltip-posmy="center bottom-10" data-tooltip-hookalign="center"
+title="Bitte beachten Sie, dass das Alter des Kindes bei Rückreise entscheidend ist.">&nbsp;</div>
+</div>
+</div><div
+class="row">
+<label
+class="label item" for="infantSelector">Babys</label><div
+id="inf" class="stepper-wrapper item js-infant-wrapper">
+<button
+type="button" aria-label="weniger Babys" class="js_decrement setter icon-minus"></button>
+<input
+data-role="none" id="infantSelector" name="sFlightInput[paxInf]" class="js_stepper_input input" value="0" type="text" placeholder="0"/>
+<button
+type="button" aria-label="weiteres Baby" class="js_increment setter icon-plus-medium"></button></div><div
+class="hint item hint-non-oj">
+1 - 23 Monate
+<div
+class="icon-info js_tooltip"
+data-tooltip-posmy="center bottom-10" data-tooltip-hookalign="center"
+title="Für jedes Baby muss mindestens ein Erwachsener mitfliegen. Dies ist notwendig, da sich jedes Baby einen Sitzplatz mit einem Erwachsenen teilt. Bis zum Alter von 23 Monaten wird ein Kleinkind in der Tarifsprache der meisten Fluggesellschaften als Baby bezeichnet. Sie fliegen in den meisten Fällen kostenlos oder zahlen etwa 10% des Tarifs. Bitte beachten Sie, dass das Alter des Kindes bei Rückreise entscheidend ist.">&nbsp;</div>
+</div>
+<div
+class="hint item hint-oj">
+1 - 23 Monate
+<div
+class="icon-info js_tooltip"
+data-tooltip-posmy="center bottom-10" data-tooltip-hookalign="center"
+title="Für jedes Baby muss mindestens ein Erwachsener mitfliegen. Dies ist notwendig, da sich jedes Baby einen Sitzplatz mit einem Erwachsenen teilt. Bis zum Alter von 23 Monaten wird ein Kleinkind in der Tarifsprache der meisten Fluggesellschaften als Baby bezeichnet. Sie fliegen in den meisten Fällen kostenlos oder zahlen etwa 10% des Tarifs. Bitte beachten Sie, dass das Alter des Kindes bei Rückreise entscheidend ist.">&nbsp;</div>
+</div>
+</div></div></div><div
+class="part">
+<div
+class="control-group select"><select
+name="sFlightInput[cabinClass]" id="cabinClass" tabindex="15" class="select cabin-class js_classSelection js_fieldAlwaysFilled control filled" ><option
+value="Y" selected="selected">Economy</option><option
+value="S" >Premium Economy</option><option
+value="C" >Business</option><option
+value="F" >First</option>
+</select>
+<label
+class="label " for="cabinClass">Klasse</label>
+
+</div></div>
+<div
+class="part">
+<div
+class="control-group select"><select
+name="sFlightInput[depAirline]" id="depAirline" tabindex="16" class="select js_airlineSelection js_fieldAlwaysFilled control filled" >
+<option
+value="" selected="selected">egal</option><option
+value="A3" >Aegean Airlines (A3)</option><option
+value="EI" >Aer Lingus (EI)</option><option
+value="BT" >airBaltic (BT)</option><option
+value="SM" >Air Cairo (SM)</option><option
+value="AC" >Air Canada (AC)</option><option
+value="CA" >Air China (CA)</option><option
+value="UX" >Air Europa (UX)</option><option
+value="AF" >Air France (AF)</option><option
+value="AI" >Air India (AI)</option><option
+value="KM" >Air Malta (KM)</option><option
+value="JU" >Air Serbia (JU)</option><option
+value="VF" >AJet (VF)</option><option
+value="AA" >American Airlines (AA)</option><option
+value="OS" >Austrian Airlines (OS)</option><option
+value="BA" >British Airways (BA)</option><option
+value="SN" >Brussels Airlines (SN)</option><option
+value="MU" >China Eastern Airlines (MU)</option><option
+value="CZ" >China Southern (CZ)</option><option
+value="DE" >Condor (DE)</option><option
+value="DL" >Delta (DL)</option><option
+value="U2" >easyJet (U2)</option><option
+value="MS" >Egyptair (MS)</option><option
+value="EK" >Emirates (EK)</option><option
+value="ET" >Ethiopian Airlines S C (ET)</option><option
+value="EY" >Etihad Airways (EY)</option><option
+value="EW" >Eurowings (EW)</option><option
+value="AY" >Finnair (AY)</option><option
+value="IB" >Iberia Airlines (IB)</option><option
+value="FI" >Icelandair (FI)</option><option
+value="AZ" >ITA Airways (AZ)</option><option
+value="KL" >Klm Royal Dutch Airlines (KL)</option><option
+value="LA" >LATAM Airlines (LA)</option><option
+value="LO" >LOT Polish Airlines (LO)</option><option
+value="LH" >Lufthansa (LH)</option><option
+value="DY" >Norwegian Air Shuttle (DY)</option><option
+value="BJ" >Nouvelair (BJ)</option><option
+value="WY" >Oman Air (WY)</option><option
+value="PC" >Pegasus Airlines (PC)</option><option
+value="QR" >Qatar Airways (QR)</option><option
+value="FR" >Ryan Air (FR)</option><option
+value="SK" >Scandinavian Airlines (SK)</option><option
+value="SQ" >Singapore Airlines (SQ)</option><option
+value="GQ" >Sky Express (GQ)</option><option
+value="XQ" >SunExpress (XQ)</option><option
+value="LX" >Swiss (LX)</option><option
+value="TP" >TAP Portugal (TP)</option><option
+value="RO" >Tarom (RO)</option><option
+value="TG" >Thai Airways (TG)</option><option
+value="X3" >TUIfly (X3)</option><option
+value="TK" >Turkish Airlines (TK)</option><option
+value="UA" >United Airlines (UA)</option><option
+value="VN" >Vietnam Airlines (VN)</option><option
+value="VY" >Vueling (VY)</option><option
+value="W6" >Wizz Air (W6)</option></select>
+<label
+class="label " for="depAirline">
+Airline
+</label>
+
+</div></div>
+</div></div><div
+class="item js_oj xlarge" style="display: none;">
+<div
+class="area-search-wrapper ">
+<input
+type="hidden" name="sFlightInput[areaSearch]" value="FALSE"/>
+<input
+type="checkbox"
+class="checkbox"
+id="OjareaSearch"
+name="sFlightInput[areaSearch]"
+value="TRUE"
+checked="checked"
+tabindex="17"/>
+<label
+data-tooltip-posat="center bottom"
+data-tooltip-posmy="center top+15"
+for="OjareaSearch" class="label area-search js_tooltip"
+title=" Wenn Sie diese Option aktivieren, suchen wir für Sie auch nach Flügen von anderen Flughäfen im Umkreis von 110 km vom ursprünglich Gewünschten aus. Dadurch können wir für Sie noch günstigere Flugangebote finden. Die Alternativflughäfen sind im nächsten Schritt als solche gekennzeichnet. ">
+inkl. Umgebung
+</label></div>
+</div>
+<div
+class="item">
+<button
+class="btn btn-a submit btn-flare" id="submit" type="submit">Fluege finden</button>
+</div></div>
+<div
+class="form-item-wrapper checkbox-row js_non-oj"><input
+type="hidden" id="areaSearch" name="sFlightInput[areaSearch]" value="TRUE" />
+<div
+class="direct-compare-wrapper item">
+<div
+id="directCompare" class="directCompare clearfix direct-compare" style="display: none;">
+<p
+class="label">Direktvergleich:</p>
+<span
+class="dc-item">
+<input
+type="checkbox" checked="checked" data-mapper="flight" class="radio dc-radio" id="dcsearch" name="pop[search]"  />
+<label
+for="dcsearch" title="Direktvergleich auf billigfluege.de" class="dc-label">
+billigfluege.de
+</label>
+</span>
+</div></div>
+
+<div
+class="cssCheckbox item first">
+<input
+type="checkbox"
+name="sFlightInput[f0][timeRange]"
+value="2"
+class="checkbox "
+id="f0TimeRange"
+tabindex="18"
+checked="checked"
+
+/>
+<label
+for="f0TimeRange"
+class="label time-range"
+>
+Flexibles Datum&nbsp;<span
+class="hint">(+&nbsp;2 Tage)</span>
+</label>
+</div>
+<div
+class="cssCheckbox item first">
+<input
+type="checkbox"
+name="sFlightInput[f1][timeRange]"
+value="2"
+class="checkbox "
+id="f1TimeRange"
+tabindex="19"
+checked="checked"
+
+/>
+<label
+for="f1TimeRange"
+class="label time-range"
+>
+Flexibles Datum&nbsp;<span
+class="hint">(+&nbsp;2 Tage)</span>
+</label>
+</div>
+</div></div></form></div><div
+id="muliformOverlay" class="multiform-overlay" style="display: none;">
+<div
+class="loading-animation-wrapper js_loading-animation "><div
+class="loading-animation">
+<span
+class="side side-left">
+<span
+class="fill"></span>
+</span>
+<span
+class="side side-right">
+<span
+class="fill"></span>
+</span></div></div></div></div></div></div></div>
+<section
+class="js_personalized-destinations personalized-destinations" data-context="home">
+<div
+class="personalized-destinations__heading"></div><div
+class="personalized-destinations__grid">
+<div
+class="personalized-destinations__tile personalized-destinations__tile--skeleton"><div
+class="personalized-destinations__img-placeholder"></div><div
+class="personalized-destinations__overlay personalized-destinations__overlay--skeleton"><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--wide"></div><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--narrow"></div></div></div>
+<div
+class="personalized-destinations__tile personalized-destinations__tile--skeleton"><div
+class="personalized-destinations__img-placeholder"></div><div
+class="personalized-destinations__overlay personalized-destinations__overlay--skeleton"><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--wide"></div><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--narrow"></div></div></div>
+<div
+class="personalized-destinations__tile personalized-destinations__tile--skeleton"><div
+class="personalized-destinations__img-placeholder"></div><div
+class="personalized-destinations__overlay personalized-destinations__overlay--skeleton"><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--wide"></div><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--narrow"></div></div></div>
+<div
+class="personalized-destinations__tile personalized-destinations__tile--skeleton"><div
+class="personalized-destinations__img-placeholder"></div><div
+class="personalized-destinations__overlay personalized-destinations__overlay--skeleton"><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--wide"></div><div
+class="personalized-destinations__skel-line personalized-destinations__skel-line--narrow"></div></div></div>
+</div>
+</section>
+<div
+class="section-content-push js_personalized-destinations-fallback" style="display:none">
+<div
+class="push-content-box"><div
+class="push-content-slideshow js-push-content-slider">
+<div
+class="slider-box item item-flighthotel js-push-content-item" style="visibility:hidden"><div
+class="teaser-box"><div
+class="heading">
+<span
+class="text">Die perfekte Kombination!</span></div><div
+class="teasing">
+<span
+class="text">Guenstige Flug & Hotel Angebote entdecken.</span></div></div>
+<button
+class="content-selection"
+tabindex="-1"
+data-target="https://fluege.lastminute.de/?utm_source=fluege.de&utm_medium=whitelabel&utm_campaign=homepage_banner"
+data-tracking-category="Content Clicks"
+data-tracking-action="flughotel_homepage_slider"
+data-tracking-label="click">
+Flug + Hotel finden
+</button>
+</div><div
+class="slider-box item item-rentalcar js-push-content-item" style="visibility:hidden"><div
+class="teaser-box"><div
+class="heading">
+<span
+class="text">Nahtlos von der Landebahn zur Straße</span></div><div
+class="teasing">
+<span
+class="text">Guenstige Mietwagen-Angebote finden Sie hier.</span></div></div>
+<button
+class="content-selection"
+tabindex="-1"
+data-target="https://car.fluege.de/?aid=fluegecar&afid=slider_homepage"
+data-tracking-category="Content Clicks"
+data-tracking-action="rentalcar_homepage_slider"
+data-tracking-label="click">
+Mietwagen finden
+</button>
+</div><div
+class="slider-box item item-hotel js-push-content-item" style="visibility:hidden"><div
+class="teaser-box"><div
+class="heading">
+<span
+class="text">Wir koennen mehr als nur fliegen.</span></div><div
+class="teasing">
+<span
+class="text">Jetzt Unterkuenfte fuer Ihre Flugreise entdecken.</span></div></div>
+<button
+class="content-selection"
+tabindex="-1"
+data-target="https://sp.booking.com/index.html?aid=1882317&lang=de&label=fluege-homepage-slider"
+data-tracking-category="Content Clicks"
+data-tracking-action="hotel_homepage_slider"
+data-tracking-label="click">
+Hotels finden
+</button>
+</div><div
+class="slider-box item item-activities js-push-content-item" style="visibility:hidden"><div
+class="teaser-box"><div
+class="heading">
+<span
+class="text">Unvergessliche Erlebnisse</span></div><div
+class="teasing">
+<span
+class="text">Aktivitäten und Sehenswürdigkeiten überall auf der Welt entdecken</span></div></div>
+<button
+class="content-selection"
+tabindex="-1"
+data-target="https://www.getyourguide.com/?partner_id=DNDSXRX&partner_id=DNDSXRX&utm_medium=travel_agent&cmp=homepage_slider"
+data-tracking-category="Content Clicks"
+data-tracking-action="Activities_homepage_slider"
+data-tracking-label="click">
+Aktivität finden
+</button>
+</div></div><div
+class="push-content-controls js-push-content-controls prev"></div><div
+class="push-content-controls js-push-content-controls next"></div><div
+class="push-content-pager js-push-content-pager"></div></div></div>
+<div
+class="container-splash-bottom">
+<div
+class="trust-bar"><div
+class="trust-bar__item trust-bar__item--trustpilot">
+<script type="text/javascript">nbl.l(['//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js']);</script> <div
+style="pointer-events: none; " class="trustpilot-widget" data-locale="de-DE"
+data-template-id="5419b732fbfb950b10de65e5"
+data-businessunit-id="4af7dfce000064000504cfa2"
+data-style-height="24px"
+data-style-width="100%"
+data-theme="dark"
+></div></div>
+<span
+class="trust-bar__separator" aria-hidden="true">&middot;</span><div
+class="trust-bar__item">
+<span
+class="trust-bar__label">550+ Airlines vergleichen</span></div>
+<span
+class="trust-bar__separator" aria-hidden="true">&middot;</span><div
+class="trust-bar__item">
+<span
+class="trust-bar__label">Bestpreis-Suche</span></div>
+<span
+class="trust-bar__separator" aria-hidden="true">&middot;</span><div
+class="trust-bar__item">
+<span
+class="trust-bar__icon trust-bar__icon--lock" aria-hidden="true">&#128274;</span>
+<span
+class="trust-bar__label">PCI-zertifiziert</span></div></div></div></div><div
+class="container container-neighbour">
+<div
+id="FlexBillboard" class="flex-billboard-pos"></div></div><div
+class="js_teaser-image-box teaser-grid container"><table>
+<tr>
+<td
+ ><div
+id="braze-feed" class="hidden"></div><div
+id="braze-fallback" class="hidden"><div
+class="braze-fallback js-open-customer-account-login-layer" data-login-position="content_box"><div
+class="braze-fallback-content"><div
+class="braze-fallback-flag">Kundenkonto</div><div
+class="braze-fallback-text">Flugdetails einsehen & Reise Extras buchen.</div></div>
+<picture>
+<img
+loading="lazy"
+src="https://media.fluege.de/topics/illustrations/without-background/login.svg"
+alt='Illustration eines Smartphones mit Login-Maske und Flugtickets, begleitet von der Aufforderung: Flugdetails einsehen & Reise Extras buchen. Mit Button und Funktion "Jetzt Einloggen". '
+>
+</picture>
+<button
+class="btn btn-b btn-medium">Jetzt Einloggen</button></div></div></td>
+<td
+ colspan="2"><a
+href="https://go.fluege.de/plus/?channel=legacy&from=search" class="teaser-plus js_teaser-link-plus"><div
+class="headline">
+Günstiger fliegen: Mit fluege.de
+<img
+alt="fluege.de PLUS Logo" class="js_unveil-img" src="https://static.fluege.de/img/pixel.gif" data-src="https://media.fluege.de/logos/agent/fluege.de/plus_orange.svg" height='19px' width='103px' /></div><div
+class="icon-check">Durchschnittlich 100 <span>&euro;</span> pro Flug sparen</div><div
+class="icon-check">Ersparnis für Sie und Ihre Mitreisenden</div><div
+class="icon-check">Vorteile können sofort nach Beantragung genutzt werden</div><button
+class="btn btn-a btn-medium" type="button">Plus entdecken</button>
+</a></td>
+</tr>
+<tr>
+<td
+ ><div
+class="teaser-blog teaser-basic">
+<strong>Travel Insights Blog</strong><p>Lassen Sie sich für Ihre nächste Reise inspirieren!</p><div
+class="link-line">
+<a
+href="https://www.fluege.de/travel-insights/" class="default-link js_teaser-link-blog" target="_blank">Zum Travel Insights Blog</a> <i
+class="icon-arrow-right"></i></div></div></td>
+<td
+ ><div
+class="teaser-app teaser-basic">
+<strong>Fluege.de App</strong><p>Jederzeit günstige Preise vergleichen & sicher buchen. Jetzt kostenlos herunterladen!</p>
+<div
+class="app-stores">
+<a
+href="https://app.adjust.io/p0i3qv" target="_blank" class="js_teaser-link-ios">
+<img
+alt="fluege.de App im App Store herunterladen" src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img apple" data-src="https://static.fluege.de/img/storebadges/app_store__600b1c37.svg" />
+</a>
+<a
+href="https://app.adjust.io/8d6llu" target="_blank" class="js_teaser-link-android">
+<img
+alt="fluege.de App im Google Play Store herunterladen" src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img android" data-src="https://static.fluege.de/img/storebadges/google_play_store__600b1c37.svg" />
+</a></div></div></td>
+<td
+ ><div
+class="teaser-newsletter teaser-basic">
+<strong>Newsletter</strong><p>Verpassen Sie nie wieder die besten Angebote und Neuigkeiten!</p><div
+class="link-line"><a
+href="javascript:void(0);" target="_blank" class="js_teaser-link-newsletter js-newsletter-modal default-link">Zur Newsletter Anmeldung</a> <i
+class="icon-arrow-right"></i></div></div></td>
+</tr>
+<tr>
+<td
+ ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="BCN">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/BCN/x380/x265/1__600b1c37.png" alt="Barcelona" width="380" height="265"><noscript>
+<img
+alt="Barcelona" src="https://static.fluege.de/img/teaser/BCN/x380/x265/1__600b1c37.png" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+Barcelona
+</span>
+</span>
+<span
+class="price">ab 72 <span>&euro;</span></span>
+</div>
+</div>
+</td>
+<td
+ ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="HER">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/HER/x380/x265/1__600b1c37.png" alt="Heraklion" width="380" height="265"><noscript>
+<img
+alt="Heraklion" src="https://static.fluege.de/img/teaser/HER/x380/x265/1__600b1c37.png" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+Heraklion
+</span>
+</span>
+<span
+class="price">ab 195 <span>&euro;</span></span>
+</div>
+</div>
+</td>
+<td
+rowspan="2" ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="BKK">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/BKK/x380/x552/1__600b1c37.jpg" alt="Bangkok" width="380" height="552"><noscript>
+<img
+alt="Bangkok" src="https://static.fluege.de/img/teaser/BKK/x380/x552/1__600b1c37.jpg" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+Bangkok
+</span>
+</span>
+<span
+class="price">ab 532 <span>&euro;</span></span>
+</div>
+</div>
+<div
+class="teaser-image-box image-loaded placement" style="display: none">
+<div
+id="a78d7e8ba70deec7dc73749d342380694" class="placement-fading-container"></div> <script type="text/plain" data-cookieconsent="marketing">
+        var o = { error: function(a) { } };
+    var error = false,
+        o = {
+        done: function() {
+                            var container = document.getElementsByClassName("teaser-image-box image-loaded placement")[0];
+                if (container !== undefined) {
+                    var elements = container.parentNode.getElementsByClassName("js_image-container js_image-container_modal teaser-image-box");
+                    if (elements.length > 0  && false === error) {
+                        elements[0].style.display = "none";
+                        container.style.display = "";
+                    }
+                }
+                    },
+        error: function(a) {
+            error = true;
+        }
+    };
+    lp.l('#a78d7e8ba70deec7dc73749d342380694', '<script src="https://aerads.adspirit.de/adscript.php?pid=111&ord=1793828953" type="text/javascript"><\/script>', o);</script></div>
+</td>
+</tr>
+<tr>
+<td
+rowspan="2" ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="NYC">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/NYC/x380/x552/1__600b1c37.jpg" alt="New York City" width="380" height="552"><noscript>
+<img
+alt="New York City" src="https://static.fluege.de/img/teaser/NYC/x380/x552/1__600b1c37.jpg" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+New York City
+</span>
+</span>
+<span
+class="price">ab 438 <span>&euro;</span></span>
+</div>
+</div>
+</td>
+<td
+ ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="IST">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/IST/x380/x265/1__600b1c37.png" alt="Istanbul" width="380" height="265"><noscript>
+<img
+alt="Istanbul" src="https://static.fluege.de/img/teaser/IST/x380/x265/1__600b1c37.png" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+Istanbul
+</span>
+</span>
+<span
+class="price">ab 108 <span>&euro;</span></span>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td
+ ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="TFS">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/TFS/x380/x265/1__600b1c37.png" alt="Teneriffa" width="380" height="265"><noscript>
+<img
+alt="Teneriffa" src="https://static.fluege.de/img/teaser/TFS/x380/x265/1__600b1c37.png" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+Teneriffa
+</span>
+</span>
+<span
+class="price">ab 48 <span>&euro;</span></span>
+</div>
+</div>
+</td>
+<td
+ ><div
+class="js_image-container js_image-container_modal teaser-image-box" data-destination="LON">
+<div
+class="smooth-loading-animation-wrapper js_loading-animation"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><img
+src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img teaser-img" data-src="https://static.fluege.de/img/teaser/LON/x380/x265/1__600b1c37.png" alt="London" width="380" height="265"><noscript>
+<img
+alt="London" src="https://static.fluege.de/img/teaser/LON/x380/x265/1__600b1c37.png" />
+</noscript><div
+class="sub-info">
+<span
+class="destination">
+<span
+class="label">
+Flüge nach
+</span>
+<span
+class="name">
+London
+</span>
+</span>
+<span
+class="price">ab 42 <span>&euro;</span></span>
+</div>
+</div>
+</td>
+</tr>
+</table></div></div><div
+class="footer" role="contentinfo">
+<div
+class="section-gutter"><div
+class="container"><div
+class="col1"><h1 class="headline">Flüge vergleichen und günstige Angebote finden</h1><p>Die Welt kann auch zum kleinen Preis erkundet werden, denn Flüge müssen heute nicht zwangsläufig teuer sein. In der Praxis ist es jedoch häufig schwieriger als gedacht, preiswerte Flüge zu finden. Ein <strong>Flugvergleich</strong> auf fluege.de hilft in solchen Fällen. Bei dem Portal handelt es sich um eine der größten Flugsuchmaschinen Deutschlands, die attraktive Angebote für weltweite Destinationen führt. Mit nur einem Klick listet die <a
+class="default-link" href="https://www.fluege.de/flugsuche" title="Flüge suchen auf fluege.de">Flugsuche</a> beispielsweise <a
+class="default-link" href="https://www.fluege.de/Katalog/Muenchen/Flug-424" title="Flüge München">Flüge nach München</a> oder zu einem anderen beliebigen Ziel auf. Damit der passende Flug auch schnell gefunden werden kann, sollten Ab- und Zielflughafen, Anzahl der reisenden Personen sowie Reisetermin in die Suchmaske eingetragen werden. <strong>Günstige Flüge buchen</strong> ist so ganz einfach! Sind mal keine passenden Flugangebote am Wunschflughafen oder zur Wunschzeit dabei, kann auch nach günstigen Flügen an Alternativflughäfen oder mit flexibler Datumswahl gesucht werden. Der Flug Vergleich berücksichtigt generell Linienflüge, Charterflüge sowie Angebote von Low Cost Airlines. Ebenfalls mit einbezogen werden günstige Flüge der verschiedensten Airlines und Flughäfen. Durch Buchung von Restplätzen lässt es sich häufig noch günstiger fliegen – einem Lastminute Kurztrip mit einem Flug nach Paris steht dadurch nichts mehr im Weg! Spezifische Angaben in der Suchmaske hinsichtlich der präferierten Fluggesellschaft oder Buchungsklasse helfen beim Flüge vergleichen. Abschließend kann das passende Angebot direkt über die Seite gebucht werden.</p></div><div
+class="col2"><h2 class="headline">Günstige Flüge von renommierten Airlines</h2><p>Die Anzahl der weltweiten Airlines ist groß, weshalb es sehr aufwendig ist, manuell nach günstigen Angeboten für Flüge zu suchen. <strong>Flüge vergleichen</strong> ist online daher umso einfacher, da hier die Angebote von über 550 Fluggesellschaften mit einem Mal abgerufen werden können. Je nach Reiseziel kommt dann eine eingegrenzte Auswahl an Airlines für die Flugreise infrage, die geordnet nach dem Preis aufgelistet werden. Günstige Flüge gibt es aber nicht nur von den bekannten Billigfluglinien wie <a
+class="default-link" href="https://www.fluege.de/airline/ryanair" title="Flug Ryanair">Ryanair</a> oder <a
+class="default-link" href="https://www.fluege.de/airline/eurowings" title="Flug Eurowings">Eurowings</a>. Auch renommierte Fluggesellschaften wie Lufthansa oder Condor bieten Flüge an, die sich gut eignen, um günstig zur Wunschdestination zu fliegen. Nicht immer ist es das preiswerteste Angebot, was für den gewünschten Flug am besten passt. Besonders bei Langstreckenflügen wünschen sich Passagiere Komfort und einen freundlichen Inklusivservice. Durch Eingabe der Wunschairline in die Suchmaske erhalten Benutzer des Portals auch für diese spezifischen Anforderungen günstige Flüge und können das passende <a
+class="default-link" href="https://www.fluege.de/flugtickets" title="Flugtickets">Flugticket</a> direkt buchen.</p></div></div></div><div
+class="section-gutter"><div
+class="container"><div
+class="col1"><h3 class="headline">Mit Billigairlines richtig günstig fliegen</h3><p>Sie liegen seit Jahren im Trend - die Billigflüge oder auch Flüge zum kleinen Preis. Aufgrund von Deregulierung und Liberalisierung des Luftraums entstanden die sogenannten Low-Cost-Airlines, die <strong>günstige Flüge</strong> mittlerweile zu vielen attraktiven Reisezielen anbieten. So können Flugreisende ihre Reisekasse schonen. Einer großen Beliebtheit erfreut sich der <a
+class="default-link" href="https://www.fluege.de/billigfluege" title="billige Flüge">Billigflug</a> vor allem bei Familien und Städtereisenden, die das gesparte Geld lieber im Urlaub ausgeben. Wer auf Inklusivleistungen wie Essens- und Getränkeservice verzichtet, kann mit einem <a
+class="default-link" href="https://www.fluege.de/Katalog/Barcelona/Flug-346" title="Billigflüge nach Barcelona">Billigflug Barcelona</a> oder andere europäische und internationale Ziele bereisen. Auch innerhalb Deutschlands kann man preiswert fliegen, Flüge nach Frankfurt beispielsweise werden auch des öfteren von Billigfliegern angeboten. Der Anlass, bei einer Billigairline einen günstigen <strong>Flug zu buchen</strong>, kann ganz unterschiedlich sein. Sei es für einen Geschäftstermin, den Jahresurlaub, einen Wochenendausflug oder um bestimmte Events, zum Beispiel Festivals, zu besuchen. Passende Flüge zu finden, ist auch bei Billigflügen mit einem Flugvergleich schnell und unkompliziert!</p></div><div
+class="col2"><h3 class="headline">Flüge buchen leicht gemacht – auf beliebten Routen und von passenden Flughäfen</h3><p>Ein Flug bringt einen nicht nur an den gewünschten Urlaubsort, sondern auch an die unterschiedlichsten Airports der Welt. In Deutschland gibt es viele große Flughäfen wie den <a
+class="default-link" href="https://www.fluege.de/flughafen/deutschland/frankfurt" title="Frankfurt Airport">Flughafen Frankfurt</a> oder den <a
+class="default-link" href="https://www.fluege.de/flughafen/deutschland/duesseldorf" title="Düsseldorf Airport">Flughafen Düsseldorf</a>, doch <strong>günstige Flüge</strong> starten auch von kleineren Airports. Beim Flüge vergleichen ist es ratsam, verschiedene Flughäfen in Betracht zu ziehen, um einen wirklich preiswerten Flug ergattern zu können. Es gibt zudem feste Flugrouten, wie Berlin-Köln oder <a
+class="default-link" href="https://www.fluege.de/Katalog/Hamburg-Muenchen/Flug-von-nach-948" title="Flüge von Hamburg nach München">Hamburg-München</a>, die beim Flüge buchen berücksichtigt werden sollten. Selbst wenn dadurch nur ein großer Flughafen, wie der <a
+class="default-link" href="https://www.fluege.de/flughafen/deutschland/muenchen" title="Flughafen München „Franz Josef Strauß“">Flughafen München</a>, infrage kommt und das eine Anreise mit dem Auto oder Zug mit sich bringt - ein Flugvergleich hilft, um einen Flug zu finden, der trotz der Anfahrtskosten günstiger ist als vom nahe gelegenen Flughafen. Gleich drei oder sogar vier verschiedene Flughäfen müssen in die Suchmaske eingegeben werden, wenn beispielsweise für eine Rundreise <a
+class="default-link" href="https://www.fluege.de/gabelfluege" title="Gabelflüge buchen">Gabelflüge</a> gesucht werden. Auch das ist mit einem Flugvergleich auf fluege.de nicht schwierig. Das Beste daran: Ein Besuch am Flughafen kann auch ein Erlebnis sein. Der „Franz Josef Strauß“-Airport in Bayerns Hauptstadt zählt zu den schönsten Flughäfen weltweit – das gibt es beim <strong>günstig Fliegen</strong> sogar gratis mit dazu.</p></div></div></div><div
+class="footer-icon-parade"><div
+class="footer-icon-parade-container"><div
+class="payment-icons"><div
+class="title">Zahlungsarten</div>
+<img
+height="33px" width="58px" class="js_unveil-img" alt="fluege.de MasterCard GOLD" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/ubc-clean.svg">
+<img
+height="29px" width="46px" class="js_unveil-img" alt="Mastercard" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/ca-clean.svg">
+<img
+height="20px" width="62px" class="js_unveil-img" alt="Visa" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/vi-clean.svg">
+<img
+height="31px" width="62px" class="js_unveil-img" alt="Visa Electron" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/vie-clean.svg">
+<img
+height="32px" width="50px" class="js_unveil-img" alt="American Express" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/ax-clean.svg">
+<img
+height="30px" width="74px" class="js_unveil-img" alt="Klarna" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/klarna-clean.svg">
+<img
+height="27px" width="100px" class="js_unveil-img" alt="PayPal" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/paypal-clean.svg">
+<img
+height="34px" width="80px" class="js_unveil-img" alt="Lastschrift" src="https://static.fluege.de/img/pixel.gif" data-src="https://static.fluege.de/img/svg/debit-clean.svg"><div
+class="hint">Alle Zahlarten sind abhängig von der Akzeptanz der Fluggesellschaft oder des Drittanbieters</div></div><div><div
+class="title">
+Immer sicher zahlen</div>
+<a
+id="showPciHint"class="js_tooltip seal"
+title="Die Verarbeitung der Kreditkartentransaktionen wird von der TC Payment GmbH übernommen."
+href="https://pci.usd.de/compliance/7213-D947-936E-D0ED-B5F9-2274/details_de.html"
+target = "_blank"
+onclick = "window.open(this.href, '', 'width=600, height=615, left=100, top=200'); return false;"
+rel="nofollow"
+data-tooltip-posat="center top-15"
+>
+<img
+title="Die Verarbeitung der Kreditkartentransaktionen wird von der TC Payment GmbH übernommen." alt="Die Verarbeitung der Kreditkartentransaktionen wird von der TC Payment GmbH übernommen." src="https://static.fluege.de/img/pixel.gif" class="js_unveil-img" width="65" data-src="https://static.fluege.de/pci/seal/width/65" />
+</a>
+</div><div><div
+class="title">ClimatePartner-zertifiziert</div>
+<a
+href="https://climate-id.com/de/E391U8" target="_blank" rel="nofollow" title="Climate Partner">
+<img
+width="216" height="50" class="js_unveil-img" src="https://static.fluege.de/img/pixel.gif" data-src="https://media.fluege.de/icons/flight-png/climate_partner_e391u8.png" alt="climate partner logo" />
+</a></div></div></div>
+<div
+class="seo-links section"><div
+class="container">
+<ul>
+<li>
+<a
+href="https://www.fluege.de/service/imprint"rel="nofollow"class="js_track  item default-link">Impressum
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/service/faq"rel="nofollow"class="js_track  item default-link">Hilfe-Center / Kontakt
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/service/about"rel="nofollow"class="js_track  item default-link">Wir &uuml;ber uns
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/travel-insights/nachhaltigkeit/"rel="nofollow"class="js_track  item default-link">Nachhaltigkeit
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/service/privacy"target="_blank"rel="nofollow"class="js_track  item default-link">Datenschutz
+</a></li>
+<li>
+<a
+href="#" class="item default-link" rel="nofollow" onclick="if (window.__ucCmp && typeof window.__ucCmp.showSecondLayer === 'function') { window.__ucCmp.showSecondLayer(); } else if (window.UC_UI && typeof window.UC_UI.showSecondLayer === 'function') { window.UC_UI.showSecondLayer(); } return false;">Cookie-Einstellungen</a></li>
+<li>
+<a
+href="https://www.fluege.de/service/advertisement"rel="nofollow"class="js_track  item default-link">Werben
+</a></li>
+<li>
+<a
+href="https://jobs.fluege.de"target="_blank"rel="nofollow"class="js_track  item default-link">Jobs
+</a></li>
+<li>
+<a
+href="https://app.adjust.com/8d6llu_p0i3qv"target="_blank"rel="nofollow"class="js_track  item default-link">App
+</a></li>
+<li>
+<a
+href="https://go.fluege.de/service/accessibility"data-trackEvent="accessibility"target="_blank"rel="nofollow"class="js_track  item default-link">Barrierefreiheit
+</a></li>
+<li>
+<a
+href="https://go.fluege.de/plus/termination"rel="nofollow"class="js_track  item default-link">Vertrag hier kündigen
+</a></li>
+<li>
+<a
+href="https://go.fluege.de/withdrawal"target="_blank"rel="nofollow"class="js_track withdrawal-link item default-link">Vertrag widerrufen
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/travel-insights/"rel="follow"title="Travel Insights Magazin" class="js_track  item default-link">Travel Insights Blog
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/card"target="_blank"rel="nofollow"class="js_track  item default-link">fluege.de Mastercard GOLD
+</a></li>
+<li>
+<a
+target="_blank"rel="nofollow"class="js_track js-newsletter-modal item default-link">Newsletteranmeldung
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/Katalog/Flug-und-Fluege/Sitemap-2435"
+class="js_track default-link"
+title="Flug"
+>
+Flüge
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/airline"
+class="js_track default-link"
+title="Airlines"
+>
+Airlines
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/billigfluege"
+class="js_track default-link"
+title="Billigflug"
+>
+Billigflüge
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/lastminute"
+class="js_track default-link"
+title="Last Minute Flüge"
+>
+Last Minute Flüge
+</a></li>
+<li>
+<a
+href="https://www.klarna.com/de/smoooth-mehrzuklarna/"
+class="js_track default-link"
+title="Infos über Klarna"
+rel="nofollow">
+Infos über Klarna
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/route"
+class="js_track default-link"
+title="Flugroute"
+>
+Flugrouten
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/glossar"
+class="js_track default-link"
+title="Glossar"
+>
+Glossar
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/billigflieger"
+class="js_track default-link"
+title="fluege.de Billigflieger"
+>
+Billigflieger
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/service/partnerprogramm"
+class="js_track default-link"
+title="Partnerprogramm"
+rel="nofollow">
+Partnerprogramm
+</a></li>
+<li>
+<a
+href="https://www.fluege.de/flughafen"
+class="js_track default-link"
+title="Flughäfen"
+>
+Flughäfen
+</a></li>
+</ul></div></div><div
+id="newsletterModalContent" style="display: none"><div
+class="modal-top"><div
+class="icon-cross modal-close js-close-modal">&nbsp;</div><div
+class="headline">
+Newsletter - Anmeldung</div><p
+class="subline">Unser brandneuer Newsletter für Sie!</p></div><div
+id="js_nl_newsletterRegister" class="modal-box"><div
+id="js_nl_newsletterSuccess" class="part-message success" style="display: none">
+<strong>Vielen Dank für Ihre Anmeldung.</strong><p>
+Sie erhalten nun eine Bestätigungsmail an Ihre genannte E-Mail-Adresse. Bitte folgen Sie dem Link in der E-Mail, um Ihre Anmeldung zum Newsletter abzuschließen.</p>
+</div><div
+id="js_nl_newsletterError" class="part-message error" style="display: none">
+Es ist ein Fehler aufgetreten.</div><div
+class="ajax-loading" style="display:none">
+<div
+class="smooth-loading-animation-wrapper modal-box"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div></div><form
+id="nl_subscribe" name="subscribe" method="post" action="https://www.fluege.de"><div
+class="part-info"><p><strong>Profitieren Sie wöchentlich von den besten Angeboten - ohne Suche - alles auf einen Blick!</strong></p><ul
+class="benefits-list"><li
+class="icon-check">Exklusive Flugangebote von Flugh&auml;fen aus Ihrer Region</li><li
+class="icon-check">Tipps zu Trend-Zielen und Airline-Aktionen</li><li
+class="icon-check">Informationen &uuml;ber Specials und Gutscheine</li></ul></div><div
+class="part-form"><div
+class="row-fluid row-form-fluid"><div
+class="control-group">
+<input
+name="email" type="text" data-prompt-position="topLeft" id="nl_email" class="validate[required, custom[email]] text control" />
+<label
+class="label" for="nl_email">E-Mail</label></div></div></div><div
+class="part-check"><div
+class="row-fluid row-form-fluid"><div
+class="span24 check-register">
+<input
+class="validate[required, custom[agb]] checkbox" type="checkbox" name="datenschutz" id="nl_datenschutz" />
+<label
+for="nl_datenschutz" class="label">
+Ich möchte den fluege.de Newsletter erhalten und willige ein, dass die TC Flights Germany GmbH meine personenbezogenen Daten (E-Mail-Adresse, ggf. im Preference-Center freiwillig ergänzte Daten) zum Zwecke der Werbung zum Thema Flüge, sowie reisenahe Produkte und Dienstleistungen speichert und für die Newsletterversendung sowie das/die Newslettertracking/Newsletternutzungsanalyse verarbeitet.
+<a
+href="javascript:;" class="js_toggle-hint">Details</a>
+</label></div></div><div
+class="row-fluid row-form-fluid js_toggle-target" style="display:none">
+Diese Einwilligung kann ich jederzeit per E-Mail an <a
+href="mailto:abmeldung@fluege.de">abmeldung@fluege.de</a> widerrufen.
+Ein Link zum Widerruf findet sich zudem am Ende jeder per E-Mail übermittelten Produktinformation.
+Der Widerruf betrifft nur zukünftige Verarbeitungen und lässt die Rechtmäßigkeit der Verarbeitung bis dahin unberührt.
+Weitere Informationen zur Verarbeitung Ihrer Daten finden Sie in unserer <a
+target="_blank" href="https://www.fluege.de/service/privacy">Datenschutzinformation</a> unter dem Punkt <a
+target="_blank" href="https://www.fluege.de/service/privacy#newsletter">Newsletter</a>.</div><div
+class="row-fluid row-form-fluid part-check-button">
+<button
+class="btn_dyn btn-a btn button-register btn-small btn-highlight"
+title="Jetzt anmelden"type="submit"tabindex="20"
+
+>
+Jetzt anmelden
+</button>
+</div></div></form></div></div></div></div><div
+id="modal" class="modal"><div
+class="modal-wrapper"><div
+id="modalWrapper"></div><div
+id="modal-loading" class="modal-loading-animation" style="display: none;">
+<div
+class="smooth-loading-animation-wrapper inverted"><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div></div></div></div><script type="text/javascript" src="https://static.fluege.de/js/main___600b1c37.js"></script>
+<script type="text/javascript" src="https://static.fluege.de/js/kingfisher_index___600b1c37.js"></script>
+<script type="text/javascript" src="https://static.fluege.de/js/fluege_de_desktop_index___600b1c37.js"></script><script type="text/javascript" src="https://static.fluege.de/js/multiForm___600b1c37.js"></script>
+<script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-31842-55']); _gaq.push(['_setDomainName', 'fluege.de']);_gaq.push(['_gat._anonymizeIp']);</script>
+<script type="text/javascript">$(function() {$(document).on('click.generic-tracking, tap.generic-tracking', 'a, button, span.label-button', function () {if (typeof gaTrackEvent === 'function') {var t = $(this),s = t.find('.ui-btn-text'),c = t.data('event-category') || 'Generic Link',a = t.data('event-action') || CONTROLLER + '/' + ACTION;if (!t.data('ignore-generic')) {s = s.length ? s.eq(0) : t;s = t.data('event-label') || $.trim(s.text());gaTrackEvent(c, a, s);}}});});$(function() {function closeCurrencySwitchLayer(event) {if (!$(event.target).closest('.currency-switch-layer, .js-currency-switch-dropdown').length) {$('.currency-switch-layer').hide();} else {$(document).one('click', closeCurrencySwitchLayer);}}$('.js-currency-switch-dropdown').click(function() {$('.currency-switch-layer').show();$(document).one('click', closeCurrencySwitchLayer);});$('.currency-switch-link').click(function() {$('body').addClass('overlay-open').preloader('show', {headingContent: 'Wir aktualisieren unser Angebot in der gewählten Währung!'});});});window.ibe = window.ibe || {};window.ibe.model = window.ibe.model || {};window.ibe.model.customerLoginService = {domain: 'fluege.de',webAppUrl: 'https://mein.fluege.de',serviceUrl: 'https://accounts-v1.postbooking.fluege.de',platformHeaders: {"Ifg-Client-Language-Locale":"de_DE","Ifg-Client-Currency":"EUR","Ifg-Client-Currency-Locale":"de_DE"},clientName: 'portal-fluege-de',clientVersion: '2.199.59',sOfferDefaultPaymentMethod: '',brandLogoPath: 'https://static.fluege.de/img/logo/branding/mein_fluege.svg'};window.ibe = window.ibe || {};window.ibe.model = window.ibe.model || {};window.ibe.model.customerLoginService = window.ibe.model.customerLoginService || {};window.ibe.model.customerLoginService.callbacks = window.ibe.model.customerLoginService.callbacks || {};window.ibe.model.customerLoginService.callbacks.registerSuccess = function(config) {if (config.registrationForwardToWeb === false) {$('.js_registered-notice-layer').removeClass('hidden hide-note-layer').removeAttr('aria-hidden').removeAttr('inert').addClass('show-note-layer');}};$(function() {$(document).on('click', '.js_close-registered-notice-layer', function() {$(this).closest('.js_registered-notice-layer').removeClass('show-note-layer').addClass('hide-note-layer');});});$('body').delegate('.js-open-customer-account-login-layer', 'click', function (e) {modal.close();openLoginLayer();return false;});$('body').delegate('.js-open-customer-account-registration-layer', 'click', function (e) {openRegistrationLayer();return false;});function openRegistrationLayer() {modal.close();modal.open({content: '#customer-account-registration-modal-content',modalClass: 'customer-account-registration-modal',buttonClose: true});}$(function() {if (window.touchDevice) {return;}$(document).one('account-data-success', function (e) {new ShowHide({sBoxSelector: '.js-customer-account-actions-dropdown',sOpeningTrigger: '.js-open-customer-account-dropdown',sOpeningAction: 'mouseenter',sClosingTrigger: '.js-customer-account',sClosingAction: 'mouseleave',sClosingAddClass: 'close-customer-account-dropdown',sShowAddClass: 'show-customer-account-dropdown',bOpeningTriggerPreventBubbling: false});});});$('#flattrip').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'package_travel',click_url: 'https://reisen.fluege.de/?utm_source=fluege.de&utm_medium=referral&utm_campaign=cross-selling_navigation',page_position: 'homepage_tab'});});$('#cityhotel').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'hotels',click_url: 'https://sp.booking.com/index.html?aid=1882317&lang=de&label=fluege-navigation-homepage',page_position: 'homepage_tab'});});$('#flighthotel').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'flight&hotel',click_url: 'https://fluege.lastminute.de/?utm_source=fluege.de&utm_medium=whitelabel&utm_campaign=homepage_tab',page_position: 'homepage_tab'});});$('#rentcar').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'rental_cars',click_url: 'https://car.fluege.de/?aid=fluegecar&afid=multiform',page_position: 'homepage_tab'});});$('#activities').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'activities',click_url: 'https://www.getyourguide.com/?partner_id=DNDSXRX&partner_id=DNDSXRX&utm_medium=travel_agent&cmp=homepage_tab ',page_position: 'homepage_tab'});});$('#parking').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'airport_parking',click_url: 'https://www.holidayextras.com/de/partner-wl/fluege-de-parkplatz.html?custref=tab_homepage_parken',page_position: 'homepage_tab'});});$('#card').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: 'mastercard_gold',click_url: 'https://www.fluege.de/card',page_position: 'homepage_tab'});});var aPopunder = {types: {}, active: false};$('.dc-radio:checkbox').change(function() {gaTrackEvent('Content Clicks', 'Direct Comparison Homepage', this.checked ? 'Check' : 'Uncheck');});aPopunder.types.search = {d: 'https://www.billigfluege.de/deeplink/fluege.de',a: '',n: 'billigfluege.de'};var urlParams = new URLSearchParams(window.location.search);if (true === urlParams.has('utm_medium') && urlParams.get('utm_medium') === 'cpc') {var redirectParams = new URLSearchParams();if (true === urlParams.has('gclid')) {redirectParams.append('gclid', urlParams.get('gclid'));redirectParams.append('utm_content', 'sea_google');aPopunder.types.search.a = redirectParams.toString();}else if (true === urlParams.has('msclkid')) {redirectParams.append('msclkid', urlParams.get('msclkid'));redirectParams.append('utm_content', 'sea_bing');aPopunder.types.search.a = redirectParams.toString();}}var aStorage = false,elDate = '#f1Date',elAuto = 'input.js-autocomplete-hidden',trigger = elAuto,isInIframe = (window.self !== window.top);function checkStatus(element) {var sStore = '',sInputValue = '',$acHidden;element.each(function() {$acHidden = $(this);sInputValue = $acHidden.val();if ($acHidden.is(':disabled') === false) {if (sInputValue === '' || sStore === sInputValue) {aPopunder.active = false;}else {sStore = sInputValue;}}});}function handleDirectCompare(trigger) {var aStorage = aStorage || $('#sflight').find(trigger),$compareContainer = $('#directCompare'),flightType = ($('input[name="sFlightInput\\[flightType\\]"]:checked').val() || 'RT');aPopunder.active = (flightType !== 'OJ' && aStorage.length > 0 && false === isInIframe);checkStatus(aStorage);if (trigger === elDate) {checkStatus($(elAuto));}$compareContainer.toggle(aPopunder.active);if (aPopunder.active) {$compareContainer.find('input:checkbox').trigger('cssCheckboxCompare', [aPopunder.active]);}}$('#sflight').on('change', trigger, function(e) {handleDirectCompare(trigger);return true;});$(function() {$(trigger).change();});window.createPopunder = function() {if (!window.fPopunderStack) {var fPopunderStack = [],aPropertyWhiteList = aPopunder.properties || ['[timeRange]', '[date]', '[datetime]', '[routeType]','[arrLocation]', '[arrAirport]', '[depLocation]', '[depAirport]', '[depCity]','[arrCity]', '[accArr]', '[accDep]', '[returnDate]', '[departureDate]','[flightType]', '[departureTimeRange]', '[returnTimeRange]', '[paxAdt]','[paxChd]', '[paxInf]', '[depAirline]', '[cabinClass]', '[nonStop]', '[paymentMethod]'],aFormData = $('#sflight').serializeArray(),oMapper = {flight: {strip: false,prefix: 'sFlightInput',map: {'[departurePlace]': '[depCity]','[destinationPlace]': '[arrCity]','[iataDep]': '[accDep]','[iataArr]': '[accArr]','[paxAdult]': '[paxAdt]','[paxChild]': '[paxChd]','[paxInfant]': '[paxInf]','[preferredAirline]': '[depAirline]','[preferredCabinClass]': '[cabinClass]'},propsWithFullName: ['[timeRange]','[date]','[arrLocation]','[arrAirport]','[depLocation]','[depAirport]','[datetime]','[routeType]'],append: ''},hotel: {prefix: '',append: '',strip: true,map: {'[accArr]': 'iata','[departureDate]': 'checkin','[returnDate]': 'checkout','[paxAdt]': 'person','[paxChd]': 'child'},propsWithFullName: []}},iFormCounter, mParamValue, aPopunderTypes,popunder, iSplParamsCount, iFormLength, sParamName,flightType = ($('input[name="sFlightInput\\[flightType\\]"]:checked').val() || 'RT');for (aPopunderTypes in aPopunder.types) {popunder = $('#dc' + aPopunderTypes);if (aPopunder.types.hasOwnProperty(aPopunderTypes) && popunder.is(':checked:visible') && (flightType === 'RT' || flightType === 'OW')) {var el = aPopunder.types[aPopunderTypes],aLinkParams = [],sPayload,sMapper = popunder.data('mapper'),oMap = oMapper[sMapper],aSplittedParams = false;for (iFormCounter = 0, iFormLength=aFormData.length; iFormCounter<iFormLength; iFormCounter++) {aSplittedParams = aFormData[iFormCounter].name.toString().match(/\[\w+\]/g);if (aSplittedParams) {mParamValue = aFormData[iFormCounter].value;if (aSplittedParams !== false) {iSplParamsCount = aSplittedParams.length - 1;if ($.inArray(aSplittedParams[iSplParamsCount], aPropertyWhiteList) !== -1&& (!oMap.strip || oMap.map[aSplittedParams[iSplParamsCount]])) {if (oMap.map[aSplittedParams[iSplParamsCount]]) {aSplittedParams[iSplParamsCount] = oMap.map[aSplittedParams[iSplParamsCount]];}sParamName = oMap.prefix;if ($.inArray(aSplittedParams[iSplParamsCount], oMap.propsWithFullName) !== -1) {sParamName += aSplittedParams.join('');}else {sParamName += aSplittedParams[iSplParamsCount];}aLinkParams.push(sParamName + '=' + encodeURIComponent(mParamValue));}}}}sPayload = el.d + '?' + aLinkParams.join('&') + oMap.append + ('' !== el.a ? '&' + el.a : '');if (el.p) {sPayload = el.p + encodeURIComponent(sPayload);}fPopunderStack.push([sPayload, {cb: (function(target) {return function() {var CONTROLLER = CONTROLLER || 'brandingMultiform';if (typeof gaTrackEvent !== 'undefined') {gaTrackEvent('Popunder', CONTROLLER, target);}};}(el.n))}]);}}if (fPopunderStack.length > 0) {if (typeof ga4CustomTrackEvent !== 'undefined' && CONTROLLER === 'index') {ga4CustomTrackEvent('flight_search', {page_type: 'homepage', form_validation: 'after' });}window.fPopunderStack = fPopunderStack;}}return window.fPopunderStack;};if (true === isInIframe) {$('#sflight').attr('target', '_blank');}else {$.popunder(window.createPopunder, '#sflight', '#sflight :submit');}jQuery(function() {new AirportCompleter({sInputSelector: '#f0-dep-location-Oj',hiddenInput: '#f0-dep-airport-Oj',multiAirport: '#f0-dep-multiAirport-Oj',revString: '1ba66e931c4108c579bd1039f23e3419',language: 'GERMAN',homeUrl: 'https://www.fluege.de',mediaUrl: 'https://static.fluege.de/'});}());jQuery(function() {new AirportCompleter({sInputSelector: '#f0-arr-location-Oj',hiddenInput: '#f0-arr-airport-Oj',multiAirport: '#f0-arr-multiAirport-Oj',revString: '1ba66e931c4108c579bd1039f23e3419',language: 'GERMAN',homeUrl: 'https://www.fluege.de',mediaUrl: 'https://static.fluege.de/'});}());$(function() {window.datepickerOj = new DatepickerDuo({containerName: 'datepickerOj',minDate: 0,master: '#f0DateOj',slave: '#f1DateOj',dateMaster: '06.11.2026',dateFormat: 'dd.mm.yy',wrapperClass: '.date-wrapper',options: { constrainInput: false,dayNamesMin: ["S", "M", "D", "M", "D", "F", "S"],monthNames : [ "Jan", "Feb", "Mar", "Apr","Mai", "Jun", "Jul", "Aug", "Sep","Okt", "Nov", "Dez" ],firstDay : 1,collision: 'none',positionMy : 'right top',positionAt : 'right bottom',positionFixed : false},onSelect: function(field) {if (window.formWizard) {window.formWizard.checkFields(field[0]);}}});});jQuery(function ($) {if (window.priceCalendar) {window.priceCalendar.init({depHiddenSel: '#f0-dep-airport-',arrHiddenSel: '#f0-arr-airport-',flightTypeSel: 'input[name="sFlightInput[flightType]"]',ajaxUrl: 'https://www.fluege.de/ajax/price-calendar',priceTrend: false});}});jQuery(function() {new AirportCompleter({sInputSelector: '#f1-dep-location-Oj',hiddenInput: '#f1-dep-airport-Oj',multiAirport: '#f1-dep-multiAirport-Oj',revString: '1ba66e931c4108c579bd1039f23e3419',language: 'GERMAN',homeUrl: 'https://www.fluege.de',mediaUrl: 'https://static.fluege.de/'});}());jQuery(function() {new AirportCompleter({sInputSelector: '#f1-arr-location-Oj',hiddenInput: '#f1-arr-airport-Oj',multiAirport: '#f1-arr-multiAirport-Oj',revString: '1ba66e931c4108c579bd1039f23e3419',language: 'GERMAN',homeUrl: 'https://www.fluege.de',mediaUrl: 'https://static.fluege.de/'});}());$(function() {window.datepickerOj.setDefaultDate('slave', '09.11.2026');});jQuery(function() {new AirportCompleter({sInputSelector: '#f0-dep-location-',hiddenInput: '#f0-dep-airport-',multiAirport: '#f0-dep-multiAirport-',revString: '1ba66e931c4108c579bd1039f23e3419',language: 'GERMAN',homeUrl: 'https://www.fluege.de',mediaUrl: 'https://static.fluege.de/'});}());jQuery(function() {new AirportCompleter({sInputSelector: '#f0-arr-location-',hiddenInput: '#f0-arr-airport-',multiAirport: '#f0-arr-multiAirport-',revString: '1ba66e931c4108c579bd1039f23e3419',language: 'GERMAN',homeUrl: 'https://www.fluege.de',mediaUrl: 'https://static.fluege.de/'});}());$(function() {window.datepicker = new DatepickerDuo({containerName: 'datepicker',minDate: 0,master: '#f0Date',slave: '#f1Date',dateMaster: '06.11.2026',dateFormat: 'dd.mm.yy',wrapperClass: '.date-wrapper',options: { constrainInput: false,dayNamesMin: ["S", "M", "D", "M", "D", "F", "S"],monthNames : [ "Jan", "Feb", "Mar", "Apr","Mai", "Jun", "Jul", "Aug", "Sep","Okt", "Nov", "Dez" ],firstDay : 1,collision: 'none',positionMy : 'center top',positionAt : 'center bottom',positionFixed : false},onSelect: function(field) {if (window.formWizard) {window.formWizard.checkFields(field[0]);}}});});$(function() {window.datepicker.setDefaultDate('slave', '09.11.2026');});(function($) {$(function () {var multiformExtension = new MultiSelect ({options: {scope: '#searchExtension',outputType: 1,passenger: '.js_passengerSelection',cabinClass: '.js_classSelection',airline: '.js_airlineSelection',i18n: {single: 'Reisender',multi : 'Reisende'}}});});})(jQuery);$(function() {var stepperAdt = new Stepper({options : {scope : '#adt', min: 1}}),stepperChd = new Stepper({options : {scope : '#chd',max: 8}}),stepperInf = new Stepper({options : {scope : '#inf', max: 1}});$('#sflight').on('submit', function() {ga4CustomTrackEvent('flight_search', { page_type: 'homepage', form_validation: 'before' });});var $flightForm = $('#flightForm'),$paxWrapper = $('#paxWrapper'),$f1TimeRangeCssCheckbox = $('#f1TimeRange_FCB'),flightSearchForm = new searchForm.Construct({_flightType: {options: {oJEnabled: true,onFlightTypeChange: function(options, model, cache) {$flightForm.toggleClass('open-jaw', (model.selected === 'OJ'));$paxWrapper.toggleClass('span4', (model.selected === 'OJ'));},mapping: {f0Date: 'f0DateOj',f1Date: 'f1DateOj',areaSearch: 'OjareaSearch','f0-dep-location-': 'f0-dep-location-Oj','f0-dep-multiAirport-': 'f0-dep-multiAirport-Oj','f0-dep-airport-': 'f0-dep-airport-Oj','f0-arr-location-': 'f0-arr-location-Oj','f0-arr-multiAirport-': 'f0-arr-multiAirport-Oj','f0-arr-airport-': 'f0-arr-airport-Oj'}}},'_flight': {options: {onFormSubmit: function(options, model, cache) {var optLabel = 'nur_Hinflug';if (model.selected === 'OJ') {optLabel = 'Gabelflug';}else if (model.selected === 'RT') {optLabel = 'Hin_Rückflug';}window._gaq = window._gaq || [];window._gaq.push(['_trackEvent', 'Formular_Tracking', 'Formular_Startseite', optLabel, 0, true]);if (multiForm.target !== '_blank') {multiForm.showLoadingAnimation();}var $form = cache.scope, url;url = $form.attr('action') + '?' + $form.serialize();window.open(url, multiForm.target);return false;}}},_passengersInput: {options: {adt: stepperAdt,chd: stepperChd,inf: stepperInf}}}); if (typeof $.app !== 'undefined' && typeof $.app.lastSearch !== 'undefined') {$.app.lastSearch.restore('dd.mm.yy');}});$(function () {var pushContentSlider = $('.js-push-content-slider').bxSlider({slideSelector: '.js-push-content-item',pagerSelector: '.js-push-content-pager',prevSelector: '.js-push-content-controls.prev',nextSelector: '.js-push-content-controls.next',pagerShortSeparator: '',prevText: '',nextText: '',auto: true,pause: 5000,autoHover: true,minSlides: 1,moveSlides: 1,slideWidth: 644,touchEnabled: !!window.touchDevice,onSliderLoad: function () {$('.push-content-slideshow .item').css('visibility', 'visible');$('.js-push-content-controls.prev a').attr('aria-label', 'Vorherige Slide');$('.js-push-content-controls.next a').attr('aria-label', 'Nächste Slide');}});pushContentSlider.on('show', function() {pushContentSlider.redrawSlider();}); $('.js-push-content-item button').click(function () {ga4CustomTrackEvent('page_linkout', {click_item: $(this).data('tracking-action'),click_url: $(this).data('target'),page_position: 'homepage_slider'});var target = $(this).data('target');window.open(target);});});$(function () {window.ibe.braze = new ContentCards({elementId: 'braze-feed',fallbackElementId: 'braze-fallback',cardType: 'banner',bannerPosition: 'bannerPos1'});window.ibe.braze.init();});$(function () {var $linkElement = $linkElement || $('a.js_teaser-link-plus');$linkElement.on("click", function () {gaTrackEvent('Content Clicks', 'Banner_Homepage', 'Customer Club');});});$(function () {var $linkElement = $linkElement || $('a.js_teaser-link-blog');$linkElement.on("click", function () {gaTrackEvent('Content Clicks', 'Banner_Homepage', 'Travel Insights');});});$(function () {var $linkElementAndroid = $linkElementAndroid || $('a.js_teaser-link-android');$linkElementAndroid.on("click", function () {gaTrackEvent('Content Clicks', 'Banner_Homepage', 'App_Andriod');});var $linkElementIos = $linkElementIos || $('a.js_teaser-link-ios');$linkElementIos.on("click", function () {gaTrackEvent('Content Clicks', 'Banner_Homepage', 'App_IOS');});});$(function () {var $linkElement = $linkElement || $('a.js_teaser-link-newsletter');$linkElement.on("click", function () {gaTrackEvent('Content Clicks', 'Banner_Homepage', 'Newsletter');});});(function ($) {$(function(){ibe.teaserImageBox = ibe.teaserImageBox || {};ibe.teaserImageBox = new TeaserImageBox({sUrl: "https://www.fluege.de/flightoffer/prices/landingPageType/Arr/accArr/",sHeadlineChangeText: "Wie viele Personen möchten reisen?",sSublineChangeText:"Bitte geben Sie die Anzahl der Reisenden ein:"});});})(jQuery);$('.js_track').on('click', function(evt) {const eventName = evt.target.getAttribute('data-trackEvent');if(eventName) {ga4CustomTrackEvent('page_linkout', {"click-item": eventName});}});$(function() {new ToggleList({sToggleContainer: '#js_nl_newsletterRegister',sToggleBox: '#js_nl_newsletterRegister',sToggleTrigger: '.js_toggle-hint',sToggleContent: '.js_toggle-target',sToggleText: false});$('#nl_subscribe').validationEngine({onValidationComplete: function(form, r) {if (r === true) {var newsletterRegister = form.parents('#js_nl_newsletterRegister'),newsletterForm = newsletterRegister.find('form'),newsletterButton = newsletterForm.find('button'),newsletterFormData = newsletterForm.serialize(),newssletterSuccess = newsletterRegister.find('#js_nl_newsletterSuccess'),newsletterError = newsletterRegister.find('#js_nl_newsletterError'),newsletterLoader = newsletterRegister.find('.ajax-loading, .modal-loading');$.ajax({data: newsletterFormData,type: 'post',url: 'https://www.fluege.de/newsletter/register',beforeSend: function() {newsletterLoader.show();newsletterForm.hide();},success: function(data) {if (data.success === true) {newssletterSuccess.show();}else {newsletterForm.show();newsletterError.show();}},error: function() {newsletterForm.show();newsletterError.show();},complete: function() {newsletterLoader.hide();}});}}});});$(function() { $('.js-newsletter-modal').on('click', function(){modal.open({content : '#newsletterModalContent',modalClass: 'newsletter-modal',buttonClose : true});return false;});});(function ($) {Date.shortDays = "So,Mo,Di,Mi,Do,Fr,Sa".split(',');window.i18n = window.i18n || {};window.i18n['h'] = "Std";window.i18n['min'] = "min";function getStringDate(value) {var datePat = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/;var dateArray = value.match(datePat);var day = parseInt(dateArray[5], 10),month = parseInt(dateArray[3] - 1, 10),year = parseInt(dateArray[1], 10);return new Date(year, month, day, 0, 0, 0, 0);}function getURLParameter(url, param) {var urlVariables = url.split('&');for (var i = 0; i < urlVariables.length; i++) {var parameterName = urlVariables[i].split('=');if (parameterName[0] === param) {return parseInt(parameterName[1]);}}}function fetchHeader(field) {var header = field.closest('.js-traveller-box').find('.pax-header').text().replace(/ *\([^)]*\) */g, "").trim();if (-1 !== header.indexOf('Erw.')) {header = header.replace('Erw', 'Erwachsener');}return header.replace(/\.$/, "");}function fetchDate(field, rules, i, options) {var form = field.parents('form').eq(0),paxGroupDay = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[day\\]]').eq(0),paxGroupMonth = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[month\\]]').eq(0),paxGroupYear = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[year\\]]').eq(0);return paxGroupYear[0].value + '-' + paxGroupMonth[0].value.replace(/^(.)$/g, "0$1") + '-' + paxGroupDay[0].value.replace(/^(.)$/g, "0$1");}function fetchMinAge(field) {var header = field.closest('.js-traveller-box').find('.pax-header');var attr = header.attr('data-paxminage');var paxMinAge = 12;if (typeof attr !== typeof undefined && attr !== false) {paxMinAge = header.attr('data-paxminage');}return paxMinAge;}function fetchValidateLeg(field) {var header = field.closest('.js-traveller-box').find('.pax-header');var attr = header.attr('data-validateoutbound');var validateLeg = "Rückreise";if (typeof attr !== typeof undefined && attr !== false) {validateLeg = (header.attr('data-validateoutbound') === 'TRUE') ? "Hinreise" : "Rückreise";}return validateLeg;}window.startNewSearch = function (search, replace) {var offerDeeplink = '';search = (search === 0) ? 'paxAdt' : ((search === 1) ? 'paxChd' : 'paxInf');replace = (replace === 0) ? 'paxAdt' : ((replace === 1) ? 'paxChd' : 'paxInf');window.location.href = ValidationHelper.changeLink(offerDeeplink, 'sFlightInput[' + search + ']', 'sFlightInput[' + replace + ']');return false;};var ValidationHelper = {validatePaxAge: function (field, rules, i, options, minAge, maxAge) {var form = field.parents('form').eq(0),isValid = true,paxGroupDay = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[day\\]]').eq(0),paxGroupMonth = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[month\\]]').eq(0),paxGroupYear = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[year\\]]').eq(0);if (rules[i + 3] !== 'year') {return true;}var paxDateString = paxGroupYear[0].value + '-' + paxGroupMonth[0].value.replace(/^(.)$/g, "0$1") + '-' + paxGroupDay[0].value.replace(/^(.)$/g, "0$1");if (isNaN(Date.parse(paxDateString)) === false && ValidationHelper.validateDate(paxDateString) === true) {var validOutboundLeg = (field.closest('.js-traveller-box').find('.pax-header').data('validateoutbound') === 'TRUE'),flightDepDate = field.data('inbound-departure-date');if (validOutboundLeg === true) {flightDepDate = field.data('outbound-departure-date');}if (!flightDepDate) {flightDepDate = Date.now();}var minDate = new Date(flightDepDate),maxDate = new Date(flightDepDate),paxBirthday = new Date(paxDateString);minDate.setFullYear(minDate.getFullYear() - minAge);maxDate.setFullYear(maxDate.getFullYear() - maxAge);if (minDate < paxBirthday || maxDate >= paxBirthday) {isValid = false;}} else {isValid = false;}return isValid;},validateDate: function (dateStringYYYYmmdd) {var year = dateStringYYYYmmdd.replace(/^(\d{4})-\d\d-\d\d$/g, "$1");return (dateStringYYYYmmdd.match(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|(1|2)[0-9]|3[01])$/g) !== null&& (dateStringYYYYmmdd.match(/-((0{0,1}2-(29|3[0,1]))|((0{0,1}[469]|11)-31))$/g) === null|| (ValidationHelper.isLeapYear(year) && dateStringYYYYmmdd.match(/-((0{0,1}2-(3[0,1]))|((0{0,1}[469]|11)-31))$/g) === null)));},isLeapYear: function (year) {return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);},stringToDate: function (dateString) {var datePattern = /^(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})$/;var dateParts = dateString.match(datePattern);if (dateParts !== null) {var century = '';if (dateParts.length >= 4 && dateParts[3].length === 2) {century = '20';}return new Date(dateString.replace(datePattern, century + '$3-$2-$1'));}return new Date(dateString);},validatefutureDate: function (field, rules, i, options) {var form = field.parents('form').eq(0),isValid = true,paxGroupDay = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[day\\]]').eq(0),paxGroupMonth = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[month\\]]').eq(0),paxGroupYear = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[year\\]]').eq(0);if (rules[i + 3] !== 'year') {return true;}var paxDateString = paxGroupYear[0].value + '-' + paxGroupMonth[0].value.replace(/^(.)$/g, "0$1") + '-' + paxGroupDay[0].value.replace(/^(.)$/g, "0$1");if (isNaN(Date.parse(paxDateString)) === false && ValidationHelper.validateDate(paxDateString) === true) { var flightDepDate = field.data('last-arrival-date') || field.data('outbound-departure-date');if (!flightDepDate) {flightDepDate = Date.now();}var minDate = new Date(flightDepDate),paxBirthday = new Date(paxDateString);if (minDate >= paxBirthday) {isValid = false;}} else {isValid = false;}return isValid;},changeLink: function (link, decreaseField, increaseField) {var decreasedValue, increasedValue;var decodedLink = decodeURI(link);var decreaseFieldValue = getURLParameter(decodedLink, decreaseField);var increaseFieldValue = getURLParameter(decodedLink, increaseField);decreasedValue = decreaseFieldValue - 1;decodedLink = decodedLink.replace(decreaseField + '=' + decreaseFieldValue, decreaseField + '=' + decreasedValue);if (increaseFieldValue === undefined) {increasedValue = 1;decodedLink = decodedLink.replace(decreaseField + '=' + decreasedValue, decreaseField + '=' + decreasedValue + '&' + increaseField + '=' + increasedValue);} else {increasedValue = increaseFieldValue + 1;decodedLink = decodedLink.replace(increaseField + '=' + increaseFieldValue, increaseField + '=' + increasedValue);}return 'https://www.fluege.de/flight/wait' + encodeURI(decodedLink);}};window.validationRules = window.validationRules || {};$.extend(window.validationRules, {required: { regex: 'none',alertText: "* Dieses Feld ist erforderlich",alertTextCheckboxMultiple: "* Bitte wählen Sie eine Option",alertTextCheckboxe: "* Diese Checkbox ist erforderlich"},singleSelect: {regex: 'none',alertText: "* Bitte wählen Sie eine Option"},selectNoneEqualsEmpty: {regex: 'none',alertText: "* Bitte wählen Sie eine Option"},singleCheckbox: {regex: 'none',alertText: "* Bitte wählen Sie eine Option"},minSize: {regex: 'none',alertText: "* Mindestens ",alertText2: " Zeichen benötigt"},maxSize: {regex: 'none',alertText: "* Maximal ",alertText2: " Zeichen erlaubt"},groupRequired: {regex: 'none',alertText: "* Sie müssen mindestens eines dieser Felder ausfüllen"},min: {regex: 'none',alertText: "* Mindeswert ist "},max: {regex: 'none',alertText: "* Maximalwert ist "},past: {regex: 'none',alertText: "* Datum vor "},future: {regex: 'none',alertText: "* Datum nach "},maxCheckbox: {regex: 'none',alertText: "* Maximale Auswahl &uuml;berschritten"},minCheckbox: {regex: 'none',alertText: "* Bitte w&auml;hlen Sie ",alertText2: " Optionen"},minReviews: {regex: 'none',alertText: "* Bitte w&auml;hlen Sie Ihre Optionen "},equals: {regex: 'none',alertText: "* Beide Felder m&uuml;ssen identisch sein"},creditCard: {regex: 'none',alertText: "* Bitte geben Sie die korrekte Kreditkartennummer an!"},phone: {regex: /^[\+]?[0-9\-\/\(\)\s]{6,32}$/,alertText: "* Ung&uuml;ltige Telefonnummer"},phoneCity: {regex: /^[0-9\-\/\(\)\s]{1,32}$/,alertText: "* Ung&uuml;ltige Telefonnummer"},phoneArea: {regex: /^[0-9]{1,6}$/,alertText: "* Ung&uuml;ltige Orts- bzw. Netzvorwahl"},phoneNumber: {regex: /^[0-9]+$/,alertText: "* Ung&uuml;ltige Telefonnummer"},email: {regex: /^[a-z0-9!#$%&'*+/=?^_`{|}~]+[a-z0-9!#$%&'*+/=?^_`{|}~-]*(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{2,}?$/i,alertText: "* Ung&uuml;ltige Emailadresse"},integer: {regex: /^[\-\+]?\d+$|^$/,alertText: "* Nur Zahlen erlaubt"},number: {regex: /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,alertText: "* Keine gültige Fließkommazahl"},date: {regex: /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/,alertText: "* Ung&uuml;ltiges Datum, muss im Format YYYY-MM-DD sein"},futureDate: {func: function (field) {var value = $(field).val();if (typeof value === 'undefined' || value.length === 0) { return true;}var departureDate = ValidationHelper.stringToDate(value);var today = new Date();today.setHours(0, 0, 0, 0);if (departureDate < today) {return false;}return true;},alertText: "Bitte prüfen Sie Ihre Eingabe"},dateDepartureBeforeArrival: {func: function (field, rules, i, options) {var departureDateString = $(field).val();var arrivalDate = $(rules[i + 2]);var arrivalDateString = arrivalDate.val();if (typeof departureDateString === 'undefined' || departureDateString.length === 0 || arrivalDateString === undefined || arrivalDateString.length === 0 || arrivalDate.is(':disabled') === true) { return true;}var arrivalDate = ValidationHelper.stringToDate(arrivalDateString);var departureDate = ValidationHelper.stringToDate(departureDateString);if (departureDate > arrivalDate) {return false;}return true;},alertText: "Der Rückflug muss später als der Hinflug sein"},calenderdate: {regex: /^(0?[1-9]|[12][0-9]|3[01])[\/\.](0?[1-9]|1[012])[\/\.]\d{4}$/,alertText: "* Ung&uuml;ltiges Datum, muss im Format DD.MM.YYYY sein"},onlyLetterSp: {regex: /^[a-zA-ZäüöÄÜÖßs\ \\\']+$/,alertText: "* Nur Buchstaben erlaubt"},onlyLetterNumber: {regex: /^[0-9a-zA-ZäüöÄÜÖßs-]+$/,alertText: "* Keine Sonderzeichen erlaubt"},IBAN: {regex: /^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{11,35}$/,alertText: "Bitte geben Sie die korrekte IBAN an!"},IBANDE: {regex: /^DE[0-9]{2}[0-9]{8}[0-9]{10}$/,alertText: "Bitte geben Sie die korrekte IBAN an!"},IBANDEAT: {regex: /^DE[0-9]{22}|AT[0-9]{20}$/,alertText: "Bitte geben Sie die korrekte IBAN an!"},BIC: {regex: /^([a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?)$/,alertText: "Bitte geben Sie den korrekten BIC an!"},loginBookingId: {func: function (field) {return ($(field).val() && $(field).val().length >= 6 && $(field).val().length <= 13);},alertText: "* Bitte geben Sie Ihren Buchungscode an!"},loginLastname: {func: function (field) {return Boolean($(field).val());},alertText: "* Bitte geben Sie den Nachnamen eines Reisenden an!"},notOnlyNumber: {regex: /^[^0-9]/,alertText: "* Bitte nicht nur Zahlen verwenden"},notOnlyNumberOptional: {regex: /^$|^[^0-9]/,alertText: "* Bitte nicht nur Zahlen verwenden"},noCyrillic: {regex: /^[^а-я]/i,alertText: "* латин. буквами"},passportNumber: {regex: /^[A-Za-z0-9]+$/,alertText: "* Bitte geben Sie eine g&uuml;ltige Dokumentennummer ein."},passportDate: {func: function (field) {return !(field.val().length == 0);},alertText: "* Bitte geben Sie das Ablaufdatum ein."},passportDateSelect: {func: function (field) {var selectedVal = field.find(':selected').val();return !(selectedVal.length == 0);},alertText: "Bitte geben Sie das Ablaufdatum ein."},agb: {func: function (field) {var isChecked = $(field).is(':checked');if ($('#ibeBookingInput\\[erv\\]\\[special\\]').is(':checked') && isChecked === false) {return true;}return isChecked;},alertText: "* Bitte akzeptieren Sie die AGB"},withdrawal: {func: function (field) { if (!$('.js-withdrawal-box').is(':visible') || !$(field).is(':visible')) {return true;}return $(field).is(':checked');},alertText: "* Bitte bestätigen Sie den Hinweis zum Widerruf."},cop: {func: function (field) {var isChecked = $(field).is(':checked');return isChecked;},alertText: "* Bitte akzeptieren Sie die Teilnahmebedingungen"},sepa: {func: function (field) {var isChecked = $(field).is(':checked');if ($('#ibeBookingInput\\[payment\\]\\[sepaAGB\\]').is(':checked') && isChecked === false) {return true;}return isChecked;},alertText: "* Bitte bestätigen Sie die Kenntnisnahme"},ccHolder: {regex: /^[0-9a-zäöüÄÖÜ -\.']+$/i,alertText: "Bitte geben Sie den Namen des Karteninhabers in der Form <b>Vorname Name</b> an!"},ccNumber: {func: function (field) {var pattern = '^[0-9]{14,16}$',luhnArr = [[0, 2, 4, 6, 8, 1, 3, 5, 7, 9],[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]],sum = 0,sCard = field.val().toString(),bValid = false;if ($('#bookingReferenceFlag').val() !== '') {pattern = '^[0-9*]{14,16}$';bValid = sCard.match(pattern);} else {sCard.replace(/\D+/g, '').replace(/[\d]/g, function (c, p, o) {sum += luhnArr[(o.length - p) & 1][parseInt(c, 10)];});bValid = (sCard.match(pattern) && (sum % 10 === 0) && (sum > 0));}return bValid;},alertText: "Bitte geben Sie eine gültige Kreditkartennummer an!"},cvc: {regex: /^[0-9]{3,4}$/,alertText: "* Ung&uuml;ltige CVC"},ccCvC: {func: function (field) {var pattern = '^[0-9]{3,4}$';if ($('#bookingReferenceFlag').val() !== '') {pattern = '^[0-9*]{3,4}$';}return field.val().match(pattern);},alertText: "Bitte geben Sie eine gültige CVC Nummer an!"},debitNumber: {regex: /^[0-9]{1,10}$/,alertText: "Bitte geben Sie die Kontonummer eines deutschen Kreditinstituts an!<br />Bei Wahl eines österreichischen Kontos geben Sie bitte IBAN und BIC ein!"},debitCode: {regex: /^[1-8][0-9]{2}[0-9]{5}$/,alertText: "Bitte geben Sie die Bankleitzahl eines deutschen Kreditinstituts an!<br />Bei Wahl eines österreichischen Kontos geben Sie bitte IBAN und BIC ein!"},ajaxDebitCode: {alertText: "Bitte geben Sie die Bankleitzahl eines deutschen Kreditinstituts an!<br />Bei Wahl eines österreichischen Kontos geben Sie bitte IBAN und BIC ein!",func: function (field, rules, i, options) {var result = true,$debitAccountNumber = $('#debitAccountNumber');if ($debitAccountNumber.val().length > 0 && field.val().length > 0) {var validator = $.ajax({type: 'GET',url: SECURE_URL + '/flightbooking/validation',cache: true,async: false,dataType: 'json',beforeSend: function () {field.validationEngine('showPrompt', "* Überprüfe Angaben, bitte warten", 'load', 'topRight', true);},data: {fieldValue: field.val(),fieldValidator: 'DebitCode',debitAccountNumber: $debitAccountNumber.val()}});validator.done(function (data) {if (data === false) {options.allrules.ajaxDebitCode.alertText = "Die eingegebene Kontonummer passt nicht zur eingegebenen Bankleitzahl"}result = data;});} else if (field.val().length === 0) {result = false;}return result;}},ajaxDebitIban: {alertText: "Bitte geben Sie die IBAN eines deutschen oder österreichischen Kreditinstituts an!",func: function (field) {if (field.val().length === 0) {return false;}var result = true,validator = $.ajax({type: 'GET',url: SECURE_URL + '/flightbooking/validation',cache: true,async: false,dataType: 'json',beforeSend: function () {field.validationEngine('showPrompt', "* Überprüfe Angaben, bitte warten", 'load', 'topRight', true);},data: {fieldValue: field.val(),fieldValidator: 'DebitIban'}});validator.done(function (data) {result = data;});return result;}},ajaxDebitBic: {alertText: "Bitte geben Sie die BIC eines deutschen oder österreichischen Kreditinstituts an!",func: function (field) {var $debitIban = $('#debitIBAN'),result = true;if ($debitIban.val().length > 0 && field.val().length > 0) {var validator = $.ajax({type: 'GET',url: SECURE_URL + '/ajax/iban-to-bic',cache: true,async: false,dataType: 'json',beforeSend: function () {field.validationEngine('showPrompt', "* Überprüfe Angaben, bitte warten", 'load', 'topRight', true);},data: {iban: $debitIban.val()}});validator.done(function (data) {if (data.debitBic !== field.val()) {result = false;}});} else if (field.val().length === 0) {result = false;}return result;}},debitName: {regex: /^[a-zäöüÄÖÜ][0-9a-zäöüÄÖÜ -\.']+$/i,alertText: "Bitte geben Sie den Namen des Kreditinstituts an!"},debitFirstName: {regex: /^[a-zäöüÄÖÜ][0-9a-zäöüÄÖÜ -\.']+$/i,alertText: "Bitte geben Sie den Vornamen des Kontoinhabers an!"},debitLastName: {regex: /^[a-zäöüÄÖÜ][0-9a-zäöüÄÖÜ -\.']+$/i,alertText: "Bitte geben Sie den Namen des Kontoinhabers an!"},customerStreet: {regex: /^[0-9\u0400-\u04FF\u0061-\u007a\u00aa\u00b5\u00ba\u00df-\u00f6\u00f8-\u00ff\u0101\u0103\u0105\u0107\u0109\u010b\u010d\u010f\u0111\u0113\u0115\u0117\u0119\u011b\u011d\u011f\u0121\u0123\u0125\u0127\u0129\u012b\u012d\u012f\u0131\u0133\u0135\u0137\u0138\u013a\u013c\u013e\u0140\u0142\u0144\u0146\u0148\u0149\u014b\u014d\u014f\u0151\u0153\u0155\u0157\u0159\u015b\u015d\u015f\u0161\u0163\u0165\u0167\u0169\u016b\u016d\u016f\u0171\u0173\u0175\u0177\u017a\u017c\u017e-\u0180\u0183\u0185\u0188\u018c\u018d\u0192\u0195\u0199-\u019b\u019e\u01a1\u01a3\u01a5\u01a8\u01aa\u01ab\u01ad\u01b0\u01b4\u01b6\u01b9\u01ba\u01bd-\u01bf\u01c6\u01c9\u01cc\u01ce\u01d0\u01d2\u01d4\u01d6\u01d8\u01da\u01dc\u01dd\u01df\u01e1\u01e3\u01e5\u01e7\u01e9\u01eb\u01ed\u01ef\u01f0\u01f3\u01f5\u01f9\u01fb\u01fd\u01ff\u0201\u0203\u0205\u0207\u0209\u020b\u020d\u020f\u0211\u0213\u0215\u0217\u0219\u021b\u021d\u021f\u0221\u0223\u0225\u0227\u0229\u022b\u022d\u022f\u0231\u0233-\u0239\u023c\u023f\u0240\u0242\u0247\u0249\u024b\u024d\u024f-\u0293\u0295-\u02af\u037b-\u037d\u0390\u03ac-\u03ce\u03d0\u03d1\u03d5-\u03d7\u03d9\u03db\u03dd\u03df\u03e1\u03e3\u03e5\u03e7\u03e9\u03eb\u03ed\u03ef-\u03f3\u03f5\u03f8\u03fb\u03fc\u0430-\u045f\u0461\u0463\u0465\u0467\u0469\u046b\u046d\u046f\u0471\u0473\u0475\u0477\u0479\u047b\u047d\u047f\u0481\u048b\u048d\u048f\u0491\u0493\u0495\u0497\u0499\u049b\u049d\u049f\u04a1\u04a3\u04a5\u04a7\u04a9\u04ab\u04ad\u04af\u04b1\u04b3\u04b5\u04b7\u04b9\u04bb\u04bd\u04bf\u04c2\u04c4\u04c6\u04c8\u04ca\u04cc\u04ce\u04cf\u04d1\u04d3\u04d5\u04d7\u04d9\u04db\u04dd\u04df\u04e1\u04e3\u04e5\u04e7\u04e9\u04eb\u04ed\u04ef\u04f1\u04f3\u04f5\u04f7\u04f9\u04fb\u04fd\u04ff\u0501\u0503\u0505\u0507\u0509\u050b\u050d\u050f\u0511\u0513\u0561-\u0587\u1d00-\u1d2b\u1d62-\u1d77\u1d79-\u1d9a\u1e01\u1e03\u1e05\u1e07\u1e09\u1e0b\u1e0d\u1e0f\u1e11\u1e13\u1e15\u1e17\u1e19\u1e1b\u1e1d\u1e1f\u1e21\u1e23\u1e25\u1e27\u1e29\u1e2b\u1e2d\u1e2f\u1e31\u1e33\u1e35\u1e37\u1e39\u1e3b\u1e3d\u1e3f\u1e41\u1e43\u1e45\u1e47\u1e49\u1e4b\u1e4d\u1e4f\u1e51\u1e53\u1e55\u1e57\u1e59\u1e5b\u1e5d\u1e5f\u1e61\u1e63\u1e65\u1e67\u1e69\u1e6b\u1e6d\u1e6f\u1e71\u1e73\u1e75\u1e77\u1e79\u1e7b\u1e7d\u1e7f\u1e81\u1e83\u1e85\u1e87\u1e89\u1e8b\u1e8d\u1e8f\u1e91\u1e93\u1e95-\u1e9b\u1ea1\u1ea3\u1ea5\u1ea7\u1ea9\u1eab\u1ead\u1eaf\u1eb1\u1eb3\u1eb5\u1eb7\u1eb9\u1ebb\u1ebd\u1ebf\u1ec1\u1ec3\u1ec5\u1ec7\u1ec9\u1ecb\u1ecd\u1ecf\u1ed1\u1ed3\u1ed5\u1ed7\u1ed9\u1edb\u1edd\u1edf\u1ee1\u1ee3\u1ee5\u1ee7\u1ee9\u1eeb\u1eed\u1eef\u1ef1\u1ef3\u1ef5\u1ef7\u1ef9\u1f00-\u1f07\u1f10-\u1f15\u1f20-\u1f27\u1f30-\u1f37\u1f40-\u1f45\u1f50-\u1f57\u1f60-\u1f67\u1f70-\u1f7d\u1f80-\u1f87\u1f90-\u1f97\u1fa0-\u1fa7\u1fb0-\u1fb4\u1fb6\u1fb7\u1fbe\u1fc2-\u1fc4\u1fc6\u1fc7\u1fd0-\u1fd3\u1fd6\u1fd7\u1fe0-\u1fe7\u1ff2-\u1ff4\u1ff6\u1ff7\u2071\u207f\u210a\u210e\u210f\u2113\u212f\u2134\u2139\u213c\u213d\u2146-\u2149\u214e\u2184\u2c30-\u2c5e\u2c61\u2c65\u2c66\u2c68\u2c6a\u2c6c\u2c74\u2c76\u2c77\u2c81\u2c83\u2c85\u2c87\u2c89\u2c8b\u2c8d\u2c8f\u2c91\u2c93\u2c95\u2c97\u2c99\u2c9b\u2c9d\u2c9f\u2ca1\u2ca3\u2ca5\u2ca7\u2ca9\u2cab\u2cad\u2caf\u2cb1\u2cb3\u2cb5\u2cb7\u2cb9\u2cbb\u2cbd\u2cbf\u2cc1\u2cc3\u2cc5\u2cc7\u2cc9\u2ccb\u2ccd\u2ccf\u2cd1\u2cd3\u2cd5\u2cd7\u2cd9\u2cdb\u2cdd\u2cdf\u2ce1\u2ce3\u2ce4\u2d00-\u2d25\ufb00-\ufb06\ufb13-\ufb17\uff41-\uff5a\s\.\-\' ]{1,50}$/i,alertText: "Bitte geben Sie die Straße an!"},customerStreetNumber: {regex: /^[0-9\u0400-\u04FF\u0061-\u007a\u00aa\u00b5\u00ba\u00df-\u00f6\u00f8-\u00ff\u0101\u0103\u0105\u0107\u0109\u010b\u010d\u010f\u0111\u0113\u0115\u0117\u0119\u011b\u011d\u011f\u0121\u0123\u0125\u0127\u0129\u012b\u012d\u012f\u0131\u0133\u0135\u0137\u0138\u013a\u013c\u013e\u0140\u0142\u0144\u0146\u0148\u0149\u014b\u014d\u014f\u0151\u0153\u0155\u0157\u0159\u015b\u015d\u015f\u0161\u0163\u0165\u0167\u0169\u016b\u016d\u016f\u0171\u0173\u0175\u0177\u017a\u017c\u017e-\u0180\u0183\u0185\u0188\u018c\u018d\u0192\u0195\u0199-\u019b\u019e\u01a1\u01a3\u01a5\u01a8\u01aa\u01ab\u01ad\u01b0\u01b4\u01b6\u01b9\u01ba\u01bd-\u01bf\u01c6\u01c9\u01cc\u01ce\u01d0\u01d2\u01d4\u01d6\u01d8\u01da\u01dc\u01dd\u01df\u01e1\u01e3\u01e5\u01e7\u01e9\u01eb\u01ed\u01ef\u01f0\u01f3\u01f5\u01f9\u01fb\u01fd\u01ff\u0201\u0203\u0205\u0207\u0209\u020b\u020d\u020f\u0211\u0213\u0215\u0217\u0219\u021b\u021d\u021f\u0221\u0223\u0225\u0227\u0229\u022b\u022d\u022f\u0231\u0233-\u0239\u023c\u023f\u0240\u0242\u0247\u0249\u024b\u024d\u024f-\u0293\u0295-\u02af\u037b-\u037d\u0390\u03ac-\u03ce\u03d0\u03d1\u03d5-\u03d7\u03d9\u03db\u03dd\u03df\u03e1\u03e3\u03e5\u03e7\u03e9\u03eb\u03ed\u03ef-\u03f3\u03f5\u03f8\u03fb\u03fc\u0430-\u045f\u0461\u0463\u0465\u0467\u0469\u046b\u046d\u046f\u0471\u0473\u0475\u0477\u0479\u047b\u047d\u047f\u0481\u048b\u048d\u048f\u0491\u0493\u0495\u0497\u0499\u049b\u049d\u049f\u04a1\u04a3\u04a5\u04a7\u04a9\u04ab\u04ad\u04af\u04b1\u04b3\u04b5\u04b7\u04b9\u04bb\u04bd\u04bf\u04c2\u04c4\u04c6\u04c8\u04ca\u04cc\u04ce\u04cf\u04d1\u04d3\u04d5\u04d7\u04d9\u04db\u04dd\u04df\u04e1\u04e3\u04e5\u04e7\u04e9\u04eb\u04ed\u04ef\u04f1\u04f3\u04f5\u04f7\u04f9\u04fb\u04fd\u04ff\u0501\u0503\u0505\u0507\u0509\u050b\u050d\u050f\u0511\u0513\u0561-\u0587\u1d00-\u1d2b\u1d62-\u1d77\u1d79-\u1d9a\u1e01\u1e03\u1e05\u1e07\u1e09\u1e0b\u1e0d\u1e0f\u1e11\u1e13\u1e15\u1e17\u1e19\u1e1b\u1e1d\u1e1f\u1e21\u1e23\u1e25\u1e27\u1e29\u1e2b\u1e2d\u1e2f\u1e31\u1e33\u1e35\u1e37\u1e39\u1e3b\u1e3d\u1e3f\u1e41\u1e43\u1e45\u1e47\u1e49\u1e4b\u1e4d\u1e4f\u1e51\u1e53\u1e55\u1e57\u1e59\u1e5b\u1e5d\u1e5f\u1e61\u1e63\u1e65\u1e67\u1e69\u1e6b\u1e6d\u1e6f\u1e71\u1e73\u1e75\u1e77\u1e79\u1e7b\u1e7d\u1e7f\u1e81\u1e83\u1e85\u1e87\u1e89\u1e8b\u1e8d\u1e8f\u1e91\u1e93\u1e95-\u1e9b\u1ea1\u1ea3\u1ea5\u1ea7\u1ea9\u1eab\u1ead\u1eaf\u1eb1\u1eb3\u1eb5\u1eb7\u1eb9\u1ebb\u1ebd\u1ebf\u1ec1\u1ec3\u1ec5\u1ec7\u1ec9\u1ecb\u1ecd\u1ecf\u1ed1\u1ed3\u1ed5\u1ed7\u1ed9\u1edb\u1edd\u1edf\u1ee1\u1ee3\u1ee5\u1ee7\u1ee9\u1eeb\u1eed\u1eef\u1ef1\u1ef3\u1ef5\u1ef7\u1ef9\u1f00-\u1f07\u1f10-\u1f15\u1f20-\u1f27\u1f30-\u1f37\u1f40-\u1f45\u1f50-\u1f57\u1f60-\u1f67\u1f70-\u1f7d\u1f80-\u1f87\u1f90-\u1f97\u1fa0-\u1fa7\u1fb0-\u1fb4\u1fb6\u1fb7\u1fbe\u1fc2-\u1fc4\u1fc6\u1fc7\u1fd0-\u1fd3\u1fd6\u1fd7\u1fe0-\u1fe7\u1ff2-\u1ff4\u1ff6\u1ff7\u2071\u207f\u210a\u210e\u210f\u2113\u212f\u2134\u2139\u213c\u213d\u2146-\u2149\u214e\u2184\u2c30-\u2c5e\u2c61\u2c65\u2c66\u2c68\u2c6a\u2c6c\u2c74\u2c76\u2c77\u2c81\u2c83\u2c85\u2c87\u2c89\u2c8b\u2c8d\u2c8f\u2c91\u2c93\u2c95\u2c97\u2c99\u2c9b\u2c9d\u2c9f\u2ca1\u2ca3\u2ca5\u2ca7\u2ca9\u2cab\u2cad\u2caf\u2cb1\u2cb3\u2cb5\u2cb7\u2cb9\u2cbb\u2cbd\u2cbf\u2cc1\u2cc3\u2cc5\u2cc7\u2cc9\u2ccb\u2ccd\u2ccf\u2cd1\u2cd3\u2cd5\u2cd7\u2cd9\u2cdb\u2cdd\u2cdf\u2ce1\u2ce3\u2ce4\u2d00-\u2d25\ufb00-\ufb06\ufb13-\ufb17\uff41-\uff5a\s\.\- ]{1,6}$/i,alertText: "Bitte geben Sie die Nummer an!"},customerCity: {regex: /^[\u0400-\u04FF\u0061-\u007a\u00aa\u00b5\u00ba\u00df-\u00f6\u00f8-\u00ff\u0101\u0103\u0105\u0107\u0109\u010b\u010d\u010f\u0111\u0113\u0115\u0117\u0119\u011b\u011d\u011f\u0121\u0123\u0125\u0127\u0129\u012b\u012d\u012f\u0131\u0133\u0135\u0137\u0138\u013a\u013c\u013e\u0140\u0142\u0144\u0146\u0148\u0149\u014b\u014d\u014f\u0151\u0153\u0155\u0157\u0159\u015b\u015d\u015f\u0161\u0163\u0165\u0167\u0169\u016b\u016d\u016f\u0171\u0173\u0175\u0177\u017a\u017c\u017e-\u0180\u0183\u0185\u0188\u018c\u018d\u0192\u0195\u0199-\u019b\u019e\u01a1\u01a3\u01a5\u01a8\u01aa\u01ab\u01ad\u01b0\u01b4\u01b6\u01b9\u01ba\u01bd-\u01bf\u01c6\u01c9\u01cc\u01ce\u01d0\u01d2\u01d4\u01d6\u01d8\u01da\u01dc\u01dd\u01df\u01e1\u01e3\u01e5\u01e7\u01e9\u01eb\u01ed\u01ef\u01f0\u01f3\u01f5\u01f9\u01fb\u01fd\u01ff\u0201\u0203\u0205\u0207\u0209\u020b\u020d\u020f\u0211\u0213\u0215\u0217\u0219\u021b\u021d\u021f\u0221\u0223\u0225\u0227\u0229\u022b\u022d\u022f\u0231\u0233-\u0239\u023c\u023f\u0240\u0242\u0247\u0249\u024b\u024d\u024f-\u0293\u0295-\u02af\u037b-\u037d\u0390\u03ac-\u03ce\u03d0\u03d1\u03d5-\u03d7\u03d9\u03db\u03dd\u03df\u03e1\u03e3\u03e5\u03e7\u03e9\u03eb\u03ed\u03ef-\u03f3\u03f5\u03f8\u03fb\u03fc\u0430-\u045f\u0461\u0463\u0465\u0467\u0469\u046b\u046d\u046f\u0471\u0473\u0475\u0477\u0479\u047b\u047d\u047f\u0481\u048b\u048d\u048f\u0491\u0493\u0495\u0497\u0499\u049b\u049d\u049f\u04a1\u04a3\u04a5\u04a7\u04a9\u04ab\u04ad\u04af\u04b1\u04b3\u04b5\u04b7\u04b9\u04bb\u04bd\u04bf\u04c2\u04c4\u04c6\u04c8\u04ca\u04cc\u04ce\u04cf\u04d1\u04d3\u04d5\u04d7\u04d9\u04db\u04dd\u04df\u04e1\u04e3\u04e5\u04e7\u04e9\u04eb\u04ed\u04ef\u04f1\u04f3\u04f5\u04f7\u04f9\u04fb\u04fd\u04ff\u0501\u0503\u0505\u0507\u0509\u050b\u050d\u050f\u0511\u0513\u0561-\u0587\u1d00-\u1d2b\u1d62-\u1d77\u1d79-\u1d9a\u1e01\u1e03\u1e05\u1e07\u1e09\u1e0b\u1e0d\u1e0f\u1e11\u1e13\u1e15\u1e17\u1e19\u1e1b\u1e1d\u1e1f\u1e21\u1e23\u1e25\u1e27\u1e29\u1e2b\u1e2d\u1e2f\u1e31\u1e33\u1e35\u1e37\u1e39\u1e3b\u1e3d\u1e3f\u1e41\u1e43\u1e45\u1e47\u1e49\u1e4b\u1e4d\u1e4f\u1e51\u1e53\u1e55\u1e57\u1e59\u1e5b\u1e5d\u1e5f\u1e61\u1e63\u1e65\u1e67\u1e69\u1e6b\u1e6d\u1e6f\u1e71\u1e73\u1e75\u1e77\u1e79\u1e7b\u1e7d\u1e7f\u1e81\u1e83\u1e85\u1e87\u1e89\u1e8b\u1e8d\u1e8f\u1e91\u1e93\u1e95-\u1e9b\u1ea1\u1ea3\u1ea5\u1ea7\u1ea9\u1eab\u1ead\u1eaf\u1eb1\u1eb3\u1eb5\u1eb7\u1eb9\u1ebb\u1ebd\u1ebf\u1ec1\u1ec3\u1ec5\u1ec7\u1ec9\u1ecb\u1ecd\u1ecf\u1ed1\u1ed3\u1ed5\u1ed7\u1ed9\u1edb\u1edd\u1edf\u1ee1\u1ee3\u1ee5\u1ee7\u1ee9\u1eeb\u1eed\u1eef\u1ef1\u1ef3\u1ef5\u1ef7\u1ef9\u1f00-\u1f07\u1f10-\u1f15\u1f20-\u1f27\u1f30-\u1f37\u1f40-\u1f45\u1f50-\u1f57\u1f60-\u1f67\u1f70-\u1f7d\u1f80-\u1f87\u1f90-\u1f97\u1fa0-\u1fa7\u1fb0-\u1fb4\u1fb6\u1fb7\u1fbe\u1fc2-\u1fc4\u1fc6\u1fc7\u1fd0-\u1fd3\u1fd6\u1fd7\u1fe0-\u1fe7\u1ff2-\u1ff4\u1ff6\u1ff7\u2071\u207f\u210a\u210e\u210f\u2113\u212f\u2134\u2139\u213c\u213d\u2146-\u2149\u214e\u2184\u2c30-\u2c5e\u2c61\u2c65\u2c66\u2c68\u2c6a\u2c6c\u2c74\u2c76\u2c77\u2c81\u2c83\u2c85\u2c87\u2c89\u2c8b\u2c8d\u2c8f\u2c91\u2c93\u2c95\u2c97\u2c99\u2c9b\u2c9d\u2c9f\u2ca1\u2ca3\u2ca5\u2ca7\u2ca9\u2cab\u2cad\u2caf\u2cb1\u2cb3\u2cb5\u2cb7\u2cb9\u2cbb\u2cbd\u2cbf\u2cc1\u2cc3\u2cc5\u2cc7\u2cc9\u2ccb\u2ccd\u2ccf\u2cd1\u2cd3\u2cd5\u2cd7\u2cd9\u2cdb\u2cdd\u2cdf\u2ce1\u2ce3\u2ce4\u2d00-\u2d25\ufb00-\ufb06\ufb13-\ufb17\uff41-\uff5a\s\.\- ]{1,50}$/i,alertText: "Bitte geben Sie die Stadt an!"},ajaxCustomerVatId: {func: function (field) {var result = true;if (field.is(':enabled')) {$.ajax({type: 'GET',url: SECURE_URL + '/flightbooking/validation',cache: true,async: false,timeout: 250,dataType: 'json',beforeSend: function () {field.validationEngine('showPrompt', "* Überprüfe Angaben, bitte warten", 'load', 'topRight', true);},data: {fieldValue: field.val(),fieldValidator: 'Vat',customerCountry: $('#' + field.data('countryid')).val()}}).done(function (data) {result = data;});}return result;},alertText: "Bitte korrigieren Sie Ihre Eingabe.<br />Die Umsatzsteuer-Identifikationsnummer darf<br />bspw. keine Leerzeichen oder Sonderzeichen enthalten.<br />Sie können Ihre Eingabe auch löschen, um fortzufahren."},ajaxCustomerZipCode: {func: function (field) {var result = true;if (field.is(':enabled')) {$.ajax({type: 'GET',url: SECURE_URL + '/flightbooking/validation',cache: true,async: false,timeout: 250,dataType: 'json',beforeSend: function () {field.validationEngine('showPrompt', "* Überprüfe Angaben, bitte warten", 'load', 'topRight', true);},data: {fieldValue: field.val(),fieldValidator: 'PostCode',customerCountry: $('#' + field.data('countryid')).val()}}).done(function (data) {result = data;});}return result;},alertText: "Bitte geben Sie die Postleitzahl an!"},paxMinBirthdate: {func: function (field) {if (field.val()) {var tDate = getStringDate(field.val()),tTemp = new Date(),today = new Date(tTemp.getFullYear(), tTemp.getMonth(), tTemp.getDate(), 0, 0, 0, 0);return (tDate <= today);}return false;},alertText: "* Das Geburtsdatum darf nicht in der Zukunft liegen!"},paxAdtBirthdate: {func: function (field) {if (field.val()) {var fieldDate = getStringDate(field.val()),depDate = getStringDate(field.data('depdate')),minDate = new Date(depDate),maxDate = new Date(depDate);minDate.setFullYear(depDate.getFullYear() - 12);maxDate.setFullYear(depDate.getFullYear() - 110);return (fieldDate > minDate && fieldDate <= maxDate);}return false;},alertText: "* Erwachsene müssen mindestens 12 Jahre alt sein!"},paxChdBirthdate: {func: function (field) {if (field.val()) {var fieldDate = getStringDate(field.val()),depDate = getStringDate(field.data('depdate')),minDate = new Date(depDate),maxDate = new Date(depDate);minDate.setFullYear(depDate.getFullYear() - 2);maxDate.setFullYear(depDate.getFullYear() - 12);return (fieldDate > minDate && fieldDate <= maxDate);}return false;},alertText: "* Kinder müssen 2 bis 11 Jahre alt sein!"},paxInfBirthdate: {func: function (field) {if (field.val()) {var fieldDate = getStringDate(field.val()),depDate = getStringDate(field.data('depdate')),maxDate = new Date(depDate);maxDate.setFullYear(depDate.getFullYear() - 2);return (fieldDate < maxDate);}return false;},alertText: "* Babys müssen 0 bis 23 Monate alt sein!"},equal_email: {func: function (field) {var equalsField = field.data('equal_email');return (field.val().toLowerCase() === $('#' + equalsField).val().toLowerCase());},alertText: "* Emailadresse muss in beiden Feldern identisch sein."},airportSelection: {func: function ($field, fieldRules, validation, jqv) {var fieldId = $field.attr('id'),fieldParams = fieldId.split('-'),flight = fieldParams[0],direction = fieldParams[1],prefix = fieldParams[3],msg = '',location, compareLocation, compareAirport, compareMultiAirport, airport, multiAirport,compareDirection;function fetchValue($element) {return $.trim($element.val().toLowerCase());}location = fetchValue($field);if (direction === 'dep') {compareDirection = 'arr';airport = fetchValue($('#' + flight + '-dep-airport-' + prefix));multiAirport = fetchValue($('#' + flight + '-dep-multiAirport-' + prefix));} else if (direction === 'arr') {compareDirection = 'dep';airport = fetchValue($('#' + flight + '-arr-airport-' + prefix));multiAirport = fetchValue($('#' + flight + '-arr-multiAirport-' + prefix));} else {return true;}compareLocation = fetchValue($('#' + flight + '-' + compareDirection + '-location-' + prefix));compareAirport = fetchValue($('#' + flight + '-' + compareDirection + '-airport-' + prefix));compareMultiAirport = fetchValue($('#' + flight + '-' + compareDirection + '-multiAirport-' + prefix));if ((airport === compareAirport && (airport !== '' || compareAirport !== ''))|| (location === compareLocation && (location !== '' || compareLocation !== ''))) {if (direction === 'dep') {msg = "Bitte geben Sie einen vom Abflughafen unterschiedlichen Zielflughafen an.";} else {msg = "Bitte geben Sie einen vom Zielflughafen unterschiedlichen Abflughafen an.";}} else if (multiAirport === compareMultiAirport && (multiAirport !== '' || compareMultiAirport !== '')) {msg = "Zielflughafen und Abflughafen befinden sich in der gleichen Metropolian-Area.";}jqv.allrules.airportSelection.alertText = msg;return (msg === '');},alertText: ''},checkAirport: {func: function ($field, fieldRules, validation, jqv) {var fieldId = $field.attr('id'),fieldParams = fieldId.split('-'),flight = fieldParams[0],direction = fieldParams[1],msg = '',data = $field.serializeArray(),async = (jqv.eventTrigger === 'field'),isValid = true;if (direction === 'dep') {msg = "Bitte geben Sie einen gültigen Abflughafen an!";} else {msg = "Bitte geben Sie einen gültigen Zielflughafen an!";}jqv.allrules.checkAirport.alertText = msg;if ($.xhrPool.cache['checkAirport' + fieldId]) {$.xhrPool.cache['checkAirport' + fieldId].abort();}if ($.xhrPool.cache.airportcompleter) {$.xhrPool.cache.airportcompleter.abort();}$.ajax({name: 'checkAirport' + fieldId,url: MEDIA_URL + 'autocomplete/checkairport/check/600b1c37',dataType: 'json',crossDomain: true,cache: true,jsonp: false,data: data,async: async,complete: function (response) {if (typeof response.responseJSON !== 'undefined'&& typeof response.responseJSON[flight] !== 'undefined'&& response.responseJSON[flight][direction + 'Location'] === 'error') {if ($('.' + fieldId + 'formError').length === 0) {$field.validationEngine('showPrompt', msg, 'error', 'topRight', true);}isValid = false;}}});return isValid;},alertText: ''},citycompleteValid: {func: function (field) {var selectedOpt = field.find(':selected').html();return !(selectedOpt === "Meinten Sie?");},alertText: "Bitte w&auml;hlen Sie eine g&uuml;ltige Stadt aus"},validCity: {func: function (field) {return true;},alertText: 'Bitte wählen Sie eine gültige Destination'},customerBirthdateCombined: {func: function (field, rules, i, options) {return ValidationHelper.validatePaxAge(field, rules, i, options, 18, 110);},alertText: '* Reiseanmelder müssen mindestens 18 Jahre alt sein!'},ubcBirthdateCombined: {func: function (field, rules, i, options) {return ValidationHelper.validatePaxAge(field, rules, i, options, 18, 110);},alertText: '* Kreditkartenanmelder müssen mindestens 18 Jahre alt sein!'},paxAdtBirthdateCombined: {func: function (field, rules, i, options) {return ValidationHelper.validatePaxAge(field, rules, i, options, 12, 110);},alertText: '* Erwachsene müssen mindestens 12 Jahre alt sein!'},paxChdBirthdateCombined: {func: function (field, rules, i, options) {return ValidationHelper.validatePaxAge(field, rules, i, options, 2, 12);},alertText: "* Kinder müssen 2 bis 11 Jahre alt sein!"},paxInfBirthdateCombined: {func: function (field, rules, i, options) {return ValidationHelper.validatePaxAge(field, rules, i, options, 0, 2);},alertText: "* Babys müssen 0 bis 23 Monate alt sein!"},futureDateCombined: {func: function (field, rules, i, options) {var form = field.parents('form').eq(0),paxGroupDay = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[day\\]]').eq(0),paxGroupMonth = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[month\\]]').eq(0),paxGroupYear = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[year\\]]').eq(0);if (field.val() != 0 && (paxGroupDay.val().length != 0 && paxGroupMonth.val().length != 0 && paxGroupYear.val().length != 0)) {if (!ValidationHelper.validatefutureDate(field, rules, i, options)) {options.allrules.futureDateCombined.alertText = "*Bitte prüfen Sie Ihre Eingabe. Das Dokument muss über den Ankunftstag des letzten Fluges hinaus gültig sein.*";return false;}}return true;}},futureDateCombinedInput: {func: function (field, rules, i, options) {var form = field.parents('form').eq(0),paxGroupDay = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[day\\]]').eq(0),paxGroupMonth = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[month\\]]').eq(0),paxGroupYear = form.find('[' + options.validateAttribute + '*=' + rules[i + 2] + '\\[year\\]]').eq(0);if (paxGroupDay.val().length === 0 || paxGroupMonth.val().length === 0 || paxGroupYear.val().length === 0) {options.allrules.futureDateCombinedInput.alertText = "* *Bitte geben Sie das Ablaufdatum ein.*";return false;} else if (!ValidationHelper.validatefutureDate(field, rules, i, options)) {options.allrules.futureDateCombinedInput.alertText = "*Bitte prüfen Sie Ihre Eingabe. Das Dokument muss über den Ankunftstag des letzten Fluges hinaus gültig sein.*";return false;}return true;}},paxAdtBirthdateCombinedExtended: {func: function (field, rules, i, options) {var header = fetchHeader(field);var adtMinAge = fetchMinAge(field);var validateleg = fetchValidateLeg(field);var date = fetchDate(field, rules, i, options);if (ValidationHelper.validateDate(date) === false && date.length > 4) {options.allrules.paxAdtBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Bitte überprüfen Sie das Geburtsdatum.</div>';return false;}if (ValidationHelper.validatePaxAge(field, rules, i, options, adtMinAge, 110) === true) {return true;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, 2, adtMinAge) === true) {options.allrules.paxAdtBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Zum Zeitpunkt der ' + validateleg + ' hat Ihr angegebener Erwachsener das ' + adtMinAge + '. Lebensjahr noch nicht vollendet und gilt daher als Kind.<br /><br />Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.<br /><a rel="nofollow" href="javascript:startNewSearch(0, 1);">Jetzt neue Angebote mit Kind finden.</a></div>';return false;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, 0, 2) === true) {options.allrules.paxAdtBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Zum Zeitpunkt der ' + validateleg + ' hat Ihr angegebener Erwachsener das 2. Lebensjahr noch nicht vollendet und gilt daher als Baby.<br /><br />Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.<br /><a rel="nofollow" href="javascript:startNewSearch(0, 2);">Jetzt neue Angebote mit Baby finden.</a></div>';return false;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, -110, 2) === true|| ValidationHelper.validatePaxAge(field, rules, i, options, 110, 999) === true) {options.allrules.paxAdtBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.</div>';return false;} else {return true;}},alertText: ''},paxChdBirthdateCombinedExtended: {func: function (field, rules, i, options) {var header = fetchHeader(field);var date = fetchDate(field, rules, i, options);if (ValidationHelper.validateDate(date) === false && date.length === 10) {options.allrules.paxChdBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.</div>';return false;}if (ValidationHelper.validatePaxAge(field, rules, i, options, 2, 12) === true) {return true;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, 12, 110) === true) {options.allrules.paxChdBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Zum Zeitpunkt der Rückreise hat Ihr angegebenes Kind das 12. Lebensjahr bereits vollendet und gilt daher als Erwachsener.<br /><br />Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.<br /><a rel="nofollow" href="javascript:startNewSearch(1, 0);">Jetzt neue Angebote mit Erwachsenem finden.</a></div>';return false;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, 0, 2) === true) {options.allrules.paxChdBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Zum Zeitpunkt der Rückreise hat Ihr angegebenes Kind das 2. Lebensjahr noch nicht vollendet und gilt daher als Baby.<br /><br />Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.<br /><a rel="nofollow" href="javascript:startNewSearch(1, 2);">Jetzt neue Angebote mit Baby finden.</a></div>';return false;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, -110, 2) === true|| ValidationHelper.validatePaxAge(field, rules, i, options, 110, 999) === true) {options.allrules.paxChdBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.</div>';return false;} else {return true;}},alertText: ''},paxInfBirthdateCombinedExtended: {func: function (field, rules, i, options) {var header = fetchHeader(field);var date = fetchDate(field, rules, i, options);if (ValidationHelper.validateDate(date) === false && date.length === 10) {options.allrules.paxInfBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.</div>';return false;}if (ValidationHelper.validatePaxAge(field, rules, i, options, 0, 2) === true) {return true;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, 2, 12) === true) {options.allrules.paxInfBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Zum Zeitpunkt der Rückreise hat Ihr angegebenes Baby das 2. Lebensjahr bereits vollendet und gilt daher als Kind.<br /><br />Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.<br /><a rel="nofollow" href="javascript:startNewSearch(2, 1);">Jetzt neue Angebote mit Kind finden.</a></div>';return false;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, 12, 110) === true) {options.allrules.paxInfBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Zum Zeitpunkt des Rückreise hat Ihr angegebenes Baby das 12. Lebensjahr bereits vollendet und gilt daher als Erwachsener.<br /><br />Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.<br /><a rel="nofollow" href="javascript:startNewSearch(2, 0);">Jetzt neue Angebote mit Erwachsenem finden.</a></div>';return false;} else if (ValidationHelper.validatePaxAge(field, rules, i, options, -110, 0) === true|| ValidationHelper.validatePaxAge(field, rules, i, options, 110, 999) === true) {options.allrules.paxInfBirthdateCombinedExtended.alertText = '<div><header>' + header + ': Geburtsdatum</header>Bitte überprüfen Sie das Geburtsdatum oder passen Sie Ihre Angaben in der Flugsuche an.</div>';return false;} else {return true;}},alertText: ''}});})(jQuery);$.fx.off = true;$(function() {if (typeof $.datepicker !== 'undefined') {$.datepicker.setDefaults({dateFormat: "dd.mm.yy",monthNames: ["Januar", "Februar", "März","April", "Mai", "Juni", "Juli","August", "September", "Oktober","November", "Dezember"],monthNamesShort: ["Jan", "Feb", "Mar", "Apr","Mai", "Jun", "Jul", "Aug", "Sep","Okt", "Nov", "Dez"],dayNamesMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],dayNamesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],dayNames: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],nextText: "N&auml;chster",prevText: "Vorheriger",currentText: "Heute"});}var stickyAdConfig = {sAdElement: '.flex-sky-right'};stickyAdConfig.sTriggerElement= '.js-searchform-full-width';if (typeof StickyAd !== 'undefined') {flexSkyRightAd = new StickyAd(stickyAdConfig);}});</script><div
+id="preloaderWrapper" class="overlay">
+<div
+class="smooth-loading-wrapper"><div
+class="smooth-loading"><div
+class="heading"></div>
+<div
+class="smooth-loading-animation-wrapper "><div
+class="smooth-loading-animation">
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label>
+<label>●</label></div></div><div
+class="provider-cloud"><div
+class="row provider-cloud-row"></div></div><div
+class="subheading"></div></div></div></div> <script type="text/plain" data-cookieconsent="statistics" data-usercentrics="Amplitude">
+        $(function() {
+            // NoCache/refresh views are deliberate cache bypasses and must not skew analytics
+            if (typeof window.amplitude === 'undefined' || /[?&](NoCache=(?!0?(&|$))|refresh(=|&|$))/.test(window.location.search)) {
+                return;
+            }
+
+            var amplitudeApiKey = "715f78d7732d8e698aee37bbe7311000";
+            var bob = {"d":"pS-9b1,mChEK8EwiBC29-2","u":null,"s":1793829075760} || {};
+
+            window.amplitude.add(window.sessionReplay.plugin({
+                serverZone: 'EU',
+                forceSessionTracking: true,
+                privacyConfig: {
+                    defaultMaskLevel: 'light',
+                    unmaskSelector: ['#wrapper']
+                }
+            }));
+
+            // strip client time from event
+            window.amplitude.add({
+                name: 'strip-client-time',
+                type: 'enrichment',
+                setup: async function () { return undefined; },
+                execute: async function (event) {
+                    delete event.time;
+                    return event;
+                }
+            });
+
+            // add screen-resolution to client events
+            amplitude.add({
+                type: 'enrichment',
+                name: 'screen-resolution-enricher',
+                execute: async (event) => {
+                    event.user_properties = event.user_properties || {};
+                    event.user_properties['screen_resolution'] = `${window.screen.width}x${window.screen.height}`;
+                    event.user_properties['viewport_size'] = `${window.innerWidth}x${window.innerHeight}`;
+
+                    return event;
+                },
+            });
+
+            if (bob.d && bob.s) {
+                window.amplitude.init(amplitudeApiKey, {
+                    deviceId: bob.d,
+                    userId: bob.u || null,
+                    sessionId: bob.s,
+                    serverZone: 'EU',
+                    autocapture: {
+                        attribution: false,
+                        pageViews: false,
+                        sessions: true,
+                        formInteractions: false,
+                        fileDownloads: false,
+                        elementInteractions: false,
+                        pageUrlEnrichment: true,
+                        frustrationInteractions: true,
+                        webVitals: true
+                    },
+                    trackingOptions: {
+                        ipAddress: false
+                    }
+                                    });
+            }
+        });</script>  <script type="text/plain" data-cookieconsent="necessary">(function () {
+            var w = document.createElement('script');
+            w.type = 'text/javascript';
+            w.async = true;
+            w.defer = true;
+            w.src = '//invia.kcenter.usu.com/kfirst-widget/js/loader.js?apikey=d1KACVM_tZn0o8ZLEs55pm6EvrBR6l08Ve1hbDy9mh4%3D';
+
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(w, s);
+            w.onload = function () {
+                window.setTimeout(function () {
+                    $(function () {
+                        $('#kfirst-widget-menu-list li').removeAttr('tooltip');
+                    });
+                }, 1000);
+            };
+        })();</script> <script>var dataLayer = dataLayer || [];dataLayer.push({'event': 'user_meta','user_agent': window.navigator.userAgent});(function(dataLayer) {var dataArray = {'event': 'page_meta','environment': 'production',                 'portal_name': 'fluege.de',                 'language': window.navigator.language,                 'max_touch_points': window.navigator.maxTouchPoints,                 'device': 'desktop',};if (!!window.navigator.refferer) {dataArray['internal_referrer'] =  window.navigator.refferer;};var SC = [];SC.push('CCLA8_1');SC.push('STTG_3');SC.push('MCBCL8_0');dataArray['test_id'] = SC.join(',');var visitorTracking = {"ctok":"e7d2e23646431b1a5dfb6f8cac81fbb16c4ad2bf3be358bf51253e7f927f3778","utm_parameter":"utm_source=index"};if (visitorTracking && 'object' === typeof visitorTracking) {for (var visitorKey in visitorTracking) {if (Object.prototype.hasOwnProperty.call(visitorTracking, visitorKey)) {dataArray[visitorKey] = visitorTracking[visitorKey];}}}dataLayer.push({...dataArray,'page_path': 'index','timestamp': new Date().getTime()             });})(dataLayer);$(document).one('account-data-finished', function () {dataLayer.push({'event': 'page_meta','login_status': ibe && ibe.customerLoginService && ibe.customerLoginService.customer && ibe.customerLoginService.customer.loggedIn || false});});dataLayer.push({'event': 'virtPath','virtPath': 'index','device': 'd','portal': 'fluege.de'});var p = {};Object.assign(p, {'test_ccla8': 'CCLA8_1'});Object.assign(p, {'test_sttg': 'STTG_3'});Object.assign(p, {'test_mcbcl8': 'MCBCL8_0'});dataLayer.push(p);</script>
+<script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://tr-s.fluege.de/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-56L6RSX');</script><noscript>
+<iframe
+src="https://tr-s.fluege.de/gtm.js?id=GTM-56L6RSX" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript></body></html>

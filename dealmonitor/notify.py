@@ -18,6 +18,7 @@ import os
 from . import http
 from .principles import euro
 from .models import Deal
+from .sources.feed import source_label
 
 log = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ def format_text(deal: Deal, status: str) -> str:
             when += " – " + o.return_date.strftime("%d.%m.%Y")
         lines.append(f"Reisedaten: {when}")
     lines += [f"• {r}" for r in deal.reasons]
-    lines.append(f"Quelle: {o.source}")
+    lines.append(f"Quelle: {source_label(o.source)}")
     if o.link:
         lines.append(f"Buchen/Artikel: {o.link}")
     cmp = compare_link(deal)
@@ -115,7 +116,7 @@ class Telegram:
                 links.append(f'<a href="{html.escape(cmp)}">Gegenprüfen</a>')
             if links:
                 parts.append(" · ".join(links))
-            parts.append(f"<i>Quelle: {html.escape(o.source)}</i>")
+            parts.append(f"<i>Quelle: {html.escape(source_label(o.source))}</i>")
             try:
                 http.request(
                     f"https://api.telegram.org/bot{self.token}/sendMessage",

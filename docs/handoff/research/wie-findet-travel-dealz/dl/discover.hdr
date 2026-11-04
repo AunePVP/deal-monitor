@@ -1,0 +1,14 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 403 
+date: Wed, 04 Nov 2026 22:02:40 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+set-cookie: __cf_bm=4tkyaPDGtCzL1Y9CwCbOMmPlRPyCUQ5sB3nh88oymZg-1793829760.6659536-1.0.1.1-UyU0PJljx0eWFp7U0HsPHPrEb6w5SzVfX2OoWxXJi1Oxz2JgaJqNUO3JL9RZxaZDriSk3eaLcXpS4KpKm4VPzk52iH1abFy2M8V7yq2YtkKz97AAM6cUN7mX_jbF7KPh; HttpOnly; SameSite=None; Secure; Path=/; Domain=www.discover-airlines.com; Expires=Wed, 04 Nov 2026 22:32:40 GMT
+content-encoding: gzip
+server: cloudflare
+cf-ray: a556e7842d45d6fd-IAD
+

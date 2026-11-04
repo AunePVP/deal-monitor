@@ -1,0 +1,40 @@
+td_json_deal_eco_ham | 200 https://travel-dealz.de/wp-json/wp/v2/deal?per_page=10&categories=1757&origins=2945&_fields=id,date,title,link,categories,origins,destinations,meta.suspend_date application/json; charset=UTF-8 1422
+td_json_deal_business | 200 https://travel-dealz.de/wp-json/wp/v2/deal?per_page=10&categories=884&_fields=id,date,title,link,categories,origins,destinations,meta.suspend_date application/json; charset=UTF-8 3378
+travelzoo_de_feed | 200 https://www.travelzoo.com/de/feed/ application/atom+xml; charset=utf-8 106689
+travelzoo_ch_feed | 404 https://www.travelzoo.com/ch/feed/ text/html; charset=utf-8 126651
+fcam_home | 200 https://first-class-and-more.de:443/ text/html; charset=UTF-8 105255
+frankfurtflyer_feed2 | 200 https://frankfurtflyer.de/feed/rss2/ application/rss+xml; charset=UTF-8 35286
+frankfurtflyer_json | 200 https://frankfurtflyer.de/wp-json/wp/v2/posts?per_page=10&_fields=id,date,title,link,categories application/json; charset=UTF-8 2582
+yhbu_feed2 | 200 https://youhavebeenupgraded.boardingarea.com/feed/ application/rss+xml; charset=UTF-8 68607
+fliegensparen_http | curl: (6) Could not resolve host: www.fliegen-sparen.de
+000 http://www.fliegen-sparen.de/feed/  0
+flugdeals_ch_home | curl: (35) Recv failure: Connection reset by peer
+000 https://flugdeals.ch/  0
+reisetopia_cats | 403 https://reisetopia.de/wp-json/wp/v2/categories?per_page=100 text/html; charset=UTF-8 4910
+meilenoptimieren_cats | 200 https://meilenoptimieren.com/wp-json/wp/v2/categories?per_page=100 application/json; charset=UTF-8 274031
+urlaubspiraten_fluege_feed | 404 https://www.urlaubspiraten.de/fluege/feed text/html 431367
+ferienpiraten_fluege_feed | 404 https://www.ferienpiraten.ch/fluege/feed text/html 340181
+vielfliegertreff_home | 200 https://www.vielfliegertreff.de/forum/ text/html; charset=utf-8 198118
+flugladen_home | 200 https://www.flugladen.de/ text/html; charset=utf-8 269596
+billigfluege_home | 200 https://go.billigfluege.de/?user-id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIzMTViYjA2Ni0xZTQwLTQ2OTEtYjM2Ny01Zjc2ZThkM2NlMmEiLCJpc3MiOiJ3ZWItYXBwIiwidiI6MywiaXAiOiI6OmZmZmY6MTAwLjEyMi4xMTAuMjIzIiwidXNlckFnZW50IjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEzMC4wLjAuMCBTYWZhcmkvNTM3LjM2IiwiaWF0IjoxNzkzODI5MDcxfQ.81zD4EM8IiQv1kP16F3d1sbMN21vS49YBf-53SnuSdI text/html; charset=utf-8 29909
+nurbilligfluege_home | curl: (56) CONNECT tunnel failed, response 502
+000 https://www.nur-billigfluege.de/  0
+reisefieber_feed | 200 https://www.reisefieber.de/feed/ application/rss+xml; charset=UTF-8 162643
+fluegede_magazin_feed | 200 https://www.fluege.de/ text/html; charset=UTF-8 154544
+holidaycheck_home | 200 https://www.holidaycheck.de/ text/html; charset=utf-8 669522
+travelfree_feed | 200 https://travelfree.info/feed/ application/rss+xml; charset=UTF-8 101936
+flynous_feed | 403 https://www.flynous.com/feed/ text/plain 25
+reisetopia_ch_feed | 403 https://www.reisetopia.ch/feed/ text/html; charset=UTF-8 6024
+flugdeals_at_feed | curl: (56) CONNECT tunnel failed, response 502
+000 https://www.flugdeals.at/feed/  0
+urlaubspiraten_at_feed | 200 https://www.urlaubspiraten.at/feed application/xml 12148
+flugdeals_de_feed | curl: (60) SSL certificate problem: self-signed certificate
+More details here: https://curl.se/docs/sslcerts.html
+
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+000 https://www.flugdeals.de/feed/  0
+airguru_json | 200 https://airguru.de/wp-json/wp/v2/posts?per_page=10&_fields=id,date,title,link,categories application/json; charset=UTF-8 2007
+meilenfuchs_feed | 404 https://www.meilenfuchs.de/feed/ text/html; charset=iso-8859-1 236
+reisedeals_ch_feed | 200 https://www.reisedeals.ch/feed/ application/rss+xml; charset=UTF-8 1131

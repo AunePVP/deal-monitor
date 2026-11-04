@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <link rel="P3Pv1" href="/w3c/p3p.xml" />
+        <link href="/public/Mashery/styles/exosphere/styles-7.0.0.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" >
+            var csp = '';
+            var nonce = '85dc00c3f86f08578a61';
+            //<![CDATA[
+            var mashery_info = {
+                        };
+
+            // iframe'd detection, to pop out if in an iframe
+            if (window.location !== parent.window.location && !(/(page|docs|blog)\/preview/.test(window.location.pathname))) {
+                parent.window.location = window.location;
+            }
+            //]]>
+        </script>
+            <title>Lufthansa Developer Center - Lufthansa Open API</title>
+<link rel="shortcut icon" href="/public/Mashery/images/boomi/boomi_favicon.png" type="image/x-icon">
+    <link rel="alternate" type="application/rss+xml" href="https://developer.lufthansa.com/docs/feed-comments/Home" />
+    <link rel="stylesheet"  type="text/css" media="screen" href="/public/Mashery/styles-min/Mashery-base.css" />
+    <link rel="stylesheet"  type="text/css" media="screen" href="/files/bootstrap.css" />
+    <link rel="stylesheet"  media="print" type="text/css" href="/public/Mashery/styles/print-default.css" />
+<style type="text/css" media="screen">
+<!--
+@import url("/files/screen.css");
+
+/**Registration Page - Terms of Service Button**/
+div#tos_link {
+  display: inline;
+}
+span#proceed_span {
+  font-family: helvetica;
+  font-weight: 900;
+}
+/**
+div#tos_link {
+  display: inline;
+  background: #FBC600;
+  background-image: -webkit-linear-gradient(top, #FBC600, #D27903);
+  background-image: -moz-linear-gradient(top, #FBC600, #D27903);
+  background-image: -ms-linear-gradient(top, #FBC600, #D27903);
+  background-image: -o-linear-gradient(top, #FBC600, #D27903);
+  background-image: linear-gradient(to bottom, #FBC600, #D27903);
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  color: #ffffff;
+  padding: 7px 12px 4px 12px;
+  text-decoration: inherit;
+}
+**/
+
+/** Swagger CSS Patchfix */
+
+element.style {
+}
+#swagger-ui * {
+    font-family: inherit;
+}
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+    background: #0061ac;
+}
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+    background: #61affe;
+}
+.swagger-ui .opblock .opblock-summary-method {
+    padding-top: 3px;
+}
+
+/** CS-7567 - hide Mashery branding - S Denham - 221104 */
+#masheryBranding { display: none;}
+
+/** CS-7581 - login error status text - S Denham - 230201 */
+#status { color: red;}
+-->
+</style>
+    <script src="/public/Mashery/scripts/Mashery/Mashery-base.js?25453" type="text/javascript"></script>
+    <script src="/public/Mashery/scripts/Mashery/source/ForumPreview.js" type="text/javascript"></script>
+    <script src="/files/jquery-3.5.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+$('head').append('<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no"/>');
+$('head').append('<meta http-equiv="content-security-policy|Cache-control" content="no-cache, default-src">');
+//]]>
+</script>
+        <!-- add syntax highlighter -->
+        <script type="text/javascript" >
+            if(window.SyntaxHighlighter != undefined) { // check for syntax highlighter load before using
+                SyntaxHighlighter.all();
+            }
+        </script>
+        <!-- end syntax highlighter -->
+        <!--[if lt IE 7.]>
+            <link href="/public/Mashery/styles/IE6.css" type="text/css" media="screen" rel="stylesheet" />
+        <![endif]-->
+        <!--[if IE 7]>
+            <link href="/public/Mashery/styles/IE7.css" type="text/css" media="screen" rel="stylesheet" />
+        <![endif]-->
+        <!--[if gte IE 8]>
+            <link href="/public/Mashery/styles/IE8.css" type="text/css" media="screen" rel="stylesheet" />
+        <![endif]-->
+
+    </head>
+    <body id="page-docs" class="page-docs read en_US">
+        <!-- PAGE -->
+        <div id="page" class="page read">
+
+            <!-- HEADER -->
+            <div id="header" class="header">
+                <div id="branding" class="branding">
+                    <div id="branding-logo" class="branding-logo">
+                        Lufthansa Developer Center                    </div><!-- /branding-logo -->
+                    <div id="branding-tagline">
+                    </div><!-- /branding-tagline -->
+                    <!--div id="branding-mashery"></div --><!-- /branding-mashery -->
+                </div><!-- /branding -->
+                <div id="search" class="search">
+    <form id="search-input" class="search-input" method="get" action="/search">
+        <div>
+            <input id="search-box" class="search-box" type="text"
+                    value="" name="q" />
+            <input id="search-button" class="search-button" type="submit"
+                    value="Search" />
+        </div>
+    </form>
+</div>
+            </div>
+            <!-- /HEADER -->
+
+            <div id="user" class="user">
+                <div id="user-auth" class="user-auth">
+                </div><!-- /user-auth -->
+                <div id="user-main" class="user-main">
+                </div><!-- /user-main -->
+                <div id="user-nav" class="user-nav">
+                    <ul>
+                        <script >
+    window. addEventListener('load', (event) => {
+        var lastSignOut = document.getElementById("lastSignOut");
+        if(lastSignOut) {
+            lastSignOut.addEventListener("click", function () {
+                document.getElementById('mashery-logout-form').submit();
+            });
+        }
+    });
+</script>
+                <li class="first sign-in">
+            <a href="https://developer.lufthansa.com/login/login?r=https%3A%2F%2Fdeveloper.lufthansa.com%2Fdocs&amp;h=acec06ec004c93d746e95f135c29e952">Sign In</a>        </li>
+                
+        
+    
+
+                    </ul>
+                </div><!-- /user-nav -->
+                <div id="user-menu">
+    </div>
+            </div><!-- /user -->
+
+            <div id="info" class="info" style="display: none;">
+            </div><!-- /info -->
+
+            <!-- CONTENT -->
+            <div id="content" class="content">
+
+                
+                <div id="main" class="main">
+                    
+<h1 class="first">Lufthansa Open API</h1>
+
+    <div class="section">
+        <div class="section-body">
+<h3>Welcome!</h3>
+<p>You are a pioneer of our new Open API. If you find a mistake, or can't find what you're looking for, let us know.</p>
+<p>The documentation is in two sections. 'Getting Started' tells you everything you need to know to make a request via a REST client or our <a href="https://developer.lufthansa.com/io-docs">API Playground</a>. It gives an overview of how our requests are structured and what you can expect as a response. If you've used a REST API before then you'll know most of this already. The <a href="/docs/api_details/">'Method Details'</a> section describes the possible input and output fields for every service.</p>
+<p>Subscribing to our Public Plan will allow you to make a limited number of requests to the API. This should be sufficient to explore the API and its contents. Once you develop an application for serious use, <a href="https://developer.lufthansa.com/contact">contact</a> us so that we can raise your call quota.</p>
+<p>We also offer a range of additional services to our commercial partners via an extended Partner Plan. Please <a href="https://developer.lufthansa.com/contact">contact</a> us for further information on available services.</p>        </div>
+
+
+        <div class="section-meta">
+            <p>
+            <span class="revision">version 23</span> <span class="timestamp">as of <abbr title="6/16/26 4:41 am">5 months ago</abbr></span> <span class="moniker">by <span class="user-reference">Marcin Danielczuk</span></span></p>
+        </div>
+        
+        
+            </div>
+
+    
+
+                </div><!-- /main -->
+
+                <!-- SUB -->
+                <div id="sub" class="sub">
+                    <h2>Docs Navigation</h2>
+
+<ul>
+<li class="active"><a href="https://developer.lufthansa.com/docs/read/Home" class="active">Lufthansa Open API</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/API_basics">Getting Started</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/Getting_Started">Getting an Access Token</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/Building_a_Request">Building a Request</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/HTTP_request_headers">HTTP request headers</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/HTTP_response_codes_and_errors">HTTP response codes</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/Error_Messages">Error Messages</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/JSON_Format_2">JSON Format</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/Paging">Paging</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/notification_service">Notifications </a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/notification_service/Subscribe_to_a_Topic">Subscribe to a Topic</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/notification_service/Obtain_a_JWT_for_MQTT_broker">Obtain a JWT for MQTT broker</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/notification_service/Oauth_Token_for_Certificate_Manager_API">Oauth Token for Certificate Manager API</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/notification_service/Connect_to_MQTT_Broker">Connect to MQTT Broker</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/notification_service/Migration_Guide_for_Notifications">Migration Guide for Notifications and Certificate Manager</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_basics/Known_Issues">Known Issues</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details">Public API Method Details</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/flight_schedules">Flight Schedules</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/Reference_Data">Reference Data</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/reference_data/Countries">Countries</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/reference_data/Cities">Cities</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/reference_data/Airports">Airports</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/reference_data/Nearest_Airport">Nearest Airports</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/reference_data/Airlines">Airlines</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/reference_data/Aircraft">Aircraft</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/offers">Offers</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/offers/Seat_Maps">Seat Maps</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/offers/Lounges">Lounges</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations">Operations</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Flight_Schedules">Flight Schedules</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Flight_Status">Flight Status</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Flight_Status_by_City_Pair">Flight Status by Route</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Flight_Status_by_Airport">Flight Status at Arrival Airport</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Departures_Status">Flight Status at Departure Airport</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Flight_Status_Response">Flight Status Response</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Customer_Flight_Information">Customer Flight Information</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Customer_Flight_Information_at_Arrival_Airport">Customer Flight Information at Arrival Airport</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Customer_Flight_Information_by_Route">Customer Flight Information by Route</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Customer_Flight_Information_at_Departure_Airport">Customer Flight Information at Departure Airport</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/operations/Flight_Information_Response">Customer Flight Information Response</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/notifications">Notifications</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/notifications/FlightUpdate">FlightUpdate</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/notifications/JWT_JSON_Web_Token">JWT - JSON Web Token</a></li>
+</ul>
+</li>
+<li>cargo<ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_details/cargo/Cargo">Cargo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner">Partner API Method Details</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/customer_deeplinks">Customer Deeplinks API</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/customer_deeplinks/Booking_Servicing_Deeplinks">Booking Servicing Deeplinks</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/customer_deeplinks/Checkin_Deeplinks">Checkin Deeplinks</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/customer_deeplinks/Shopping_Links_Search">Shopping Links Search</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/customer_deeplinks/Shopping_Links_Confirmation">Shopping Links Confirmation</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/Getting_a_PARTNER_API_token">Getting a PARTNER API token</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/reference_data">Reference Data</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/reference_data/Seat_Details">Seat Details</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/promotions">Promotions</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/promotions/Price_Offer">Price Offer</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/offers">Offers</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/offers/Lowest_Fares_New">BestPrice Lowest Fares</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/offers/Best_Fares_New">BestPrice Best Fares</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/offers/Fares_Subscriptions_New">Fares Subscriptions</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/offers/Fare_Response">Fare Response</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_partner/offers/OND">OND </a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops">FlightOps/Crew API Method Details</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services">Crew Services Overview</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Crew_CheckIn_Times">Crew Check-In Times</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Crew_Lists">Crew Lists</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Duty_Events">Duty Events</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Flight_Leg_Details">Flight Leg Details</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Landing_Report">Landing Report</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Processing_Errors_Model">Processing Errors Model</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Crew_Hotel_Information">Crew Hotel Information</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Simulator_Crewlist">Simulator Crewlist</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Common_Weather_Service">Common Weather Service</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/common_crew_services/Crew_Rotation">Crew Rotation</a></li>
+</ul>
+</li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/crew_oauth2_server">Crew OAuth2 Server Overview</a><ul>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/crew_oauth2_server/Authorization_Endpoint">Authorization Endpoint</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/crew_oauth2_server/Token_Endpoint">Token Endpoint</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/crew_oauth2_server/Logout_Endpoints">Logout Endpoints</a></li>
+<li><a href="https://developer.lufthansa.com/docs/read/api_flightops/crew_oauth2_server/Registration_of_redirect_uri_in_Developer_Portal">Registration of redirect_uri in Developer Portal</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+                </div>
+                <!-- /SUB -->
+
+                <div id="breadcrumbs">
+                </div><!-- /breadcrumbs -->
+
+                <div id="local" class="local">
+                    <ul>
+    <li class=" first"><a href="https://developer.lufthansa.com/page">Home</a></li>
+    <li class=" "><a href="https://developer.lufthansa.com/contact">Get in touch</a></li>
+    <li class="active "><a href="https://developer.lufthansa.com/docs">Docs</a></li>
+    <li class=" "><a href="https://developer.lufthansa.com/io-docs">Play with the Data</a></li>
+    <li class=" "><a href="https://developer.lufthansa.com/partner_apis">Partner APIs</a></li>
+</ul>
+                </div><!-- /local -->
+
+                                    <div id="nav" class="nav">
+                    </div><!-- /nav -->
+                            </div>
+            <!-- /CONTENT -->
+
+            <div id="footer" class="footer">
+
+                
+                <!-- SITEINFO -->
+                <div id="siteinfo" class="siteinfo">
+                        <p><h2 style="font-size: 16px"> <a href="/contact" style="padding: 3px">Contact us here for any information or if you are missing something!</a></h2><p><a href="/Data_Privacy"style="padding: 3px">Data Privacy</a><a href="/General_Terms_and_Conditions">Terms and Conditions</a> <a href="http://www.lufthansa.com">LH.com</a> <a href="http://lh-innovationhub.com/">Lufthansa Innovation Hub</a> <a href="https://www.lufthansagroup.com/en/service/imprint.html">Imprint</a></p>
+ <script nonce="{csp_nonce}" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script>
+jq351 = jQuery.noConflict(true);
+jq351.getScript('/files/lufthansa_151020.js');
+jq351.getScript('/files/bootstrap_151020.js');
+</script>
+<script async nonce="{csp_nonce}" src="/files/run_prettify.js" charset="utf-8"></script>
+</p>                </div>
+                <!-- /SITEINFO -->
+            </div><!-- /footer -->
+        </div>
+        <!-- /page -->
+
+        <!-- Start Branding script tag -->
+        <script type="text/javascript" >
+            // get the branding logo to set the mouseover/out and onclick
+            var brandingLogo = document.getElementById('branding-logo');
+            if(brandingLogo != undefined) {
+                brandingLogo.addEventListener("click", function () {
+                    location.href = "https://developer.lufthansa.com/";
+                });
+
+                brandingLogo.addEventListener("mouseover", function () {
+                    this.style.cursor = 'pointer';
+                });
+
+                brandingLogo.addEventListener("mouseout", function () {
+                    this.style.cursor = 'auto';
+                });
+            }
+
+            // get the mashery logo to set the mouseover/out and onclick
+            var masheryLogo = document.getElementById('branding-mashery');
+            if(masheryLogo != undefined) {
+                masheryLogo.addEventListener("click", function () {
+                    location.href = "http://www.mashery.com/";
+                });
+
+                masheryLogo.addEventListener("mouseover", function () {
+                    this.style.cursor = 'pointer';
+                });
+
+                masheryLogo.addEventListener("mouseout", function () {
+                    this.style.cursor = 'auto';
+                });
+            }
+        </script>
+        <!-- End Branding script tag -->
+            <!-- <div id="extra1">&nbsp;</div>
+            <div id="extra2">&nbsp;</div> -->
+
+        <script type="text/javascript">
+//<![CDATA[
+// Update the heading on the login page
+;(function (window, document, undefined) {
+	var heading = document.querySelector('.page-login.login .options h2');
+	if (!heading) return;
+	heading.textContent = 'Register a TIBCO Cloud API Management ID';
+})(window, document);
+
+var _body = document.getElementsByTagName("BODY")[0];
+_body.style.opacity = 0.0;
+//]]>
+</script>
+    </body>
+</html>

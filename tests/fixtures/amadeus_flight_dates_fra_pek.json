@@ -1,0 +1,116 @@
+{
+  "data": [
+    {
+      "type": "flight-date",
+      "origin": "FRA",
+      "destination": "PEK",
+      "departureDate": "2027-03-02",
+      "returnDate": "2027-03-16",
+      "price": {
+        "total": "489.37"
+      },
+      "links": {
+        "flightDestinations": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=FRA&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE",
+        "flightOffers": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-02&returnDate=2027-03-16&adults=1&nonStop=false"
+      }
+    },
+    {
+      "type": "flight-date",
+      "origin": "FRA",
+      "destination": "PEK",
+      "departureDate": "2027-03-05",
+      "returnDate": "2027-03-19",
+      "price": {
+        "total": "412.90"
+      },
+      "links": {
+        "flightDestinations": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=FRA&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE",
+        "flightOffers": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-05&returnDate=2027-03-19&adults=1&nonStop=false"
+      }
+    },
+    {
+      "type": "flight-date",
+      "origin": "FRA",
+      "destination": "PEK",
+      "departureDate": "2027-03-09",
+      "returnDate": "2027-03-23",
+      "price": {
+        "total": "455.12"
+      },
+      "links": {
+        "flightDestinations": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=FRA&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE",
+        "flightOffers": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-09&returnDate=2027-03-23&adults=1&nonStop=false"
+      }
+    },
+    {
+      "type": "flight-date",
+      "origin": "FRA",
+      "destination": "PEK",
+      "departureDate": "2027-03-12",
+      "returnDate": "2027-03-26",
+      "price": {
+        "total": "398.60"
+      },
+      "links": {
+        "flightDestinations": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=FRA&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE",
+        "flightOffers": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-12&returnDate=2027-03-26&adults=1&nonStop=false"
+      }
+    },
+    {
+      "type": "flight-date",
+      "origin": "FRA",
+      "destination": "PEK",
+      "departureDate": "2027-03-19",
+      "returnDate": "2027-04-02",
+      "price": {
+        "total": "521.00"
+      },
+      "links": {
+        "flightDestinations": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=FRA&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE",
+        "flightOffers": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-19&returnDate=2027-04-02&adults=1&nonStop=false"
+      }
+    },
+    {
+      "type": "flight-date",
+      "origin": "FRA",
+      "destination": "PEK",
+      "departureDate": "2027-03-26",
+      "returnDate": "2027-04-09",
+      "price": {
+        "total": "604.75"
+      },
+      "links": {
+        "flightDestinations": "https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=FRA&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE",
+        "flightOffers": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-26&returnDate=2027-04-09&adults=1&nonStop=false"
+      }
+    }
+  ],
+  "dictionaries": {
+    "currencies": {
+      "EUR": "EURO"
+    },
+    "locations": {
+      "FRA": {
+        "subType": "AIRPORT",
+        "detailedName": "FRANKFURT INTL"
+      },
+      "PEK": {
+        "subType": "AIRPORT",
+        "detailedName": "CAPITAL INTL"
+      }
+    }
+  },
+  "meta": {
+    "currency": "EUR",
+    "links": {
+      "self": "https://test.api.amadeus.com/v1/shopping/flight-dates?origin=FRA&destination=PEK&departureDate=2027-03-01,2027-03-31&oneWay=false&duration=1,21&nonStop=false&viewBy=DATE"
+    },
+    "defaults": {
+      "departureDate": "2027-03-01,2027-03-31",
+      "oneWay": false,
+      "duration": "1,21",
+      "nonStop": false,
+      "viewBy": "DATE"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 403 
+date: Wed, 04 Nov 2026 21:51:17 GMT
+content-type: text/plain
+content-length: 25
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+server-timing: cfEdge;dur=6,cfOrigin;dur=0
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=O2s5k19BPb%2BtAx3rn1nfjNKu6KeSH%2BiK4eJAtSL%2F28iYqT25fMqwoaG1NsNxbSn4YfUaa9Q4k2Ta6g1QsxcVQwNeVkKQ6Zjd1hxU0DQn1ML2KMHlpLfifKb2PufhgYQH2Ls%3D"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+expect-ct: max-age=86400, enforce
+x-xss-protection: 1; mode=block
+x-robots-tag: noai, noimageai
+server: cloudflare
+cf-ray: a556d6d62c693173-IAD
+

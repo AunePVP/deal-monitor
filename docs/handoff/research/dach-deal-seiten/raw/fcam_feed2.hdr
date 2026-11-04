@@ -1,0 +1,9 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+date: Wed, 04 Nov 2026 21:53:18 GMT
+content-type: text/html; charset=iso-8859-1
+content-length: 283
+location: http://first-class-and-more.de/feed
+server: Apache/2.4.69 (Amazon Linux) OpenSSL/3.5.8
+

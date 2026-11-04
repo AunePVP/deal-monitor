@@ -8,6 +8,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from dataclasses import dataclass
 from http.client import HTTPException
 
 USER_AGENT = "deal-monitor/0.1 (+https://github.com/)"
@@ -30,6 +31,22 @@ class HttpError(RuntimeError):
         self.network = network   # True: Server nicht erreichbar / keine Antwort
 
 
+@dataclass
+class Response:
+    """Rohe Antwort (``request(..., full=True)``): Body, Status, Header, endgültige Adresse."""
+
+    body: bytes
+    status: int
+    headers: dict[str, str]
+    url: str              # nach Weiterleitungen (z. B. consent.google.com erkennen)
+
+    def header(self, name: str, default: str = "") -> str:
+        for k, v in self.headers.items():
+            if k.lower() == name.lower():
+                return v
+        return default
+
+
 def request(
     url: str,
     *,
@@ -39,7 +56,11 @@ def request(
     method: str | None = None,
     timeout: float = 20,
     retries: int = 2,
-) -> bytes:
+    full: bool = False,
+) -> bytes | Response:
+    """GET/POST mit Wiederholungen. ``full=True`` liefert statt der Bytes ein ``Response``
+    (Body + Status + Header + endgültige URL) - für Quellen, die Weiterleitungen oder
+    ``Content-Encoding`` selbst auswerten müssen."""
     if params:
         clean = {k: v for k, v in params.items() if v is not None}
         url = f"{url}?{urllib.parse.urlencode(clean)}"
@@ -50,7 +71,10 @@ def request(
         req = urllib.request.Request(url, data=data, headers=hdrs, method=method)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return resp.read()
+                body = resp.read()
+                if full:
+                    return Response(body, resp.status, dict(resp.headers.items()), resp.geturl())
+                return body
         except urllib.error.HTTPError as e:
             last, status = e, e.code
             # 4xx (außer 429) sind endgültig - nicht wiederholen

@@ -1,0 +1,21 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+content-security-policy: frame-ancestors 'self' https://*.travelzoo.com;
+x-frame-options: SAMEORIGIN
+x-ip: tzprodwww
+x-azid: 41
+x-akamai-transformed: 0 - 0 -
+expires: Wed, 04 Nov 2026 21:50:42 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 21:50:42 GMT
+set-cookie: __RequestVerificationToken=N8cv78SBV5vKT-TMXCa4m256pkK9Omwfkd3fG1OPEo5x4vtvVuElbZuip1Vc12cGe9Aqj9SJYwOMNCzagw2p9zwyErU1; path=/; secure; HttpOnly
+server-timing: cdn-cache; desc=MISS
+server-timing: edge; dur=111
+server-timing: origin; dur=179
+set-cookie: _abck=25F8184A9AC792C56CE9DA6FF46927D1~-1~YAAQBVPRFynHX4OhAQAAVPqKqBBfkDlgK6RTo8ssVtiKkHxDPidaO5yZMiehC1hU1f7NNv/YSB0etyVSG8vnBPX57uCvh85tBMSxzGP+cFqYncsyOtEblnbC4k2ZyosUAuTs0j1P7xhrpIgu6VTiqeBmj9Pm31QXNXthv4gV9oLVOKM9jd4geBY1YQpe1OixdehKq5uRVvSLItHk8zwQ4nIbZNKwRLFqNfjNyxhGb9el5A9oZLyiGeKE38vPPxBO44OgFu29xOnyqHyTBADdxH6Ybvsb1ED7cw2iC7Fw/moKvWnQyb252VfKFiarsVzvMNMHGGDoLYqEtxbsOrFFFmkwwlsIvP3o59EVqu0+y3PfHMLAwM0Um0KSd2x4VAhyvPXzfLa1Y7SkDGp5nqymotQZez/w+daqZ03pDetXGTfe+Ab/Tp3gYyCIJ7KkWRqV/vCJmJM+1mWrHUk=~-1~-1~-1~-1~-1; Domain=.travelzoo.com; Path=/; Expires=Thu, 04 Nov 2027 21:50:42 GMT; Max-Age=31536000; Secure
+set-cookie: bm_sz=BA8B3B96246E0D4846BE739F0EDDCCED~YAAQBVPRFyrHX4OhAQAAVPqKqAEIyzF8k2I+jfkkP1UUgIg8/51q3YbaHurMg90GTQfwBsBeWKYG47Pt2vXeOFWkfE8kkDFJ+bksm8m/JAvVM1lixKjgWdialazIVGW3GotYajKF0HTaSmhm5W9nNIIVARgXUfMlvRLebUgxSP5hPJ2JgMFTjwasaGIaGdEeYe8qkK7Le+QcvD1QiuYh+nAcatCnkQrM/XOY/VsF69fuLRnzYAHIbL+pbqGWf6ij/7PndvSJoYmb1wA+kJkv1fGbc1mIijcn5h9thnoX0O+Kh0mZTYc3r3SIUQevvJLBWqNpKVa14TodHMQ6FdIlt5UGrVJR3HqjIbGFYnnmzDJnFVogjeG4qFKrcdr5kBj8OnHU5QbZXmfkrfwJTBT4pA==~3490114~3354949; Domain=.travelzoo.com; Path=/; Expires=Thu, 05 Nov 2026 01:50:42 GMT; Max-Age=14400
+server-timing: ak_p; desc="1793829042425_399594245_531241521_28964_8823_18_42_15";dur=1
+

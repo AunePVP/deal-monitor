@@ -1,0 +1,26 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:45:26 GMT
+content-type: text/xml; charset=UTF-8
+server: cloudflare
+x-robots-tag: noindex, follow
+strict-transport-security: max-age=0; preload
+content-security-policy: frame-ancestors 'self' travel-dealz.de travel-dealz.com forum.travel-dealz.de kreuzfahrten.travel-dealz.de cruises.travel-dealz.com;
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+access-control-allow-origin: https://travel-dealz.com
+access-control-allow-origin: https://cruises.travel-dealz.com
+access-control-allow-origin: https://travel-dealz.de
+access-control-allow-origin: https://kreuzfahrten.travel-dealz.de
+access-control-allow-origin: https://data.travel-dealz.net
+access-control-allow-origin: https://farecollection.travel-dealz.com
+permissions-policy: interest-cohort=()
+x-rocket-nginx-bypass: No
+x-rocket-nginx-reason: File not cached
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=bVqwzAgq60cyhOby3f9YP6XueYeZUtfiYkQbY3c4jt7iLOITIijqlfH%2BqLsjZ%2BBQy4iFw90bdUTxDOXT6z00B17siDHB16zieC04SV8fnBOfw1F%2B110SYXkGlePvatmPMNo%3D"}]}
+cf-ray: a556ce417905172f-IAD
+alt-svc: h3=":443"; ma=86400
+

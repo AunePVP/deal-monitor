@@ -1,0 +1,15 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:54:18 GMT
+content-type: application/rss+xml; charset=UTF-8
+expires: Thu, 19 Nov 1981 08:52:00 GMT
+cache-control: no-store, no-cache, must-revalidate
+pragma: no-cache
+link: <https://www.sparhamster.at/wp-json/>; rel="https://api.w.org/"
+set-cookie: PHPSESSID=0abdb05a96206476ae64a4c881d5ab1b; path=/
+last-modified: Wed, 04 Nov 2026 19:39:17 GMT
+vary: Accept-Encoding
+server: HTTP Server
+alt-svc: h3=":443"; ma=86400
+

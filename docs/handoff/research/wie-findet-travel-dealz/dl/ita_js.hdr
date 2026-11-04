@@ -1,0 +1,20 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+accept-ranges: bytes
+vary: Accept-Encoding
+content-encoding: gzip
+content-type: text/javascript
+access-control-allow-origin: *
+cross-origin-resource-policy: cross-origin
+cross-origin-opener-policy: same-origin; report-to="alkali"
+report-to: {"group":"alkali","max_age":2592000,"endpoints":[{"url":"https://csp.withgoogle.com/csp/report-to/alkali"}]}
+content-length: 571830
+date: Wed, 04 Nov 2026 22:04:51 GMT
+expires: Thu, 04 Nov 2027 22:04:51 GMT
+cache-control: public, max-age=31536000
+last-modified: Thu, 29 Oct 2026 16:02:12 GMT
+x-content-type-options: nosniff
+server: sffe
+x-xss-protection: 0
+

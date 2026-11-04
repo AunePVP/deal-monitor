@@ -1,0 +1,17 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+server: nginx
+date: Wed, 04 Nov 2026 21:44:28 GMT
+content-type: application/rss+xml; charset=UTF-8
+x-frame-options: SAMEORIGIN
+expires: Thu, 19 Nov 1981 08:52:00 GMT
+cache-control: no-store, no-cache, must-revalidate
+pragma: no-cache
+link: <https://www.urlaubstracker.de/wp-json/>; rel="https://api.w.org/", <https://www.urlaubstracker.de/>; rel="canonical"
+set-cookie: PHPSESSID=7rrq8lrjuj1r7unn0fdbnpi4ef; path=/
+last-modified: Wed, 04 Nov 2026 21:30:02 GMT
+etag: "31f6b699b0749c1de5fb592465abba12"
+vary: Accept-Encoding
+front-end-https: on
+

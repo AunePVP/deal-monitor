@@ -1,0 +1,27 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 404 
+content-type: text/html; charset=UTF-8
+server: Apache
+last-modified: Thu, 11 Dec 2025 20:15:38 GMT
+accept-ranges: bytes
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+content-security-policy: object-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: p11.techlab-cdn.com; base-uri 'none'; worker-src blob: www.cathaypacific.com flights.cathaypacific.com api.cathaypacific.com book.cathaypacific.com
+x-ua-compatible: IE=edge
+x-frame-options: SAMEORIGIN
+x-akamai-transformed: 0 - 0 -
+date: Wed, 04 Nov 2026 22:04:59 GMT
+content-length: 3133
+set-cookie: AKA_A2=A; expires=Wed, 04-Nov-2026 23:04:59 GMT; path=/; domain=cathaypacific.com; secure; HttpOnly
+server-timing: cdn-cache; desc=MISS
+server-timing: edge; dur=136
+server-timing: origin; dur=209
+vary: Origin
+strict-transport-security: max-age=15768000
+set-cookie: _abck=AFAE140C5D18D7ECC2B28E7E9F7260E1~-1~YAAQRhjQF6OAF5ihAQAAHAuYqBD0kPapmlTGvqo9jYiJwAnyuXxqq6nQJ4V6WOsLOSPjmbKlNd3WVN3/9ar6UwfftOWTXoMbMULlpTebo067l613tqMzBD0rpUaCQi5UAPGqinx7eyelhzijgGipDq5kyvhvAjo56wq0W4oYvFY6v+F59PpzsLvg9NbAQOVfCuPN1tq5anF1ez/zrvW4DlZbg2/RPdTMVWq+illDFyjZGVQUQkAww2X3Sri6Ydd6TmsMijbQ8+a26sA99AgcXRrWEqMY5P7O2Cd3pwOEQTZI9sCf7gHIcfMqDxnf9AcFX3OidDgppZRdTayKDmtbOU6yj/48lb0FxaM1p7rEURr9+Ux2MLEoTQnpAWMKuWilvU48pGkQvZheelF5qAaeZ3JxtLVu5yPxcDK9TOAESGLdzC0CXKjEFOCYrehOjeEBudwd9xmvfil0VXoj0u90~-1~-1~-1~-1~-1; Domain=.cathaypacific.com; Path=/; Expires=Thu, 04 Nov 2027 22:04:59 GMT; Max-Age=31536000; Secure
+set-cookie: bm_s=YAAQRhjQF6SAF5ihAQAAHAuYqAYZ9xnDJVIu8/IaYYwbtir6VXcvANIjg+mll57Ki7Ta9FG2rotKWFrX0r/5+AFEw5V8ub7lY8kgexbblFUfbIKqPpQNiYsX3sHmzPSZ/2VdUR00/2PLrIEfaw8n7/GTCEAzOO5EqNFOW/p4RGpJZxyXEIiohfAnqNdodmPPY11pYFrPR7dDAwdfojcBwktWr4qYP22sBOiNOVt/AvQR1mRnpamc3C4Wrc+y/CTLSlDTOCxkZ/drDfXvgFImFPx/ayK3o/ENMenlQkXDPzhvUAIU1eEYt8JbNt1ewpRFF0/r49tVMhJXyozw0GLaNx/Ck0jtM7rG0znhM8glxyOeoB0fvA22CHJFrSrxHxUnCA9APc+CUFrDBjHUvuWk3D6sWrLQ+Ezown/B5+bcTtztDWvIEC3usiXSE7Ax1CaV+Qbx5zT1+q2NGdfU1EtO3lJl2O90y8miHTmNGUPXIddOLej7GTYMeoYaQJbSdktdLK9PqwwhQRxuK24vs0yl8d+K1Hzb1tN2wahRKbZeXPe884mF3+9tKjuNkn8OVWPFwTcgv9N2AIu66JDFS1Tg6VV3cNL7DGgIU1JIBDWgyIEYcZT3DXPs07FW7pJHMToZ4cwNw/pG7jVT92RXRipo6t7toJ80ZDtVPVgdbi6vmk5FnhEXe3zp4pI495iViFpSjLRX7plCoQM5F6zaBFWIdvhz5vx1blg0ej2mNpbVwhJsyTeAGjsAzcPbyG60c3piUTsFlTz3ZjcrWnAk3aaaHk+z+mK7VYjmojMpNSlOMLM53hgro1AbNrRoalbmyVeuvdzc41j/Ti/JjdntvZu2fmIy6VmKwWSqCzclxyuxGuMhlZymgcHZx+vGoPjqnKziT4+1HdMPZwS6pVwDjfCnak+oF2vD1p/R8coWhSTDYZvhrTdcODGFebIh4izxl4vKpFO6GliQfJraL1LMY9e2Sr5ZzsUBpKJY1a6QGKTqmNQ1Fs4Y1QBlQ0PKV85q81M=; Domain=.cathaypacific.com; Path=/; Expires=Sat, 05 Dec 2026 22:04:59 GMT; Max-Age=2678400; Secure; HttpOnly
+set-cookie: bm_so=A5C46BCF9915DB01E865C523599C1A975BC2BD7D06C809DB8D4376005F9C1375~YAAQRhjQF6WAF5ihAQAAHAuYqAmq5StyhNB7OxHzP21QFnvT+xF9Xj9+u9OPSFkM6faFChNRC4U/HIASe+CgeFsCaltMImC0i6uB6zOhwL6FVqPwtVZqpntUSSA0L0Bcx0l7U3rzdOSEkkGblRgchHzfB2MfwG81kXjb/UQm/YzDIJsXfpleoUvF+P1dgk3IC597mKh0ezcZzelBDcYwMt5SpFPW4YZFlc8HZnO6D2cq5ctSnLWNrV27berBEwGtzj+BRKOm0khuNW+6CqLq5Ij2GGWgQ6rV27CGZmhP4yL/AjKPjF4sXH3UVXczK3yaUCtOJywhVNOgCZKYfhav6JpL1M28zd1l9UQ8hu8Xi011Xf08TBeQoPQ5/DUZchAOSwjERmGrIDErkJ/kHHyT7g6+cWWJ6j//swMrzxDpvWvFXRKmLS+QItNo8ZeNOE0TTvxFm/klyLUu1oBk773OcLiCJslGf+i7G1Yq94XNk0m/XuU=~2; Domain=.cathaypacific.com; Path=/; Expires=Thu, 05 Nov 2026 22:04:59 GMT; Max-Age=86400; Secure
+set-cookie: bm_sz=5E071A69B2CCA2D63E28171FCD69E0D6~YAAQRhjQF6aAF5ihAQAAHAuYqAGFz57oO9ekT2yTbilv016m/letZT75N3Y9NHD7j19l+jUERfi5xUFsE/pmYU+ggbCOXax7jaSFHoKflt/wDPlJQrv1Q9N89hbHZR77gqTVBBy5AX2NwKo60q5sByQ1Ok46s/SsAN2IT604d+zxZhrhfXJpdWmYmtQapGSQJiTibiN4Ib6Nd+YNjl0kJ88bZZP+wkVF4ydlMGmPvnCm6pMxEC7PD0nwHonqn1RVuwMBHiHUKMa/l6dk8lMB+5iAVhzI17FTShxXAFvWiHBbEuQ6qcRQR7KJHeEradvkYUmllY5cljywGMiIuK0E1IdwM/v1nHIuRYtlFnHgx41zJrQHLNd0q+u48rM7tTKWzUFFCGu/f2czr5bWASsIk69c55Wi~4342321~4469555; Domain=.cathaypacific.com; Path=/; Expires=Thu, 05 Nov 2026 02:04:58 GMT; Max-Age=14399
+server-timing: ak_p; desc="1793829898500_399513670_2658232645_34396_124938_17_50_15";dur=1
+

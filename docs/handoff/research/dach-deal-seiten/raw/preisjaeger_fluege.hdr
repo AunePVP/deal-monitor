@@ -1,0 +1,23 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:44:45 GMT
+content-type: text/xml; charset=utf-8
+server: cloudflare
+vary: Accept-Encoding
+cache-control: no-cache, private
+x-frame-options: SAMEORIGIN
+x-xss-protection: 1
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000
+content-security-policy: default-src https:; script-src https: 'unsafe-inline' 'unsafe-eval'; style-src https: 'unsafe-inline'; img-src https: data: blob:; font-src https: data:; connect-src https: wss:; media-src https: blob: https://customer-5qepixzh3p8owb6t.cloudflarestream.com;
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: midi=()
+set-cookie: pepper_session=%225zLZToC9jXTLrTAZIMqLBB97k3fWRW8pmcQTcZ8O%22; expires=Wed, 04 Nov 2026 22:19:45 GMT; Max-Age=2100; path=/; secure; httponly
+set-cookie: f_v=%22f3068ca6-d898-11f1-9f90-0242ac110002%22; expires=Thu, 04 Nov 2027 21:44:44 GMT; Max-Age=31535999; path=/; secure
+set-cookie: u_l=0; expires=Wed, 04 Nov 2026 21:59:44 GMT; Max-Age=899; path=/; secure; httponly
+set-cookie: xsrf_t=%22jwPzBRsxeTXTuDBuHQxrU3btB7xqd8VbA5dVfOv5%22; expires=Fri, 06 Nov 2026 08:44:44 GMT; Max-Age=125999; path=/; secure; samesite=strict
+cf-cache-status: DYNAMIC
+cf-ray: a556cd3ffd04a16b-IAD
+alt-svc: h3=":443"; ma=86400
+

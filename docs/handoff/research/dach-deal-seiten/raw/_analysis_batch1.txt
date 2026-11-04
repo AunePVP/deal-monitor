@@ -1,0 +1,120 @@
+##### td_region_schweiz
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 13:41:11 +0000 | Explora Journeys Sonderpreise: Luxuskreuzfahrten im Winter 2026/27 ab 1.430€ p.P. (Alleinreisende ab 1.790€) | https://travel-dealz.de/deal/explora-journeys-sonderpreise-winter/?utm_source=feed&utm_med
+  [2] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [3] Wed, 04 Nov 2026 10:37:46 +0000 | China Eastern: Gabelflüge Amsterdam – Tokio – Frankfurt ab 426€ (Nov. / Dez. 2026) | https://travel-dealz.de/ticker/486604/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [4] Wed, 04 Nov 2026 10:17:50 +0000 | Kanaren: 7 Nächte mit der Costa Smeralda ab Gran Canaria inkl. Flügen, Zug zum Flug & Transfers ab 699€ p.P. | https://travel-dealz.de/ticker/472935/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [5] Wed, 04 Nov 2026 10:00:46 +0000 | New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum) | https://travel-dealz.de/deal/new-york-condor-premium-class/?utm_source=feed&utm_medium=rss
+  [6] Wed, 04 Nov 2026 09:03:00 +0000 | 50% Rabatt: Schweiz ↔ Paris mit dem TGV Lyria ab 20€ pro Richtung | https://travel-dealz.de/deal/tgv-lyria-schweiz-paris/?utm_source=feed&utm_medium=rss&utm_c
+  [7] Wed, 04 Nov 2026 08:48:51 +0000 | MSC World Europa: 14 Nächte Karibik Kreuzfahrten von Martinique mit Flügen & Transfers ab 1.849€ p.P. | https://travel-dealz.de/deal/mscworld-europa-kreuzfahrt-von-martinique-2026/?utm_source=fe
+  [8] Wed, 04 Nov 2026 08:22:29 +0000 | Genf – Sao Paulo: LATAM kommt in die Schweiz | https://travel-dealz.de/ticker/486575/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [9] Wed, 04 Nov 2026 07:12:32 +0000 | Costa Toscana: 7 Nächte Mittelmeer-Kreuzfahrten von Savona ab 399€ p.P. (auch Alleinreisende) | https://travel-dealz.de/deal/costa-toscana-savona-mittelmeer-dezember/?utm_source=feed&utm
+  [10] Wed, 04 Nov 2026 07:08:13 +0000 | Last Minute: Bonaire ab 416€ mit Corendon von Amsterdam (Handgepäck) | https://travel-dealz.de/ticker/486560/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [11] Wed, 04 Nov 2026 06:11:53 +0000 | Costa Serena: 20 Nächte Transatlantik-Kreuzfahrt von Buenos Aires nach Barcelona ab 889€ (ohne Einzelzuschlag) | https://travel-dealz.de/deal/costa-serena-buenos-aires-barcelona/?utm_source=feed&utm_medi
+  [12] Tue, 03 Nov 2026 16:09:35 +0000 | Condor plant zwei eigene Lounges am Flughafen Frankfurt | https://travel-dealz.de/ticker/486531/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+##### td_region_de
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 17:43:00 +0000 | Letzte Chance: 50.000 Hilton Honors Punkte + Gold Status für die Hilton Honors Kreditkarte | https://travel-dealz.de/deal/hilton-honors-kreditkarte-willkommensbonus-okt27/?utm_source=
+  [2] Wed, 04 Nov 2026 17:30:42 +0000 | Lufthansa Gutschein: 40€ Rabatt auf Langstrecken im Nov. 2026 (z.B. Seattle ab 529€ inkl. Gepäck) | https://travel-dealz.de/gutschein/lufthansa/?utm_source=feed&utm_medium=rss&utm_campaign=r
+  [3] Wed, 04 Nov 2026 13:41:11 +0000 | Explora Journeys Sonderpreise: Luxuskreuzfahrten im Winter 2026/27 ab 1.430€ p.P. (Alleinreisende ab 1.790€) | https://travel-dealz.de/deal/explora-journeys-sonderpreise-winter/?utm_source=feed&utm_med
+  [4] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [5] Wed, 04 Nov 2026 10:37:46 +0000 | China Eastern: Gabelflüge Amsterdam – Tokio – Frankfurt ab 426€ (Nov. / Dez. 2026) | https://travel-dealz.de/ticker/486604/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [6] Wed, 04 Nov 2026 10:17:50 +0000 | Kanaren: 7 Nächte mit der Costa Smeralda ab Gran Canaria inkl. Flügen, Zug zum Flug & Transfers ab 699€ p.P. | https://travel-dealz.de/ticker/472935/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [7] Wed, 04 Nov 2026 10:00:46 +0000 | New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum) | https://travel-dealz.de/deal/new-york-condor-premium-class/?utm_source=feed&utm_medium=rss
+  [8] Wed, 04 Nov 2026 09:03:00 +0000 | 50% Rabatt: Schweiz ↔ Paris mit dem TGV Lyria ab 20€ pro Richtung | https://travel-dealz.de/deal/tgv-lyria-schweiz-paris/?utm_source=feed&utm_medium=rss&utm_c
+  [9] Wed, 04 Nov 2026 08:48:51 +0000 | MSC World Europa: 14 Nächte Karibik Kreuzfahrten von Martinique mit Flügen & Transfers ab 1.849€ p.P. | https://travel-dealz.de/deal/mscworld-europa-kreuzfahrt-von-martinique-2026/?utm_source=fe
+  [10] Wed, 04 Nov 2026 08:47:35 +0000 | TUI JAZ Bluemarine, Hurghada: Ab 564€ p.P. für 1 Woche All-inclusive mit Flügen & Transfers im Winter | https://travel-dealz.de/deal/tuijaz-bluemarine-pauschal/?utm_source=feed&utm_medium=rss&ut
+  [11] Wed, 04 Nov 2026 08:22:29 +0000 | Genf – Sao Paulo: LATAM kommt in die Schweiz | https://travel-dealz.de/ticker/486575/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [12] Wed, 04 Nov 2026 07:12:32 +0000 | Costa Toscana: 7 Nächte Mittelmeer-Kreuzfahrten von Savona ab 399€ p.P. (auch Alleinreisende) | https://travel-dealz.de/deal/costa-toscana-savona-mittelmeer-dezember/?utm_source=feed&utm
+##### td_feed_posttype_deal
+FORMAT=RSS ITEMS=100
+  [1] Wed, 04 Nov 2026 17:43:00 +0000 | Letzte Chance: 50.000 Hilton Honors Punkte + Gold Status für die Hilton Honors Kreditkarte | https://travel-dealz.de/deal/hilton-honors-kreditkarte-willkommensbonus-okt27/?utm_source=
+  [2] Wed, 04 Nov 2026 13:41:11 +0000 | Explora Journeys Sonderpreise: Luxuskreuzfahrten im Winter 2026/27 ab 1.430€ p.P. (Alleinreisende ab 1.790€) | https://travel-dealz.de/deal/explora-journeys-sonderpreise-winter/?utm_source=feed&utm_med
+  [3] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [4] Wed, 04 Nov 2026 10:00:46 +0000 | New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum) | https://travel-dealz.de/deal/new-york-condor-premium-class/?utm_source=feed&utm_medium=rss
+  [5] Wed, 04 Nov 2026 09:03:00 +0000 | 50% Rabatt: Schweiz ↔ Paris mit dem TGV Lyria ab 20€ pro Richtung | https://travel-dealz.de/deal/tgv-lyria-schweiz-paris/?utm_source=feed&utm_medium=rss&utm_c
+  [6] Wed, 04 Nov 2026 08:48:51 +0000 | MSC World Europa: 14 Nächte Karibik Kreuzfahrten von Martinique mit Flügen & Transfers ab 1.849€ p.P. | https://travel-dealz.de/deal/mscworld-europa-kreuzfahrt-von-martinique-2026/?utm_source=fe
+  [7] Wed, 04 Nov 2026 08:47:35 +0000 | TUI JAZ Bluemarine, Hurghada: Ab 564€ p.P. für 1 Woche All-inclusive mit Flügen & Transfers im Winter | https://travel-dealz.de/deal/tuijaz-bluemarine-pauschal/?utm_source=feed&utm_medium=rss&ut
+  [8] Wed, 04 Nov 2026 07:12:32 +0000 | Costa Toscana: 7 Nächte Mittelmeer-Kreuzfahrten von Savona ab 399€ p.P. (auch Alleinreisende) | https://travel-dealz.de/deal/costa-toscana-savona-mittelmeer-dezember/?utm_source=feed&utm
+  [9] Wed, 04 Nov 2026 07:10:20 +0000 | Blue Reef Resort, Marsa Alam: 1 Woche All-inclusive Pauschalreise ab 539€ p.P. im Dezember | https://travel-dealz.de/deal/blue-reef-resort-marsa-pauschal/?utm_source=feed&utm_medium=r
+  [10] Wed, 04 Nov 2026 06:11:53 +0000 | Costa Serena: 20 Nächte Transatlantik-Kreuzfahrt von Buenos Aires nach Barcelona ab 889€ (ohne Einzelzuschlag) | https://travel-dealz.de/deal/costa-serena-buenos-aires-barcelona/?utm_source=feed&utm_medi
+  [11] Tue, 03 Nov 2026 14:47:24 +0000 | Round the World: Vancouver, Seattle, Singapur, Kuala Lumpur + Hanoi ab 898€ inkl. Gepäck (getrennte Tickets) | https://travel-dealz.de/deal/round-the-world-nov26/?utm_source=feed&utm_medium=rss&utm_cam
+  [12] Tue, 03 Nov 2026 11:19:33 +0000 | Explora II: 10 Nächte Luxuskreuzfahrt von Civitavecchia über Amalfi & Marokko nach Barcelona ab 2.840€ (Allein | https://travel-dealz.de/deal/explora-ii-civitavecchia-barcelona-jan27/?utm_source=feed&utm
+##### meilenoptimieren_feed
+FORMAT=RSS ITEMS=15
+  [1] Wed, 04 Nov 2026 09:30:57 +0000 | Diese Airlines setzen auf Starlink-Internet: Air Tahiti Nui führt ab 2027 kostenloses WLAN ein | https://meilenoptimieren.com/starlink-airlines/
+  [2] Wed, 04 Nov 2026 06:00:40 +0000 | Singapore Airlines stellt neue First Class und Business Class am 6. November vor | https://meilenoptimieren.com/singapore-airlines-neue-business-class-und-first-class/
+  [3] Wed, 04 Nov 2026 05:30:45 +0000 | Miles & More Meilen mit Amazon sammeln – Bis zu 12 Meilen/Euro im November | https://meilenoptimieren.com/miles-and-more-meilen-mit-amazon-sammeln/
+  [4] Wed, 04 Nov 2026 05:00:47 +0000 | Edelweiss Streckenmeldung: Las Vegas entfällt im Sommer 2027 | https://meilenoptimieren.com/edelweiss-strecken/
+  [5] Wed, 04 Nov 2026 04:45:02 +0000 | Wie funktionieren die American Express Zusatzkarten in Österreich? | https://meilenoptimieren.com/american-express-zusatzkarten-oesterreich/
+  [6] Tue, 03 Nov 2026 12:15:45 +0000 | Condor plant zwei eigene Lounges am Flughafen Frankfurt | https://meilenoptimieren.com/condor-plant-lounges-flughafen-frankfurt/
+  [7] Tue, 03 Nov 2026 11:00:43 +0000 | Royal Jordanian Royal Club Status Match – 1 Jahr oneworld Loungezugang ab 149 USD | https://meilenoptimieren.com/royal-jordanian-royal-club-status-match/
+  [8] Tue, 03 Nov 2026 10:00:09 +0000 | American Express Platinum Card Schweiz: 90.000 Punkte Willkommensbonus | https://meilenoptimieren.com/american-express-platinum-card-schweiz/
+  [9] Tue, 03 Nov 2026 07:00:00 +0000 | Alle MO Luxe Hotels Aktionen bei Rosewood – Freinächte und Rabatte | https://meilenoptimieren.com/moluxe-hotels-aktionen-rosewood/
+  [10] Tue, 03 Nov 2026 06:00:11 +0000 | WELTplus Jahresabo mit 10.000 Miles & More Meilen für 100 Euro (=1,00 Cent pro Meile) | https://meilenoptimieren.com/weltplus-abo/
+  [11] Tue, 03 Nov 2026 05:30:09 +0000 | Mit cadooz Gutscheinen Miles & More Meilen sammeln – 6 Meilen je Euro im November | https://meilenoptimieren.com/mit-cadooz-gutscheinen-meilen-sammeln/
+  [12] Tue, 03 Nov 2026 05:00:41 +0000 | Discover Airlines Streckenmeldung: Mit dem Airbus A350 nach San José und Belize | https://meilenoptimieren.com/discover-airlines-strecken/
+##### ferienpiraten_feed
+FORMAT=RSS ITEMS=7
+  [1] Wed, 04 Nov 2026 15:00:00 +0100 | Design-Refugium mit Infinity-Pool ✨ | https://www.ferienpiraten.ch/hotels/the-cambrian-adelboden
+  [2] Wed, 04 Nov 2026 13:00:00 +0100 | Last Minute nach Tirol 😍 | https://www.ferienpiraten.ch/hotels/hotel-elisabeth-kirchberg-in-tirol
+  [3] Wed, 04 Nov 2026 10:04:01 +0100 | Günstige Flüge nach Bangkok 😍 | https://www.ferienpiraten.ch/fluege/etihad-bangkok-fluege
+  [4] Wed, 04 Nov 2026 09:00:00 +0100 | Weihnachtliches London ✨ | https://www.ferienpiraten.ch/hotels/the-corner-london-city
+  [5] Tue, 03 Nov 2026 12:00:00 +0100 | Winterferien im Zillertal ⛷️ | https://www.ferienpiraten.ch/hotels/kosis-sports-lifestyle-hotel-fuegen-zillertal-ch
+  [6] Tue, 03 Nov 2026 09:20:00 +0100 | Einzigartiges Glamping in Belgien | https://www.ferienpiraten.ch/hotels/ch-glamping-ardooie-belgien
+  [7] Tue, 03 Nov 2026 11:10:13 +0100 | Der erste Harry Potter-Weihnachtsmarkt der Welt - in München! ✨🪄 | https://www.ferienpiraten.ch/reise-journal/ch-harry-potter-weihnachtsmarkt
+##### urlaubstracker_feed
+FORMAT=RSS ITEMS=16
+  [1] Wed, 04 Nov 2026 21:30:02 +0000 | Traumziel Kap Verde: 8 Tage Strandurlaub im 4* Hotel inkl. Frühstück, Flug, Zug & Transfer ab 886 € | https://www.urlaubstracker.de/kap-verden-hotel-sobrado/
+  [2] Wed, 04 Nov 2026 20:30:03 +0000 | Unschlagbarer Deal für München: 2 Tage zur Weihnachtsmarktzeit ab 32 € | https://www.urlaubstracker.de/deutschland-muenchen-ibis-city-sued/
+  [3] Wed, 04 Nov 2026 19:30:03 +0000 | Jordanien-Kracher: 8 Tage Jordanien-Rundreise inkl. Flug, Hotels & Transfer für 799€ | https://www.urlaubstracker.de/jordanien-rundreise/
+  [4] Wed, 04 Nov 2026 18:30:02 +0000 | Albanien-Kracher: 8 Tage im TOP 3* Hotel mit Frühstück & Flug ab 239€ | https://www.urlaubstracker.de/albanien-vila-arial/
+  [5] Wed, 04 Nov 2026 17:30:03 +0000 | Low Budget Städtetrip: 3 Tage Budapest inkl. Hotel, Frühstück & Flug | https://www.urlaubstracker.de/ungarn-budapest-bed-breakfast-hotel-budapest/
+  [6] Wed, 04 Nov 2026 16:30:02 +0000 | Thailand-Abenteuer: 15 Tage Bangkok, Khao Lak & Patong mit verschiedenen Hotels & Flug ab 2080€ | https://www.urlaubstracker.de/thailland-rundreise/
+  [7] Wed, 04 Nov 2026 15:30:02 +0000 | Teneriffa-Urlaub zum Verlieben: 8 Tage im 4* Hotel mit Frühstück & Flug für 319€ | https://www.urlaubstracker.de/teneriffa-hotel-o7-tenerife/
+  [8] Wed, 04 Nov 2026 15:00:41 +0000 | Winter-Städtetrip: 4 Tage Venedig inkl. Hotel & Flug ab 238€ | https://www.urlaubstracker.de/venedig-generator-venice/
+  [9] Wed, 04 Nov 2026 14:30:02 +0000 | Rundum-sorglos übers Mittelmeer von Palma bis Heraklion: 9 Tage auf der Mein Schiff 5 mit All Inclusive ab 129 | https://www.urlaubstracker.de/meinschiff5-spanien-italien-griechenland/
+  [10] Wed, 04 Nov 2026 14:00:11 +0000 | Malediven-Traumurlaub: 10 Tage im TOP 4* Resort in Strandvilla  mit Halbpension, Transfer, Gepäck & Flug | https://www.urlaubstracker.de/malediven-addu-atoll-canareef-resort-maldives/
+  [11] Wed, 04 Nov 2026 13:40:02 +0000 | Griechischer Frühbucher-Traumurlaub: 10 Tage Chalkidiki im TOP 3* Hotel mit Flug ab 251€ | https://www.urlaubstracker.de/griechenland-chalkidiki-medusa-hotel/
+  [12] Wed, 04 Nov 2026 13:00:06 +0000 | Papierfabrik wird zum Luxus-Zimmer: 2 Tage Köln im 4* Design-Hotel für 78 € | https://www.urlaubstracker.de/koeln-black/
+##### insideflyer_feed
+FORMAT=RSS ITEMS=10
+  [1] Wed, 04 Nov 2026 11:00:21 +0000 | Das langerwartete Thompson Rome hat eröffnet | https://insideflyer.de/das-langerwartete-thompson-rome-hat-eroeffnet/
+  [2] Wed, 04 Nov 2026 04:00:40 +0000 | Warum die American Express Business Platinum Card für Unternehmer wirtschaftlicher ist als klassische Kreditka | https://insideflyer.de/warum-die-american-express-business-platinum-card-fuer-unternehmer-
+  [3] Tue, 03 Nov 2026 11:00:35 +0000 | The Cape Town EDITION eröffnet als erstes EDITION Hotel in Afrika | https://insideflyer.de/the-cape-town-edition-eroeffnet-als-erstes-edition-hotel-in-afrika/
+  [4] Tue, 03 Nov 2026 04:00:32 +0000 | Minor Hotels: Warum Luxusreisende heute mehr als perfekte Hotels erwarten | https://insideflyer.de/minor-hotels-warum-luxusreisende-heute-mehr-als-perfekte-hotels-erw
+  [5] Mon, 02 Nov 2026 11:00:20 +0000 | Discover Airlines nennt erste Ziele für die Airbus A350 | https://insideflyer.de/discover-airlines-nennt-erste-ziele-fuer-die-airbus-a350/
+  [6] Mon, 02 Nov 2026 04:00:23 +0000 | Casa Verbena Madrid: Erstes Outset Collection by Hilton Hotel in Europa eröffnet | https://insideflyer.de/casa-verbena-madrid-erstes-outset-collection-by-hilton-hotel-in-eur
+  [7] Fri, 30 Oct 2026 12:00:43 +0000 | Vom Südpol bis zum Korallendreieck: Wie Swan Hellenic Luxuskreuzfahrten neu definiert | https://insideflyer.de/vom-suedpol-bis-zum-korallendreieck-wie-swan-hellenic-luxuskreuzfah
+  [8] Fri, 30 Oct 2026 04:00:48 +0000 | Wyndham Rewards fügt Ferienhäuser und Villen zum Programm hinzu | https://insideflyer.de/wyndham-rewards-fuegt-ferienhaeuser-und-villen-zum-programm-hinzu/
+  [9] Thu, 29 Oct 2026 08:36:03 +0000 | Singapore Airlines erneuert Entertainment und führt Starlink-WiFi ein | https://insideflyer.de/singapore-airlines-erneuert-entertainment-und-fuehrt-starlink-wifi-
+  [10] Tue, 27 Oct 2026 14:54:11 +0000 | Miles & More Status 2026: Vorteile, Stufen und Anforderungen | https://insideflyer.de/miles-more-status-2026-vorteile-stufen-und-anforderungen/
+##### preisjaeger_fluege
+FORMAT=RSS ITEMS=30
+  [1] Wed, 04 Nov 2026 15:40:06 +0100 | Ryanair: 20% Rabatt auf Flüge ab Wien & Bratislava, z.b. Mailand & Barcelona ab 44€ Hin & Retour oder Agadir a | https://www.preisjaeger.at/deals/ryanair-20-rabatt-auf-fluge-ab-wien-bratislava-zb-mailand
+  [2] Thu, 29 Oct 2026 10:49:15 +0100 | Dem Winter entfliehen: Hin- & Rückflug nach Agadir (Marokko) im Dezember ab 53€ | https://www.preisjaeger.at/deals/dem-winter-entfliehen-hin-ruckflug-nach-agadir-marokko-im
+  [3] Wed, 28 Oct 2026 15:11:11 +0100 | Ryanair: Flüge ab 14,99€ z.B. Wien -> Paphos | Venedig | Krakau oder Linz -> Alicante ab 16,99€ | https://www.preisjaeger.at/deals/ryanair-fluge-ab-1499eur-zb-wien-paphos-venedig-krakau-od
+  [4] Sat, 17 Oct 2026 08:58:04 +0200 | 5% auf Eurowings Flugpreis durch 10x Payback Punkte | https://www.preisjaeger.at/deals/5-auf-eurowings-flugpreis-durch-10x-payback-punkte-370822
+  [5] Mon, 05 Oct 2026 09:59:47 +0200 | MALEDIVEN: 5* Brennia Kottefaru Maldives, All inclusive, inkl. 2 Ausflügen & 3GB eSIM, ab 5 Nächte inkl. Flug  | https://www.preisjaeger.at/deals/malediven-5-brennia-kottefaru-maldives-all-inclusive-inkl
+  [6] Mon, 28 Sep 2026 19:10:56 +0200 | GRIECHENLAND/SANTORINI Adults Only: 5*Boutique Hotel Santo Mangata inkl. Frühstück ab 205€ für 3 Nächte, inkl. | https://www.preisjaeger.at/deals/griechenlandsantorini-adults-only-5boutique-hotel-santo-m
+  [7] Sat, 26 Sep 2026 13:45:16 +0200 | Wien - Bangkok mit Eithad - Sep/Okt/Nov Flüge gefunden ab 216 € Hin/Zurück | https://www.preisjaeger.at/deals/wien-bangkok-mit-eithad-sepoktnov-fluge-gefunden-ab-216-e
+  [8] Thu, 24 Sep 2026 17:20:00 +0200 | Ryanair: Wieder viele Ziele ab 14,99€ von Wien z.B. Bologna, Neapel, Palma de Mallorca oder London Stanstad | https://www.preisjaeger.at/deals/ryanair-wieder-viele-ziele-ab-1499eur-von-wien-zb-bologna
+  [9] Thu, 17 Sep 2026 10:51:30 +0200 | Ryanair: 20% Rabatt auf Flüge im Herbst Teil 2 - z.b. Hin & Retour - Mallorca, Bergamo, Stockholm, Rom oder Ma | https://www.preisjaeger.at/deals/ryanair-20-rabatt-auf-fluge-im-herbst-teil-2-zb-mallorca-
+  [10] Tue, 18 Aug 2026 13:33:56 +0200 | Ryanair: 20€ Rabatt auf Hin und Rückflug auf ausgewählte Ziele | https://www.preisjaeger.at/deals/ryanair-20eur-rabatt-auf-hin-und-ruckflug-auf-ausgewahlte
+  [11] Tue, 11 Aug 2026 13:59:34 +0200 | Ryanair Blitzverkauf | Flüge ab 15€; z.B. Wien - Krakau; Klagenfurt - London | Flüge ab 17€; Wien - Pula/Dubro | https://www.preisjaeger.at/deals/ryanair-blitzverkauf-fluge-ab-15eur-zb-wien-krakau-klange
+  [12] Tue, 04 Aug 2026 10:27:14 +0200 | (Info-Thread) Austrian streicht Flüge von Graz nach Wien - das sind die Alternativen | https://www.preisjaeger.at/deals/info-thread-austrian-streicht-fluge-von-graz-nach-wien-da
+##### dealdoktor_feed
+FORMAT=RSS ITEMS=10
+  [1] Wed, 04 Nov 2026 19:15:00 +0000 | 💥 Die Top Deals des Tages – z.B. 200€ Prämie für Deutsche Bank Girokonto | https://www.dealdoktor.de/top-deal-des-tages/
+  [2] Wed, 04 Nov 2026 18:30:00 +0000 | 🌺 10 Ausgaben GartenFlora für 16,95€ + 5€ BestChoice-Gutschein | https://www.dealdoktor.de/gartenflora-jahresabo/
+  [3] Wed, 04 Nov 2026 18:00:00 +0000 | WhatsApp-Gutschein-Drops: Jeden Tag ein BestChoice-Gutschein – bis Ende November | https://www.dealdoktor.de/whatsapp-gutschein-drops/
+  [4] Wed, 04 Nov 2026 17:50:22 +0000 | 💰 200€ Prämie für Deutsche Bank Girokonto (kostenlos für junge Leute) | https://www.dealdoktor.de/deutsche-bank-girokonto/
+  [5] Wed, 04 Nov 2026 17:30:19 +0000 | 🌱 Clementoni Galileo Lab – Die Biosphäre für 18,80€ | https://www.dealdoktor.de/galileo-lab-die-biosphaere/
+  [6] Wed, 04 Nov 2026 17:20:15 +0000 | 🍟Knusprig im Doppelpack? Der Ninja Crispi Dualzone im DealDoktor-Check! | https://www.dealdoktor.de/ninja-crispi-dualzone-im-dealdoktor-check/
+  [7] Wed, 04 Nov 2026 17:00:00 +0000 | 15% Rabatt auf Bosch Professional Werkzeug 🔧👨‍🔧 z.B. Akkuschrauber, Bohrhämmer & vieles mehr | https://www.dealdoktor.de/sale-bosch/
+  [8] Wed, 04 Nov 2026 16:45:18 +0000 | 🏎️ Hot Wheels Ultimate Garage für 97,52€ (statt 128€) | https://www.dealdoktor.de/hot-wheels-ultimate-garage/
+  [9] Wed, 04 Nov 2026 16:33:47 +0000 | 61% Ersparnis! 🚀 Wurkkos CL01 Campinglampe mit 550 Lumen, RGB und Powerbank-Funktion für 17,59€! 💡 | https://www.dealdoktor.de/wurkkos-cl01-campinglampe/
+  [10] Wed, 04 Nov 2026 16:00:00 +0000 | 🎄 Galileo Lab Adventskalender für 9,99€ (statt 21€) | https://www.dealdoktor.de/galileo-lab-adventskalender/
+##### travelzoo_de_home
+FORMAT=HTML title= Travelzoo: Exklusive Reiseangebote für Club-Mitglieder len= 236775
+  feedlink: <link rel="alternate" type="application/atom+xml" title="Travelzoo Deals" href="https://www.travelzoo.com/de/feed/" />

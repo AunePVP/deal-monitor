@@ -1,0 +1,7 @@
+frankfurtflyer_deal_feed | 200 https://frankfurtflyer.de/category/deal/feed/ application/octet-stream; charset=UTF-8 0
+yhbu_premium_feed | 200 https://youhavebeenupgraded.boardingarea.com/category/billige-premium-tickets/feed/ application/rss+xml; charset=UTF-8 65535
+vft_mileageruns_rss | 200 https://www.vielfliegertreff.de/forum/forums/mileage-runs.5/index.rss application/rss+xml; charset=utf-8 31676
+td_dest_china_children | 200 https://travel-dealz.de/wp-json/wp/v2/destinations?parent=745&per_page=50&_fields=id,slug,name,count application/json; charset=UTF-8 1941
+td_json_flights_after | 200 https://travel-dealz.de/wp-json/wp/v2/deal?per_page=20&categories=1757,884,3225&after=2026-11-01T00:00:00&_fields=id,date,title,link,categories,origins,destinations,meta.suspend_date application/json; charset=UTF-8 1763
+sparhamster_feed | 200 https://www.sparhamster.at/feed/ application/rss+xml; charset=UTF-8 35102
+frankfurtflyer_deal_rss2 | 200 https://frankfurtflyer.de/category/deal/feed/rss2/ application/rss+xml; charset=UTF-8 34408

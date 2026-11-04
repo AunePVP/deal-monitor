@@ -1,0 +1,42 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+date: Wed, 04 Nov 2026 21:44:29 GMT
+content-type: text/html
+location: https://insideflyer.de/feed/
+server: cloudflare
+age: 41472
+cf-cache-status: HIT
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server-timing: cfCacheStatus;desc="HIT"
+server-timing: cfEdge;dur=62,cfOrigin;dur=0
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=%2Ffft%2Fm3UrhWSzzsFe4AR9fwGkW6quT8CgCG90xYVYUfLvOCoZhmzHG7asCHKke7jdczOQO6MLF%2Bg16IfWGSNPW6m0FPrMSpF%2FtVx2kHwWRwz4pOnJEjAaxysu3A0TrVM6ivP1ZY%3D"}]}
+cf-ray: a556ccdf78c607fb-IAD
+alt-svc: h3=":443"; ma=86400
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:44:29 GMT
+content-type: application/rss+xml; charset=UTF-8
+content-length: 160201
+server: cloudflare
+last-modified: Wed, 04 Nov 2026 11:00:21 GMT
+etag: "278e17239babb0f8bc1e86a770f95ffc"
+x-cache-lifetime: 604800
+x-cache-tags: a9c6,a9c6-post-77399,a9c6-post-77405,a9c6-post-77392,a9c6-post-77382,a9c6-post-77379,a9c6-post-77373,a9c6-post-77361,a9c6-post-77355,a9c6-post-77349,a9c6-post-77337
+referrer-policy: same-origin
+alt-svc: h3=":443"; ma=86400
+accept-ranges: bytes
+x-cache-age: 641
+pragma: no-cache
+expires: -1
+cache-control: no-store, no-cache, must-revalidate, max-age=0
+age: 37943
+cf-cache-status: HIT
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server-timing: cfCacheStatus;desc="HIT"
+server-timing: cfEdge;dur=51,cfOrigin;dur=0
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=3mQgI5PD1AkSuQy1Q5maJroijyu8XjlrywcdPVku8bcYYru2FBVwa9We9F0q9ajJGU1lCgd3HfZQUFGRtrfjfVPo%2F2BhUUqCPQ7IcsktPRuNl7bxDc5BmWzKzYnPZuSbbg%3D%3D"}]}
+cf-ray: a556cce109d629b6-IAD
+

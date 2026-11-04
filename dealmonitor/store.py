@@ -93,6 +93,11 @@ CREATE TABLE IF NOT EXISTS runs (
 #: Ein abgelaufener Deal, der zum gleichen Preis wieder auftaucht, wird erst nach dieser
 #: Zeit erneut gemeldet (sonst "flackern" Deals bei kleinen Preisschwankungen).
 REVIVE_AFTER = timedelta(hours=24)
+#: später hinzugekommene Zähler der Tabelle ``runs`` (werden per ALTER TABLE nachgerüstet):
+#: radar = Radar-Treffer, rejected = bei Google Flights verworfene Deals
+RUN_EXTRA_COLUMNS = ("radar", "rejected")
+#: Läufe, die nur die Deal-Seiten (Feeds + Radar) prüfen - zählen nicht als volle Prüfung
+FEED_TRIGGERS = ("feeds", "manual-feeds")
 
 _INIT_LOCK = threading.Lock()
 _READY: set[str] = set()   # Dateien, deren Schema in diesem Prozess schon angelegt ist
@@ -141,6 +146,7 @@ class Store:
                         if mode.lower() != "wal":
                             self.db.execute("PRAGMA journal_mode=WAL")
                     self.db.executescript(SCHEMA)
+                    self._migrate()
                     break
                 except sqlite3.OperationalError as e:
                     if "locked" not in str(e) or attempt == 19:
@@ -149,6 +155,14 @@ class Store:
             if key != ":memory:":
                 _restrict(key)
                 _READY.add(key)
+
+    def _migrate(self) -> None:
+        """Spalten nachrüsten, die es in älteren Datenbanken noch nicht gab."""
+        cols = {r[1] for r in self.db.execute("PRAGMA table_info(runs)")}
+        for col in RUN_EXTRA_COLUMNS:
+            if col not in cols:
+                self.db.execute(f"ALTER TABLE runs ADD COLUMN {col} INTEGER NOT NULL DEFAULT 0")
+        self.db.commit()
 
     def close(self) -> None:
         try:
@@ -423,12 +437,13 @@ class Store:
         return cur.lastrowid
 
     def finish_run(self, run_id: int, *, offers: int = 0, deals: int = 0, notified: int = 0,
-                   expired: int = 0, errors: list[str] | None = None) -> None:
+                   expired: int = 0, errors: list[str] | None = None, radar: int = 0,
+                   rejected: int = 0) -> None:
         self.db.execute(
-            "UPDATE runs SET finished_at=?, offers=?, deals=?, notified=?, expired=?, errors=? "
-            "WHERE id=?",
+            "UPDATE runs SET finished_at=?, offers=?, deals=?, notified=?, expired=?, errors=?, "
+            "radar=?, rejected=? WHERE id=?",
             (now_iso(), offers, deals, notified, expired,
-             json.dumps(errors or [], ensure_ascii=False), run_id))
+             json.dumps(errors or [], ensure_ascii=False), radar, rejected, run_id))
         self.db.commit()
 
     def abort_unfinished_runs(self) -> int:
@@ -449,9 +464,15 @@ class Store:
         rows = self.db.execute("SELECT * FROM runs ORDER BY id DESC LIMIT ?", (limit,))
         return [self._run(r) for r in rows]
 
-    def last_run(self, full_only: bool = False) -> dict | None:
-        sql = "SELECT * FROM runs"
+    def last_run(self, full_only: bool = False, *, feed_runs: bool = True) -> dict | None:
+        """Letzter Lauf. ``full_only``: nur Läufe über alle Alarme; ``feed_runs=False``:
+        reine Feed-Läufe (``FEED_TRIGGERS``) nicht mitzählen."""
+        conds = []
         if full_only:
-            sql += " WHERE alert_id IS NULL"
-        row = self.db.execute(sql + " ORDER BY id DESC LIMIT 1").fetchone()
+            conds.append("alert_id IS NULL")
+        if not feed_runs:
+            conds.append("trigger NOT IN (%s)" % ",".join("?" * len(FEED_TRIGGERS)))
+        sql = "SELECT * FROM runs" + (" WHERE " + " AND ".join(conds) if conds else "")
+        args = tuple(FEED_TRIGGERS) if not feed_runs else ()
+        row = self.db.execute(sql + " ORDER BY id DESC LIMIT 1", args).fetchone()
         return self._run(row) if row else None

@@ -1,0 +1,14 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+link: <https://www.reisefieber.de/wp-json/>; rel="https://api.w.org/"
+set-cookie: quform_session_e558b155a425f1744afd75f3ee8bcbc8=GyqLSq4OLXjumWpEMSG5JptYRZl1TDIfZCmAL6D9; path=/; secure; httponly; samesite=None
+vary: User-Agent,Accept-Encoding
+last-modified: Tue, 01 Sep 2026 11:29:13 GMT
+etag: "bc252c91c58f08bdd7b990d10c7c3e9c"
+cache-control: max-age=3600
+expires: Wed, 04 Nov 2026 22:51:13 GMT
+content-type: application/rss+xml; charset=UTF-8
+date: Wed, 04 Nov 2026 21:51:13 GMT
+server: Apache
+

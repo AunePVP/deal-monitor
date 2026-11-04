@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>Travelpayouts Data API</title>
+  
+
+  <link rel="shortcut icon" href="./img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  <link href="https://media.readthedocs.org/css/badge_only.css" rel="stylesheet">
+  <link href="https://media.readthedocs.org/css/readthedocs-doc-embed.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "None";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script>
+  <script src="./js/theme.js"></script> 
+  <script src="./readthedocs-data.js"></script>
+  <script src="./readthedocs-dynamic-include.js"></script>
+  <script src="https://media.readthedocs.org/static/core/js/readthedocs-doc-embed.js"></script>
+
+  
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="travelpayouts-data-api" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Travelpayouts Data API</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href=".">Home</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#data-access-api">Data Access API</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-prices-for-the-airline-tickets">The prices for the airline tickets</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-calendar-of-prices-for-a-month">The calendar of prices for a month</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-prices-for-the-alternative-directions">The prices for the alternative directions</a></li>
+                
+                    <li><a class="toctree-l4" href="#cheapest-tickets">Cheapest tickets</a></li>
+                
+                    <li><a class="toctree-l4" href="#non-stop-tickets">Non-stop tickets</a></li>
+                
+                    <li><a class="toctree-l4" href="#flight-price-trends">Flight price trends</a></li>
+                
+                    <li><a class="toctree-l4" href="#popular-airline-routes">Popular airline routes</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-calendar-of-prices-for-a-week">The calendar of prices for a week</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-popular-directions-from-a-city">The popular directions from a city</a></li>
+                
+                    <li><a class="toctree-l4" href="#data-of-countries-in-json-format">Data of countries in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#city-data-in-json-format">City data in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#airport-data-in-json-format">Airport data in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#airline-data-in-json-format">Airline data in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#alliance-data-in-json-format">Alliance data in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#airplane-data-in-json-format">Airplane data in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#data-on-the-routes-in-json-format">Data on the routes in json format</a></li>
+                
+                    <li><a class="toctree-l4" href="#the-definition-of-a-users-location-by-ip-address">The definition of a user's location by IP address</a></li>
+                
+                    <li><a class="toctree-l4" href="#reduction-of-prices-into-the-other-currency">Reduction of prices into the other currency</a></li>
+                
+                    <li><a class="toctree-l4" href="#special-offers">Special offers</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="README/">README</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Travelpayouts Data API</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="data-access-api">Data Access API</h1>
+<p>Travelpayouts Data API – the way to get travel insights for your site or blog. You can get flight price trends and find popular destinations for your customers.</p>
+<p>Dear partners! Attention, the data is transferred from the cache, so it is recommended to use them to generate static pages. </p>
+<p>To access the API you must pass your token in the X-Access-Token header or in the token parameter. To obtain a token for the Data Access API, go to <a href="http://www.travelpayouts.com/developers/api">http://www.travelpayouts.com/developers/api</a>.</p>
+<p>Dates are accepted in the formats YYYY-MM and YYYY-MM-DD.</p>
+<p>The server response is always sent in json format with the following structure:</p>
+<ul>
+<li><strong>success</strong> – true for successful request, false in case of errors;</li>
+<li><strong>data</strong> – result of the request; in case of an error is equal to null;</li>
+<li><strong>error</strong> – short description of the error that prevented request completion; for successful request is equal to null.</li>
+</ul>
+<p>Dates and times are given in UTC, formatted according to <a href="https://ru.wikipedia.org/wiki/ISO_8601">ISO 8601</a>. Prices are given in rubles as of when the ticket is put in the search results. It is not recommended to use expired prices (the approximate expiration date is given in the value of the expires_at parameter).</p>
+<p><strong>Important</strong>. We strongly urge receiving data in compressed GZIP format, which saves a significant amount of time in receiving the response. To get data in compressed form, send the header Accept-Encoding: gzip, deflate.</p>
+<h2 id="the-prices-for-the-airline-tickets">The prices for the airline tickets</h2>
+<p>Brings back to the list of prices, found by our users during the recent 48 hours according to the filters used.</p>
+<h3 id="request">Request</h3>
+<p>http://api.travelpayouts.com/v2/prices/latest?currency=usd&amp;period_type=year&amp;page=1&amp;limit=30&amp;sorting=price&amp;trip_class=0&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters">Request parameters</h4>
+<ul>
+<li><strong>currency</strong> — the airline tickets currency. The default value — RUB.</li>
+<li><strong>origin</strong> — the point of departure. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>destination</strong> — the point of destination. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+</ul>
+<p><strong>Note!</strong> If the point of departure and the point of destination are not specified, then the API shall bring 30 the most cheapest tickets, which have been found during the recent 48 hours, back.</p>
+<ul>
+<li><strong>beginning_of_period</strong> — the beginning of the period, within which the dates of departure fall (in the YYYY-MM-DD format, for example, 2016-05-01). Must be specified if <strong>period_type</strong> is equal to <strong>month</strong>.</li>
+<li><strong>period_type</strong> — the period, for which the tickets have been found (the required parameter):</li>
+<li><strong>year</strong> — for the whole time;</li>
+<li><strong>month</strong> — for a month.</li>
+<li><strong>one_way</strong> — true — one way, false — back-to-back. The default value — false.</li>
+<li><strong>page</strong> — a page number. The default value — 1.</li>
+<li><strong>limit</strong> — the total number of records on a page. The default value — 30. The maximum value — 1000.</li>
+<li><strong>show_to_affiliates</strong> — false — all the prices, true — just the prices, found using the partner marker (recommended). The default value — true.</li>
+<li><strong>sorting</strong> — the assorting of prices:</li>
+<li><strong>price</strong> — by the price (the default value). For the directions <strong>city — city</strong> assorting by the price is possible only;</li>
+<li><strong>route</strong> — by the popularity of a route;</li>
+<li><strong>distance_unit_price</strong> — by the price for 1 km.</li>
+<li><strong>trip_class</strong> — the flight class:</li>
+<li><strong>0</strong> — The economy class (the default value);</li>
+<li><strong>1</strong> — The business class;</li>
+<li><strong>2</strong> — The first class.</li>
+<li><strong>trip_duration</strong> — the length of stay in weeks or days (for period_type=day).</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h3 id="response-example">Response example</h3>
+<pre><code>{
+    "success":true,
+    "data":[{
+        "show_to_affiliates":true,
+        "trip_class":0,
+        "origin":"WMI",
+        "destination":"WRO",
+        "depart_date":"2015-12-07",
+        "return_date":"2015-12-13",
+        "number_of_changes":0,
+        "value":1183,
+        "found_at":"2015-09-22T14:08:45+04:00",
+        "distance":298,
+        "actual":true
+    }]
+}
+</code></pre>
+<h4 id="response-parameters">Response parameters</h4>
+<ul>
+<li><strong>origin</strong> — the point of departure.</li>
+<li><strong>destination</strong> — the point of destination.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true — just the prices, found using the partner marker (recommended). The default value — true.</li>
+<li><strong>trip_class</strong> — the flight class:</li>
+<li><strong>0</strong> — the economy class,</li>
+<li><strong>1</strong> — the business class,</li>
+<li><strong>2</strong> — the first class.</li>
+<li><strong>depart_date</strong> — the date of departure.</li>
+<li><strong>return_date</strong> — the date of return.</li>
+<li><strong>number_of_changes</strong> — the number of transfers.</li>
+<li><strong>value</strong> — the cost of a flight, in the currency specified.</li>
+<li><strong>found_at</strong> — the time and the date, for which a ticket was found.</li>
+<li><strong>distance</strong> — the distance between the point of departure and the point of destination.</li>
+<li><strong>actual</strong> — the actuality of an offer.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h2 id="the-calendar-of-prices-for-a-month">The calendar of prices for a month</h2>
+<p>Brings the prices for each day of a month, grouped together by the number of transfers, back.</p>
+<h3 id="request_1">Request</h3>
+<p>http://api.travelpayouts.com/v2/prices/month-matrix?currency=usd&amp;origin=LED&amp;destination=HKT&amp;show_to_affiliates=true&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_1">Request parameters</h4>
+<ul>
+<li><strong>currency</strong> — the airline tickets currency. The default value - RUB.</li>
+<li><strong>origin</strong> — the point of departure. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>destination</strong> — the point of destination. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+</ul>
+<p><strong>Note!</strong> If the point of departure and the point of destination are not specified, then the API shall bring 30 the most cheapest tickets, which have been found during the recent 48 hours, back.</p>
+<ul>
+<li><strong>month</strong> — the beginning of the month in the YYYY-MM-DD format.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true - just the prices, found using the partner marker (recommended). The default value - true.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h3 id="response-example_1">Response example</h3>
+<pre><code>{{
+    "success":true,
+    "data":[{
+    "show_to_affiliates":true,
+    "trip_class":0,
+    "origin":"LED",
+    "destination":"HKT",
+    "depart_date":"2015-10-01",
+    "return_date":"",
+    "number_of_changes":1,
+    "value":29127,
+    "found_at":"2015-09-24T00:06:12+04:00",
+    "distance":8015,
+    "actual":true
+    }]
+}
+</code></pre>
+<h4 id="response-parameters_1">Response parameters</h4>
+<ul>
+<li><strong>origin</strong> — the point of departure.</li>
+<li><strong>destination</strong> — the point of destination.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true - just the prices, found using the partner marker (recommended). The default value - true.</li>
+<li><strong>trip_class</strong> — the flight class:</li>
+<li><strong>0</strong> — The economy class,</li>
+<li><strong>1</strong> — The business class,</li>
+<li><strong>2</strong> — The first class.</li>
+<li><strong>depart_date</strong> — the date of departure.</li>
+<li><strong>return_date</strong> — the date of return.</li>
+<li><strong>number_of_changes</strong> — the number of transfers.</li>
+<li><strong>value</strong> — the cost of a flight, in the currency specified.</li>
+<li><strong>found_at</strong> — the time and the date, for which a ticket was found.</li>
+<li><strong>distance</strong> — the distance between the point of departure and the point of destination.</li>
+<li><strong>actual</strong> — the actuality of an offer.</li>
+</ul>
+<h2 id="the-prices-for-the-alternative-directions">The prices for the alternative directions</h2>
+<p>Brings the prices for the directions between the nearest to the target cities back.</p>
+<h3 id="request_2">Request</h3>
+<p>http://api.travelpayouts.com/v2/prices/nearest-places-matrix?currency=usd&amp;origin=LED&amp;destination=HKT&amp;show_to_affiliates=true&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_2">Request parameters</h4>
+<ul>
+<li><strong>currency</strong> — the airline tickets currency. The default value - RUB.</li>
+<li><strong>origin</strong> — the point of departure. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>destination</strong> — the point of destination. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>limit</strong> — the number of variants entered, from 1 to 20. Where 1 – is just the variant with the specified points of departure and the points of destination.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true - just the prices, found using the partner marker (recommended). The default value - true.</li>
+<li><strong> depart_date</strong> <em>(optional)</em> — Day or month of departure (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>return_date</strong> <em>(optional)</em> — Day or month of return (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>flexibility</strong> — expansion of the range of dates upward or downward. The value may vary from 0 to 7, where 0 shall show the variants for the dates specified, 7 – all the variants found for a week prior to the specified dates and a week after.</li>
+<li><strong>distance</strong> — the number of variants entered, from 1 to 20. Where 1 – is just the variant with the specified points of departure and the points of destination.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h3 id="response-example_2">Response example</h3>
+<pre><code>{
+"prices":[{
+    "value":26000.0,
+    "trip_class":0,
+    "show_to_affiliates":true,
+    "return_date":"2016-09-18",
+    "origin":"BAX",
+    "number_of_changes":0,
+    "gate":"AMADEUS",
+    "found_at":"2016-07-28T04:57:47Z",
+    "duration":null,
+    "distance":3643,
+    "destination":"SIP",
+    "depart_date":"2016-09-09",
+    "actual":true
+    }],
+"origins":[
+    "BAX"
+    ],
+"errors":{
+    "amadeus":{
+    }},
+"destinations":[
+    "SIP"
+    ]
+}
+</code></pre>
+<h4 id="response-parameters_2">Response parameters</h4>
+<ul>
+<li><strong>origin</strong> — the point of departure.</li>
+<li><strong>destination</strong> — the point of destination.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true - just the prices, found using the partner marker (recommended). The default value - true.</li>
+<li><strong>trip_class</strong> — the flight class:</li>
+<li><strong>0</strong> — the economy class,</li>
+<li><strong>1</strong> — the business class,</li>
+<li><strong>2</strong> — the first class.</li>
+<li><strong>depart_date</strong> — the date of departure.</li>
+<li><strong>return_date</strong> — the date of return.</li>
+<li><strong>number_of_changes</strong> — the number of transfers.</li>
+<li><strong>value</strong> — the cost of a flight, in the currency specified.</li>
+<li><strong>found_at</strong> — the time and the date, for which a ticket was found.</li>
+<li><strong>distance</strong> — the distance between the point of departure and the point of destination.</li>
+<li><strong>actual</strong> — the actuality of an offer.</li>
+<li><strong>duration</strong> — flight duration in minutes, taking into account direct and expectations.</li>
+<li><strong>errors</strong> — if the error "Some error occurred" is returned, so in this area do not have the data in the cache.</li>
+<li><strong>gate</strong> — the agents, which was found in the ticket.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h2 id="cheapest-tickets">Cheapest tickets</h2>
+<p>Returns the cheapest non-stop tickets, as well as tickets with 1 or 2 stops, for the selected route with departure/return date filters.</p>
+<h3 id="request_3">Request</h3>
+<p>http://api.travelpayouts.com/v1/prices/cheap?origin=MOW&amp;destination=HKT&amp;depart_date=2016-11&amp;return_date=2016-12&amp;token=PutHereYourToken</p>
+<p><strong>Important:</strong> Old dates may be specified in a query. No error will be generated, but no data will be returned.</p>
+<h4 id="request-parameters_3">Request parameters</h4>
+<ul>
+<li><strong>origin</strong> — IATA code of the departure city. IATA code is shown by uppercase letters, for example MOW.</li>
+<li><strong>destination</strong> — IATA code of the destination city (for all routes, enter "-"). IATA code is shown by uppercase letters, for example MOW.</li>
+<li><strong>depart_date</strong> <em>(optional)</em> — day or month of departure (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>return_date</strong> <em>(optional)</em> — day or month of return (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>page</strong> — optional parameter, is used to display the found data (by default the page displays 100 found prices. If the  - <strong>destination</strong> isn't selected, there can be more data. In this case, use the <strong>page</strong>, to display the next set of data, for example, page=2).</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+<li><strong>currency</strong> — currency of prices. Default value is RUB.</li>
+</ul>
+<h3 id="response-example_3">Response example</h3>
+<pre><code>{
+"success": true,
+"data": {
+    "HKT": {
+        "0": {
+            "price": 35443,
+            "airline": "UN",
+            "flight_number": 571,
+            "departure_at": "2015-06-09T21:20:00Z",
+            "return_at": "2015-07-15T12:40:00Z",
+            "expires_at": "2015-01-08T18:30:40Z"
+        },
+        "1": {
+            "price": 27506,
+            "airline": "CX",
+            "flight_number": 204,
+            "departure_at": "2015-06-05T16:40:00Z",
+            "return_at": "2015-06-22T12:00:00Z",
+            "expires_at": "2015-01-08T18:38:45Z"
+        },
+        "2": {
+            "price": 31914,
+            "airline": "AB",
+            "flight_number": 8113,
+            "departure_at": "2015-06-12T13:45:00Z",
+            "return_at": "2015-06-24T20:30:00Z",
+            "expires_at": "2015-01-08T15:17:42Z"
+        }}
+    }
+}
+</code></pre>
+<h3 id="response-parameters_3">Response parameters</h3>
+<ul>
+<li><strong>0, 1, 2</strong> — sequence number in the search results.</li>
+<li><strong>price</strong> — ticket price (in the currency specified in the currency parameter).</li>
+<li><strong>airline</strong> — IATA code of the airline operating the flight.</li>
+<li><strong>flight_number</strong> — flight number.</li>
+<li><strong>departure_at</strong> — departure Date.</li>
+<li><strong>return_at</strong> — return Date.</li>
+<li><strong>expires_at</strong> — date on which the found price expires (UTC+0).</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h2 id="non-stop-tickets">Non-stop tickets</h2>
+<p>Returns the cheapest non-stop tickets for the selected route with departure/return date filters.</p>
+<h3 id="request_4">Request</h3>
+<p>http://api.travelpayouts.com/v1/prices/direct?origin=MOW&amp;destination=LED&amp;depart_date=2016-11&amp;return_date=2016-12&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_4">Request parameters</h4>
+<ul>
+<li><strong>origin</strong> — IATA code of departure city. IATA code is shown by uppercase letters, for example MOW.</li>
+<li><strong>destination</strong> — IATA code of destination city (for all routes, enter “-”). IATA code is shown by uppercase letters, for example MOW.</li>
+<li><strong>depart_date</strong> <em>(optional)</em> — day or month of departure (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>return_date</strong> <em>(optional)</em> — day or month of return (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+<li><strong>currency</strong> — currency of prices. Default value is RUB.</li>
+</ul>
+<h3 id="response-example_4">Response example</h3>
+<pre><code>{
+    "success": true,
+    "data": {
+    "LED": {
+        "0": {
+        "price": 4363,
+        "airline": "UT",
+        "flight_number": 369,
+        "departure_at": "2015-06-27T11:35:00Z",
+        "return_at": "2015-07-04T16:00:00Z",
+        "expires_at": "2015-01-08T20:21:46Z"
+        }
+    }
+    }
+}
+</code></pre>
+<h4 id="response-parameters_4">Response parameters</h4>
+<ul>
+<li><strong>price</strong> – Ticket price (in specified currency).</li>
+<li><strong>airline</strong> – IATA code of airline operating the flight.</li>
+<li><strong>flight_number</strong> – Flight number.</li>
+<li><strong>departure_at</strong> – Departure date.</li>
+<li><strong>return_at</strong> – Return date.</li>
+<li><strong>expires_at</strong> – Date on which the found price expires (UTC+0). </li>
+</ul>
+<h2 id="flight-price-trends">Flight price trends</h2>
+<p>Returns the cheapest non-stop, one-stop, and two-stop flights for the selected route for each day of the selected month.</p>
+<h3 id="request_5">Request</h3>
+<p>http://api.travelpayouts.com/v1/prices/calendar?depart_date=2016-11&amp;origin=MOW&amp;destination=BCN&amp;calendar_type=departure_date&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_5">Request parameters</h4>
+<ul>
+<li><strong>origin</strong> — IATA code of departure city. IATA code is shown by uppercase letters, for example MOW.</li>
+<li><strong>destination</strong> — IATA code of destination city. IATA code is shown by uppercase letters, for example MOW.</li>
+<li><strong>departure_date</strong> — day or month of departure (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>return_date</strong> <em>(optional)</em> — day or month of return (yyyy-mm-dd or yyyy-mm). <strong>Pay attention!</strong> If the return_date is not specified, you will get the "One way" flights.</li>
+<li><strong>calendar_type</strong> — field used to build the calendar. Equal to either: departure_date or return_date</li>
+<li><strong>length</strong> <em>(optional)</em> — length of stay in the destination city.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+<li><strong>currency</strong> — currency of prices. Default value is RUB.</li>
+</ul>
+<h3 id="response-example_5">Response example</h3>
+<pre><code>{
+    "success": true,
+    "data": {
+    "2015-06-01": {
+        "origin": "MOW",
+        "destination": "BCN",
+        "price": 12449,
+        "transfers": 1,
+        "airline": "PS",
+        "flight_number": 576,
+        "departure_at": "2015-06-01T06:35:00Z",
+        "return_at": "2015-07-01T13:30:00Z",
+        "expires_at": "2015-01-07T12:34:14Z"
+    },
+    "2015-06-02": {
+        "origin": "MOW",
+        "destination": "BCN",
+        "price": 13025,
+        "transfers": 1,
+        "airline": "PS",
+        "flight_number": 578,
+        "departure_at": "2015-06-02T17:00:00Z",
+        "return_at": "2015-06-11T13:30:00Z",
+        "expires_at": "2015-01-06T17:15:47Z"
+    },
+    ...
+    "2015-06-30": {
+        "origin": "MOW",
+        "destination": "BCN",
+        "price": 13025,
+        "transfers": 1,
+        "airline": "PS",
+        "flight_number": 578,
+        "departure_at": "2015-06-30T17:00:00Z",
+        "return_at": "2015-07-23T13:30:00Z",
+        "expires_at": "2015-01-07T20:15:34Z"
+    }
+    }
+}
+</code></pre>
+<h4 id="response-parameters_5">Response parameters</h4>
+<ul>
+<li><strong>origin</strong> — IATA code of departure city.</li>
+<li><strong>destination</strong> — IATA code of destination city.</li>
+<li><strong>price</strong> — ticket price in the specified currency.</li>
+<li><strong>transfers</strong> — number of stops.</li>
+<li><strong>airline</strong> — IATA code of airline.</li>
+<li><strong>flight_number</strong> — flight number.</li>
+<li><strong>departure_at</strong> — departure Date.</li>
+<li><strong>return_at</strong> — return Date.</li>
+<li><strong>expires_at</strong> — when the found price expires (UTC+0). </li>
+</ul>
+<h2 id="popular-airline-routes">Popular airline routes</h2>
+<p>Returns routes for which an airline operates flights, sorted by popularity.</p>
+<h3 id="request_6">Request</h3>
+<p>http://api.travelpayouts.com/v1/airline-directions?airline_code=SU&amp;limit=10&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_6">Request parameters</h4>
+<ul>
+<li><strong>airline_code</strong> — IATA code of airline.</li>
+<li><strong>limit</strong> — records limit per page. Default value is 100. Not less than 1000.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h3 id="response-example_6">Response example</h3>
+<pre><code>{
+    "success": true,
+    "data": {
+    "MOW-BKK": 187491,
+    "MOW-BCN": 113764,
+    "MOW-PAR": 91889,
+    "MOW-NYC": 77417,
+    "MOW-PRG": 71449,
+    "MOW-ROM": 67190,
+    "MOW-TLV": 62132,
+    "MOW-HKT": 58549,
+    "MOW-GOI": 47341,
+    "MOW-IST": 45553
+    },
+    "error": null,
+    "currency":"rub"
+}
+</code></pre>
+<h4 id="description-of-response">Description of response</h4>
+<p>Returns a list of popular routes of an airline, sorted by popularity.</p>
+<h2 id="the-calendar-of-prices-for-a-week">The calendar of prices for a week</h2>
+<p>Brings the prices for the nearest dates to the target ones back.</p>
+<h3 id="request_7">Request</h3>
+<p>http://api.travelpayouts.com/v2/prices/week-matrix?currency=usd&amp;origin=LED&amp;destination=HKT&amp;show_to_affiliates=true&amp;depart_date=2016-09-04&amp;return_date=2016-09-18&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_7">Request parameters</h4>
+<ul>
+<li><strong>currency</strong> — the airline tickets currency. The default value - RUB.</li>
+<li><strong>origin</strong> — the point of departure. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>destination</strong> — the point of destination. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true - just the prices, found using the partner marker (recommended). The default value - true.</li>
+<li><strong>depart_date</strong> <em>(optional)</em> — Day or month of departure (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>return_date</strong> <em>(optional)</em> — Day or month of return (yyyy-mm-dd or yyyy-mm).</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h3 id="response-example_7">Response example</h3>
+<pre><code>{
+    «success»:true,
+    «data»:[
+    {
+    «show_to_affiliates»:true,
+    «trip_class»:0,
+    «origin»:«LED»,
+    «destination»:«HKT»,
+    «depart_date»:«2016-03-01»,
+    «return_date»:«2016-03-15»,
+    «number_of_changes»:1,
+    «value»:71725,
+    «found_at»:«2016-02-19T00:04:37+04:00»,
+    «distance»:8015,
+    «actual»:true
+    }]
+}
+</code></pre>
+<h4 id="response-parameters_6">Response parameters</h4>
+<ul>
+<li><strong>origin</strong> — the point of departure.</li>
+<li><strong>destination</strong> — the point of destination.</li>
+<li><strong>show_to_affiliates</strong> — false - all the prices, true - just the prices, found using the partner marker (recommended). The default value — true.</li>
+<li><strong>trip_class</strong> — the flight class:</li>
+<li><strong>0</strong> — the economy class,</li>
+<li><strong>1</strong> — the business class,</li>
+<li><strong>2</strong> — the first class.</li>
+<li><strong>depart_date</strong> — the date of departure.</li>
+<li><strong>return_date</strong> — the date of return.</li>
+<li><strong>number_of_changes</strong> — the number of transfers.</li>
+<li><strong>value</strong> — the cost of a flight, in the currency specified.</li>
+<li><strong>found_at</strong> — the time and the date, for which a ticket was found.</li>
+<li><strong>distance</strong> — the distance between the point of departure and the point of destination.</li>
+<li><strong>actual</strong> — the actuality of an offer.</li>
+</ul>
+<h2 id="the-popular-directions-from-a-city">The popular directions from a city</h2>
+<p>Brings the most popular directions from a specified city back.</p>
+<h3 id="request_8">Request</h3>
+<p>http://api.travelpayouts.com/v1/city-directions?origin=MOW&amp;currency=usd&amp;token=PutHereYourToken</p>
+<h4 id="request-parameters_8">Request parameters</h4>
+<ul>
+<li><strong>currency</strong> — the airline tickets currency. The default value — RUB.</li>
+<li><strong>origin</strong> — the point of departure. The IATA city code or the country code. The length - from 2 to 3 symbols.</li>
+<li><strong>token</strong> — individual affiliate token.</li>
+</ul>
+<h3 id="response-example_8">Response example</h3>
+<pre><code>{
+    "success":true,
+    "data":{
+    "AER":{
+        "origin":"MOW",
+        "destination":"AER",
+        "price":3673,
+        "transfers":0,
+        "airline":"WZ",
+        "flight_number":125,
+        "departure_at":"2016-03-08T16:35:00Z",
+        "return_at":"2016-03-17T16:05:00Z",
+        "expires_at":"2016-02-22T09:32:44Z"
+    }
+    },
+    "error":null,
+    "currency":"rub"
+}
+</code></pre>
+<h4 id="response-parameters_7">Response parameters</h4>
+<ul>
+<li><strong>origin</strong> — the point of departure.</li>
+<li><strong>destination</strong> — the point of destination.</li>
+<li><strong>departure_at</strong> — the date of departure.</li>
+<li><strong>return_at</strong> — the date of return.</li>
+<li><strong>expires_at</strong> — date on which the found price expires (UTC+0).</li>
+<li><strong>number_of_changes</strong> — the number of transfers.</li>
+<li><strong>price</strong> — the cost of a flight, in the currency specified.</li>
+<li><strong>found_at</strong> — the time and the date, for which a ticket was found.</li>
+<li><strong>transfers</strong> — the number of direct.</li>
+<li><strong>airline</strong> — IATA of airline.</li>
+<li><strong>flight_number</strong> — flight number.</li>
+<li><strong>currency</strong> — currency of response.</li>
+</ul>
+<h2 id="data-of-countries-in-json-format">Data of countries in json format</h2>
+<p>The query http://api.travelpayouts.com/data/countries.json returns a file with a list of countrys from the database. </p>
+<h3 id="example-response">Example response</h3>
+<pre><code>[{
+    "code":"NC",
+    "name":"New Caledonia",
+    "currency":"XPF",
+    "name_translations":{
+    "de":"Neukaledonien",
+    "en":"New Caledonia",
+    "zh-CN":"??????",
+    "tr":"Yeni Kaledonya",
+    "ru":"Новая Каледония",
+    "fr":"Nouvelle-Caledonie",
+    "es":"Nueva Caledonia",
+    "it":"Nuova Caledonia",
+    "th":"???????????????????"
+    }}
+]
+</code></pre>
+<h4 id="response-parameters_8">Response parameters</h4>
+<ul>
+<li><strong>code</strong> — IATA-code of country.</li>
+<li><strong>name</strong> — country name.</li>
+<li><strong>currency</strong> — currency country.</li>
+<li><strong>name_translations</strong> — translation of country name.</li>
+</ul>
+<h2 id="city-data-in-json-format">City data in json format</h2>
+<p>The query http://api.travelpayouts.com/data/cities.json returns a file with a list of cities from the database. </p>
+<h3 id="example-response_1">Example response</h3>
+<pre><code>[{
+    "code":"SCE",
+    "name":"State College",
+    "coordinates":{
+    "lon":-77.84823,
+    "lat":40.85372
+    },
+    "time_zone":"America/New_York",
+    "name_translations":{
+    "de":"State College",
+    "en":"State College",
+    "zh-CN":"???",
+    "tr":"State College",
+    "ru":"Стейт Колледж",
+    "it":"State College",
+    "es":"State College",
+    "fr":"State College",
+    "th":"??????????"
+    },
+    "country_code":"US"
+}]
+</code></pre>
+<h4 id="response-parameters_9">Response parameters</h4>
+<ul>
+<li><strong>code</strong> — city IATA-code.</li>
+<li><strong>name</strong> — city name.</li>
+<li><strong>coordinates</strong> — city coordinates.</li>
+<li><strong>time_zone</strong> — timezone relative to GMT.</li>
+<li><strong>name_translations</strong> — translation of city name.</li>
+<li><strong>country_code</strong> — country IATA-code.</li>
+</ul>
+<h2 id="airport-data-in-json-format">Airport data in json format</h2>
+<p>The query http://api.travelpayouts.com/data/airports.json returns a file with a list of airports from the database. </p>
+<h3 id="example-response_2">Example response</h3>
+<pre><code>[{
+    "code":"MQP",
+    "name":"Kruger Mpumalanga International Airport",
+    "coordinates":{
+    "lon":31.098131,
+    "lat":-25.384947
+    },
+    "time_zone":"Africa/Johannesburg",
+    "name_translations":{
+    "de":"Nelspruit",
+    "en":"Kruger Mpumalanga International Airport",
+    "tr":"International Airport",
+    "it":"Kruger Mpumalanga",
+    "fr":"Kruger Mpumalanga",
+    "es":"Kruger Mpumalanga",
+    "th":"???????????????"
+    },
+    "country_code":"ZA",
+    "city_code":"NLP"
+}]
+</code></pre>
+<h4 id="response-parameters_10">Response parameters</h4>
+<ul>
+<li><strong>code</strong> — airport IATA code.</li>
+<li><strong>name</strong> — airport name.</li>
+<li><strong>lon</strong> — airport longitude.</li>
+<li><strong>lat</strong> — airport latitude.</li>
+<li><strong>time_zone</strong> – time zone relative to GMT.</li>
+<li><strong>name_translations</strong> — the name of the airport in different languages.</li>
+<li><strong>country_code</strong> — country IATA code.</li>
+<li><strong>city_code</strong> — city IATA code.</li>
+</ul>
+<h2 id="airline-data-in-json-format">Airline data in json format</h2>
+<p>The query http://api.travelpayouts.com/data/airlines.json returns a file with a list of airlines from the database. </p>
+<h3 id="example-response_3">Example response</h3>
+<pre><code>[{
+    "name":"Private flight",
+    "alias":null,
+    "iata":null,
+    "icao":null,
+    "callsign":null,
+    "country":null,
+    "is_active":true
+}]
+</code></pre>
+<h4 id="response-parameters_11">Response parameters</h4>
+<ul>
+<li><strong>name</strong> — airline name.</li>
+<li><strong>alias</strong> — alliance name (if the airline is an alliance member).</li>
+<li><strong>iata</strong> — airline IATA code.</li>
+<li><strong>icao</strong> — airline ICAO code.</li>
+<li><strong>callsign</strong> — airline call sign.</li>
+<li><strong>country</strong> — airline country of registration.</li>
+<li><strong>is_active</strong> — true: company is active, false: company is not active.</li>
+</ul>
+<h2 id="alliance-data-in-json-format">Alliance data in json format</h2>
+<p>The query http://api.travelpayouts.com/data/airlines_alliances.json returns a file with a list of alliances from the database. </p>
+<h3 id="example-response_4">Example response</h3>
+<pre><code>[{
+    "name":"oneworld",
+    "airlines":["4M","AA","AB","BA","CX","AY","HG","IB","JC","JL","JO","KA","LA","LP","MA","MN","MX","NU","QF","RJ","S7","XL"]
+}]
+</code></pre>
+<h4 id="response-parameters_12">Response parameters</h4>
+<ul>
+<li><strong>name</strong> — alliance name.</li>
+<li><strong>airlines</strong> — codes for alliance member companies.</li>
+</ul>
+<h2 id="airplane-data-in-json-format">Airplane data in json format</h2>
+<p>The query http://api.travelpayouts.com/data/planes.json returns a file with a list of airplanes from the database. </p>
+<h3 id="example-response_5">Example response</h3>
+<pre><code>[{
+    "code":"100",
+    "name":"Fokker 100"
+}]
+</code></pre>
+<h4 id="response-parameters_13">Response parameters</h4>
+<ul>
+<li><strong>code</strong> — plane IATA code.</li>
+<li><strong>name</strong> — plane name.</li>
+</ul>
+<h2 id="data-on-the-routes-in-json-format">Data on the routes in json format</h2>
+<p>The query http://api.travelpayouts.com/data/planes.json returns a file with a list of routes from the database.</p>
+<h3 id="example-response_6">Example response</h3>
+<pre><code>[{
+    "airline_iata":"2B",
+    "airline_icao":null,
+    "departure_airport_iata":"AER",
+    "departure_airport_icao":null,
+    "arrival_airport_iata":"DME",
+    "arrival_airport_icao":null,
+    "codeshare":false,
+    "transfers":0,
+    "planes":[
+    "CR2"
+    ]
+}]
+</code></pre>
+<h4 id="response-parameters_14">Response parameters</h4>
+<ul>
+<li><strong>airline_iata</strong> — IATA of airline.</li>
+<li><strong>airline_icao</strong> — ICAO of airline.</li>
+<li><strong>departure_airport_iata</strong> — IATA of airport of departure.</li>
+<li><strong>departure_airport_icao</strong> — ICAO of airport of departure.</li>
+<li><strong>arrival_airport_iata</strong> — IATA of airport of arrival.</li>
+<li><strong>arrival_airport_icao</strong> — ICAO of airport of arrival.</li>
+<li><strong>codeshare</strong> — it shows whether the flight performs the same company that sells the ticket.</li>
+<li><strong>transfers</strong> — the number of direct.</li>
+<li><strong>planes</strong> — IATA of airplane.</li>
+</ul>
+<h2 id="the-definition-of-a-users-location-by-ip-address">The definition of a user's location by IP address</h2>
+<p>The query: http://www.travelpayouts.com/whereami?locale=ru&amp;callback=useriata&amp;ip=62.105.128.0 is returned the IATA-code and the name of nearest city from the user.</p>
+<h3 id="request-options">Request Options</h3>
+<ul>
+<li><strong>locale</strong> — the language in which returns the name of the city (available languages: en, ru, de, fr, it, pl, th. By default it is Russian);</li>
+<li><strong>callback</strong> — specifies the name of the function, which contains a response to a query (mandatory);</li>
+<li><strong>ip</strong> — ip-addresses of the users (if the address is not passed, the system determines IP from the header of the request).</li>
+</ul>
+<h3 id="example-response_7">Example response</h3>
+<pre><code>*useriata ({"iata": "MOW", "name": "Moscow"})*
+</code></pre>
+<h4 id="response-parameters_15">Response parameters</h4>
+<ul>
+<li><strong>iata</strong> — IATA code of the city where the user is located;</li>
+<li><strong>name</strong> — the name of the city.</li>
+</ul>
+<h2 id="reduction-of-prices-into-the-other-currency">Reduction of prices into the other currency</h2>
+<p>Brings the current rate of all popular currencies to RUB back.</p>
+<h3 id="request_9">Request</h3>
+<p>http://yasen.aviasales.ru/adaptors/currency.json</p>
+<h4 id="example-response_8">Example response</h4>
+<pre><code>{
+    "cny":8.24394,
+    "eur":57.1578,
+    "mzn":1.49643,
+    "nio":1.97342,
+    "usd":51.1388,
+    "hrk":7.48953
+}
+</code></pre>
+<h2 id="special-offers">Special offers</h2>
+<p>Brings the recent special offers from the airline companies back in the .XML format.</p>
+<h3 id="request_10">Request</h3>
+<p>http://api.travelpayouts.com/v2/prices/special-offers</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="README/" class="btn btn-neutral float-right" title="README">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.15.0
+Build Date UTC : 2017-10-13 08:44:43.008014
+-->

@@ -1,0 +1,14 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 403 
+server: AkamaiGHost
+mime-version: 1.0
+content-type: text/html
+content-length: 373
+expires: Wed, 04 Nov 2026 21:44:29 GMT
+cache-control: max-age=0, no-cache
+pragma: no-cache
+date: Wed, 04 Nov 2026 21:44:29 GMT
+alt-svc: h3=":443"; ma=93600
+tdm-reservation: 1
+

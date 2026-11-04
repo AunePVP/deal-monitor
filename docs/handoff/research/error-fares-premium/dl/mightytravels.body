@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mighty Travels Premium Plans: $9.99, $14.99, $19.99/month</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Subscribe to Mighty Travels Premium. Monthly plans: Explore $9.99, Pro $14.99, and Max $19.99. Switch to yearly billing and save up to 40%. Save up to 90% on flights and hotels with real-time mistake fares and luxury hotel rates.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <link rel="canonical" href="https://www.mightytravels.com/dashboardv2/welcome.php">
+    <link rel="preconnect" href="https://js.stripe.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.mightytravels.com">
+    <link rel="dns-prefetch" href="https://js.stripe.com">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Mighty Travels Premium">
+    <meta property="og:title" content="Mighty Travels Premium Plans: $9.99, $14.99, $19.99/month">
+    <meta property="og:description" content="Subscribe to Mighty Travels Premium. Monthly plans: Explore $9.99, Pro $14.99, and Max $19.99. Switch to yearly billing and save up to 40%. Save up to 90% on flights and hotels with real-time mistake fares and luxury hotel rates.">
+    <meta property="og:url" content="https://www.mightytravels.com/dashboardv2/welcome.php">
+    <meta property="og:image" content="https://cdn.mightytravels.com/css-add/bohol-7491218_1280.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Mighty Travels Premium — flight and hotel deals">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@mightytravels">
+    <meta name="twitter:title" content="Mighty Travels Premium Plans: $9.99, $14.99, $19.99/month">
+    <meta name="twitter:description" content="Subscribe to Mighty Travels Premium. Monthly plans: Explore $9.99, Pro $14.99, and Max $19.99. Switch to yearly billing and save up to 40%. Save up to 90% on flights and hotels with real-time mistake fares and luxury hotel rates.">
+    <meta name="twitter:image" content="https://cdn.mightytravels.com/css-add/bohol-7491218_1280.jpg">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.mightytravels.com/css-add/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.mightytravels.com/css-add/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.mightytravels.com/css-add/apple-touch-icon.png">
+    <meta name="theme-color" content="#2c476a">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.mightytravels.com/#organization",
+          "name": "Mighty Travels",
+          "url": "https://www.mightytravels.com/",
+          "logo": "https://cdn.mightytravels.com/css-add/mt-logo.svg",
+          "sameAs": ["https://twitter.com/mightytravels"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.mightytravels.com/dashboardv2/welcome.php#webpage",
+          "url": "https://www.mightytravels.com/dashboardv2/welcome.php",
+          "name": "Mighty Travels Premium Plans: $9.99, $14.99, $19.99/month",
+          "description": "Subscribe to Mighty Travels Premium. Monthly plans: Explore $9.99, Pro $14.99, and Max $19.99. Switch to yearly billing and save up to 40%. Save up to 90% on flights and hotels with real-time mistake fares and luxury hotel rates.",
+          "isPartOf": { "@type": "WebSite", "name": "Mighty Travels", "url": "https://www.mightytravels.com/" },
+          "about": { "@id": "https://www.mightytravels.com/dashboardv2/welcome.php#product" }
+        },
+        {
+          "@type": "Product",
+          "@id": "https://www.mightytravels.com/dashboardv2/welcome.php#product",
+          "name": "Mighty Travels Premium",
+          "description": "Membership for exclusive airfare and luxury hotel deals, mistake fares, and cabin-class alerts.",
+          "brand": { "@id": "https://www.mightytravels.com/#organization" },
+          "image": "https://cdn.mightytravels.com/css-add/bohol-7491218_1280.jpg",
+          "url": "https://www.mightytravels.com/dashboardv2/welcome.php",
+          "offers": {
+            "@type": "AggregateOffer",
+            "lowPrice": "9.99",
+            "highPrice": "19.99",
+            "priceCurrency": "USD",
+            "offerCount": "3",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.mightytravels.com/dashboardv2/welcome.php",
+            "offers": [
+              {
+                "@type": "Offer",
+                "name": "Explore",
+                "price": "9.99",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.mightytravels.com/dashboardv2/welcome.php",
+                "priceSpecification": {
+                  "@type": "UnitPriceSpecification",
+                  "price": "9.99",
+                  "priceCurrency": "USD",
+                  "billingDuration": 1,
+                  "billingIncrement": 1,
+                  "unitCode": "MON"
+                }
+              },
+              {
+                "@type": "Offer",
+                "name": "Pro",
+                "price": "14.99",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.mightytravels.com/dashboardv2/welcome.php",
+                "priceSpecification": {
+                  "@type": "UnitPriceSpecification",
+                  "price": "14.99",
+                  "priceCurrency": "USD",
+                  "billingDuration": 1,
+                  "billingIncrement": 1,
+                  "unitCode": "MON"
+                }
+              },
+              {
+                "@type": "Offer",
+                "name": "Max",
+                "price": "19.99",
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://www.mightytravels.com/dashboardv2/welcome.php",
+                "priceSpecification": {
+                  "@type": "UnitPriceSpecification",
+                  "price": "19.99",
+                  "priceCurrency": "USD",
+                  "billingDuration": 1,
+                  "billingIncrement": 1,
+                  "unitCode": "MON"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How much does Mighty Travels Premium cost?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Monthly plans are Explore at $9.99, Pro at $14.99, and Max at $19.99. Yearly billing is also available and saves up to 40% compared with paying month to month. You can cancel anytime from your account."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do you offer yearly billing?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Yearly billing is available on this page and saves up to 40% compared with paying month to month."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between Explore, Pro, and Max?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Explore ($9.99) covers Economy airfare deals. Pro ($14.99) adds Premium Economy and Business Class. Max ($19.99) includes First Class, multiple departure airports, and every alert we send."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I cancel my Mighty Travels Premium subscription?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Unsubscribe anytime from your account or by emailing premium@mightytravels.com. We respect your privacy."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What do I get with a Premium membership?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Real-time mistake-fare alerts, luxury hotel rates, 35+ airfare search filters, continent-to-continent search, and handpicked offers with up to 90% off published fares."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my airport covered?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Search the airport list on the Mighty Travels homepage. It shows the airport code, name, city, country, and how many deals are live from that airport right now."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        :root {
+            --navy: #2c476a;
+            --link: #005fa1;
+            --text: #333;
+            --muted: #5b6573;
+            --bg: #f6f8fb;
+            --card: #fff;
+            --line: #e6ebf2;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            margin: 0;
+            color: var(--text);
+            background: var(--bg);
+            font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        a { color: var(--link); }
+        a:hover { color: #003d7a; }
+        img { max-width: 100%; height: auto; border: 0; }
+        .wrap {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 20px 12px 40px;
+        }
+        .card {
+            background: var(--card);
+            box-shadow: 0 8px 28px rgba(44, 71, 106, 0.08);
+            padding: 24px 16px 32px;
+        }
+        header { text-align: center; margin-bottom: 8px; }
+        .plans { margin: 8px 0 24px; }
+        .plans h2 { text-align: center; }
+        .rest { padding: 8px 16px 28px; }
+        .logo { height: 70px; width: 202px; }
+        h1 {
+            margin: 18px 0 8px;
+            color: var(--navy);
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+        .lede {
+            margin: 0 auto 8px;
+            max-width: 36em;
+            color: var(--muted);
+        }
+        .airport-link {
+            margin: 4px 0 0;
+            font-weight: 650;
+        }
+        .prices {
+            margin: 0 0 20px;
+            color: var(--navy);
+            font-weight: 700;
+        }
+        .billing { position: relative; }
+        .billing > input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .billing-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 0 16px;
+        }
+        .billing-tabs label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--navy);
+            font-weight: 600;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .billing-tabs label small {
+            font-weight: 600;
+            color: #1e7a46;
+        }
+        #bill-month:checked ~ .billing-tabs label[for="bill-month"],
+        #bill-year:checked ~ .billing-tabs label[for="bill-year"] {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+        }
+        #bill-month:checked ~ .billing-tabs label[for="bill-month"] small,
+        #bill-year:checked ~ .billing-tabs label[for="bill-year"] small { color: #b7f0c8; }
+        .checkout {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            min-height: 620px;
+            overflow: visible;
+        }
+        stripe-pricing-table {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            min-height: 620px;
+            overflow: visible;
+        }
+        .compare { margin-top: 36px; }
+        h2 {
+            margin: 0 0 14px;
+            color: var(--navy);
+            font-size: 1.35rem;
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .compare-table th, .compare-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--line);
+            text-align: center;
+            word-break: break-word;
+        }
+        .compare-table th:first-child, .compare-table td:first-child { text-align: left; }
+        .compare-table thead th { color: var(--navy); }
+        .compare-table .amt { display: block; font-size: 1.15rem; font-weight: 700; }
+        .compare-table .per { display: block; font-size: 0.75rem; font-weight: 500; color: var(--muted); }
+        .yes { color: #1e7a46; font-weight: 700; }
+        .no { color: #b0b7c3; }
+        .benefits { margin: 28px 0 0; padding: 0; list-style: none; }
+        .benefits li {
+            position: relative;
+            margin: 0 0 10px;
+            padding-left: 1.4em;
+            color: var(--muted);
+        }
+        .benefits li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #1e7a46;
+            font-weight: 700;
+        }
+        .faq { margin-top: 36px; }
+        details {
+            border-top: 1px solid var(--line);
+            padding: 12px 0;
+        }
+        details:last-of-type { border-bottom: 1px solid var(--line); }
+        summary {
+            cursor: pointer;
+            color: var(--navy);
+            font-weight: 600;
+        }
+        details p { margin: 8px 0 0; color: var(--muted); }
+        footer {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            text-align: center;
+            font-size: 0.92rem;
+            color: var(--muted);
+        }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px; margin-top: 12px; }
+        .footer-links span { color: #c0c6d0; }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        noscript p { color: #8a1f11; }
+        @media (max-width: 640px) {
+            .wrap { padding: 12px 10px 28px; }
+            .card, .rest { padding: 16px 12px 24px; box-shadow: none; }
+            .billing-tabs { width: 100%; }
+            .billing-tabs label {
+                flex: 1 1 0;
+                justify-content: center;
+                min-height: 44px;
+                padding: 10px 12px;
+            }
+            .checkout, stripe-pricing-table { min-height: 980px; }
+            .compare-table { font-size: 0.8rem; }
+            .compare-table th, .compare-table td { padding: 8px 4px; }
+            .compare-table .per { display: none; }
+            .footer-links { flex-direction: column; gap: 10px; }
+            .footer-links span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <article>
+            <header class="card">
+                <img class="logo" src="https://cdn.mightytravels.com/css-add/mt-logo.svg" alt="Mighty Travels Premium" width="202" height="70" fetchpriority="high" decoding="async">
+                <h1>Save up to 90% on flights and hotels</h1>
+                <p class="lede">Mighty Travels Premium finds mistake fares, luxury hotel rates, and handpicked offers you will not see on the public booking sites.</p>
+                <p class="airport-link"><a href="https://www.mightytravels.com/#airports">is my airport covered</a></p>
+                <p class="prices">Explore $9.99/mo · Pro $14.99/mo · Max $19.99/mo</p>
+            </header>
+
+            <section class="plans" aria-labelledby="plans-heading">
+                <h2 id="plans-heading">Choose your plan</h2>
+                <noscript><p>JavaScript is required to complete checkout. Monthly plans: Explore $9.99, Pro $14.99, Max $19.99. Yearly billing saves up to 40%.</p></noscript>
+                <div class="billing">
+                    <input type="radio" name="billing" id="bill-month" checked>
+                    <input type="radio" name="billing" id="bill-year">
+                    <div class="billing-tabs">
+                        <label for="bill-month">Monthly</label>
+                        <label for="bill-year">Yearly <small>save up to 40%</small></label>
+                    </div>
+                    <div class="checkout" id="stripe-slot"
+                         data-monthly="prctbl_1RWHDqDOkNAx4ldFYXI13o6g"
+                         data-yearly="prctbl_1OXQwCDOkNAx4ldFfNDeWKha"
+                         data-pk="pk_live_516CDysDOkNAx4ldFYWstcCaTUDaUSAUUa4biwKEBvvsn3NWhqx51YI1NU7SfC5ikh7UkjJvuUW1WlvQxg1gojIDO00wJAIdHuK">
+                        <stripe-pricing-table
+                            pricing-table-id="prctbl_1RWHDqDOkNAx4ldFYXI13o6g"
+                            publishable-key="pk_live_516CDysDOkNAx4ldFYWstcCaTUDaUSAUUa4biwKEBvvsn3NWhqx51YI1NU7SfC5ikh7UkjJvuUW1WlvQxg1gojIDO00wJAIdHuK">
+                        </stripe-pricing-table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="card rest">
+            <section class="compare" aria-labelledby="compare-heading">
+                <h2 id="compare-heading">What is included</h2>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Feature</th>
+                            <th scope="col">Explore <span class="amt">$9.99</span><span class="per">per month</span></th>
+                            <th scope="col">Pro <span class="amt">$14.99</span><span class="per">per month</span></th>
+                            <th scope="col">Max <span class="amt">$19.99</span><span class="per">per month</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Economy airfare deals</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">Premium Economy deals</th><td class="no">—</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">Business Class deals</th><td class="no">—</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">First Class deals</th><td class="no">—</td><td class="no">—</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">Multiple departure airports</th><td class="no">—</td><td class="no">—</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">Mistake-fare alerts</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                        <tr><th scope="row">Luxury hotel rates</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                    </tbody>
+                </table>
+                <ul class="benefits">
+                    <li>Real-time notifications for airfare and luxury hotel offers you will not see elsewhere.</li>
+                    <li>Search a whole continent to another in seconds, with twice-daily updates for saved searches.</li>
+                    <li>More than 35 airfare filters: discount airlines, lie-flat seats, alliances, and more.</li>
+                    <li>Handpicked concierge offers with up to 90% off. Cancel anytime.</li>
+                </ul>
+            </section>
+
+            <section class="faq" aria-labelledby="faq-heading">
+                <h2 id="faq-heading">Frequently asked questions</h2>
+                <details>
+                    <summary>How much does Mighty Travels Premium cost?</summary>
+                    <p>Monthly plans are Explore at $9.99, Pro at $14.99, and Max at $19.99. Switch to yearly billing above to save up to 40% compared with paying month to month.</p>
+                </details>
+                <details>
+                    <summary>Do you offer yearly billing?</summary>
+                    <p>Yes. Choose Yearly above the pricing table to pay annually and save up to 40% versus monthly billing.</p>
+                </details>
+                <details>
+                    <summary>What is the difference between Explore, Pro, and Max?</summary>
+                    <p>Explore is Economy deals. Pro adds Premium Economy and Business Class. Max adds First Class, multiple departure airports, and every alert we send.</p>
+                </details>
+                <details>
+                    <summary>Can I cancel anytime?</summary>
+                    <p>Yes. Manage or cancel from your account, or email <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4949681898d9189a4898d838c909d90968592818897ca878b89">[email&#160;protected]</a>. We respect your privacy.</p>
+                </details>
+                <details>
+                    <summary>Is my airport covered?</summary>
+                    <p>Search by city, airport name, or code on the <a href="https://www.mightytravels.com/#airports">homepage airport list</a>. You will see the code, name, city, country, and how many deals are live from that airport right now.</p>
+                </details>
+                <details>
+                    <summary>Already have a specific itinerary?</summary>
+                    <p><a href="https://www.mightytravels.com/dashboardv2/save_more.php">Save More</a> finds a better deal for a trip you already have in mind, or it is free.</p>
+                </details>
+            </section>
+
+            <footer>
+                <p>We respect your privacy. Unsubscribe anytime.</p>
+                <nav class="footer-links" aria-label="Legal and account">
+                    <a href="https://www.mightytravels.com/#airports">Is my airport covered?</a>
+                    <span aria-hidden="true">|</span>
+                    <a href="https://www.mightytravels.com/dashboardv2/?ng=client/login/">Login</a>
+                    <span aria-hidden="true">|</span>
+                    <a href="https://www.mightytravels.com/testimonials_faq.php">FAQ &amp; testimonials</a>
+                    <span aria-hidden="true">|</span>
+                    <a href="https://mightymediallc.com/privacy.html" rel="noopener">Privacy</a>
+                    <span aria-hidden="true">|</span>
+                    <a href="https://mightymediallc.com/terms.html" rel="noopener">Terms</a>
+                </nav>
+            </footer>
+            </div>
+        </article>
+    </main>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://js.stripe.com/v3/pricing-table.js" defer></script>
+    <script>
+    (function () {
+        var slot = document.getElementById('stripe-slot');
+        if (!slot) return;
+        var pk = slot.getAttribute('data-pk');
+        var ids = { month: slot.getAttribute('data-monthly'), year: slot.getAttribute('data-yearly') };
+        function mount(id) {
+            slot.innerHTML = '<stripe-pricing-table pricing-table-id="' + id + '" publishable-key="' + pk + '"></stripe-pricing-table>';
+        }
+        var year = document.getElementById('bill-year');
+        var month = document.getElementById('bill-month');
+        if (year) year.addEventListener('change', function () { if (this.checked) mount(ids.year); });
+        if (month) month.addEventListener('change', function () { if (this.checked) mount(ids.month); });
+    })();
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"7c8c1a60df9f4353b31bd932c7915c78","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

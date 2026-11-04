@@ -1,0 +1,95 @@
+##### travelzoo_de_feed
+FORMAT=ATOM ITEMS=135
+  [1] 2026-11-04T08:34:00-08:00       | ab 69 € p.P. -- Barcelona: 4*-Hotel nah am Meer mit Flug | https://www.travelzoo.com/de/hotels-deutschland/osten/ab-69-p-P-Barcelona-4-Hotel-nah-am-M
+  [2] 2026-11-04T05:00:00-08:00       | Las Vegas -- Hotel am Strip & Flug ab 819 € p.P. | https://www.travelzoo.com/de/urlaubsreisen/usa-kanada/Las-Vegas-Hotel-am-Strip-Flug-ab-819
+  [3] 2026-11-04T04:31:00-08:00       | ab 360 € p.P -- MSC: 1 Woche Karibik & Antillen | https://www.travelzoo.com/de/kreuzfahrten/weltweit/ab-360-p-P-MSC-1-Woche-Karibik-Antillen
+  [4] 2026-11-04T03:45:00-08:00       | ab 410 € p.P -- Kreuzfahrt in der karibischen Wintersonne | https://www.travelzoo.com/de/kreuzfahrten/weltweit/ab-410-p-P-Kreuzfahrt-in-der-karibische
+  [5] 2026-11-04T03:38:00-08:00       | ab 539 € p.P. -- Wintersonne auf den Kanaren mit MSC | https://www.travelzoo.com/de/kreuzfahrten/mittelmeer-kanaren/ab-539-p-P-Wintersonne-auf-de
+  [6] 2026-11-04T14:57:29-08:00       | 85 € p.P. -- 3 Tage auf autofreier Nordseeinsel mit Dinner | https://www.travelzoo.com/de/local-deals/Bundesweit/Getaway/448667/Parkhotel-Wangerooge/
+  [7] 2026-11-04T15:28:57-08:00       | 89 € p.P. -- 3 Tage in der Altstadt von Dresden | https://www.travelzoo.com/de/local-deals/Bundesweit/Getaway/449031/Hotel-Elbflorenz-Dresde
+  [8] 2026-11-04T03:04:00-08:00       | ab 459 € p.P. -- Mallorca mit Iberostar & Flug | https://www.travelzoo.com/de/urlaubsreisen/italien-spanien/ab-459-p-P-Mallorca-mit-Iberost
+  [9] 2026-11-04T02:59:00-08:00       | ab 1559 € p.P. -- Hawaii: Baden mit Flug | https://www.travelzoo.com/de/urlaubsreisen/usa-kanada/ab-1559-p-P-Hawaii-Baden-mit-Flug-32
+  [10] 2026-11-04T02:58:00-08:00       | ab 579 € p.P. -- Andalusien mit HP & Flug | https://www.travelzoo.com/de/urlaubsreisen/italien-spanien/ab-579-p-P-Andalusien-mit-HP-Fl
+  [11] 2026-11-04T02:56:00-08:00       | ab 259 € p.P. -- Mailand: Suite mit Flug | https://www.travelzoo.com/de/urlaubsreisen/italien-spanien/ab-259-p-P-Mailand-Suite-mit-Fl
+  [12] 2026-11-04T02:53:00-08:00       | ab 199 € p.P. -- Black Friday: Mittelmeer entdecken mit MSC | https://www.travelzoo.com/de/kreuzfahrten/mittelmeer-kanaren/ab-199-p-P-Black-Friday-Mitte
+##### frankfurtflyer_feed2
+FORMAT=RSS ITEMS=18
+  [1] Wed, 04 Nov 2026 12:00:30 +0000 | Mehr Premiumsitze: Lufthansa will eine größere Business Class | https://frankfurtflyer.de/mehr-premiumsitze-lufthansa-will-eine-groessere-business-class/
+  [2] Wed, 04 Nov 2026 08:00:17 +0000 | Rosewood Beyond: 30% Rabatt in Luxushotels weltweit | https://frankfurtflyer.de/rosewood-beyond-30-rabatt-in-luxushotels-weltweit/
+  [3] Wed, 04 Nov 2026 06:30:28 +0000 | Lufthansa Group stoppt Flottenmodernisierung bei Austrian Airlines | https://frankfurtflyer.de/lufthansa-group-stoppt-flottenmodernisierung-bei-austrian-airlin
+  [4] Wed, 04 Nov 2026 04:45:14 +0000 | Verlängert: ALL Accor+ Explorer mit 3.000 Bonuspunkten, Gold Status und zwei Freinächten | https://frankfurtflyer.de/all-accor-plus/
+  [5] Tue, 03 Nov 2026 12:00:54 +0000 | Noch verfügbar!Miles & More Meilen mit 50% Bonus kaufen + bis zu 150 Status Points und 3 Lounge Gutscheine | https://frankfurtflyer.de/milesmore-meilen-kaufen/
+  [6] Tue, 03 Nov 2026 10:45:49 +0000 | Waldorf Astoria Berlin Angebot mit 33% Rabatt und umfangreichen Extras | https://frankfurtflyer.de/waldorf-astoria-berlin-angebot/
+  [7] Tue, 03 Nov 2026 06:30:59 +0000 | SWISS Senses: Mumbai wird das dritte Ziel der neuen SWISS Business- und First Class | https://frankfurtflyer.de/swiss-senses-mumbai-wird-das-dritte-ziel-der-neuen-swiss-busines
+  [8] Tue, 03 Nov 2026 04:45:54 +0000 | Neues Hotel-Bonusprogramm ab 2027: Das ändert sich bei Best Western & Co | https://frankfurtflyer.de/neues-hotel-bonusprogramm-ab-2027-das-aendert-sich-bei-best-west
+  [9] Mon, 02 Nov 2026 10:45:44 +0000 | Kostenlose 4. Nacht im neuen Mandarin Oriental Downtown Dubai mit wertvollen Vorteilen | https://frankfurtflyer.de/kostenlose-4-nacht-im-neuen-mandarin-oriental-downtown-dubai-mit
+  [10] Mon, 02 Nov 2026 04:45:59 +0000 | Neue Flying Blue Promo Rewards: Für 45.000 Meilen in der Air France Business Class nach New York | https://frankfurtflyer.de/flying-blue-promo-rewards/
+  [11] Mon, 02 Nov 2026 04:00:00 +0000 | [UPDATE] Cashback beim Fliegen, Shoppen und im Hotel: Es gibt neue AMEX Offers! | https://frankfurtflyer.de/die-aktuellen-amex-offers/
+  [12] Sun, 01 Nov 2026 14:15:45 +0000 | Review: Numo Ierapetra Beach Resort Kreta, a CURIO Collection by Hilton | https://frankfurtflyer.de/review-numo-ierapetra-beach-resort-kreta-a-curio-collection-by-h
+##### yhbu_feed2
+FORMAT=RSS ITEMS=50
+  [1] Wed, 04 Nov 2026 20:51:00 +0000 | 50% BONUS bei Finnair Plus Avios Sale + 10% Statuspunkte + Reset vom Kauflimit | https://youhavebeenupgraded.boardingarea.com/2026/11/50-bonus-bei-finnair-plus-avios-sale/
+  [2] Wed, 04 Nov 2026 19:55:00 +0000 | BIS 05.11.!!! Hilton Kreditkarte mit sofort Gold Status und Fast Track zu Diamond + 50.000 Willkommenspunkte!! | https://youhavebeenupgraded.boardingarea.com/2026/11/der-einfachste-hotelstatus-hilton-kre
+  [3] Wed, 04 Nov 2026 17:21:00 +0000 | ACT FAST: Royal Jordanian Status Match mit Hotel Status zu Oneworld Sapphire für 149 USD … ohne Status 248 USD | https://youhavebeenupgraded.boardingarea.com/2026/11/act-fast-royal-jordanian-status-match
+  [4] Tue, 03 Nov 2026 20:30:00 +0000 | 40% BONUS bei Choice Privileges Punktesale = günstiges Skandinavien | https://youhavebeenupgraded.boardingarea.com/2026/11/25-rabatt-bei-choice-privileges-punkt
+  [5] Mon, 02 Nov 2026 06:52:20 +0000 | LOT Miles and More Meilenschnäppchen November 2026 | https://youhavebeenupgraded.boardingarea.com/2026/11/lot-miles-and-more-meilenschnaeppchen
+  [6] Sun, 01 Nov 2026 19:37:58 +0000 | Was für eine Aussicht und Location: St. Regis Lhasa – Potala Palace View Room | https://youhavebeenupgraded.boardingarea.com/2026/11/was-fuer-eine-aussicht-und-location-s
+  [7] Sun, 01 Nov 2026 16:24:38 +0000 | Mit Welt Abo 10.000 Miles and More Meilen kaufen: 100 Euro | https://youhavebeenupgraded.boardingarea.com/2026/11/mit-welt-abo-10-000-miles-and-more-me
+  [8] Sun, 01 Nov 2026 06:19:07 +0000 | Mit FAZ Digitalabo 50.000 Miles and More Meilen kaufen: 635 Euro | https://youhavebeenupgraded.boardingarea.com/2026/11/mit-faz-digitalabo-50-000-miles-and-m
+  [9] Sat, 31 Oct 2026 05:14:00 +0000 | LETZTE CHANCE: 4.000 Payback Punkte mit der kostenlosen Payback American Express Karte | https://youhavebeenupgraded.boardingarea.com/2026/10/5-000-miles-and-more-meilen-mit-der-k
+  [10] Thu, 29 Oct 2026 17:43:00 +0000 | Hilton Status Challenge mit Status bis 2028 | https://youhavebeenupgraded.boardingarea.com/2026/10/hilton-status-challenge-mit-status-bi
+  [11] Wed, 28 Oct 2026 06:30:46 +0000 | Best Western Rewards wird World Hotels Rewards | https://youhavebeenupgraded.boardingarea.com/2026/10/best-western-rewards-wird-world-hotel
+  [12] Tue, 27 Oct 2026 06:31:22 +0000 | Einen Oneworld Ruby Status kaufen: 44 Euro | https://youhavebeenupgraded.boardingarea.com/2026/10/einen-oneworld-ruby-status-kaufen-44-
+##### reisefieber_feed
+FORMAT=RSS ITEMS=10
+  [1] Thu, 30 Apr 2026 10:34:55 +0000 | Costa Rica – Ein Land, das unter die Haut geht | https://www.reisefieber.de/costa-rica/
+  [2] Wed, 21 May 2025 09:44:16 +0000 | Mit Stil durch Vietnam: Eine Zugreise voller Sinnesfreuden | https://www.reisefieber.de/mit-stil-durch-vietnam/
+  [3] Tue, 11 Mar 2025 10:27:20 +0000 | Von der Bucket List in die Realität: Einzigartige Erlebnisse, die du nicht verpassen solltest | https://www.reisefieber.de/von-der-bucketlist-in-die-realitaet/
+  [4] Tue, 12 Nov 2024 13:11:08 +0000 | Nordische Länder: Ein Ganzjähriges Abenteuer – Sommer- und Winterwunder im hohen Norden | https://www.reisefieber.de/nordische-laender/
+  [5] Thu, 29 Jun 2023 11:56:54 +0000 | Die Jahreszeiten Islands | https://www.reisefieber.de/die-jahreszeiten-islands/
+  [6] Tue, 27 Jun 2023 11:37:51 +0000 | Mit kleinem Fußabdruck durch Neuengland reisen | https://www.reisefieber.de/neuengland/
+  [7] Wed, 07 Aug 2019 11:38:08 +0000 | New York City zu jeder Jahreszeit | https://www.reisefieber.de/new-york-city-zu-jeder-jahreszeit/
+  [8] Tue, 08 Jan 2019 11:35:40 +0000 | Safarierlebnis Tansania | https://www.reisefieber.de/safarierlebnis-tansania/
+  [9] Mon, 29 Oct 2018 11:32:32 +0000 | Urgemütliche Inn’s und Bed & Breakfasts erleben | https://www.reisefieber.de/urgemuetliche-inns-und-bed-breakfasts-erleben/
+  [10] Fri, 31 Aug 2018 11:29:56 +0000 | Reisefieber im Herbst & Winter | https://www.reisefieber.de/reisefieber-im-herbst-winter/
+##### travelfree_feed
+FORMAT=RSS ITEMS=50
+  [1] Wed, 04 Nov 2026 20:07:01 +0000 | Full service fights from Riga to SEYCHELLES from €635 | https://travelfree.info/cheap-flights-riga-seychelles/
+  [2] Wed, 04 Nov 2026 19:36:20 +0000 | Last minute! Direct flight from Poznan to Phu Quoc, Vietnam for €657 (checked baggage incl) | https://travelfree.info/direct-flight-from-poznan-to-phu-quoc-vietnam/
+  [3] Wed, 04 Nov 2026 19:14:33 +0000 | Non Stop flights from Stockholm to Bangkok, Thailand from €423 | https://travelfree.info/direct-flights-stockholm-bangkok/
+  [4] Wed, 04 Nov 2026 18:36:48 +0000 | Full service flights from Milan to Zanzibar from €524 | https://travelfree.info/full-service-flights-from-milan-rome-to-zanzibar/
+  [5] Wed, 04 Nov 2026 13:06:41 +0000 | Cheap flights from Berlin to Seattle, USA from €406 | https://travelfree.info/cheap-flights-from-berlin-to-seattle-usa/
+  [6] Wed, 04 Nov 2026 12:33:08 +0000 | HOT! Cheap flights from European cities to MAURITIUS from €470 | https://travelfree.info/cheap-flights-from-european-cities-to-mauritius/
+  [7] Wed, 04 Nov 2026 12:02:39 +0000 | HOT! Open-jaw flights from Stockholm to BALI, Indonesia (back to Amsterdam or London) from €418 | https://travelfree.info/open-jaw-flights-bali/
+  [8] Wed, 04 Nov 2026 11:28:27 +0000 | HOT! Direct flights from Amsterdam to BONAIRE (Caribbean Island) from €400 | https://travelfree.info/cheap-flights-from-amsterdam-to-bonaire/
+  [9] Wed, 04 Nov 2026 10:59:08 +0000 | Deutsche Bahn PROMO SALE: Tickets from €6.99 | https://travelfree.info/deutsche-bahn-promo-sale/
+  [10] Wed, 04 Nov 2026 10:32:00 +0000 | Flights from Vilnius to Kuala Lumpur, Malaysia from €587 | https://travelfree.info/cheap-flights-from-lithuania-to-malaysia/
+  [11] Wed, 04 Nov 2026 09:52:27 +0000 | Non stop flights from Copenhagen to Seoul, SOUTH KOREA from €609 | https://travelfree.info/cheap-flights-from-copenhagen-to-south-korea-for-e412-by-turkish-a
+  [12] Wed, 04 Nov 2026 09:21:52 +0000 | Non stop flights from Milan to Bangkok, Thailand from €602 (checked baggage incl.) | https://travelfree.info/direct-flights-milan-bangkok-thailand/
+##### urlaubspiraten_at_feed
+FORMAT=RSS ITEMS=10
+  [1] Wed, 04 Nov 2026 15:00:00 +0100 | Madeira entdecken: spektakuläre Natur & Walbeobachtung 🐳 | https://www.urlaubspiraten.at/pauschalreisen/magisches-madeira-mit-vivido-at
+  [2] Wed, 04 Nov 2026 14:00:00 +0100 | Winter-Special: Erlebnisreisen mit bis zu 100€ Rabatt | https://www.urlaubspiraten.at/pauschalreisen/winter-special-vivido
+  [3] Wed, 04 Nov 2026 13:00:00 +0100 | Last Minute nach Tirol 😍 | https://www.urlaubspiraten.at/hotels/hotel-elisabeth-kirchberg-in-tirol
+  [4] Wed, 04 Nov 2026 11:00:00 +0100 | Weihnachtliches London ✨ | https://www.urlaubspiraten.at/hotels/the-corner-london-city
+  [5] Wed, 04 Nov 2026 09:00:00 +0100 | Ski & Wellness in Kärnten ✨ | https://www.urlaubspiraten.at/hotels/hotel-trattlerhof-kaernten
+  [6] Tue, 03 Nov 2026 14:00:00 +0100 | 5 Länder Seidenstraße: Von Kasachstan bis zur Türkei | https://www.urlaubspiraten.at/pauschalreisen/fuenf-laender-seidenstrasse-kasachstan-bis-zu
+  [7] Tue, 03 Nov 2026 12:00:00 +0100 | Winterurlaub im Zillertal ⛷️ | https://www.urlaubspiraten.at/hotels/kosis-sports-lifestyle-hotel-fuegen-zillertal-at
+  [8] Tue, 03 Nov 2026 09:20:00 +0100 | Einzigartiges Glamping in Belgien | https://www.urlaubspiraten.at/hotels/at-glamping-ardooie-belgien
+  [9] Tue, 03 Nov 2026 08:34:41 +0100 | BLACK MONTH mit 150€ Rabatt ❤️ | https://www.urlaubspiraten.at/pauschalreisen/150eur-rabatt-gutschein-black-friday-journawa
+  [10] Tue, 03 Nov 2026 11:08:58 +0100 | Der erste Harry Potter-Weihnachtsmarkt der Welt - in München! ✨🪄 | https://www.urlaubspiraten.at/reise-journal/at-harry-potter-weihnachtsmarkt
+##### reisedeals_ch_feed
+FORMAT=RSS ITEMS=0
+##### fcam_home
+FORMAT=HTML title= Miles & More | Reisetipps für Ihren Luxusurlaub | First Class & More len= 105255
+##### vielfliegertreff_home
+FORMAT=HTML title= Vielfliegertreff len= 198118
+  feedlink: <link rel="alternate" type="application/rss+xml" title="RSS-Feed für Vielfliegertreff" href="/forum/forums/-/index.rss" />
+##### flugladen_home
+FORMAT=HTML title= Billigflüge buchen: Günstige Flüge vergleichen | Flugladen.de len= 269596
+##### billigfluege_home
+FORMAT=HTML title= Billige Flüge schnell & einfach buchen | billigfluege.de len= 29909
+##### holidaycheck_home
+FORMAT=HTML title= HolidayCheck • Dein Hotelbewertungs- und Reiseportal len= 669522
+##### fluegede_magazin_feed
+FORMAT=HTML title= Günstige Flüge online buchen – Flug-Angebote vergleichen | fluege.de len= 154544

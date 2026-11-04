@@ -1,0 +1,42 @@
+##### frankfurtflyer_deal_feed
+FORMAT=HTML title= - len= 0
+##### yhbu_premium_feed
+FORMAT=RSS ITEMS=50
+  [1] Sun, 18 Oct 2026 18:22:44 +0000 | DEAL: Sri Lankan Business London – Malediven (Return): 1.333 Euro | https://youhavebeenupgraded.boardingarea.com/2026/10/deal-sri-lankan-business-london-maled
+  [2] Sun, 18 Oct 2026 09:08:06 +0000 | DEAL: China Southern Business Madrid – Sydney (Return): 2.680 Euro | https://youhavebeenupgraded.boardingarea.com/2026/10/deal-china-southern-business-madrid-s
+  [3] Sat, 03 Oct 2026 20:11:00 +0000 | DEAL: Hainan Business Budapest – China (Return): 1.490 Euro | https://youhavebeenupgraded.boardingarea.com/2026/10/deal-hainan-business-budapest-china-r
+  [4] Wed, 30 Sep 2026 13:29:28 +0000 | DEAL: Riyadh Air Business Manila – Manchester (Oneway): 660 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-riyadh-air-business-manila-manch
+  [5] Sun, 27 Sep 2026 13:34:41 +0000 | DEAL: Azerbaijan Business Istanbul – Peking (Return): 900 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-azerbaijan-business-istanbul-pek
+  [6] Sun, 20 Sep 2026 17:05:22 +0000 | DEAL: China Southern Business Frankfurt – Asien (Return): 1.720 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-china-southern-business-frankfur
+  [7] Sat, 19 Sep 2026 14:38:24 +0000 | DEAL: Gulf Air Business Frankfurt – Hyderabad (Return): 1.160 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-gulf-air-business-frankfurt-hyde
+  [8] Sat, 19 Sep 2026 07:14:42 +0000 | DEAL: Etihad First Tunis – Bangkok (Oneway): 1.380 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-etihad-first-tunis-bangkok-onewa
+  [9] Sat, 12 Sep 2026 15:26:13 +0000 | DEAL: Gulf Air Business Südindien – Europa (Oneway): 440 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-gulf-air-business-suedindien-eur
+  [10] Mon, 07 Sep 2026 16:44:00 +0000 | DEAL: Etihad First Apartment A380 / A321 First Paris – Asien (Return): 2900 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-etihad-a380-a321-first-paris-ban
+  [11] Fri, 04 Sep 2026 15:09:42 +0000 | Ein exzellenter Malaysia Airlines Business Sale | https://youhavebeenupgraded.boardingarea.com/2026/09/ein-exzellenter-malaysia-airlines-bus
+  [12] Fri, 04 Sep 2026 06:21:25 +0000 | DEAL: Oman Air Business Manila – Muscat (Oneway): 380 Euro | https://youhavebeenupgraded.boardingarea.com/2026/09/deal-oman-air-business-manila-muscat-
+##### vft_mileageruns_rss
+FORMAT=RSS ITEMS=25
+  [1] Wed, 04 Nov 2026 17:47:56 +0000 | [Sammelthread] Mir fehlen noch xxx Meilen bis zum FTL/SEN/HON im Miles & More-Programm | https://www.vielfliegertreff.de/forum/threads/sammelthread-mir-fehlen-noch-xxx-meilen-bis-
+  [2] Tue, 03 Nov 2026 14:13:31 +0000 | Zum HON in 2027: Strategien & Sweetspots | https://www.vielfliegertreff.de/forum/threads/zum-hon-in-2027-strategien-sweetspots.167214
+  [3] Sun, 01 Nov 2026 10:21:08 +0000 | Direct-Turnaround Thread | https://www.vielfliegertreff.de/forum/threads/direct-turnaround-thread.89284/
+  [4] Thu, 29 Oct 2026 14:05:15 +0000 | Qualifying Points Runs für M&M ab 2024 | https://www.vielfliegertreff.de/forum/threads/qualifying-points-runs-fuer-m-m-ab-2024.1576
+  [5] Sun, 09 Aug 2026 15:09:04 +0000 | HON Meilenrun 2026 - Ideen / jemand dabei? | https://www.vielfliegertreff.de/forum/threads/hon-meilenrun-2026-ideen-jemand-dabei.164704
+  [6] Thu, 16 Jul 2026 19:21:21 +0000 | neue A3 *Gold Mileage Runs | https://www.vielfliegertreff.de/forum/threads/neue-a3-gold-mileage-runs.76351/
+  [7] Thu, 16 Jul 2026 10:18:06 +0000 | Mileage Run - Ideen ab Brasilien? | https://www.vielfliegertreff.de/forum/threads/mileage-run-ideen-ab-brasilien.166587/
+  [8] Wed, 17 Jun 2026 19:48:23 +0000 | Gemeinsam ein Argentinisches Steak essen? UA Mileage Run nach EZE 6.10.- 9.10 | https://www.vielfliegertreff.de/forum/threads/gemeinsam-ein-argentinisches-steak-essen-ua-
+  [9] Tue, 16 Jun 2026 20:33:43 +0000 | Mileage Run - SAS Eurobonus | https://www.vielfliegertreff.de/forum/threads/mileage-run-sas-eurobonus.152707/
+  [10] Tue, 09 Jun 2026 14:20:55 +0000 | SK: Adventskalender: 15.000 Level Points für 10 Flüge | https://www.vielfliegertreff.de/forum/threads/sk-adventskalender-15-000-level-points-fuer-
+  [11] Sun, 24 May 2026 17:55:05 +0000 | TK Mileage Run | https://www.vielfliegertreff.de/forum/threads/tk-mileage-run.111124/
+  [12] Fri, 06 Feb 2026 18:17:49 +0000 | 0 auf HON in 4 Monaten | https://www.vielfliegertreff.de/forum/threads/0-auf-hon-in-4-monaten.158543/
+##### sparhamster_feed
+FORMAT=RSS ITEMS=10
+  [1] Wed, 04 Nov 2026 18:36:40 +0000 | Oclean TravelGo FlowSet mist white elektrische Zahnbürste um 41,24 € statt 49,58 € | https://www.sparhamster.at/oclean-travelgo-flowset/
+  [2] Wed, 04 Nov 2026 18:30:26 +0000 | Hot Wheels City Megacity Parkgarage um 82,58 € statt 120,29 € | https://www.sparhamster.at/hot-wheels-city-megacity-parkgarage/
+  [3] Wed, 04 Nov 2026 17:30:51 +0000 | Dyson Spot + Scrub AI Saug-/Wischroboter inkl. Absaug-/Reinigungsstation um 649 € statt 805,95 € | https://www.sparhamster.at/dyson-spot-scrub-ai-saug-wischroboter-inkl-absaug-reinigungssta
+  [4] Wed, 04 Nov 2026 17:30:13 +0000 | Gastroback Design Plancha&BBQ Tischgrill + gratis Gastroback 42582 Design Air Pro Heißluftfritteuse um 149 € s | https://www.sparhamster.at/gastroback-design-planchabbq-tischgrill/
+  [5] Wed, 04 Nov 2026 17:00:02 +0000 | PROFI COOK „PC-PO 1323“ Pizzaofen (bis zu 400°C) um 99,99 € statt 129,80 € | https://www.sparhamster.at/profi-cook-pc-po-1323-pizzaofen/
+  [6] Wed, 04 Nov 2026 16:30:42 +0000 | Cecotec ProClean 5130 Digitale Mikrowelle mit Grill (23 Liter) um 69,95 € statt 108,36 € | https://www.sparhamster.at/cecotec-proclean-5130-mikrowelle-mit-grill/
+  [7] Wed, 04 Nov 2026 16:00:03 +0000 | Philips HX9214/85 Sonicare Next-Generation DiamondClean 9000 elektrische Zahnbürste (Satin-Lila) um 264,57 € s | https://www.sparhamster.at/philips-hx9214-85-sonicare-next-generation-diamondclean-9000-el
+  [8] Wed, 04 Nov 2026 15:30:00 +0000 | 0815.at Happy Halloween Aktion – viele Produkte bis 8.11 im Angebot! | https://www.sparhamster.at/0815-happy-halloween-aktion/
+  [9] Wed, 04 Nov 2026 15:00:05 +0000 | Ninja „Pacour“ Slackline-Set um 33,95 € statt 89,95 € | https://www.sparhamster.at/ninja-pacour-slackline-set/
+  [10] Wed, 04 Nov 2026 14:30:15 +0000 | Nabo „KGN 2516“ Kühl-Gefrier-Kombination (No-Frost, 180L +71L, Wasserspender) um 366 € statt 429 € | https://www.sparhamster.at/nabo-kgn-2516-kuehl-gefrier-kombination/

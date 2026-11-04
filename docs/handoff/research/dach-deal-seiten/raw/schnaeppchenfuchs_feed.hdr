@@ -1,0 +1,22 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 301 Moved Permanently
+server: nginx/1.18.0 (Ubuntu)
+date: Wed, 04 Nov 2026 21:44:49 GMT
+content-type: text/html; charset=UTF-8
+location: https://schnaeppchenfuchs.com/feed/
+strict-transport-security: max-age=31536000; preload
+set-cookie: DO-LB="Cg0xMC4xMTQuMC41OjgwEJDW1hc="; Max-Age=300; Path=/; HttpOnly; SameSite=Lax
+cache-control: private
+transfer-encoding: chunked
+
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 404 Not Found
+server: nginx/1.18.0 (Ubuntu)
+date: Wed, 04 Nov 2026 21:44:50 GMT
+content-type: application/json
+set-cookie: DO-LB="Cg0xMC4xMTQuMC42OjgwEJDW1hc="; Max-Age=300; Path=/; HttpOnly; SameSite=Lax
+cache-control: private
+transfer-encoding: chunked
+

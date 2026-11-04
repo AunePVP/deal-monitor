@@ -1,0 +1,17 @@
+td_region_sitemap | 200 https://travel-dealz.de/region-sitemap.xml text/xml; charset=UTF-8 1074
+td_cat_sitemap | 200 https://travel-dealz.de/category-sitemap.xml text/xml; charset=UTF-8 3473
+td_wptypes | 200 https://travel-dealz.de/wp-json/wp/v2/types application/json; charset=UTF-8 13679
+td_wptax | 200 https://travel-dealz.de/wp-json/wp/v2/taxonomies application/json; charset=UTF-8 5789
+td_cat_economy | 200 https://travel-dealz.de/kategorie/fluge/economy-class/feed/ application/rss+xml; charset=UTF-8 449855
+td_cat_business | 200 https://travel-dealz.de/kategorie/fluge/business-class/feed/ application/rss+xml; charset=UTF-8 561573
+td_cat_premeco | 200 https://travel-dealz.de/kategorie/fluge/premium-economy/feed/ application/rss+xml; charset=UTF-8 671324
+td_cat_first | 200 https://travel-dealz.de/kategorie/fluge/first-class/feed/ application/rss+xml; charset=UTF-8 698267
+td_cat_fluge | 200 https://travel-dealz.de/kategorie/fluge/feed/ application/rss+xml; charset=UTF-8 438386
+td_cat_miles | 200 https://travel-dealz.de/kategorie/milespoints/feed/ application/rss+xml; charset=UTF-8 284850
+td_thema_errorfares | 200 https://travel-dealz.de/thema/errorfares/feed/ application/rss+xml; charset=UTF-8 53500
+td_thema_gabelflug | 200 https://travel-dealz.de/thema/gabelflug/feed/ application/rss+xml; charset=UTF-8 78032
+td_thema_oneway | 200 https://travel-dealz.de/thema/oneway/feed/ application/rss+xml; charset=UTF-8 217517
+td_thema_eilmeldungen | 200 https://travel-dealz.de/thema/eilmeldungen/feed/ application/rss+xml; charset=UTF-8 1259
+td_thema_mileagerun | 200 https://travel-dealz.de/thema/mileage-run/feed/ application/rss+xml; charset=UTF-8 14714
+td_tagsearch_hamburg | 200 https://travel-dealz.de/wp-json/wp/v2/tags?search=hamburg application/json; charset=UTF-8 1155
+td_tagsearch_china | 200 https://travel-dealz.de/wp-json/wp/v2/tags?search=china application/json; charset=UTF-8 1573

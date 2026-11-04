@@ -1,0 +1,7 @@
+td_abflug_ham | 200 https://travel-dealz.de/abflug/hamburg-ham/feed/ application/rss+xml; charset=UTF-8 815722
+td_abflug_zrh | 200 https://travel-dealz.de/abflug/zuerich-zrh/feed/ application/rss+xml; charset=UTF-8 292572
+td_reiseziel_china | 200 https://travel-dealz.de/reiseziel/china/feed/ application/rss+xml; charset=UTF-8 468616
+td_reiseziel_hamburg | 200 https://travel-dealz.de/reiseziel/hamburg/feed/ application/rss+xml; charset=UTF-8 637947
+td_visibility | 200 https://travel-dealz.de/wp-json/wp/v2/visibility application/json; charset=UTF-8 8863
+td_json_deal_ham | 200 https://travel-dealz.de/wp-json/wp/v2/deal?per_page=10&origins=2945&_fields=id,date,title,link,categories,origins,destinations,airline,meta.suspend_date application/json; charset=UTF-8 4193
+td_json_ticker_china | 200 https://travel-dealz.de/wp-json/wp/v2/ticker?per_page=10&destinations=745&_fields=id,date,title,link,categories,origins,destinations application/json; charset=UTF-8 2

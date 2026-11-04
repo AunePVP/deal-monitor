@@ -1,0 +1,36 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:45:45 GMT
+content-type: application/rss+xml; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+vary: Accept
+last-modified: Wed, 04 Nov 2026 21:34:14 GMT
+etag: W/"b6c8e4a225a49a72e6becbc17d3f7406"
+access-control-allow-origin: *
+access-control-allow-origin: https://travel-dealz.com
+access-control-allow-origin: https://cruises.travel-dealz.com
+access-control-allow-origin: https://travel-dealz.de
+access-control-allow-origin: https://kreuzfahrten.travel-dealz.de
+access-control-allow-origin: https://data.travel-dealz.net
+access-control-allow-origin: https://farecollection.travel-dealz.com
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-headers: Accept, Authorization, Content-Type
+link: <https://travel-dealz.de/?term_id=2523>; title="ActivityPub (JSON)"; rel="alternate"; type="application/activity+json"
+link: <https://travel-dealz.de/wp-json/>; rel="https://api.w.org/"
+link: <https://travel-dealz.de/wp-json/wp/v2/tags/2523>; rel="alternate"; title="JSON"; type="application/json"
+link: <https://travel-dealz.de/thema/mileage-run/>; rel="canonical"
+strict-transport-security: max-age=0; preload
+content-security-policy: frame-ancestors 'self' travel-dealz.de travel-dealz.com forum.travel-dealz.de kreuzfahrten.travel-dealz.de cruises.travel-dealz.com;
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+permissions-policy: interest-cohort=()
+x-rocket-nginx-bypass: No
+x-rocket-nginx-reason: File not cached
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=10Zjw2fBgxiu3P8IsW0bWMEciuoJisVTDqRYLUjnwAJ1OCmcQbZ%2FAVfSR2jpwHYWY1NQh3r%2Fc7%2BETmfcrjmqzlfVERd7mCe1Sfx4SpTYyhvJDInpsvkdCuVSJUJ8PyCdOXY%3D"}]}
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a556ceb57b7f42d7-EWR
+alt-svc: h3=":443"; ma=86400
+

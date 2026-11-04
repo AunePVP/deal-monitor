@@ -1,0 +1,11 @@
+{
+  "type": "amadeusOAuth2Token",
+  "username": "foo@bar.com",
+  "application_name": "deal-monitor",
+  "client_id": "3sY9VNvXIjyJYd5mmOtOzJLuL1BzJBBp",
+  "token_type": "Bearer",
+  "access_token": "CpjU0sEenniHCgPDrndzOSWFk5mN",
+  "expires_in": 1799,
+  "state": "approved",
+  "scope": ""
+}

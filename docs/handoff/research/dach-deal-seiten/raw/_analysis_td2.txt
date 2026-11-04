@@ -1,0 +1,70 @@
+##### td_abflug_ham
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 07:10:20 +0000 | Blue Reef Resort, Marsa Alam: 1 Woche All-inclusive Pauschalreise ab 539€ p.P. im Dezember | https://travel-dealz.de/deal/blue-reef-resort-marsa-pauschal/?utm_source=feed&utm_medium=r
+  [2] Tue, 03 Nov 2026 09:28:48 +0000 | Kassandra Palace Seaside, Griechenland: 1 Woche Halbpension ab 715€ p.P. mit Flügen, Zügen & Transfers im Früh | https://travel-dealz.de/deal/kassandra-palace-seaside-pauschal/?utm_source=feed&utm_medium
+  [3] Tue, 03 Nov 2026 06:42:12 +0000 | Flying Blue Promo Awards: Business Class nach New York ab 45.000 Meilen + 317€ pro Richtung (ohne Lounge) | https://travel-dealz.de/deal/flying-blue-promo-awards/?utm_source=feed&utm_medium=rss&utm_
+  [4] Mon, 02 Nov 2026 12:49:09 +0000 | Maritim Blue Albena, Bulgarien: Pauschalreise ans Schwarze Meer ab 644€ p.P. für 1 Woche Halbpension | https://travel-dealz.de/deal/maritim-blue-albena-bulgarien-pauschal/?utm_source=feed&utm_m
+  [5] Mon, 02 Nov 2026 09:36:40 +0000 | Winter: 1 Woche All-inclusive im Aydinbey King’s Palace bei Side ab 602€ p.P. mit Transfers & Flügen von 11 Fl | https://travel-dealz.de/deal/aydinbey-kings-palace-side-pauschal/?utm_source=feed&utm_medi
+  [6] Sat, 31 Oct 2026 09:03:00 +0000 | AIDAnova: 14 Nächte Nordsee Kreuzfahrten von Hamburg ab 1.185€ p.P. | https://travel-dealz.de/deal/nordsee-aidanova-ozeanreisen-2028/?utm_source=feed&utm_medium
+  [7] Fri, 30 Oct 2026 11:11:51 +0000 | Amus Hotel, Rhodos: 1 Woche Pauschalreise mit Frühstück ab 645€ p.P. im Frühling (Ferien ab 720€ p.P. mit eine | https://travel-dealz.de/deal/amus-hotel-rhodos-pauschal/?utm_source=feed&utm_medium=rss&ut
+  [8] Fri, 30 Oct 2026 10:49:30 +0000 | MSC Preziosa: 7 Nächte Nordsee-Kreuzfahrten von Hamburg ab 399€ p.P. (Alleinreisende ab 556€) | https://travel-dealz.de/deal/preziosa-nordsee-cruises/?utm_source=feed&utm_medium=rss&utm_
+  [9] Thu, 29 Oct 2026 09:19:30 +0000 | Erbil, Irak ab 390€ in der Eurowings „Business Class“ (inkl. 400 Miles&More Statuspunkten) | https://travel-dealz.de/ticker/485569/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [10] Thu, 29 Oct 2026 08:14:11 +0000 | Seaden Sea Planet, Side: 1 Woche All-inclusive Pauschalreise ab 504€ p.P. im Frühling 2027 von 18 deutschen Fl | https://travel-dealz.de/deal/seaden-sea-planet-side-pauschal/?utm_source=feed&utm_medium=r
+  [11] Wed, 28 Oct 2026 08:09:00 +0000 | Pickalbatros White Beach Resort, Agadir: 1 Woche All-inclusive mit Zügen, Flügen & Transfers ab 883€ p.P. (Adu | https://travel-dealz.de/deal/pickalbatros-white-beach-resort-pauschal/?utm_source=feed&utm
+  [12] Tue, 27 Oct 2026 10:03:58 +0000 | 1 Woche im Sheraton Fuerteventura ab 914€ p.P. mit Halbpension, Transfers, Zügen & Flügen von 8 Flughäfen | https://travel-dealz.de/deal/sheraton-fuerteventura-pauschal/?utm_source=feed&utm_medium=r
+  [13] Tue, 27 Oct 2026 08:36:15 +0000 | Japan: 12 Tage Pauschalreise Osaka, Kyoto, Tokio ab 999€ p.P. mit Flügen, Shinkansen & Hotels im Januar | https://travel-dealz.de/deal/journaway-osaka-kyoto-tokio/?utm_source=feed&utm_medium=rss&u
+  [14] Mon, 26 Oct 2026 15:29:02 +0000 | Pauschalreise ins Akassia Swiss Resort, Ägypten: 1 Woche All-inclusive ab 613€ p.P. von 10 deutschen Flughäfen | https://travel-dealz.de/deal/akassia-swiss-resort-winter-2026/?utm_source=feed&utm_medium=
+  [15] Sun, 25 Oct 2026 10:43:00 +0000 | Queen Anne: 90 Nächte Kreuzfahrt rund um Südamerika von Hamburg ab 11.570€ p.P. | https://travel-dealz.de/deal/queen-anne-hamburg-suedamerika/?utm_source=feed&utm_medium=rs
+  [16] Sun, 25 Oct 2026 08:04:58 +0000 | Steigenberger Aqua Magic, Hurghada: 1 Woche All-inclusive Pauschalreise ab 622€ p.P. (Ferien ab 651€ p.P. mit  | https://travel-dealz.de/deal/steigenbergeraqua-hurghada-winter-2026/?utm_source=feed&utm_m
+  [17] Fri, 23 Oct 2026 06:03:48 +0000 | Halbpension an der Algarve: 1 Woche Pestana Alvor Praia ab 857€ p.P. mit Flügen, Zügen & Transfers | https://travel-dealz.de/deal/pestana-alvor-praia-pauschal/?utm_source=feed&utm_medium=rss&
+  [18] Thu, 22 Oct 2026 15:56:18 +0000 | Türkei im Winter: 1 Woche All-inclusive Suite im Oleander Hotel Side ab 664€ p.P. (Ferienpreise ab 568€ p.P. m | https://travel-dealz.de/deal/oleander-hotel-side-suite-ferien/?utm_source=feed&utm_medium=
+  [19] Thu, 22 Oct 2026 09:41:11 +0000 | San José del Cabo: Condor „Premium Economy“ ab 760€ roundtrip (660€ mit Amex Platinum) | https://travel-dealz.de/ticker/484486/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [20] Wed, 21 Oct 2026 05:32:52 +0000 | Be Live Marrakesch Adults Only: 1 Woche All-inclusive ab 749€ p.P. mit Flügen & Transfers | https://travel-dealz.de/deal/belive-marrakesch-allinclusive-dezember/?utm_source=feed&utm_
+##### td_abflug_zrh
+FORMAT=RSS ITEMS=11
+  [1] Wed, 04 Nov 2026 09:03:00 +0000 | 50% Rabatt: Schweiz ↔ Paris mit dem TGV Lyria ab 20€ pro Richtung | https://travel-dealz.de/deal/tgv-lyria-schweiz-paris/?utm_source=feed&utm_medium=rss&utm_c
+  [2] Tue, 03 Nov 2026 06:42:12 +0000 | Flying Blue Promo Awards: Business Class nach New York ab 45.000 Meilen + 317€ pro Richtung (ohne Lounge) | https://travel-dealz.de/deal/flying-blue-promo-awards/?utm_source=feed&utm_medium=rss&utm_
+  [3] Thu, 22 Oct 2026 09:41:11 +0000 | San José del Cabo: Condor „Premium Economy“ ab 760€ roundtrip (660€ mit Amex Platinum) | https://travel-dealz.de/ticker/484486/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [4] Thu, 22 Oct 2026 09:00:00 +0000 | Italienische Schweiz: Hin- und Rückfahrt von Basel & Zürich nach Locarno ab 44 CHF / 48€ (22 CHF mit Halbtax) | https://travel-dealz.de/deal/suedostbahn-tessin-schweiz/?utm_source=feed&utm_medium=rss&ut
+  [5] Tue, 20 Oct 2026 13:00:00 +0000 | United Airlines: Gabelflüge Europa – Südamerika – Deutschland ab 432€ (inkl. Gepäck) | https://travel-dealz.de/deal/united-gabelfluege-suedamerika/?utm_source=feed&utm_medium=rs
+  [6] Thu, 17 Sep 2026 08:36:18 +0000 | Dublin: Hin- und Rückflug mit Aer Lingus ab 61€ (inkl. Personal Item + 10 kg Gepäck) | https://travel-dealz.de/deal/aer-lingus-angebot/?utm_source=feed&utm_medium=rss&utm_campai
+  [7] Mon, 07 Sep 2026 10:56:42 +0000 | Aer Lingus: Gabelflüge Brüssel – Cancún – Deutschland ab 374€ (inkl. Gepäck) | https://travel-dealz.de/deal/aer-lingus-gabelfluege-cancun/?utm_source=feed&utm_medium=rss
+  [8] Fri, 23 Dec 2022 13:17:56 +0000 | London ab 10.500 Avios + 59€ roundtrip inkl. Gepäck (BA Executive Club Sweet Spot) | https://travel-dealz.de/deal/london-executive-club-zone-1/?utm_source=feed&utm_medium=rss&
+  [9] Sun, 01 Dec 2019 13:18:16 +0000 | Bewertung: Übernachtung im Dayroom am Flughafen Zürich | https://travel-dealz.de/blog/bewertung-dayrooms-zurich/?utm_source=feed&utm_medium=rss&utm
+  [10] Tue, 20 Aug 2019 13:09:29 +0000 | Qatar Airways QSUITE Strecken, Ziele, Flugzeuge & Verfügbarkeit | https://travel-dealz.de/blog/qatar-airways-qsuite-strecken/?utm_source=feed&utm_medium=rss
+  [11] Sun, 10 Dec 2017 12:56:20 +0000 | Bewertung: SWISS Senator Lounge Zürich E-Gates | https://travel-dealz.de/blog/bewertung-senator-lounge-zurich/?utm_source=feed&utm_medium=r
+##### td_reiseziel_china
+FORMAT=RSS ITEMS=15
+  [1] Tue, 03 Nov 2026 06:42:12 +0000 | Flying Blue Promo Awards: Business Class nach New York ab 45.000 Meilen + 317€ pro Richtung (ohne Lounge) | https://travel-dealz.de/deal/flying-blue-promo-awards/?utm_source=feed&utm_medium=rss&utm_
+  [2] Wed, 28 Oct 2026 13:24:03 +0000 | Hilton-Kreditkarte: Was ihr mit 50.000 Punkten Willkommensbonus anstellen könnt | https://travel-dealz.de/deal/hilton-punkte-sweetspots/?utm_source=feed&utm_medium=rss&utm_
+  [3] Fri, 23 Oct 2026 08:21:25 +0000 | China ab 1.440€ in der China Southern Business Class von Budapest | https://travel-dealz.de/deal/china-southern-business-budapest-china/?utm_source=feed&utm_m
+  [4] Sat, 17 Oct 2026 13:52:46 +0000 | Shanghai ab 1.486€ in der China Southern Business Class von Luxemburg (langer Stopover in Zhengzhou) | https://travel-dealz.de/deal/china-southern-business-ab-luxemburg/?utm_source=feed&utm_med
+  [5] Fri, 09 Oct 2026 08:00:00 +0000 | Shanghai ab 716€ in der China Southern Premium Economy von Amsterdam | https://travel-dealz.de/deal/amsterdam-shanghai-china-southern/?utm_source=feed&utm_medium
+  [6] Sun, 04 Oct 2026 10:05:00 +0000 | Weltumrundung mit der Queen Anne: 115 Nächte ab/an Hamburg ab 14.440€ p.P. (Januar bis Mai 2028) | https://travel-dealz.de/deal/queen-anne-weltreise-2028/?utm_source=feed&utm_medium=rss&utm
+  [7] Fri, 02 Oct 2026 07:13:07 +0000 | Weltreisebausteine von Turkmenistan Airlines: Business Class Frankfurt ↔︎ Asien ab 612€ oneway | https://travel-dealz.de/deal/turkmenistan-airlines-business-oneways/?utm_source=feed&utm_m
+  [8] Wed, 30 Sep 2026 07:49:01 +0000 | Peking: Business Class von Frankfurt ab 1.123€ mit Turkmenistan Airlines | https://travel-dealz.de/deal/turkmenistan-airlines-business-peking/?utm_source=feed&utm_me
+  [9] Sun, 12 Jul 2026 14:30:00 +0000 | Übersicht: Alle Strecken (und Flugzeuge) mit der Lufthansa Allegris Kabine | https://travel-dealz.de/blog/lufthansa-allegris-strecken/?utm_source=feed&utm_medium=rss&u
+  [10] Mon, 30 Jun 2025 15:55:00 +0000 | Auf Inlandsflügen: Chinesische Behörden verbieten die Mitnahme fast aller Powerbanks | https://travel-dealz.de/news/china-powerbank-zertifizierung/?utm_source=feed&utm_medium=rs
+  [11] Sun, 29 Jun 2025 15:41:00 +0000 | Travel-Dealz empfiehlt… Dandong, China | https://travel-dealz.de/blog/travel-dealz-empfiehlt-dandong-china/?utm_source=feed&utm_med
+  [12] Fri, 24 Nov 2023 09:45:46 +0000 | Ab Dezember: China setzt Visumspflicht für deutsche Staatsbürger testweise aus | https://travel-dealz.de/news/china-setzt-visumspflicht-aus/?utm_source=feed&utm_medium=rss
+  [13] Sun, 20 Feb 2022 15:25:00 +0000 | Hilton Impresario Online buchen: Upgrades, 100$ Guthaben & Frühstück in Conrad & Waldorf Astoria und mehr! | https://travel-dealz.de/deal/redirect-hilton-impresario/?utm_source=feed&utm_medium=rss&ut
+  [14] Tue, 20 Aug 2019 13:09:29 +0000 | Qatar Airways QSUITE Strecken, Ziele, Flugzeuge & Verfügbarkeit | https://travel-dealz.de/blog/qatar-airways-qsuite-strecken/?utm_source=feed&utm_medium=rss
+  [15] Sat, 19 Mar 2016 15:47:43 +0000 | Tipp: Günstig First Class in China fliegen + Bewertung | https://travel-dealz.de/blog/first-class-china/?utm_source=feed&utm_medium=rss&utm_campaig
+##### td_reiseziel_hamburg
+FORMAT=RSS ITEMS=16
+  [1] Mon, 02 Nov 2026 06:39:17 +0000 | Stage Entertainment: Musicals in Berlin, Hamburg und Stuttgart mit bis zu 40% Rabatt sichern | https://travel-dealz.de/deal/stage-musicals-early-black-friday/?utm_source=feed&utm_medium
+  [2] Fri, 30 Oct 2026 10:49:30 +0000 | MSC Preziosa: 7 Nächte Nordsee-Kreuzfahrten von Hamburg ab 399€ p.P. (Alleinreisende ab 556€) | https://travel-dealz.de/deal/preziosa-nordsee-cruises/?utm_source=feed&utm_medium=rss&utm_
+  [3] Sun, 25 Oct 2026 10:43:00 +0000 | Queen Anne: 90 Nächte Kreuzfahrt rund um Südamerika von Hamburg ab 11.570€ p.P. | https://travel-dealz.de/deal/queen-anne-hamburg-suedamerika/?utm_source=feed&utm_medium=rs
+  [4] Sat, 17 Oct 2026 09:41:00 +0000 | HX Expeditions: 12 Nächte Lissabon → Hamburg Kreuzfahrt ab 4.556€ p.P. (All-inclusive) | https://travel-dealz.de/deal/hx-expeditions-lissabon-hamburg-kreuzfahrt/?utm_source=feed&u
+  [5] Tue, 13 Oct 2026 10:50:09 +0000 | Auch Alleinreisende: 17 Nächte Costa Kreuzfahrt von Hamburg nach Martinique ab 729€ (Last Minute) | https://travel-dealz.de/deal/costafavolosa-hamburg-martinique-lastchance/?utm_source=feed&
+  [6] Tue, 13 Oct 2026 08:29:55 +0000 | Costa Favolosa: 13 Nächte von Hamburg nach Civitavecchia ab 981€ p.P. (September 2027) | https://travel-dealz.de/deal/costa-favolosa-hamburg-civitavecchia-gruppe/?utm_source=feed&
+  [7] Fri, 09 Oct 2026 13:01:00 +0000 | Costa Favolosa: 9 Nächte Norwegen-Kreuzfahrt von Hamburg ab 1.012€ p.P. im Juni 2027 (1.201€ p.P. inkl. MyItal | https://travel-dealz.de/deal/costa-favolosa-hamburg-norwegen-gruppe/?utm_source=feed&utm_m
+  [8] Wed, 07 Oct 2026 14:13:08 +0000 | MS Europa: 16 Nächte Nizza → Hamburg Kreuzfahrt ab 5.733€ p.P. | https://travel-dealz.de/deal/ms-europa-nizza-hamburg-kreuzfahrt/?utm_source=feed&utm_mediu
+  [9] Wed, 07 Oct 2026 05:19:07 +0000 | MSC Preziosa: 2 Nächte Schnupperkreuzfahrt Southampton → Hamburg ab 143€ p.P. | https://travel-dealz.de/deal/msc-preziosa-southampton-hamburg/?utm_source=feed&utm_medium=
+  [10] Sun, 30 Aug 2026 12:06:00 +0000 | 61 Premier Inn Hotels in Deutschland ab 69€ / Nacht inkl. Frühstück (zzgl. City Tax) | https://travel-dealz.de/deal/animod-premier-inn/?utm_source=feed&utm_medium=rss&utm_campai
+  [11] Sat, 08 Aug 2026 10:22:18 +0000 | Explora V: 14 Nächte Luxus-Kreuzfahrt nach Skandinavien ab Hamburg ab 7.490€ p.P. im Juli 2028 (All-inclusive) | https://travel-dealz.de/deal/explora-v-hamburg-kopenhagen/?utm_source=feed&utm_medium=rss&
+  [12] Tue, 09 Dec 2025 15:13:13 +0000 | Free2move Gutschein: 5€ Startguthaben für Carsharing in 7 Städten | https://travel-dealz.de/gutschein/free2move/?utm_source=feed&utm_medium=rss&utm_campaign=r
+  [13] Thu, 31 Oct 2024 06:09:00 +0000 | Stage Entertainment Gutschein: 15€ Rabatt pro Person auf Musicals | https://travel-dealz.de/gutschein/stage-entertainment/?utm_source=feed&utm_medium=rss&utm_
+  [14] Sun, 02 Jun 2024 16:07:00 +0000 | Travel-Dealz empfiehlt: Hamburger Hafenrundfahrt mit dem ÖPNV | https://travel-dealz.de/blog/hamburger-hafenrundfahrt-mit-faehre/?utm_source=feed&utm_medi
+  [15] Sun, 23 Apr 2023 07:29:00 +0000 | MILES Promo Code: 10€ Gutschein für Neukunden | https://travel-dealz.de/gutschein/miles/?utm_source=feed&utm_medium=rss&utm_campaign=rss-f
+  [16] Sat, 01 Nov 2014 12:14:03 +0000 | Hotelbewertung: Barcelo Hotel in Hamburg | https://travel-dealz.de/blog/hotelbewertung-barcelo-hamburg/?utm_source=feed&utm_medium=rs

@@ -1,0 +1,35 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+date: Wed, 04 Nov 2026 21:44:45 GMT
+content-type: text/html
+location: https://airguru.de/feed/
+server: cloudflare
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server-timing: cfCacheStatus;desc="DYNAMIC"
+server-timing: cfEdge;dur=45,cfOrigin;dur=265
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=9VdCbIHKXieyPqXqPoiP6vgt1bFjorQCE9Em%2FXyZstOBKdhgt9bPllPFoxKu1O7M8Et1xmUyaMHlDKYMv%2BQgmkHjJMXiyO2hficgN2TiY7OPc9akJYbe1YLnyj6Q9FASbw%3D%3D"}]}
+cf-ray: a556cd44fa78c44f-EWR
+alt-svc: h3=":443"; ma=86400
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 500 
+date: Wed, 04 Nov 2026 21:44:48 GMT
+content-type: application/json; charset=UTF-8
+server: cloudflare
+x-powered-by: PHP/8.5.12
+link: <https://airguru.de/wp-json/>; rel="https://api.w.org/", <https://airguru.de/>; rel="canonical"
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0
+etag: "354735a23fdbc658b170608df33767f6"
+strict-transport-security: max-age=15768000; includeSubDomains
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server-timing: cfCacheStatus;desc="DYNAMIC"
+server-timing: cfEdge;dur=31,cfOrigin;dur=1813
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=BgxRZ8RBbRgqV82HyMz5THJ%2BBR%2BVRQPUcY546FcyLbawyRJLAXUjJOdOTisoCU37%2Fs1WPk3Jy76Bj9JbrNo2o1Pkny7jI2hm5aGNktiTQ0QHEebI2%2Bi7ywopmR2p"}]}
+cf-ray: a556cd487fa805ee-IAD
+alt-svc: h3=":443"; ma=86400
+

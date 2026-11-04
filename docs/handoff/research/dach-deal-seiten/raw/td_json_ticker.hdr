@@ -1,0 +1,35 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:47:36 GMT
+content-type: application/json; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+vary: Origin
+x-robots-tag: noindex
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link
+access-control-allow-headers: Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type
+x-wp-total: 66
+x-wp-totalpages: 14
+link: <https://travel-dealz.de/wp-json/wp/v2/ticker?per_page=5&page=2>; rel="next"
+allow: GET
+strict-transport-security: max-age=0; preload
+content-security-policy: frame-ancestors 'self' travel-dealz.de travel-dealz.com forum.travel-dealz.de kreuzfahrten.travel-dealz.de cruises.travel-dealz.com;
+x-xss-protection: 1; mode=block
+access-control-allow-origin: https://travel-dealz.com
+access-control-allow-origin: https://cruises.travel-dealz.com
+access-control-allow-origin: https://travel-dealz.de
+access-control-allow-origin: https://kreuzfahrten.travel-dealz.de
+access-control-allow-origin: https://data.travel-dealz.net
+access-control-allow-origin: https://farecollection.travel-dealz.com
+permissions-policy: interest-cohort=()
+x-rocket-nginx-bypass: No
+x-rocket-nginx-reason: File not cached
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=X9IMifr4HUXeso9dMYitucknnfr%2FeGguWamAekTunG1yYn4ITxMoB9y9%2Fc5wt%2BbrVw2C1uEpxsYVR0HAHBxvX5CPji9l2yIM3rnqkZG5Qq84yRLyuJDBbYmuCeGteruykOU%3D"}]}
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a556d16e596f5791-EWR
+alt-svc: h3=":443"; ma=86400
+

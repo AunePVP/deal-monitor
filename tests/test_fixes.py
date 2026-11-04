@@ -305,8 +305,9 @@ class SettingsTest(unittest.TestCase):
                         'destinations = ["HAM"]\nmax_price = 100\n', encoding="utf-8")
         import_config(self.store, path)
         app = AppSettings(self.store, {})
+        # "feed" ist der alte Name der Deal-Seiten-Quelle - wird zu "feeds" normalisiert
         self.assertEqual((app.get("interval_hours"), app.get("sources"), app.get("scan_months")),
-                         (6.0, ["feed"], 3))
+                         (6.0, ["feeds"], 3))
         path.write_text('[settings]\ngibtsnicht = 1\n', encoding="utf-8")
         with self.assertRaises(ValueError):
             config_mod.load_raw(path)

@@ -1,0 +1,24 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 404 
+date: Wed, 04 Nov 2026 21:51:06 GMT
+content-type: text/html
+content-security-policy: upgrade-insecure-requests;script-src * 'unsafe-eval' 'unsafe-inline';script-src-attr 'unsafe-inline';style-src * 'unsafe-inline';img-src * data:;font-src *;connect-src * ;manifest-src data:;frame-ancestors 'self';form-action *;base-uri 'self';object-src 'none'
+cross-origin-opener-policy: unsafe-none
+cross-origin-resource-policy: cross-origin
+origin-agent-cluster: ?1
+referrer-policy: strict-origin-when-cross-origin
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: DENY
+x-permitted-cross-domain-policies: none
+x-xss-protection: 0
+cache-control: no-cache, must-revalidate
+set-cookie: hp.sid=s%3AqL4J8YFX0gw5rnMrrMp1dhE2rgdmpFOn.HZQwRD5grgd%2Fa8owKe%2F5DLVCm6S7GgAWAysstaJVclU; Domain=.urlaubspiraten.de; Path=/; HttpOnly; Secure; SameSite=None
+vary: Accept-Encoding
+cf-cache-status: DYNAMIC
+server: cloudflare
+cf-ray: a556d68b5d9be721-IAD
+

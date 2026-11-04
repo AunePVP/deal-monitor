@@ -1,0 +1,30 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+x-r9-mst-target: sparkle
+content-encoding: br
+x-sn-waf-code: 
+set-cookie: p1.med.token=; Expires=Thu, 01 Jan 1970 00:00:10 GMT; Path=/
+set-cookie: Apache=oE9qjg-AAABoaiVt4A-c4-YIwidg; Max-Age=86400000; Expires=Tue, 31 Jul 2029 22:02:26 GMT; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: cluster=4; Max-Age=2700; Expires=Wed, 04 Nov 2026 22:47:26 GMT; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: p1.med.sid=R-49CFW2sEa3bWEuYoL1$JE-m3A0yVQ_NOPNn6TgWqZSiuKveVsGqm81929KbLxPd; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: kayak.t=QXYer9W1yTyR_xwVzS2f; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: kayak.mc=AdnVWT0VK-4I1AYLBRgDkgFB7333vRjWA4x3pIQO_cX6rsn-kqatRm0z4bujf2TDR1FvqdAXt--U1O2LiM7HE9H3pHZtee6fFyMKTIIxGGBX8RxvW4pyZiSGA8Nhduag7WIwoMOgQjcYC982zszDa-YwLy5OfMJWktK6fy5qwdVS5XbWtWN1gSkeUfDGdPiklEoWledjc66vnyDWaOm1qk73rcVH_5Z6p6SWHrtVNv9I9oe9__1dlxa9tI0bw5Ujj1k9Euw0zPHKepgo9ISM5M0; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: mst_iBfK2g=llYFinp4nYC-Wkiyk5BVjOtJZ09nyj2q0n3JmYd0wtKkPWC4XbK-evHsTx6T0qSFN57fEKas5Zf-Uue46QR80w; Expires=Wed, 04 Nov 2026 22:17:27 GMT; Max-Age=900; Path=/; HttpOnly
+set-cookie: mst_client=AYxxz2i1aZuEDSfszF4KO_o2gujcgiAkLovNZhaXNVIBVQRIlJzI1iiXlQ57oFPGtxXwxrJ0iLt_kmkIe_bthcY; Path=/; HttpOnly
+set-cookie: mst_ADIrkw=wFMOjyG7FLcEgzD9OknQx-tJZ09nyj2q0n3JmYd0wtJSu58NYwg48mVM9lfb8SBxjzOhJ5w_d6mM3sdpmNEMMA; Expires=Wed, 04 Nov 2026 22:17:27 GMT; Max-Age=900; Path=/; HttpOnly
+content-type: application/json;charset=UTF-8
+x-render-time: 0.65
+content-language: de-DE
+strict-transport-security: max-age=10886400; preload
+server: KAYAK/1.0
+x-r9-mst-req: WtPD5WlZN0ieI
+accept-ranges: bytes
+date: Wed, 04 Nov 2026 22:02:27 GMT
+via: 1.1 varnish
+x-served-by: r9, cache-iad-kcgs7200080-IAD, cache-iad-kcgs7200080-IAD
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1793829746.471659,VS0,VE859
+vary: Accept-Encoding
+

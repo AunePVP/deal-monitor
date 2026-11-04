@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Airfare Spot — Coming Soon</title>
+<link rel="shortcut icon" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/favicon.ico?v=1793682279">
+<link rel="icon" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/favicon.ico?v=1793682279" sizes="any">
+<link rel="icon" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/favicon.svg?v=1793682279" type="image/svg+xml">
+<link rel="icon" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/favicon-32.png?v=1793682279" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/apple-touch-icon.png?v=1793682279">
+<link rel="mask-icon" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/safari-pinned-tab.svg?v=1793682279" color="#164e63">
+<link rel="manifest" href="https://airfarespot.com/wp-content/themes/afs3theme/assets/site.webmanifest">
+<meta name="theme-color" content="#164e63">
+<link href="https://airfarespot.com/wp-content/themes/afs3theme/assets/css/fonts.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --amber:      #f59e0b;
+    --amber-300:  #fcd34d;
+    --amber-400:  #fbbf24;
+    --amber-600:  #d97706;
+    --teal:       #0e7490;
+    --teal-400:   #06b6d4;
+    --slate-300:  #b8c2d8;
+    --slate-400:  #5f6d8c;  
+    --slate-500:  #5a6a8a;
+    --slate-700:  #253657;
+    --slate-800:  #1e3a5f;
+    --slate-900:  #0a1628;
+    --ease:       cubic-bezier(0.165, 0.84, 0.44, 1);
+    --font:       'Sora', sans-serif;
+  }
+
+  html { height: 100%; }
+
+  body {
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--slate-900);
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+  }
+
+  
+  .cs-bg {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden;
+  }
+  .cs-bg::before {
+    content: '';
+    position: absolute;
+    width: 160vmax; height: 160vmax;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+      from 0deg,
+      rgba(245,158,11,0.12) 0deg,
+      rgba(14,116,144,0.09) 60deg,
+      rgba(245,158,11,0.03) 120deg,
+      rgba(14,116,144,0.06) 180deg,
+      rgba(245,158,11,0.10) 240deg,
+      rgba(14,116,144,0.04) 300deg,
+      rgba(245,158,11,0.12) 360deg
+    );
+    animation: cs-rotate 80s linear infinite;
+  }
+  .cs-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, var(--slate-900) 70%);
+  }
+  @keyframes cs-rotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  
+  .cs-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    will-change: transform;
+  }
+  .cs-orb--2 {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, var(--teal) 0%, transparent 70%);
+    bottom: -18%; left: -10%;
+    opacity: 0.35;
+    animation: cs-orb2 30s ease-in-out infinite;
+  }
+  .cs-orb--4 {
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, var(--teal-400) 0%, transparent 70%);
+    top: 20%; left: 10%;
+    opacity: 0.15;
+    animation: cs-orb4 28s ease-in-out infinite;
+  }
+  @keyframes cs-orb2 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(70px, -50px) scale(1.2); }
+    66% { transform: translate(30px, -80px) scale(0.85); }
+  }
+  @keyframes cs-orb4 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    40% { transform: translate(40px, 50px) scale(1.2); }
+    70% { transform: translate(-30px, 20px) scale(0.9); }
+  }
+
+  
+  .cs-ghosts {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .cs-ghost {
+    position: absolute;
+    font-family: var(--font);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #fff;
+    opacity: 0;
+    white-space: nowrap;
+    animation: cs-drift linear infinite;
+  }
+  
+  .cs-ghost:nth-child(1)  { font-size: 4.5rem; top: 8%;  left: -20%; animation-duration: 45s; animation-delay: 0s;   opacity: 0.04; }
+  .cs-ghost:nth-child(2)  { font-size: 2rem;   top: 22%; left: -15%; animation-duration: 55s; animation-delay: -8s;  opacity: 0.055; }
+  .cs-ghost:nth-child(3)  { font-size: 6rem;   top: 40%; left: -25%; animation-duration: 65s; animation-delay: -20s; opacity: 0.03; }
+  .cs-ghost:nth-child(4)  { font-size: 1.5rem; top: 58%; left: -10%; animation-duration: 40s; animation-delay: -5s;  opacity: 0.06;  }
+  .cs-ghost:nth-child(5)  { font-size: 3.5rem; top: 72%; left: -20%; animation-duration: 50s; animation-delay: -15s; opacity: 0.035; }
+  .cs-ghost:nth-child(6)  { font-size: 2.5rem; top: 88%; left: -15%; animation-duration: 60s; animation-delay: -30s; opacity: 0.045; }
+  .cs-ghost:nth-child(7)  { font-size: 5rem;   top: 15%; left: -22%; animation-duration: 70s; animation-delay: -40s; opacity: 0.025; }
+  .cs-ghost:nth-child(8)  { font-size: 1.8rem; top: 35%; left: -12%; animation-duration: 42s; animation-delay: -12s; opacity: 0.06; }
+  .cs-ghost:nth-child(9)  { font-size: 3rem;   top: 65%; left: -18%; animation-duration: 52s; animation-delay: -25s; opacity: 0.04; }
+  .cs-ghost:nth-child(10) { font-size: 4rem;   top: 50%; left: -20%; animation-duration: 58s; animation-delay: -35s; opacity: 0.03; }
+  .cs-ghost:nth-child(11) { font-size: 2.2rem; top: 80%; left: -14%; animation-duration: 48s; animation-delay: -18s; opacity: 0.05; }
+  .cs-ghost:nth-child(12) { font-size: 5.5rem; top: 5%;  left: -24%; animation-duration: 72s; animation-delay: -50s; opacity: 0.02; }
+  @keyframes cs-drift {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(100vw + 30rem)); }
+  }
+
+  
+  .cs-radar {
+    position: fixed;
+    width: 120vmax; height: 120vmax;
+    top: 0; left: 0; right: 0; bottom: 0;
+    margin: auto;
+    z-index: 0;
+    pointer-events: none;
+    animation: cs-radar-spin 9s linear infinite;
+    transform-origin: center center;
+  }
+  .cs-radar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; right: 0; bottom: 50%;
+    background: conic-gradient(
+      from 0deg at 0% 100%,
+      transparent 0deg,
+      rgba(245,158,11,0.08) 30deg,
+      transparent 60deg
+    );
+    transform-origin: bottom left;
+  }
+  @keyframes cs-radar-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  
+  .cs-particles {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .cs-dot {
+    position: absolute;
+    width: 2px; height: 2px;
+    border-radius: 50%;
+    background: var(--amber);
+    opacity: 0;
+    animation: cs-rise linear infinite;
+  }
+  .cs-dot:nth-child(odd) { background: var(--teal-400); }
+  .cs-dot:nth-child(1)  { left: 12%; animation-duration: 12s; animation-delay: 0s; }
+  .cs-dot:nth-child(2)  { left: 28%; animation-duration: 16s; animation-delay: -3s; }
+  .cs-dot:nth-child(3)  { left: 45%; animation-duration: 14s; animation-delay: -7s; }
+  .cs-dot:nth-child(4)  { left: 62%; animation-duration: 18s; animation-delay: -2s; }
+  .cs-dot:nth-child(5)  { left: 78%; animation-duration: 13s; animation-delay: -9s; }
+  .cs-dot:nth-child(6)  { left: 88%; animation-duration: 15s; animation-delay: -5s; }
+  .cs-dot:nth-child(7)  { left: 35%; animation-duration: 17s; animation-delay: -11s; }
+  .cs-dot:nth-child(8)  { left: 55%; animation-duration: 11s; animation-delay: -1s; }
+  .cs-dot:nth-child(9)  { left: 7%;  animation-duration: 19s; animation-delay: -14s; }
+  .cs-dot:nth-child(10) { left: 92%; animation-duration: 13s; animation-delay: -6s; }
+  .cs-dot { width: 3px; height: 3px; }
+  @keyframes cs-rise {
+    0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+    10%  { opacity: 0.8; transform: translateY(90vh) scale(1); }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-20vh) scale(0.5); opacity: 0; }
+  }
+
+  
+  .cs-deals {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .cs-deal {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.04);
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+    opacity: 0;
+    animation: cs-deal-float linear infinite;
+  }
+  .cs-deal-route {
+    font-family: var(--font);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.01em;
+  }
+  .cs-deal-price {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--amber);
+    opacity: 0.5;
+  }
+  .cs-deal-arrow {
+    color: rgba(255,255,255,0.15);
+    font-size: 0.6rem;
+  }
+  
+  .cs-deal--rtl { animation-name: cs-deal-float-rtl; }
+
+  .cs-deal:nth-child(1)  { top: 6%;  left: -22%; animation-duration: 38s; animation-delay: -2s;  opacity: 0.7; }
+  .cs-deal:nth-child(2)  { top: 18%; right: -20%; animation-duration: 44s; animation-delay: -10s; opacity: 0.5; }
+  .cs-deal:nth-child(3)  { top: 32%; left: -24%; animation-duration: 42s; animation-delay: -18s; opacity: 0.6; }
+  .cs-deal:nth-child(4)  { top: 48%; right: -18%; animation-duration: 36s; animation-delay: -6s;  opacity: 0.55; }
+  .cs-deal:nth-child(5)  { top: 62%; left: -20%; animation-duration: 46s; animation-delay: -24s; opacity: 0.65; }
+  .cs-deal:nth-child(6)  { top: 76%; right: -22%; animation-duration: 40s; animation-delay: -14s; opacity: 0.5; }
+  .cs-deal:nth-child(7)  { top: 90%; left: -18%; animation-duration: 48s; animation-delay: -30s; opacity: 0.6; }
+  .cs-deal:nth-child(8)  { top: 12%; left: -26%; animation-duration: 50s; animation-delay: -36s; opacity: 0.45; }
+
+  @keyframes cs-deal-float {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(100vw + 30rem)); }
+  }
+  @keyframes cs-deal-float-rtl {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(-100vw - 30rem)); }
+  }
+
+  
+  .cs-grain {
+    position: fixed; inset: 0; z-index: 1;
+    opacity: 0.035;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  
+  .cs-scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity: 0.25;
+    animation: cs-scan 6s ease-in-out infinite;
+  }
+  @keyframes cs-scan {
+    0%, 100% { top: -2px; opacity: 0; }
+    5%       { opacity: 0.25; }
+    95%      { opacity: 0.12; }
+    100%     { top: 100%; }
+  }
+
+  
+  .cs-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  
+  .cs-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px; height: 72px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(20px) saturate(180%);
+    margin: 0 auto 2rem;
+    animation: cs-enter 1s var(--ease) both, cs-radar-hit 9s ease-in-out -1s infinite;
+  }
+  .cs-mark svg {
+    width: 34px; height: 34px;
+    stroke: var(--amber);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  
+  @keyframes cs-radar-hit {
+    0%, 6%, 100% { border-color: rgba(255,255,255,0.10); box-shadow: 0 0 0 transparent; }
+    3%           { border-color: rgba(245,158,11,0.45); box-shadow: 0 0 20px rgba(245,158,11,0.08); }
+  }
+  @keyframes cs-radar-glow {
+    0%, 8%, 100% { box-shadow: 0 0 0 transparent; border-color: rgba(255,255,255,0.12); }
+    4%           { box-shadow: 0 0 18px rgba(245,158,11,0.10), 0 0 4px rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.35); }
+  }
+  @keyframes cs-radar-glow-stat {
+    0%, 8%, 100% { box-shadow: 0 0 0 transparent; border-color: rgba(255,255,255,0.10); }
+    4%           { box-shadow: 0 0 18px rgba(245,158,11,0.10), 0 0 4px rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.35); }
+  }
+
+  
+  .cs-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1.5rem;
+    animation: cs-enter 1s var(--ease) 0.12s both;
+  }
+  .cs-eyebrow-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    animation: cs-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes cs-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+    50%      { opacity: 0.5; box-shadow: 0 0 0 6px rgba(245,158,11,0); }
+  }
+
+  
+  .cs-title {
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1.08;
+    margin-bottom: 1.25rem;
+    animation: cs-enter 1s var(--ease) 0.24s both;
+  }
+  
+  .cs-title-line {
+    display: block;
+    animation: cs-hero-float 4s ease-in-out infinite;
+  }
+  .cs-title-line:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+  @keyframes cs-hero-float {
+    0%   { transform: translateY(0); opacity: 1; }
+    25%  { transform: translateY(-6px); opacity: 1; }
+    50%  { transform: translateY(0); opacity: 0.92; }
+    75%  { transform: translateY(3px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  .cs-title-accent {
+    background: linear-gradient(135deg, var(--amber-300), var(--amber), var(--amber-600));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: cs-gradient-shift 6s ease-in-out infinite;
+  }
+  @keyframes cs-gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  .cs-sub {
+    font-size: clamp(0.88rem, 2vw, 1rem);
+    color: var(--slate-400);
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto 2rem;
+    animation: cs-enter 1s var(--ease) 0.36s both;
+  }
+
+  
+  .cs-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+    animation: cs-enter 1s var(--ease) 0.48s both;
+  }
+  .cs-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px) saturate(160%);
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    color: var(--slate-300);
+    white-space: nowrap;
+    transition: border-color 300ms, color 300ms, background 300ms;
+  }
+  .cs-pill:hover {
+    border-color: rgba(245,158,11,0.2);
+    color: var(--amber-400);
+    background: rgba(245,158,11,0.04);
+  }
+  .cs-pill svg {
+    width: 12px; height: 12px;
+    stroke: var(--amber);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  
+  .cs-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 2.5rem;
+    animation: cs-enter 1s var(--ease) 0.6s both;
+  }
+  .cs-stat {
+    padding: 16px 24px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(12px) saturate(160%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: cs-radar-glow-stat 9s ease-in-out 3.4s infinite;
+  }
+  .cs-stat:first-child { border-radius: 14px 0 0 14px; }
+  .cs-stat:last-child  { border-radius: 0 14px 14px 0; }
+  .cs-stat::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(245,158,11,0.03) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .cs-stat:hover::before { opacity: 1; }
+  .cs-stat-num {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .cs-stat-label {
+    display: block;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--slate-400);
+  }
+
+  
+  .cs-socials {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    animation: cs-enter 1s var(--ease) 0.72s both;
+  }
+  .cs-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px) saturate(160%);
+    color: var(--slate-300);
+    text-decoration: none;
+    transition: all 250ms var(--ease);
+    animation: cs-radar-glow 9s ease-in-out 3.9s infinite;
+  }
+  .cs-social:hover {
+    background: rgba(245,158,11,0.08);
+    border-color: rgba(245,158,11,0.2);
+    color: var(--amber);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(245,158,11,0.1);
+  }
+  .cs-social svg { width: 17px; height: 17px; fill: currentColor; }
+
+  
+  .cs-foot {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 2;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.58rem;
+    color: rgba(255,255,255,0.22);
+    letter-spacing: 0.06em;
+  }
+
+  
+  @keyframes cs-enter {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  
+  @media (max-width: 600px) {
+    .cs-mark { width: 60px; height: 60px; border-radius: 18px; }
+    .cs-mark svg { width: 28px; height: 28px; }
+    .cs-stats { gap: 1px; }
+    .cs-stat { padding: 12px 14px; }
+    .cs-stat-num { font-size: 1.1rem; }
+    .cs-features { gap: 6px; }
+    .cs-pill { padding: 5px 10px; font-size: 0.55rem; }
+    .cs-orb--2 { width: 250px; height: 250px; }
+    .cs-orb--4 { display: none; }
+    .cs-ghost { display: none; }
+    .cs-deal:nth-child(n+5) { display: none; }
+    .cs-deal { padding: 6px 10px; }
+    .cs-deal-route, .cs-deal-price { font-size: 0.6rem; }
+  }
+  @media (min-width: 601px) and (max-width: 768px) {
+    .cs-ghost:nth-child(n+8) { display: none; }
+    .cs-deal:nth-child(n+7) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  
+  <div class="cs-bg"></div>
+
+  
+  <div class="cs-orb cs-orb--2"></div>
+  <div class="cs-orb cs-orb--4"></div>
+
+  
+  <div class="cs-ghosts">
+    <span class="cs-ghost">Paris</span>
+    <span class="cs-ghost">Tokyo</span>
+    <span class="cs-ghost">Barcelona</span>
+    <span class="cs-ghost">Bali</span>
+    <span class="cs-ghost">London</span>
+    <span class="cs-ghost">Reykjavik</span>
+    <span class="cs-ghost">Santorini</span>
+    <span class="cs-ghost">Cancun</span>
+    <span class="cs-ghost">Marrakech</span>
+    <span class="cs-ghost">Sydney</span>
+    <span class="cs-ghost">Cape Town</span>
+    <span class="cs-ghost">Lisbon</span>
+  </div>
+
+  
+  <div class="cs-radar"></div>
+
+  
+  <div class="cs-particles">
+    <span class="cs-dot"></span><span class="cs-dot"></span>
+    <span class="cs-dot"></span><span class="cs-dot"></span>
+    <span class="cs-dot"></span><span class="cs-dot"></span>
+    <span class="cs-dot"></span><span class="cs-dot"></span>
+    <span class="cs-dot"></span><span class="cs-dot"></span>
+  </div>
+
+  
+  <div class="cs-deals">
+    <div class="cs-deal">
+      <span class="cs-deal-route">New York to Paris</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$299</span>
+    </div>
+    <div class="cs-deal cs-deal--rtl">
+      <span class="cs-deal-route">Miami to Barcelona</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$315</span>
+    </div>
+    <div class="cs-deal">
+      <span class="cs-deal-route">Boston to Reykjavik</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$220</span>
+    </div>
+    <div class="cs-deal cs-deal--rtl">
+      <span class="cs-deal-route">Around the World</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$877</span>
+    </div>
+    <div class="cs-deal">
+      <span class="cs-deal-route">Los Angeles to Paris</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$368</span>
+    </div>
+    <div class="cs-deal cs-deal--rtl">
+      <span class="cs-deal-route">Denver to Paris</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$316</span>
+    </div>
+    <div class="cs-deal">
+      <span class="cs-deal-route">Las Vegas to Honolulu</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$278</span>
+    </div>
+    <div class="cs-deal cs-deal--rtl">
+      <span class="cs-deal-route">New York to Oslo</span>
+      <svg class="afs3-arrow cs-deal-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g><path d="M4 12h15M13.5 6.5 19 12 13.5 17.5"/></g></svg>      <span class="cs-deal-price">$278</span>
+    </div>
+  </div>
+
+  
+  <div class="cs-grain"></div>
+
+  
+  <div class="cs-scanline"></div>
+
+  
+  <div class="cs-content">
+
+    
+    <div class="cs-mark">
+      <svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2C4.3 5.1 3.8 5.4 3.5 5.8l-.7 1c-.4.5-.3 1.1.1 1.5L8 12l-2 3H4l-1 1 3 2 2 3 1-1v-2l3-2 3.5 4.5c.4.4 1 .5 1.5.1l1-.7c.4-.3.7-.8.6-1.3z"/></svg>
+    </div>
+
+    
+    <div class="cs-eyebrow">
+      <span class="cs-eyebrow-dot"></span>
+      Something big is landing
+    </div>
+
+    
+    <h1 class="cs-title">
+      <span class="cs-title-line">Travel More.</span>
+      <span class="cs-title-line"><span class="cs-title-accent">Spend Less.</span></span>
+    </h1>
+
+    
+    <p class="cs-sub">
+      Personalized flight deal alerts straight to your inbox. We're building something that will change how you find cheap flights.
+    </p>
+
+    
+    <div class="cs-features">
+      <span class="cs-pill">
+        <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Deal Alerts
+      </span>
+      <span class="cs-pill">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email Alerts
+      </span>
+      <span class="cs-pill">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Personalized
+      </span>
+      <span class="cs-pill">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        100% Free
+      </span>
+    </div>
+
+    
+    <div class="cs-stats">
+      <div class="cs-stat">
+        <span class="cs-stat-num">17,000+</span>
+        <span class="cs-stat-label">Deals Found</span>
+      </div>
+      <div class="cs-stat">
+        <span class="cs-stat-num">200+</span>
+        <span class="cs-stat-label">Destinations</span>
+      </div>
+      <div class="cs-stat">
+        <span class="cs-stat-num">2015</span>
+        <span class="cs-stat-label">Established</span>
+      </div>
+    </div>
+
+    
+    <div class="cs-socials">
+      <a href="https://instagram.com/airfarespot" class="cs-social" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/airfarespot" class="cs-social" aria-label="Facebook" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://x.com/airfarespot" class="cs-social" aria-label="X" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  
+  <div class="cs-foot">
+    &copy; 2026 Airfare Spot. All rights reserved.
+  </div>
+
+</body>
+</html>

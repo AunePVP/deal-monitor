@@ -1,0 +1,26 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 404 
+date: Wed, 04 Nov 2026 21:51:07 GMT
+content-type: text/html
+content-security-policy: upgrade-insecure-requests;script-src * 'unsafe-eval' 'unsafe-inline';script-src-attr 'unsafe-inline';style-src * 'unsafe-inline';img-src * data:;font-src *;connect-src * ;manifest-src data:;frame-ancestors 'self';form-action *;base-uri 'self';object-src 'none'
+cross-origin-opener-policy: unsafe-none
+cross-origin-resource-policy: cross-origin
+origin-agent-cluster: ?1
+referrer-policy: strict-origin-when-cross-origin
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: DENY
+x-permitted-cross-domain-policies: none
+x-xss-protection: 0
+cache-control: no-cache, must-revalidate
+set-cookie: hp.sid=s%3AcC3RNS6pI2b1i1xoUyDhrGL6WdyMSSt6.ivZ2zqk%2BY2%2FVMmiAHWPhuFvn%2BzTlfXCcGVEWtfvI09c; Domain=.ferienpiraten.ch; Path=/; HttpOnly; Secure; SameSite=None
+vary: Accept-Encoding
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=sfZDJ9NaU2OUNCiVRCW2cH%2FOnSymXexgV1xlqTRfMOAwKad%2FuF1h93R6gSDr%2Bp6n0fidvDEiQJoDzBqCsDmLdlR3X8WHRVegiuWEQHHK0utFY3kaeWAOP%2FptyqsgiNWHLathADJO"}]}
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server: cloudflare
+cf-ray: a556d694ac6cadd0-IAD
+

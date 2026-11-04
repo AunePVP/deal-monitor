@@ -15,7 +15,7 @@
 # "Würde ich das selbst buchen?"
 #   max_stops, max_duration_hours (pro Richtung), min_nights/max_nights, exclude_airlines
 #
-# feed_keywords: Stichwort-Gruppen für den Travel-Dealz-Feed. Innerhalb einer Gruppe
+# feed_keywords: Stichwort-Gruppen für die Deal-Seiten (Feeds). Innerhalb einer Gruppe
 #   müssen alle Wörter vorkommen (UND), zwischen den Gruppen reicht eine (ODER).
 
 [settings]
@@ -28,7 +28,9 @@ max_deals_per_alert = 5
 request_delay = 0.35
 database = "data/deals.sqlite"
 report = "data/report.html"
-feeds = ["https://travel-dealz.de/feed/"]
+# Deal-Seiten (Travel-Dealz, mydealz, fly4free, premium-flights ...) sind als Presets in der
+# Oberfläche wählbar (Einstellungen -> Quellen -> Deal-Seiten); hier nur eigene Feed-URLs:
+feeds = []
 feed_max_age_days = 14
 
 

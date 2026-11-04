@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<script type="text/javascript" src="//www.csair.com/cn/scripts/jquery-1.10.2.min.js"></script>
+	<style>
+			body{
+				background-color: #f4f5f7;
+			}
+			
+			.err_404,.err_500 {
+				background-color: #f4f5f7;
+				padding: 40px 0 60px;
+			}
+	
+			.err_404 .error_box,
+			.err_500 .error_box {
+				width: 1024px;
+				height: 414px;
+				margin: 0 auto;
+				overflow: hidden;
+				background: url("/error/images/new404.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+			}
+	
+			.err_404 #err_txt,
+			.err_500 #err_txt {
+				width: 740px;
+				margin: 0 auto;
+				margin-top: 20px;
+				font-family: "微软雅黑", simsun;
+			}
+	
+			.err_404 #err_txt .err_txt_left,
+			.err_500 #err_txt .err_txt_left{
+				padding-left: 60px;
+				background: url("/error/images/warning404.png") no-repeat left center;
+				overflow: hidden;
+			}
+	
+			.err_404 #err_txt .sorryPage,
+			.err_500 #err_txt .sorryPage{
+				font-size: 24px;
+			}
+	
+			.err_404 #err_txt .error404,
+			.err_500 #err_txt .error500{
+				font-size: 14px;
+				color: #333;    
+				margin-top: 5px;
+			}
+	
+			#err_txt .err_txt_right button{
+				border: 0;
+				width: 120px;
+				height: 40px;
+				background-color: #008ed3;
+				text-align: center;
+				line-height: 40px;
+				color: #fff;
+				display: block;
+				margin: 0 auto;
+				margin-top: 20px;
+			}
+	
+			#err_txt>div{
+				display: inline-block;
+				vertical-align: middle;
+			}
+	
+			.erweima{
+				float: right;
+				font-size: 12px;
+				text-align: center;
+			}
+	
+			.erweima>div{
+				display: inline-block;
+				margin-left: 40px;
+			}
+			
+			#footer-box{
+				margin-top:0!important;
+			}
+		</style>
+</head>
+<body>
+		<div class="err_404">
+				<div class="error_box block_box">
+				</div>
+				<div id="err_txt">
+					<div>
+						<div class="err_txt_left">
+								<div class="sorryPage">很抱歉，未找到指定页面。</div>
+								<div class="error404">错误代码：404</div>
+							</div>
+							<div class="err_txt_right">
+								<button class="returnHome" onclick="returnHome()">返回首页</button>
+						</div>
+					</div>
+					<div class="erweima">
+						<div>
+								<img src="/error/images/a-qr.jpg" alt="">
+								<div class="downloadApp">
+										扫描二维码下载客户端
+								</div>
+						</div>
+						<div>
+								<img src="/error/images/b-qr.jpg" alt="">
+								<div class="focusWechat">
+									扫描二维码关注南方航空微信号
+								</div>
+						</div>
+					</div>
+				</div>
+				<script src="//www.csair.com/headfoot/cn/headfoot.js" type="text/javascript"></script>
+				<script>
+					var lang = $.cookie("language") || $.GetQueryString("subsite") || $.cookie("changehead"),
+							_COUNTRY,
+							_LANGUAGE;
+					if(/^(EN|ZH|KO)\_(AU|NZ|KR|US|SG|GB|CA|DE|NL|FR|IT|JP|HK|TW|TH|MY|RU|ID|VN|PH|IN)$/i.test(lang)){
+							lang = lang .split("_")[1] + "_" + lang .split("_")[0]
+					}
+					if(lang){
+							_LANGUAGE = lang.split("_")[1].toLowerCase();
+							if(_LANGUAGE.toLowerCase() == "en"){
+								$(".sorryPage").text("Sorry, page not found.");
+								$(".error404").text("Error code: 404");
+								$(".returnHome").text("Return Home");
+								$(".downloadApp").text("APP download");
+								$(".focusWechat").text("Wechat public account");
+								$("title").text("Page Not Found - China Southern Airlines");
+							}else if(_LANGUAGE.toLowerCase() == "ko"){
+								$(".sorryPage").text("이 페이지를 표시할 수 없습니다");
+								$(".error404").text("에러코드: 404");
+								$(".returnHome").text("돌아가기");
+								$(".downloadApp").text("APP다운로드");
+								$(".focusWechat").text("중국남방항공 웨이신");
+								$("title").text("해당 페이지를 찾을 수 없습니다 - 중국남방항공");
+							}
+					}
+					function returnHome(){
+							lang = $.cookie("language") || $.GetQueryString("subsite") || $.cookie("changehead");
+							if(/^(EN|ZH|KO)\_(AU|NZ|KR|US|SG|GB|CA|DE|NL|FR|IT|JP|HK|TW|TH|MY|RU|ID|VN|PH|IN)$/i.test(lang)){
+									lang = lang .split("_")[1] + "_" + lang .split("_")[0]
+							}
+							if(lang && lang.split("_")[1] != "CN"){
+									_COUNTRY = lang.split("_")[0].toLowerCase();
+									_LANGUAGE = lang.split("_")[1].toLowerCase();
+									window.location.href = "/" + _COUNTRY + "/" + _LANGUAGE;
+							}else{
+								if(/CN/.test(lang)){
+									if(lang.split("_")[0] == "en"){
+										window.location.href='/en/index.shtml';
+									}else{
+										window.location.href='/cn/index.shtml';
+									}
+								}else{
+									window.location.href='/cn/index.shtml';
+								}
+							}
+					}
+					$.headfooter();
+					$.cookie("language",lang,{ path: "/" ,domain: '.csair.com'});
+				</script>
+			</div>
+</body>
+</html>

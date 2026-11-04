@@ -258,7 +258,7 @@ class RunTest(ServerTest):
         self.assertFalse(n["read"])
         st = self.get("/api/status")[1]
         self.assertEqual(st["counts"], {"alerts": 2, "alerts_enabled": 2, "active_deals": 2,
-                                        "unread": 2})
+                                        "radar_deals": 0, "unread": 2})
         self.assertEqual(st["last_run"]["id"], r["id"])
         self.assertIsNone(st["next_run"])   # Zeitplan aus
         # zweiter Lauf: nichts Neues -> keine neuen Meldungen; dann verschwindet ein Deal
@@ -343,14 +343,14 @@ class SettingsTest(ServerTest):
         self.assertEqual(data["secrets"]["telegram_bot_token"], {"set": True, "hint": "…9999"})
         self.assertEqual(data["secrets"]["travelpayouts_token"], {"set": False, "hint": None})
 
-        body = {"values": {"interval_hours": "1,5", "sources": ["feed"],
+        body = {"values": {"interval_hours": "1,5", "sources": ["feed"],   # alter Name -> feeds
                            "webhook_url": "https://anders.example"},
                 "secrets": {"travelpayouts_token": "geheimertoken1234",
                             "telegram_bot_token": "ignoriert"}}
         status, data, _ = self.call("PUT", "/api/settings", body)
         self.assertEqual(status, 200, data)
         self.assertEqual(data["values"]["interval_hours"], 1.5)
-        self.assertEqual(data["values"]["sources"], ["feed"])
+        self.assertEqual(data["values"]["sources"], ["feeds"])
         self.assertEqual(data["values"]["webhook_url"], "https://notify.example/hook")  # Env gewinnt
         self.assertEqual(data["secrets"]["travelpayouts_token"], {"set": True, "hint": "…1234"})
         self.assertEqual(data["secrets"]["telegram_bot_token"]["hint"], "…9999")
@@ -387,8 +387,13 @@ class SettingsTest(ServerTest):
             self.assertEqual(cfg.settings.scan_months, 4)
             self.assertEqual(cfg.settings.database, str(ctx.db_path))
             src = ctx.sources(cfg, store)
-        self.assertEqual([s.name for s in src], ["travelpayouts", "travel-dealz-feed"])
+        self.assertEqual([s.name for s in src], ["travelpayouts", "feeds"])
         self.assertEqual((src[0].token, src[0].marker, src[0].scan_months), ("t", "777", 4))
+        # Deal-Seiten: Standard-Presets inkl. Suche, keine eigenen Feeds
+        self.assertEqual([p.id for p in src[1].presets],
+                         ["travel-dealz", "mydealz-fluege", "fly4free", "premium-flights"])
+        self.assertTrue(src[1].search_enabled)
+        self.assertEqual(src[1].extra_feeds, [])
 
 
 class AuthTest(ServerTest):

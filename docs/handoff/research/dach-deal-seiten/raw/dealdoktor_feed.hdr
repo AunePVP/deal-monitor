@@ -1,0 +1,21 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:44:48 GMT
+content-type: application/rss+xml; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+last-modified: Wed, 04 Nov 2026 21:00:56 GMT
+etag: W/"104af8c220a9ecc0803f6b955a45c47f"
+cache-control: private, no-store
+link: <https://www.dealdoktor.de/wp-json/>; rel="https://api.w.org/"
+link: <https://www.dealdoktor.de/>; rel="canonical"
+access-control-allow-origin: *
+access-control-allow-methods: GET, POST, OPTIONS
+access-control-allow-headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
+access-control-expose-headers: Content-Length,Content-Range
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=6a8T%2Frzdzv5HDJlmM%2F3ErrSAfGmQJSS3HcKuAzTxgb4gEw3hK1puphokIAmyAM4bFDQUCJKCMHA7WSUoTKeG6olRCJddK%2B7hGjb2MAb2f6S7PuuxsUlIUd5z6bC%2BXflplirp"}]}
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: a556cd55181382a8-IAD
+
