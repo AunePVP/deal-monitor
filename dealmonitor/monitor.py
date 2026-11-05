@@ -25,7 +25,7 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from statistics import median
 
 from . import principles, radar, sightings
@@ -415,6 +415,7 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
     # Artikel, die eine andere Deal-Seite schon gemeldet hat, ergänzen nur die Erstmeldung
     checked, merged = first_reports(
         store, [(d, store.deal_status(d, s.renotify_drop)) for d in picked], sources)
+    checked = quiet_old(checked, s.feed_max_age_days)
     pending: list[tuple[Deal, str]] = []
     for d, status in checked:
         if status == "known":
@@ -523,6 +524,30 @@ def first_reports(store: Store, pending: list[tuple[Deal, str]], sources: list
     return kept, merged
 
 
+def old_article(d: Deal, max_age_days: int, now: datetime | None = None) -> bool:
+    """Artikel-Deal, dessen Artikel älter als ``max_age_days`` ist (``found_at`` = Erscheinen)?
+    Solche Deals laufen noch (Ablaufdatum in der Zukunft, Seite postet selten), sind aber
+    keine Neuigkeit mehr: nicht als "neu"/"wieder da" melden."""
+    o = d.offer
+    if not o.title or o.found_at is None:
+        return False
+    return o.found_at < (now or datetime.now()) - timedelta(days=max_age_days)
+
+
+def quiet_old(checked: list[tuple[Deal, str]], max_age_days: int
+              ) -> list[tuple[Deal, str]]:
+    """Status "new"/"revived" alter Artikel -> "quiet" (speichern, nicht melden) - auch beim
+    ersten Lauf nach dem Einschalten einer Quelle kein Schwall alter Meldungen."""
+    out = []
+    for d, status in checked:
+        if status in ("new", "revived") and old_article(d, max_age_days):
+            log.info("Alter Artikel (%s), nur gespeichert: %s",
+                     d.offer.found_at.date().isoformat(), d.headline)
+            status = "quiet"
+        out.append((d, status))
+    return out
+
+
 def _record_twins(store: Store, twins: list[tuple[Offer, Deal]], merged: dict[str, list[Deal]],
                   sources: list) -> None:
     """Radar: derselbe Deal bei zwei Seiten im selben Lauf ("Auch bei …") - beide Meldungen
@@ -588,6 +613,7 @@ def run_radar(sources: list, store: Store, cfg: Config, settings: radar.RadarSet
     # Schon von einer anderen Deal-Seite gemeldet (früherer Lauf): nur der Erstmeldung zuordnen
     kept, merged = first_reports(
         store, [(d, store.deal_status(d, s.renotify_drop)) for d in deals], sources)
+    kept = quiet_old(kept, s.feed_max_age_days)
     to_notify: list[tuple[Deal, str]] = []
     for d, quiet in kept:
         if quiet == "quiet":

@@ -58,7 +58,7 @@ class Alert:
 
 
 #: optionale Offer-Felder, die ``Offer.extras`` ausgibt (Reihenfolge = Ausgabe)
-EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "hot", "uid", "legs")
+EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "published", "hot", "uid", "legs")
 
 
 @dataclass
@@ -93,6 +93,8 @@ class Offer:
     surcharge: float | None = field(default=None, compare=False)
     #: Ende des Buchungszeitraums laut Quelle (aware oder naiv = UTC)
     expires: datetime | None = field(default=None, compare=False)
+    #: Erscheinen des Artikels laut Deal-Seite (aware) - für "Artikel vom … · Ablauf unbekannt"
+    published: datetime | None = field(default=None, compare=False)
     #: Marker der Quelle wie "ERROR FARE", "CRAZY HOT", "PRICE DROP"
     hot: str | None = field(default=None, compare=False)
     #: stabile ID der Quelle (Bluesky ``post.uri``, Travel-Dealz ``id:modified``)

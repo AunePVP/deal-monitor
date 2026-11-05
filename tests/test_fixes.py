@@ -209,7 +209,7 @@ class FeedTest(unittest.TestCase):
     def test_unexpected_parse_error_becomes_source_error(self):
         src = FeedSource(["https://x.example/feed"])
         with mock.patch.object(http, "request", return_value=b"<rss/>"), \
-                mock.patch.object(FeedSource, "parse", side_effect=TypeError("kaputt")):
+                mock.patch.object(FeedSource, "parse_all", side_effect=TypeError("kaputt")):
             with self.assertRaises(SourceError):
                 src.load()
 

@@ -5,8 +5,9 @@ Zwei Endpunkte, beide nur Flüge (Kategorie 24 mit Unterkategorien):
 * ``/wp-json/wp/v2/deal``   - die Artikel
 * ``/wp-json/wp/v2/ticker`` - Kurzmeldungen (stehen *nicht* in ``/deal``)
 
-Statt bis zu 2 MB RSS kommen je Abruf wenige KB JSON (``_fields``). Nachgeholt wird über
-``modified_after``; das Ablaufdatum steht in ``meta.suspend_date``, Abflug und Ziel als
+Statt bis zu 2 MB RSS kommen je Abruf wenige KB JSON (``_fields``). Die Schnittstelle liefert
+nur *aktive* Beiträge (abgelaufene verschwinden; 11/2026: 72 Deals + 21 Ticker, je eine Seite),
+der volle Abruf holt deshalb alle, nachgeholt wird über ``modified_after``; das Ablaufdatum steht in ``meta.suspend_date``, Abflug und Ziel als
 Term-IDs (``origins``/``destinations``), deren Namen die IATA-Codes tragen
 ("Zürich [ZRH]", "Peking [PEK,BJS]"). Einen Preis gibt es nur im Titel.
 
@@ -19,10 +20,14 @@ jedes Mal *alle* aktuellen Beiträge, holt aber nur die Änderungen ab. Zustand 
 JSON-tauglich):
 
 * ``cursor``: ``{"deal": ISO, "ticker": ISO}`` - jüngstes ``modified_gmt`` minus 1 min (UTC)
-* ``full_at``: letzter vollständiger Abruf (alle 24 h: Fenster ``WINDOW``, ersetzt den Bestand -
-  so verschwinden gelöschte Beiträge)
+* ``full_at``: letzter vollständiger Abruf (alle 24 h ohne ``modified_after``, ersetzt den
+  Bestand - so verschwinden gelöschte Beiträge)
 * ``posts``: ``{"deal:123": {...}}`` - der gekürzte Bestand
 * ``terms``: ``{"origins": {"3015": ["DUB"]}, "destinations": {...}}`` - nachgeschlagene Term-IDs
+
+Geliefert wird, was noch gilt: mit Ablaufdatum (``suspend_date``, Median 45 Tage nach dem
+Erscheinen) bis dahin, egal wie alt; ohne (Evergreen-/Info-Beiträge) nur, wenn höchstens
+``WINDOW`` alt (letzte Änderung).
 
 Fehler (403/429, Netz, kaputtes JSON) -> ``SourceError``; dann bleibt der Zustand unverändert
 und der RSS-Preset ``travel-dealz`` deckt die Seite weiter ab.
@@ -50,7 +55,7 @@ FIELDS = ("id,date_gmt,modified_gmt,date,modified,link,title,categories,origins,
 PER_PAGE = 100
 MAX_PAGES = 5
 MAX_BYTES = 2_000_000
-#: so weit zurück wird beim vollständigen Abruf geholt (wie ``feed_max_age_days``)
+#: Beiträge *ohne* Ablaufdatum gelten so lange ab der letzten Änderung (wie ``feed_max_age_days``)
 WINDOW = timedelta(days=14)
 FULL_EVERY = timedelta(hours=24)
 OVERLAP = timedelta(minutes=1)
@@ -174,11 +179,14 @@ def _get(path: str, params: dict, timeout: float) -> tuple[list, int]:
     return data, max(pages, 1)
 
 
-def fetch_posts(kind: str, after: datetime, timeout: float = 20.0) -> list[dict]:
-    """Flug-Beiträge (``deal``/``ticker``), geändert nach ``after`` - neueste zuerst. Blättert
-    höchstens bis ``X-WP-TotalPages`` (darüber antwortet WordPress mit 400) bzw. ``MAX_PAGES``."""
+def fetch_posts(kind: str, after: datetime | None, timeout: float = 20.0) -> list[dict]:
+    """Flug-Beiträge (``deal``/``ticker``), geändert nach ``after`` (``None`` = alle aktiven) -
+    neueste zuerst. Blättert höchstens bis ``X-WP-TotalPages`` (darüber antwortet WordPress
+    mit 400) bzw. ``MAX_PAGES``."""
     params = {"categories": FLIGHTS, "per_page": PER_PAGE, "orderby": "modified",
-              "order": "desc", "modified_after": _iso(after), "_fields": FIELDS}
+              "order": "desc", "_fields": FIELDS}
+    if after is not None:
+        params["modified_after"] = _iso(after)
     out: list[dict] = []
     page, pages = 1, 1
     while page <= min(pages, MAX_PAGES):
@@ -321,8 +329,8 @@ def fetch_items(*, timeout: float = 20.0, state: dict | None = None,
 
     fresh: dict[str, dict] = {}
     for kind in KINDS:
-        after = None if full else _utc(cursor.get(kind))
-        after = max(after, oldest) if after else oldest
+        # voll: alle aktiven (ohne modified_after); sonst ab Cursor, ohne Cursor ab ``oldest``
+        after = None if full else (_utc(cursor.get(kind)) or oldest)
         for raw in fetch_posts(kind, after, timeout):
             p = _slim(raw, kind)
             if p:
@@ -334,8 +342,11 @@ def fetch_items(*, timeout: float = 20.0, state: dict | None = None,
         posts.update(fresh)
 
     def alive(p: dict) -> bool:
+        # mit Ablaufdatum: bis dahin (egal wie alt), sonst höchstens WINDOW seit der Änderung
         expires, modified = _utc(p.get("expires")), _utc(p.get("modified"))
-        return (expires is None or expires >= now) and (modified is None or modified >= oldest)
+        if expires is not None:
+            return expires >= now
+        return modified is None or modified >= oldest
 
     kept = sorted((p for p in posts.values() if alive(p)),
                   key=lambda p: p.get("modified") or "", reverse=True)[:MAX_POSTS]

@@ -47,7 +47,17 @@ Preset("secretflying", "Secret Flying", (), "en", True, Profile(lang="en"),
 
 Pflicht (wie `FeedSource.parse`): `title, link, published (datetime UTC|None), categories (list[str]),
 feed, description, description_text, merchant_price`. `feed.normalize_item(raw, feed, max_age_days=…)`
-ergänzt Fehlendes, prüft Typen und wird für Loader-Items automatisch aufgerufen.
+ergänzt Fehlendes, prüft Typen und wird für Loader-Items automatisch aufgerufen (von `FeedSource` ohne
+`max_age_days`: das Alter prüft danach für alle Quellen gleich `feed.is_current`).
+
+**Altersregel** `feed.is_current(item, now, max_days)`: „EXPIRED/abgelaufen“ in Titel/Kategorie → False;
+`expires` bekannt (≤ 400 Tage voraus) → `expires >= now`, egal wie alt; sonst `published` ≤ `max_days` alt
+(ohne Datum: True). `max_days` = `FeedSource.age_limit(preset)` = max(`feed_max_age_days`,
+`Preset.max_age_days`) – YHBU 45, premium-flights 30, sonst None. `FeedSource.parse_all()` liest ohne
+Altersregel, `parse()` = `parse_all()` + `is_current`. `stats[source]`: `items`/`parsed`/`newest` über **alle**
+gelesenen Artikel (Rohwerte; `newest` ohne Zukunftsdaten), `current` = davon gültig (nur diese werden
+dedupliziert und abgeglichen). `Offer.published` (Extra-Feld) = Erscheinen des Artikels.
+`monitor.quiet_old`: „new“/„revived“ bei Artikeln älter als `feed_max_age_days` → still speichern.
 
 Optional (werten `normalize_item` und `analyze()` aus):
 
@@ -192,8 +202,10 @@ Screenshots (Demo, Desktop 1280 / Mobil 390): `docs/handoff/screens/`.
   Gründe, die schon als Badge stehen (Erstmeldung, Google-Niveau, Hub), werden nicht doppelt gelistet.
   Alle Werte defensiv: fehlende/kaputte Felder → Element fehlt, nie ein Fehler.
 - **Beinahe-Deals**: Abschnitt unter den Deals (folgt dem Filter) und auf jeder Alarm-Karte.
-- **Seite „Quellen“** (`#quellen`): Ampel je Quelle, Alter des neuesten Artikels, Artikel/Abrufe im
-  letzten Lauf, Google-leer-Anteil, Liste „Bewusst nicht genutzt“.
+- **Seite „Quellen“** (`#quellen`): Ampel je Quelle, Alter des neuesten Artikels, „n Artikel im Feed,
+  m aktuell, k mit Preis“, „ohne Ablaufdatum bis N Tage“ (`report(...)["max_age_days"]`, `current`; alte
+  Zustände ohne `current` → null), Google-leer-Anteil, Liste „Bewusst nicht genutzt“.
+- **Badge „Artikel vom TT.MM. · Ablauf unbekannt“**: Deal ohne `expires`, `published` > 14 Tage.
 - **Demo** (`demo.py`): Google-Seiten mit Preisniveau (ZRH⇄HAM one-way, FRA→PEK mit 559 € als
   Beinahe-Deal, erfundenes Niveau für die bestätigte 92-€-Karte), erfundene Artikel von Secret Flying,
   ErrorFareAlerts und premium-flights (`demo_articles`: 3 Quellen, Budapest-Hub mit Ablaufdatum,
@@ -207,5 +219,5 @@ Screenshots (Demo, Desktop 1280 / Mobil 390): `docs/handoff/screens/`.
   „Westjet: Oneway von Westkanada nach London“ kam ohne REST-Abflug als „ohne Angabe“ ins Radar.
   Test: `tests/test_review_fixes.py::OriginTest.test_compass_prefix_keeps_place`.
 - Live-Ergebnis je Quelle und offene Punkte: `docs/HANDOFF.md` („Abnahme-Live-Lauf“).
-- Stand: 627 Unit-Tests, 43 E2E-Schritte grün. Keine neuen Umgebungsvariablen in Runde 2 außer den schon
+- Stand: 665 Unit-Tests, 44 E2E-Schritte grün (nach der Altersregel, `tests/test_feed_age.py`). Keine neuen Umgebungsvariablen in Runde 2 außer den schon
   dokumentierten (`FAST_INTERVAL_MINUTES`, `HUBS_ENABLED`, `HUB_SURCHARGE_A/B`).

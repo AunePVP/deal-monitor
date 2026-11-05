@@ -505,7 +505,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def api_sources_health(self, store, **_):
         """Gesundheit je Quelle (OK/Leer/Veraltet/Fehler) aus dem letzten Lauf, der sie las."""
-        return 200, health.report(store)
+        app = self.ctx.settings(store)
+        return 200, health.report(store, feed_max_age_days=app.get("feed_max_age_days"))
 
     def api_deals(self, store, query, **_):
         status = query.get("status", ["active"])[0] or "active"

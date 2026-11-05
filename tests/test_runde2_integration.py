@@ -203,7 +203,9 @@ class HealthSeesNewSourcesTest(unittest.TestCase):
         self.assertEqual(health.rule_for("feed:secretflying").stale_hours, 20)
         self.assertEqual(health.rule_for("feed:travel-dealz-rest").stale_hours, 20)
         self.assertEqual(health.rule_for("feed:errorfarealerts").stale_hours, 48)
-        self.assertFalse(health.rule_for("feed:yhbu").need_items)     # postet etwa wöchentlich
+        # postet etwa wöchentlich (Lücken bis 583 h); der Feed listet immer 50 Artikel
+        self.assertEqual(health.rule_for("feed:yhbu").stale_hours, 720)
+        self.assertTrue(health.rule_for("feed:yhbu").need_items)
 
     def test_collect_after_loader_run(self):
         src, _ = load(sorted(LOADER_PRESETS))

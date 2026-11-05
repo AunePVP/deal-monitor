@@ -23,7 +23,26 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   - Takt: schnelle Quellen alle 10 min, Sofort-Prüfung bei schnellem Treffer, Quellen-Gesundheit mit Meldung bei Wechsel.
   - Bewertung: Google-Bezugspreis, Fehlerpreis-Verdacht, Erstmeldung über Quellen, Beinahe-Deals.
   - UI: Preisverlauf, Badges, Beinahe-Deals, Seite „Quellen“; Demo mit allen neuen Feldern.
-- Tests: `python3 -m unittest discover -s tests` → **650 grün**; `node tests/e2e/ui.mjs` → **43 Schritte grün**.
+- Tests: `python3 -m unittest discover -s tests` → **665 grün**; `node tests/e2e/ui.mjs` → **44 Schritte grün**.
+
+### Altersregel der Deal-Seiten (05.11.2026, `feed.is_current`)
+Vorher fiel jeder Artikel nach 14 Tagen weg – auch mit Ablaufdatum in der Zukunft – und lief damit sofort ab.
+Jetzt gilt: als „EXPIRED/abgelaufen“ markiert → weg; **Ablaufdatum bekannt → bis dahin** (egal wie alt,
+> 400 Tage voraus = unbekannt); sonst Höchstalter je Quelle: **YHBU 45, premium-flights 30**, alle anderen
+`feed_max_age_days` (14; wirksam ist der größere Wert). Travel-Dealz REST holt beim vollen Abruf alle
+aktiven Beiträge (ohne `modified_after`; die API liefert nur aktive, live 72 Deals + 21 Ticker).
+Messung dazu (live 05.11.): TD `suspend_date` im Median 45,5 Tage nach Erscheinen, 50 von 72 aktiven Deals
+älter als 14 Tage; premium-flights Ticketing-Frist Median 29 Tage, „EXPIRED“ Median 25 Tage; YHBU Fristen
+zu 75 % ≤ 25 Tage, Postlücken bis 583 h.
+- Artikel älter als `feed_max_age_days` werden **gespeichert, aber nicht gemeldet** (auch nicht „wieder da“,
+  `monitor.quiet_old`) – kein Schwall alter Meldungen beim Rollout.
+- Deal-Karte ohne Ablaufdatum, Artikel > 14 Tage: Badge „Artikel vom TT.MM. · Ablauf unbekannt“ (nie „gültig“).
+- Gesundheit auf Rohwerten: „50 Artikel im Feed, 5 aktuell“; YHBU `Rule(720)` (0 Artikel = LEER).
+- Live-Lauf danach (frische DB): neu und still gespeichert YHBU Budapest 1.670 € (33 T.), Istanbul–Peking
+  1.080 € (39 T.), premium-flights Luxemburg→China 1.720 €, Luxemburg→Shanghai 1.595 € (dort hängt
+  Travel-Dealz „Shanghai ab Luxemburg“ 1.566 € als zweite Quelle dran), Radar z. B. Kuala Lumpur Business
+  1.148 € (TD, läuft bis 16.11.). Gemeldet nur Artikel ≤ 14 Tage. Zweiter Lauf: 0 Meldungen. Ob die YHBU-Deals
+  noch buchbar sind, ist unbekannt (Seite per Cloudflare gesperrt) – daher nur „Ablauf unbekannt“.
 
 ### Google: leere Seiten (Messung 05.11.2026, 42 Abrufe + Gegenprobe 8 Abrufe)
 Eine leere Seite ist kein Zufall, sondern einer von drei Fällen (`googleflights.empty_kind`):
@@ -64,7 +83,7 @@ Danach ein Schnell-Check nach Zeitplan (10 min): 2 s, Secret Flying 61 Artikel (
 | fly4free / fly4free Business | 50 / 2 | 26 / 2 | – |
 | premium-flights (inkl. China-Tags) | 23 | 11 | – (US$/AU$-Titel bewusst ohne Preis) |
 | reisetopia | 60 | 19 | – |
-| You have been upgraded | 0 | 0 | Feed lesbar, neuester Artikel 18.10. (> 14 Tage) → 0 ist dort normal |
+| You have been upgraded | 0 | 0 | damals: neuester Artikel 18.10. (> 14 Tage) → 0; jetzt 50 im Feed, 5 aktuell (siehe Altersregel) |
 | ErrorFareAlerts | 10 | 10 | – |
 | Urlaubspiraten | 48 | 6 | – |
 | Google Flights | 5 Abrufe | 3 | 2 leer trotz zweitem Abruf (HAJ–HGH, FRA–SHA); FRA–SHA direkt danach mit 10 Flügen + Preisniveau |
@@ -78,9 +97,10 @@ Behoben dabei (mit Test): „von Westkanada“ galt als Abflug ohne Angabe → l
 `/api/alerts`, `/api/sources/health` und UI (Desktop/Mobil, Deals/Alarme/Quellen) per Screenshot geprüft.
 
 ### Offene Punkte (bewusst nicht geändert / Entscheidung des Nutzers)
-- Feed-Artikel älter als 14 Tage werden ignoriert (`feed_max_age_days`) – fehlen z. B. „Luxemburg→China 1.640 €“
-  (17.10.) und YHBU „Istanbul–Peking Business 900 €“ (27.09.); ob noch buchbar, ist unbekannt.
-  YHBU zeigt deshalb oft „0 Artikel“ und gilt trotzdem als OK (kein „Veraltet“, weil alte Artikel vorher wegfallen).
+- YHBU/premium-flights nennen nur selten ein Buchungsende (20 % bzw. 29 % der Artikel, im Text). Optional:
+  Loader über WP-REST (`/wp-json/wp/v2/posts?categories=62` bzw. `?tags=`, mit `content`, HTTP 200 trotz
+  Cloudflare auf den Artikelseiten) – „TICKETS MUST BE ISSUED ON/BEFORE ddMMMyy“ → `expires`, „EXPIRED“ im Text →
+  verwerfen. Nicht gebaut (neuer Loader am Vortag der Abgabe).
 - Travel-Dealz-Suche max. 8 Suchen/Lauf: Hangzhou, Chongqing, Xiamen werden nie gesucht.
 - Google: **erstes HTTP 429** am 05.11. beim 8. Abruf der Gegenprobe (heute ~50 Abrufe in 35 min, 5–10 s
   Abstand). Der Schutzschalter pausiert Google dann für den Lauf. Ob 40 Abrufe/Lauf (Standard) alle 6 h
@@ -102,7 +122,7 @@ Behoben dabei (mit Test): „von Westkanada“ galt als Abflug ohne Angabe → l
 1. Nutzer-OK für Runde 2 abwarten bzw. als gegeben nehmen → `wip/quellen-ausbau` auf `main` mergen und pushen
    (baut das Unraid-Image). Vorher Unit + E2E noch einmal laufen lassen.
 2. Nach dem Ausrollen: im Container einen Lauf mit echtem Travelpayouts-Token prüfen.
-3. Optional (RESEARCH.md Abschnitt 4): Feed-Alter je Quelle (YHBU länger), Suche über mehr Ziele rotieren.
+3. Optional: YHBU/premium-flights-Fristen per WP-REST (siehe Offene Punkte), Suche über mehr Ziele rotieren.
 
 ## Umgebung (Cloud-Session)
 - Netzwerk offen; `gh`-Token ungültig → GitHub nur per `git push` (Repo ist angebunden). Kein Repo-Erstellen möglich.

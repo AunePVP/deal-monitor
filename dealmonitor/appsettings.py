@@ -88,7 +88,8 @@ VALUES: dict[str, Spec] = {
     "feed_presets": Spec("list", default_preset_ids(), "Deal-Seiten",
                          choices=tuple(p.id for p in FEED_PRESETS)),
     "feeds": Spec("list", list(_D.feeds), "Eigene Feeds", url=True),
-    "feed_max_age_days": Spec("int", _D.feed_max_age_days, "Max. Alter von Feed-Artikeln (Tage)",
+    "feed_max_age_days": Spec("int", _D.feed_max_age_days, "Max. Alter von Feed-Artikeln ohne Ablaufdatum "
+                              "(Tage) – YHBU/premium-flights mind. 45/30",
                               1, 365),
     # Google Flights (inoffiziell)
     "google_max_requests": Spec("int", 40, "Google Flights: Abfragen pro Lauf", 2, 500),

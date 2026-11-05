@@ -402,6 +402,28 @@ async function desktopFlows(browser) {
     await shot(page, "desktop-deal-signale", false);
   });
 
+  await step("Alter Artikel ohne Ablaufdatum: „Ablauf unbekannt“, nicht gemeldet", async () => {
+    await page.goto(base + "/#deals");
+    await page.waitForSelector(".deal-card");
+    const deals = (await api("GET", "/api/deals")).deals;
+    const old = deals.find((d) => /Frankfurt – Shanghai ab 1\.690/.test(d.headline || ""));
+    assert(old && old.published && !old.expires, `Demo-Artikel (25 Tage) fehlt: ${JSON.stringify(old)}`);
+    // 40 Tage alter premium-flights-Artikel liegt über deren Grenze (30 Tage) -> kein Deal
+    assert(!deals.some((d) => /München – Peking ab 1\.550/.test(d.headline || "")), "Zu alter Artikel als Deal");
+    const badges = page.locator(".signals .badge.article-age");
+    assert(await badges.count() === 1, `Badge „Ablauf unbekannt“ ${await badges.count()}× statt 1×`);
+    const card = page.locator(".deal-card", { has: badges });
+    assert(/Frankfurt – Shanghai ab 1\.690/.test(await card.locator(".deal-title").textContent()), "Badge an falscher Karte");
+    const pub = new Date(old.published);
+    const want = `Artikel vom ${String(pub.getDate()).padStart(2, "0")}.${String(pub.getMonth() + 1).padStart(2, "0")}. · Ablauf unbekannt`;
+    assert(norm(await badges.textContent()) === want, `Badge-Text: ${norm(await badges.textContent())} ≠ ${want}`);
+    assert(/kein Buchungsende/.test(await badges.getAttribute("title")), "Tooltip fehlt");
+    assert(!/gültig/i.test(await card.textContent()), "Karte behauptet Gültigkeit");
+    assert(await card.locator(".badge", { hasText: "läuft ab" }).count() === 0, "Ablaufdatum erfunden");
+    const notes = (await api("GET", "/api/notifications?limit=200")).notifications;
+    assert(!notes.some((n) => /Frankfurt – Shanghai ab 1\.690/.test(n.headline || "")), "Alter Artikel wurde gemeldet");
+  });
+
   await step("Beinahe-Deals: je Alarm sichtbar, nie gemeldet", async () => {
     const alerts = (await api("GET", "/api/alerts")).alerts;
     const near = alerts.flatMap((a) => a.near_deals.map((e) => [a, e]));
@@ -452,7 +474,10 @@ async function desktopFlows(browser) {
     assert(light === "rgb(180, 83, 9)", `Ampel nicht gelb: ${light}`);
     const google = norm(await page.locator('.health-row[data-id="google_flights"]').textContent());
     assert(/[\d.]+ Abrufe im letzten Lauf · \d+ % leer/.test(google), `Google-Zeile: ${google}`);
-    assert(/\d+ Artikel im letzten Lauf/.test(norm(await page.locator('.health-row[data-id="feed:secretflying"]').textContent())), "Artikelzahl fehlt");
+    assert(/\d+ Artikel im Feed/.test(norm(await page.locator('.health-row[data-id="feed:secretflying"]').textContent())), "Artikelzahl fehlt");
+    // premium-flights: 3 Artikel geliefert, der 40 Tage alte zählt nicht als aktuell; eigenes Höchstalter
+    const pf = norm(await page.locator('.health-row[data-id="feed:premium-flights"] .health-facts').textContent());
+    assert(/3 Artikel im Feed, 2 aktuell, 3 mit Preis/.test(pf) && /ohne Ablaufdatum bis 30 Tage/.test(pf), `premium-flights-Zeile: ${pf}`);
     const unused = page.locator("#unused-list li");
     assert(await unused.count() === rep.not_used.length && rep.not_used.length >= 5, "Liste „bewusst nicht genutzt“ unvollständig");
     const utxt = norm(await page.textContent("#unused-list"));
@@ -1062,7 +1087,10 @@ async function desktopFlows(browser) {
     await page.click('label.switch:has(#s-radar_home_only)');
     await page.click("#settings-save");
     await waitToast(page, /Einstellungen gespeichert/);
-    let s = await api("GET", "/api/settings");
+    // der Toast kann noch vom vorigen Speichern stammen: auf die gespeicherten Werte warten
+    let s = null;
+    await waitFor(async () => { s = await api("GET", "/api/settings"); return s.values.radar_business_max === 1100; },
+      { timeout: 5000, msg: "Radar-Werte nicht gespeichert" }).catch(() => {});
     assert(s.values.radar_business_max === 1100 && s.values.radar_economy_max === 250.5 && s.values.radar_home_only === false,
       `Radar-Werte: ${s.values.radar_business_max} / ${s.values.radar_economy_max} / ${s.values.radar_home_only}`);
     await page.reload();

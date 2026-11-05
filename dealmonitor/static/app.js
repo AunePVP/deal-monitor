@@ -502,6 +502,15 @@
     const label = `läuft ab ${pad(when.getDate())}.${pad(when.getMonth() + 1)}.`;
     return el("span", { class: `badge badge-soft${days <= 3 ? " sig-warn" : ""}`, title: `Angebot gilt laut Deal-Seite bis ${fmtDateTime(d.expires)}` }, label);
   }
+  /** Artikel älter als 14 Tage ohne Ablaufdatum: nur „Ablauf unbekannt“ – nie „gültig“. */
+  const OLD_ARTICLE_DAYS = 14;
+  function articleAgeBadge(d) {
+    if (d.status === "expired" || parseIso(d.expires)) return null;
+    const pub = parseIso(d.published);
+    if (!pub || (Date.now() - pub.getTime()) / 86400000 <= OLD_ARTICLE_DAYS) return null;
+    return el("span", { class: "badge badge-soft sig-warn article-age", title: "Quelle nennt kein Buchungsende – vor dem Buchen prüfen, ob der Deal noch läuft" },
+      `Artikel vom ${pad(pub.getDate())}.${pad(pub.getMonth() + 1)}. · Ablauf unbekannt`);
+  }
   function hubBadge(d) {
     if (!d.via_hub) return null;
     const name = d.hub_name || d.via_hub;
@@ -746,7 +755,7 @@
     const chart = expired ? null : sparkline(d.insight, d.price);
     const signals = el("div", { class: "badges signals" },
       chart ? null : levelBadge(g), chart || !g ? null : (rangeText(g) ? el("span", { class: "badge badge-soft" }, rangeText(g)) : null),
-      expiresBadge(d), hubBadge(d), leadBadge(d), sourcesBadge(d));
+      expiresBadge(d), articleAgeBadge(d), hubBadge(d), leadBadge(d), sourcesBadge(d));
     const shownReasons = (Array.isArray(d.reasons) ? d.reasons : []).filter((r) => !reasonShown(r, d, chart || levelBadge(g) ? g : null));
     const reasons = shownReasons.length
       ? el("ul", { class: "reasons", "aria-label": "Warum ein Deal?" }, ...shownReasons.map((r) => el("li", null, r))) : null;
@@ -1258,7 +1267,12 @@
         const [age, limit] = staleText(s.age_hours, s.threshold_hours);
         facts.push(`neuester Artikel vor ${age} (erwartet: höchstens ${limit})`);
       } else if (num(s.age_hours)) facts.push(`neuester Artikel vor ${hoursText(s.age_hours)}`);
-      if (num(s.items)) facts.push(`${plural(s.items, "Artikel", "Artikel")} im letzten Lauf` + (num(s.parsed) && s.items ? `, ${s.parsed} mit Preis` : ""));
+      if (num(s.items)) {
+        facts.push(`${plural(s.items, "Artikel", "Artikel")} im Feed`
+          + (num(s.current) && s.current !== s.items ? `, ${s.current} aktuell` : "")
+          + (num(s.parsed) && s.items ? `, ${s.parsed} mit Preis` : ""));
+      }
+      if (num(s.max_age_days)) facts.push(`ohne Ablaufdatum bis ${plural(s.max_age_days, "Tag", "Tage")}`);
     }
     const when = [s.checked ? `geprüft ${relTime(s.checked)}` : null,
       s.state !== "ok" && s.since ? `so seit ${fmtTime(s.since)}` : null].filter(Boolean).join(" · ");
@@ -1401,7 +1415,7 @@
     { key: "amadeus_max_requests", group: "amadeus", type: "int", label: "Max. Abfragen pro Lauf", min: 1, max: 2000 },
     { key: "feed_interval_minutes", group: "feeds", type: "int", label: "Feed-Intervall (Minuten)", min: 10, max: 1440, help: "So oft werden nur die Deal-Seiten + Radar geprüft (zusätzlich zum vollen Lauf). Mindestens 10." },
     { key: "fast_interval_minutes", group: "feeds", type: "int", label: "Schnell-Intervall (Minuten)", min: 5, max: 1440, help: "So oft werden die schnellen Deal-Quellen (Secret Flying, Travel-Dealz schnell) + Radar geprüft. Mindestens 5." },
-    { key: "feed_max_age_days", group: "feeds", type: "int", label: "Artikel max. Alter (Tage)", min: 1 },
+    { key: "feed_max_age_days", group: "feeds", type: "int", label: "Artikel ohne Ablaufdatum max. Alter (Tage)", min: 1, max: 365, help: "Mit Ablaufdatum gilt ein Artikel bis dahin. You have been upgraded und premium-flights posten seltener: dort mindestens 45 bzw. 30 Tage." },
     { key: "feeds", group: "feeds", type: "lines", label: "Eigene Feed-URLs (eine pro Zeile)", wide: true, help: "Weitere RSS-Feeds, z. B. die Kategorie-Feeds einer Deal-Seite." },
     { key: "hubs_enabled", group: "feeds", type: "bool", label: "Abflug ab Nachbar-Hub zulassen", help: "Business/First und Langstrecke: Deals ab Amsterdam, Budapest, Rom … zählen mit Aufschlag für die Anreise. Die Preisgrenze gilt für Ticket + Aufschlag." },
     { key: "hub_surcharge_a", group: "feeds", type: "float", label: "Aufschlag Zug/Auto (€)", min: 0, help: "Luxemburg, Brüssel, Amsterdam, Straßburg, Mailand, Prag, Kopenhagen. Schätzwert." },

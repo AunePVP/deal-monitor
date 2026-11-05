@@ -19,7 +19,7 @@ from dealmonitor.models import Alert
 from dealmonitor.sources import SourceError
 from dealmonitor.sources import traveldealz_rest as td
 from dealmonitor.sources.feed import (
-    PRESETS_BY_ID, TRAVEL_DEALZ_PROFILE, FeedSource, Preset, analyze, normalize_item,
+    PRESETS_BY_ID, TRAVEL_DEALZ_PROFILE, FeedSource, Preset, analyze, is_current, normalize_item,
 )
 from dealmonitor.store import Store
 
@@ -157,11 +157,13 @@ class FetchTest(unittest.TestCase):
         for kind, q in api.calls[:2]:
             self.assertEqual((q["categories"], q["per_page"], q["orderby"], q["order"]),
                              ("24", "100", "modified", "desc"))
-            self.assertEqual(q["modified_after"], "2026-10-22T11:40:43")    # jetzt - 14 Tage
+            # voller Abruf: die Schnittstelle liefert nur aktive Beiträge -> alle holen
+            self.assertNotIn("modified_after", q)
             self.assertIn("meta.suspend_date", q["_fields"])
-        # 45 + 12 Beiträge; 2 davon älter als 14 Tage (WordPress vergleicht modified_after
-        # mit Berliner Zeit, liefert also bis zu 1 h mehr) - die fallen weg
-        self.assertEqual(len(items), 55)
+        # 45 + 12 Beiträge; 2 davon seit über 14 Tagen nicht geändert, laufen aber bis 16.11.
+        # (suspend_date) - die bleiben
+        self.assertEqual(len(items), 57)
+        self.assertTrue(any(i["title"].startswith("12 Ziele in (Süd-)Ostasien") for i in items))
         self.assertEqual(state["full_at"], "2026-11-05T11:40:43")
         self.assertEqual(state["cursor"], {"deal": "2026-11-05T10:18:57",
                                            "ticker": "2026-11-05T10:17:07"})
@@ -267,15 +269,36 @@ class FetchTest(unittest.TestCase):
         api.data["deal"] = [p for p in api.data["deal"] if p["id"] != PEKING]   # gelöscht
         api.calls.clear()
         items, state = run(api, state, FIXTURE_NOW + timedelta(hours=25))
-        self.assertEqual(api.calls[0][1]["modified_after"], "2026-10-23T12:40:43")
+        self.assertNotIn("modified_after", api.calls[0][1])
         self.assertFalse(any(i["uid"].startswith(f"{PEKING}:") for i in items))
         self.assertEqual(state["full_at"], "2026-11-06T12:40:43")
 
-    def test_cursor_after_long_outage_is_bounded(self):
+    def test_incremental_fetch_follows_cursor(self):
+        # alter Cursor: ab dort (die Schnittstelle liefert ohnehin nur aktive Beiträge);
+        # ohne Cursor: ab jetzt - WINDOW
         state = {"cursor": {"deal": "2026-01-01T00:00:00"}, "full_at": "2026-11-05T11:00:00"}
         api = FakeAPI()
         run(api, state)
-        self.assertEqual(api.calls[0][1]["modified_after"], "2026-10-22T11:40:43")
+        self.assertEqual(api.calls[0][1]["modified_after"], "2026-01-01T00:00:00")
+        self.assertEqual(api.calls[1][1]["modified_after"], "2026-10-22T11:40:43")
+
+    def test_old_post_with_future_suspend_date_stays(self):
+        # vor 20 Tagen zuletzt geändert: mit Ablaufdatum in der Zukunft bleibt er, ohne fällt
+        # er weg (Evergreen/Info), mit Ablaufdatum in der Vergangenheit ebenfalls
+        old = "2026-10-16T10:00:00"
+        api = FakeAPI([post(1, "Shanghai ab 1.486€ in der Business Class von Luxemburg",
+                            date_gmt=old, modified_gmt=old,
+                            meta={"suspend_date": "2026-11-10 23:59:00"}),
+                       post(2, "Peking ab 499€ von Frankfurt", date_gmt=old, modified_gmt=old,
+                            meta={"suspend_date": ""}),
+                       post(3, "Tokio ab 599€ von Frankfurt", date_gmt=old, modified_gmt=old,
+                            meta={"suspend_date": "2026-11-01 23:59:00"})])
+        items, state = run(api)
+        self.assertEqual([i["uid"][0] for i in items], ["1"])
+        self.assertEqual(items[0]["expires"], datetime(2026, 11, 10, 22, 59, tzinfo=timezone.utc))
+        self.assertEqual(sorted(state["posts"]), ["deal:1"])
+        # ... und übersteht den Abruf über FeedSource (Altersregel: expires geht vor)
+        self.assertTrue(is_current(normalize_item(items[0], now=FIXTURE_NOW), FIXTURE_NOW, 14))
 
     def test_page_beyond_total_pages_is_never_fetched(self):
         posts = [post(i, modified_gmt=f"2026-11-0{1 + i % 4}T10:{i % 60:02d}:00")
@@ -310,7 +333,7 @@ class FetchTest(unittest.TestCase):
         api = live_api()
         api.errors = {"origins": http.HttpError("HTTP 500", 500)}
         items, state = run(api)
-        self.assertEqual(len(items), 55)
+        self.assertEqual(len(items), 57)
         self.assertEqual(state["terms"]["origins"], {})            # nichts gemerkt -> neu fragen
         by_title = {i["title"][:30]: i for i in items}
         self.assertEqual(by_title["Peking: Business Class von Fra"]["origin_codes"], ["FRA"])
@@ -390,7 +413,7 @@ class FeedSourceTest(unittest.TestCase):
         self.assertEqual(len(peking), 1)                        # REST + RSS: ein Artikel
         self.assertEqual(peking[0]["source"], "feed:travel-dealz-rest")
         st = src.stats["feed:travel-dealz-rest"]
-        self.assertEqual((st["items"], st["error"]), (55, None))
+        self.assertEqual((st["items"], st["current"], st["error"]), (57, 57, None))
         self.assertGreaterEqual(st["parsed"], 45)
         saved = self.store.source_state("travel-dealz-rest")
         self.assertEqual(set(saved), {"cursor", "full_at", "posts", "terms"})

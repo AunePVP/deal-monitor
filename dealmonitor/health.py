@@ -5,8 +5,13 @@ Nach jedem Lauf wird jede gelesene Quelle eingestuft:
 * **OK**
 * **LEER** - Abruf klappte, aber 0 Artikel oder kein einziger Flug-Deal mit Preis
   (sieht sonst aus wie "keine Deals")
-* **VERALTET** - der neueste Artikel ist älter als die Schwelle der Quelle (Alter des Artikels,
-  nicht ``lastBuildDate``: das hinkt z. B. bei premium-flights 14 h nach)
+* **VERALTET** - der neueste Artikel ist älter als die Schwelle der Quelle (Alter des neuesten
+  Artikels im Feed *vor* der Altersregel ``feed.is_current``, nicht ``lastBuildDate``: das
+  hinkt z. B. bei premium-flights 14 h nach)
+
+Alle Zähler sind Rohwerte (was der Feed liefert); ``current`` = davon noch gültig. Eine Seite,
+deren Artikel alle zu alt sind, ist also nicht LEER, sondern "50 Artikel, 0 aktuell" - und
+VERALTET erst, wenn auch der neueste Artikel die Schwelle überschreitet.
 * **FEHLER** - Quelle nicht lesbar
 
 Google Flights gilt als LEER, wenn in einem Lauf mehr als die Hälfte der Abrufe leer blieb
@@ -27,7 +32,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 
 from . import notify
-from .sources.feed import source_label
+from .sources.feed import PRESETS_BY_ID, source_label
 
 log = logging.getLogger(__name__)
 
@@ -62,8 +67,9 @@ RULES: dict[str, Rule] = {
     "feed:premium-flights": Rule(120),       # Lücken 34 h, 39 h, 98,5 h in 10 Tagen
     "feed:errorfarealerts": Rule(48),        # Schübe mit Lücken bis 25 h
     "feed:reisetopia": Rule(36, need_parsed=False),   # Annahme; meist Hotels/Meilen
-    # YHBU postet etwa einmal pro Woche: 0 Artikel in 14 Tagen ist dort normal
-    "feed:yhbu": Rule(240, need_items=False),
+    # YHBU postet etwa einmal pro Woche, größte Lücke 583 h (100 Artikel, 11/2026); der Feed
+    # listet immer die letzten 50 Artikel - 0 heißt also: kaputt
+    "feed:yhbu": Rule(720),
     "feed:fly4free-business": Rule(None, need_items=False),   # selten neue Artikel
     "feed:urlaubspiraten": Rule(72, need_parsed=False),  # Preise selten im Titel
     # Suche: 0 Treffer ist normal (Stichwort ohne aktuellen Deal)
@@ -183,10 +189,29 @@ def collect(sources: list, now: datetime, *, quick: bool = False) -> dict[str, d
                 out[name] = {"state": state, "detail": detail,
                              "items": int(stat.get("items") or 0),
                              "parsed": int(stat.get("parsed") or 0),
+                             "current": _count(stat.get("current")),
                              "newest": _local(_aware(stat.get("newest"))),
                              "error": (str(stat["error"])[:ERROR_CHARS]
                                        if stat.get("error") else None)}
     return out
+
+
+def _count(value) -> int | None:
+    """Zähler oder None (alte Zustände/Quellen ohne diesen Wert)."""
+    return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 \
+        else None
+
+
+def _max_age(name: str, setting: int | None) -> int | None:
+    """Höchstalter (Tage) für Artikel ohne Ablaufdatum einer Deal-Seite (wie
+    ``FeedSource.age_limit``); keine Deal-Seite bzw. unbekannt -> None."""
+    if not name.startswith("feed:") and not name.endswith("-feed"):
+        return None
+    preset = PRESETS_BY_ID.get(name.removeprefix("feed:"))
+    extra = preset.max_age_days if preset is not None else None
+    if not isinstance(setting, int) or isinstance(setting, bool):
+        return extra
+    return max(setting, extra or 0)
 
 
 def _change_line(name: str, old: str | None, new: dict) -> str:
@@ -205,6 +230,9 @@ def _heartbeat_text(sources: dict[str, dict]) -> str:
         e = sources[name]
         unit = "Abrufe" if name == GOOGLE else "Artikel"
         line = f"{source_label(name)}: {e.get('items', 0)} {unit}"
+        current = _count(e.get("current"))
+        if name != GOOGLE and current is not None and current != e.get("items"):
+            line += f", {current} aktuell"
         if e.get("state") != OK:
             line += f" ({LABELS.get(e.get('state'), e.get('state'))})"
         lines.append(line)
@@ -273,8 +301,9 @@ def update(store, sources: list, notifiers: list | None = None, *,
     return errors
 
 
-def report(store, now: datetime | None = None) -> dict:
-    """Antwort für ``GET /api/sources/health``."""
+def report(store, now: datetime | None = None, *, feed_max_age_days: int | None = None) -> dict:
+    """Antwort für ``GET /api/sources/health``. ``feed_max_age_days``: Einstellung, für
+    ``max_age_days`` je Deal-Seite (Höchstalter von Artikeln ohne Ablaufdatum)."""
     now = now or datetime.now(timezone.utc)
     state = store.source_state(STATE_NAME)
     known = state.get("sources") if isinstance(state.get("sources"), dict) else {}
@@ -300,6 +329,8 @@ def report(store, now: datetime | None = None) -> dict:
         out.append({
             "id": name, "name": source_label(name), "state": st, "label": LABELS[st],
             "detail": e.get("detail"), "items": e.get("items"), "parsed": e.get("parsed"),
+            "current": _count(e.get("current")) if name != GOOGLE else None,
+            "max_age_days": _max_age(name, feed_max_age_days),
             "newest": e.get("newest"),
             "age_hours": round((now - newest).total_seconds() / 3600, 1) if newest else None,
             "threshold_hours": rule.stale_hours, "error": e.get("error"),

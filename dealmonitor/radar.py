@@ -199,7 +199,7 @@ def _offer(item: dict, info: feed_mod.ItemInfo, hub: tuple[str, float] | None = 
         price=price,
         roundtrip=not info.oneway, cabin=info.cabin, link=item["link"], title=item["title"],
         found_at=(published.astimezone().replace(tzinfo=None) if published else datetime.now()),
-        expires=info.expires, hot=info.hot, uid=info.uid,
+        expires=info.expires, published=published, hot=info.hot, uid=info.uid,
         via_hub=hub[0] if hub else None, surcharge=hub[1] if hub else None,
     )
 

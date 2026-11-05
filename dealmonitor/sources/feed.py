@@ -55,6 +55,8 @@ TRAVEL_DEALZ_SEARCH = "https://travel-dealz.de/?s={word}&feed=rss2"
 #: Grenzen je Feed-Abruf: Größe (Bytes) und Gesamtdauer (Sekunden)
 FEED_MAX_BYTES = 5_000_000
 FEED_MAX_TIME = 60.0
+#: ``published`` bis so weit in der Zukunft (Uhren gehen ungenau) zählt noch als "neuester"
+FUTURE_SLACK = timedelta(minutes=10)
 SAFE_LINK_RE = re.compile(r"^https?://", re.I)
 
 
@@ -97,6 +99,10 @@ class Preset:
     loader: str | None = None
     #: Takt: "fast" (schnelle Quellen, eigener Takt) oder "normal" (wie die RSS-Feeds)
     lane: str = "normal"
+    #: Höchstalter (Tage) für Artikel *ohne* Ablaufdatum, wenn die Seite selten postet und
+    #: Deals länger gelten (YHBU, premium-flights). Wirksam ist der größere Wert aus diesem
+    #: und der Einstellung ``feed_max_age_days`` (:meth:`FeedSource.age_limit`).
+    max_age_days: int | None = None
 
     def __post_init__(self) -> None:
         if self.lane not in LANES:
@@ -171,11 +177,15 @@ FEED_PRESETS: list[Preset] = [
         "https://premium-flights.com/tag/pek/feed/",
         "https://premium-flights.com/tag/shanghai/feed/",
     ), "en", True, Profile(lang="en", price_from="title", cabins=PREMIUM_CABINS),
-           "https://premium-flights.com/", "Business/First Class, nur €-Preise, auch China-Seiten"),
+           "https://premium-flights.com/", "Business/First Class, nur €-Preise, auch China-Seiten",
+           # Ticketing-Frist im Median 29 Tage nach dem Artikel, "EXPIRED" im Median nach 25
+           max_age_days=30),
     Preset("yhbu", "You have been upgraded", (
         "https://youhavebeenupgraded.boardingarea.com/category/billige-premium-tickets/feed/",),
            "de", True, YHBU_PROFILE, "https://youhavebeenupgraded.boardingarea.com/",
-           "Business/First-Schnäppchen, oft ab Nachbarländern (z. B. Budapest)"),
+           "Business/First-Schnäppchen, oft ab Nachbarländern (z. B. Budapest)",
+           # postet etwa wöchentlich (Lücken bis 24 Tage); Ticketing-Fristen zu 75 % ≤ 25 Tage
+           max_age_days=45),
     Preset("reisetopia", "reisetopia", (
         "https://reisetopia.de/feed/",
         "https://reisetopia.de/feed/?paged=2",
@@ -283,12 +293,37 @@ def is_expired(item: dict, now: datetime | None = None) -> bool:
     return expires is not None and expires < (now or datetime.now(timezone.utc))
 
 
+#: Ein Ablaufdatum weiter in der Zukunft gilt als Tippfehler/Platzhalter (= unbekannt)
+EXPIRES_MAX_AHEAD = timedelta(days=400)
+
+
+def is_current(item: dict, now: datetime | None = None, max_days: float | None = 14) -> bool:
+    """Gilt der Artikel noch? Die zentrale Altersregel für alle Deal-Seiten:
+
+    * als abgelaufen markiert ("EXPIRED"/"abgelaufen" in Titel oder Kategorie) -> nein
+    * Ablaufdatum bekannt (``expires``, höchstens 400 Tage voraus) -> bis dahin ja, egal wie
+      alt der Artikel ist
+    * sonst: ``published`` höchstens ``max_days`` Tage alt (ohne Datum bzw. ``max_days=None``: ja)
+    """
+    now = now or datetime.now(timezone.utc)
+    if EXPIRED_RE.search(str(item.get("title") or "")) \
+            or any(EXPIRED_RE.search(str(c)) for c in item.get("categories") or ()):
+        return False
+    expires = _aware(item.get("expires"))
+    if expires is not None and expires <= now + EXPIRES_MAX_AHEAD:
+        return expires >= now
+    published = _aware(item.get("published"))
+    return max_days is None or published is None or published >= now - timedelta(days=max_days)
+
+
 def normalize_item(raw: dict, feed: str = "", *, max_age_days: int | None = None,
                    now: datetime | None = None) -> dict | None:
     """Artikel eines Loaders ins Format von :meth:`FeedSource.parse` bringen (fehlende Schlüssel
     ergänzen, Typen prüfen). Optionale Schlüssel werden bereinigt oder weggelassen, ``hot`` wird
     zusätzlich als Kategorie angehängt (für ``radar.hot_reason``). ``None`` = verwerfen: kein
-    Titel, abgelaufen (``expires``), zu alt (``published``) oder als abgelaufen markiert."""
+    Titel, abgelaufen (``expires``), als abgelaufen markiert oder - nur mit ``max_age_days`` -
+    zu alt (``published``). ``FeedSource`` übergibt kein ``max_age_days``, das Alter prüft dort
+    :func:`is_current` (ein bekanntes ``expires`` geht vor)."""
     if not isinstance(raw, dict):
         return None
     title = str(raw.get("title") or "").strip()
@@ -338,10 +373,9 @@ def normalize_item(raw: dict, feed: str = "", *, max_age_days: int | None = None
             it["categories"].append(hot)
     if raw.get("uid"):
         it["uid"] = str(raw["uid"])
-    if max_age_days is not None and it["published"] is not None \
-            and it["published"] < now - timedelta(days=max_age_days):
-        return None
     if EXPIRED_RE.search(title):
+        return None
+    if max_age_days is not None and not is_current(it, now, max_age_days):
         return None
     return it
 
@@ -1112,8 +1146,14 @@ class FeedSource:
     :class:`~dealmonitor.store.Store`) für den Zustand der Loader; ohne bekommen sie ``{}``.
     ``lanes``: nur Presets dieser Takte laden (``{"fast"}`` für den schnellen Takt; ``None`` = alle).
 
-    Nach ``load``: ``stats[offer_source] = {"items", "parsed", "newest", "error"}`` je Quelle
-    (Artikel geladen, davon Flug-Deals mit Preis, neuester ``published``, Fehlertext oder None).
+    Nach ``load``: ``stats[offer_source] = {"items", "parsed", "newest", "current", "error"}``
+    je Quelle - ``items``/``parsed``/``newest`` über *alle* gelesenen Artikel (vor der
+    Altersregel: Artikel im Feed, davon Flug-Deals mit Preis, neuester ``published`` nicht in
+    der Zukunft), ``current`` = davon noch gültig (:func:`is_current`), ``error`` = Fehlertext
+    oder None.
+
+    Altersregel: ein Artikel gilt bis zu seinem Ablaufdatum (``expires``), ohne Ablaufdatum
+    höchstens :meth:`age_limit` Tage ab ``published`` (Einstellung bzw. mehr je Preset).
     """
 
     records_history = False
@@ -1240,21 +1280,37 @@ class FeedSource:
 
     def _stat(self, source: str) -> dict:
         return self.stats.setdefault(source, {"items": 0, "parsed": 0, "newest": None,
-                                              "error": None})
+                                              "current": 0, "error": None})
+
+    def age_limit(self, preset: Preset | None) -> int:
+        """Höchstalter (Tage) für Artikel ohne Ablaufdatum: Einstellung, je Preset auch mehr."""
+        extra = preset.max_age_days if preset is not None else None
+        return max(self.max_age_days, extra or 0)
+
+    def _current(self, source: str, items: list[dict], preset: Preset | None,
+                 now: datetime | None = None) -> list[dict]:
+        """Nur noch gültige Artikel (:func:`is_current`); zählt sie in ``stats[...]["current"]``."""
+        now = now or datetime.now(timezone.utc)
+        limit = self.age_limit(preset)
+        out = [it for it in items if is_current(it, now, limit)]
+        self._stat(source)["current"] += len(out)
+        return out
 
     def _record(self, source: str, items: list[dict] | None = None,
                 error: str | None = None) -> None:
-        """Zähler für ``stats`` fortschreiben (``items`` schon mit ``_tag`` versehen)."""
+        """Zähler für ``stats`` fortschreiben (``items`` = alle gelesenen Artikel vor der
+        Altersregel, schon mit ``_tag`` versehen)."""
         st = self._stat(source)
         if error:
             st["error"] = f"{st['error']}; {error}" if st["error"] else error
+        latest = datetime.now(timezone.utc) + FUTURE_SLACK
         for it in items or []:
             st["items"] += 1
             info = analyze(it)
             if info.flight and (info.price is not None or info.alt_prices):
                 st["parsed"] += 1
-            pub = it.get("published")
-            if pub is not None and (st["newest"] is None or pub > st["newest"]):
+            pub = _aware(it.get("published"))
+            if pub is not None and pub <= latest and (st["newest"] is None or pub > st["newest"]):
                 st["newest"] = pub
 
     def _fetch_loader(self, preset: Preset) -> list[dict]:
@@ -1265,8 +1321,8 @@ class FeedSource:
         raw = fn(timeout=20.0, state=work)
         if not isinstance(raw, list):
             raise SourceError(f"{preset.name}: Loader lieferte keine Liste")
-        items = [it for it in (normalize_item(r, f"loader:{preset.id}",
-                                              max_age_days=self.max_age_days) for r in raw) if it]
+        # ohne Altersgrenze: die Altersregel (``is_current``) gilt danach für alle Quellen gleich
+        items = [it for it in (normalize_item(r, f"loader:{preset.id}") for r in raw) if it]
         if self.state_store is not None and work != state:
             self.state_store.set_source_state(preset.id, work)
         return items
@@ -1281,7 +1337,7 @@ class FeedSource:
         # selbst eingetragene Feeds nur auf öffentliche Adressen (auch nach Weiterleitungen)
         raw = http.request(url, timeout=20, error_body=False, max_bytes=FEED_MAX_BYTES,
                            max_time=FEED_MAX_TIME, public_only=url in self.extra_feeds)
-        return self.parse(raw, url)
+        return self.parse_all(raw, url)
 
     def load(self) -> list[dict]:
         if self._items is not None:
@@ -1310,8 +1366,8 @@ class FeedSource:
                 self._record(source, error=f"{shown}: unerwarteter Fehler: {e}")
                 log.warning("Feed %s nicht lesbar: %s", shown, e)
                 continue
-            self._record(source, fetched)
-            for it in fetched:                      # Dedup über alle Feeds (erster gewinnt)
+            self._record(source, fetched)           # Gesundheit: alles, was der Feed liefert
+            for it in self._current(source, fetched, preset):   # Dedup: erster gewinnt
                 if it["key"] in seen:
                     continue
                 seen.add(it["key"])
@@ -1327,14 +1383,28 @@ class FeedSource:
         return items
 
     def parse(self, xml: bytes, url: str = "", profile: Profile | None = None) -> list[dict]:
-        """Artikel eines RSS-Feeds. ``profile`` (sonst das Preset der URL) steuert Zusatzschlüssel
-        wie Strecke/Ablauf aus der Infobox; ohne passendes Preset bleibt es beim Grundformat."""
+        """Wie :meth:`parse_all`, aber nur noch gültige Artikel (:func:`is_current` mit dem
+        Höchstalter des Presets der URL)."""
+        preset = self._url_preset(url)
+        now = datetime.now(timezone.utc)
+        limit = self.age_limit(preset)
+        return [it for it in self.parse_all(xml, url, profile) if is_current(it, now, limit)]
+
+    @staticmethod
+    def _url_preset(url: str) -> Preset | None:
+        if not url:
+            return None
+        return next((p for p in FEED_PRESETS if url in p.urls), None) or preset_for_url(url)
+
+    def parse_all(self, xml: bytes, url: str = "", profile: Profile | None = None) -> list[dict]:
+        """Alle Artikel eines RSS-Feeds, ohne Altersregel (nur als abgelaufen markierte fallen
+        weg). ``profile`` (sonst das Preset der URL) steuert Zusatzschlüssel wie Strecke/Ablauf
+        aus der Infobox; ohne passendes Preset bleibt es beim Grundformat."""
         root = ET.fromstring(xml)
         if profile is None and url:
-            preset = next((p for p in FEED_PRESETS if url in p.urls), None) or preset_for_url(url)
+            preset = self._url_preset(url)
             profile = preset.profile if preset else None
         out = []
-        cutoff = datetime.now(timezone.utc) - timedelta(days=self.max_age_days)
         for item in root.iter("item"):
             title = (item.findtext("title") or "").strip()
             link = (item.findtext("link") or "").strip()
@@ -1350,8 +1420,6 @@ class FeedSource:
                     pass
             if published is not None and published.tzinfo is None:
                 published = published.replace(tzinfo=timezone.utc)   # "-0000" = UTC
-            if published and published < cutoff:
-                continue
             if EXPIRED_RE.search(title) or any(EXPIRED_RE.search(c) for c in categories):
                 continue
             description = item.findtext("description") or ""
@@ -1389,8 +1457,9 @@ class FeedSource:
                     continue
                 url = TRAVEL_DEALZ_SEARCH.format(word=urllib.parse.quote(word))
                 try:
-                    self._search_cache[key] = self._tag(self._fetch_one(url), preset)
-                    self._record(preset.source, self._search_cache[key])
+                    found = self._tag(self._fetch_one(url), preset)
+                    self._record(preset.source, found)
+                    self._search_cache[key] = self._current(preset.source, found, preset)
                 except Exception as e:  # noqa: BLE001 - Suche ist Zugabe, nie fatal
                     self._search_cache[key] = []
                     self._search_failed.add(key)
@@ -1491,7 +1560,7 @@ class FeedSource:
                 title=it["title"],
                 found_at=(it["published"].astimezone().replace(tzinfo=None)
                           if it["published"] else datetime.now()),
-                expires=info.expires, hot=info.hot, uid=info.uid,
+                expires=info.expires, published=it["published"], hot=info.hot, uid=info.uid,
                 via_hub=hub[0] if hub else None, surcharge=hub[1] if hub else None,
             ))
             self.matched_links.add(info.link or it["key"])

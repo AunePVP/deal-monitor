@@ -193,7 +193,8 @@ class FetchTest(unittest.TestCase):
         self.assertEqual(bud.offer.origin, "BUD")
         self.assertEqual(bud.reasons[0], "Abflug Nachbar-Hub Budapest (+180 € Zubringer): "
                                          "Ticket 1.490 €, mit Zubringer 1.670 €")
-        self.assertEqual(bud.offer.extras(), {"via_hub": "BUD", "surcharge": 180.0})
+        self.assertEqual(bud.offer.extras(), {"via_hub": "BUD", "surcharge": 180.0,
+                                              "published": "2026-10-03T20:11+00:00"})
         # ausgeschaltet: wie vorher nur der Deal ab Frankfurt
         off = deals(a, yhbu_offers(a, HubSettings(enabled=False)))
         self.assertEqual([d.offer.price for d in off], [1330])

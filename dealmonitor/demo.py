@@ -96,11 +96,21 @@ def demo_articles(now: datetime) -> dict[str, list[dict]]:
              "published": ago(1), "price_eur": 439.0, "origin_codes": ["FRA"],
              "dest_codes": ["PEK"], "cabin": "economy", "oneway": False},
         ],
-        # neuester Artikel 6 Tage alt (Grenze 5 Tage): zeigt "Veraltet" in der Quellen-Gesundheit
+        # neuester Artikel 6 Tage alt (Grenze 5 Tage): zeigt "Veraltet" in der Quellen-Gesundheit;
+        # der 25 Tage alte ohne Ablaufdatum gilt dort noch (bis 30 Tage), wird aber nicht
+        # gemeldet und trägt "Artikel vom … · Ablauf unbekannt"
         "premium-flights": [
             {"title": "Business Class nach Bangkok ab 1.390 €",
              "link": "https://www.premium-flights.de/demo/bangkok-business/",
              "published": ago(144), "price_eur": 1390.0, "cabin": "business", "oneway": False},
+            {"title": "Business Class: Frankfurt – Shanghai ab 1.690 €",
+             "link": "https://www.premium-flights.de/demo/frankfurt-shanghai-business/",
+             "published": ago(25 * 24), "price_eur": 1690.0, "origin_codes": ["FRA"],
+             "dest_codes": ["SHA"], **business},
+            {"title": "Business Class: München – Peking ab 1.550 €",
+             "link": "https://www.premium-flights.de/demo/muenchen-peking-business/",
+             "published": ago(40 * 24), "price_eur": 1550.0, "origin_codes": ["MUC"],
+             "dest_codes": ["PEK"], **business},
         ],
     }
 
@@ -128,8 +138,7 @@ class FixtureFeed(FeedSource):
         if preset is not None and preset.id != "travel-dealz":
             now = datetime.now(timezone.utc)
             raw = demo_articles(now).get(preset.id, [])
-            return [it for it in (normalize_item(r, f"loader:{preset.id}", now=now,
-                                                 max_age_days=self.max_age_days) for r in raw)
+            return [it for it in (normalize_item(r, f"loader:{preset.id}", now=now) for r in raw)
                     if it]
         return self._fetch_one(PRESETS_BY_ID["travel-dealz"].urls[0])
 
@@ -137,7 +146,7 @@ class FixtureFeed(FeedSource):
         xml = (FIXTURES / "travel-dealz-feed.xml").read_text()
         when = datetime.now().astimezone() - timedelta(hours=self.age_hours)
         xml = xml.replace("PUBDATE", format_datetime(when))
-        return self.parse(xml.encode(), url)
+        return self.parse_all(xml.encode(), url)
 
 
 #: One-way Zürich → Hamburg: an diesem Tag zeigt die Demo 39 € statt 126 € (siehe unten)
