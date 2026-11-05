@@ -6,7 +6,7 @@ alle Quellen und alle 30 Minuten die Deal-Seiten (Radar für Error Fares und Ham
 **So startest du es:**
 1. `docker compose up -d` (ohne Docker: `./start.sh`)
 2. http://localhost:8080 öffnen
-3. Optional unter **Einstellungen → Quellen** den kostenlosen Travelpayouts-Token eintragen → [travelpayouts.com](https://www.travelpayouts.com/) (Tools → API).
+3. Optional unter **Einstellungen → Quellen** den kostenlosen Travelpayouts-Token eintragen → [travelpayouts.com](https://www.travelpayouts.com/) (unten links aufs Profil → Reiter „API token“, vorher unter Programs das Aviasales-Programm beitreten).
    Google Flights und die Deal-Seiten laufen ohne Key.
 
 Fertig. Alarme legst du in der Oberfläche unter **Alarme** an, Treffer landen unter **Meldungen**.
