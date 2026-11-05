@@ -42,7 +42,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
-from .. import http, regions
+from .. import http, hubs, regions
 from ..models import Alert, Offer
 from . import SourceError
 
@@ -863,7 +863,7 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
 def origin_ok(alert: Alert, info: ItemInfo) -> bool:
     """Fremder Abflugort passt nur, wenn der Alarm diesen Ort selbst als Von hat. Ein
     DACH-Abflug aus einem Land, aus dem der Alarm gar nicht abfliegt ("von Zürich" beim
-    Alarm ab Deutschland), passt auch nicht."""
+    Alarm ab Deutschland), passt auch nicht. Ausnahme Nachbar-Hub: siehe :func:`hub_origin`."""
     if info.origin == "foreign":
         return bool(info.origin_codes & set(alert.origins))
     if info.origin == "home" and info.origin_codes:
@@ -874,6 +874,16 @@ def origin_ok(alert: Alert, info: ItemInfo) -> bool:
         if countries and alert_countries and not countries & alert_countries:
             return False
     return True
+
+
+def hub_origin(alert: Alert, info: ItemInfo,
+               settings: hubs.HubSettings | None = None) -> tuple[str, float] | None:
+    """Fremder Abflug ab Nachbar-Hub (Budapest, Rom, Amsterdam …), der für diesen Alarm doch
+    zählt: ``(Hub-Stadtcode, Zubringer-Aufschlag)``, sonst ``None``. Nur Alarme ab DACH in
+    Business/First oder auf die Langstrecke; die Preisgrenze gilt dann für Ticket + Aufschlag."""
+    if info.origin != "foreign" or info.origin_codes & set(alert.origins):
+        return None
+    return hubs.for_alert(alert, info.origin_codes, settings)
 
 
 # -- Die Quelle ---------------------------------------------------------------------------------------
@@ -894,6 +904,8 @@ class FeedSource:
     """
 
     records_history = False
+    #: Nachbar-Hubs (``hubs.HubSettings``; ``None`` = Standard), setzt ``appsettings.sources``
+    hub_settings: hubs.HubSettings | None = None
 
     def __init__(self, feeds: list[str] | None = None, *, presets: list[str] | None = None,
                  extra_feeds: list[str] | None = None, search_enabled: bool | None = None,
@@ -1213,18 +1225,21 @@ class FeedSource:
                        and not origin_candidates(it["title"], it["profile"].lang)
                        and all(regions.is_home(o) for o in alert.origins)
                        and bool(regions.region_names(alert.origins)))
+            # Abflug ab Nachbar-Hub: das Ziel-Wort reicht, der Hub steht ja im Titel
+            hub = hub_origin(alert, info, self.hub_settings)
             if keywords:
                 hit = matches(alert, text, keywords, **kw_args)
             else:
                 # Ohne eigene Stichwörter: Von- und Nach-Wort (bzw. nur Nach-Wort, siehe oben)
-                hit = matches(alert, text, auto_keywords(alert, origin_required=not implied),
+                hit = matches(alert, text,
+                              auto_keywords(alert, origin_required=not (implied or hub)),
                               **kw_args)
             if not hit and info.dest_codes & set(alert.destinations):
                 # Quelle nennt Ziel-Codes (Loader): Ziel passt, Abflug muss belegt sein
-                hit = bool(info.origin_codes & set(alert.origins)) or implied
+                hit = bool(info.origin_codes & set(alert.origins)) or implied or bool(hub)
             if not hit:
                 continue
-            if not origin_ok(alert, info):
+            if hub is None and not origin_ok(alert, info):
                 continue
             cabin, price = info.cabin, info.price
             if alert.cabin != cabin and alert.cabin in info.alt_prices:
@@ -1232,9 +1247,13 @@ class FeedSource:
                 cabin, price = alert.cabin, info.alt_prices[alert.cabin]
             if price is None:
                 continue  # ohne €-Preis kein vergleichbarer Deal
+            # Nachbar-Hub: Preis = Ticket + Zubringer (dagegen gilt die Grenze), Hub im Offer
+            origin = alert.origins[0] if len(alert.origins) == 1 else ""
+            if hub:
+                origin, price = hub[0], round(price + hub[1], 2)
             offers.append(Offer(
                 source=info.source,
-                origin=alert.origins[0] if len(alert.origins) == 1 else "",
+                origin=origin,
                 destination=alert.destinations[0] if len(alert.destinations) == 1 else "",
                 price=price,
                 roundtrip=not info.oneway,
@@ -1244,6 +1263,7 @@ class FeedSource:
                 found_at=(it["published"].astimezone().replace(tzinfo=None)
                           if it["published"] else datetime.now()),
                 expires=info.expires, hot=info.hot, uid=info.uid,
+                via_hub=hub[0] if hub else None, surcharge=hub[1] if hub else None,
             ))
             self.matched_links.add(info.link or it["key"])
         return offers

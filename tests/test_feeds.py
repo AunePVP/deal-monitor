@@ -393,10 +393,15 @@ class EnglishFixtureTest(unittest.TestCase):
         self.assertEqual([(o.source, o.price, o.cabin) for o in offers],
                          [("feed:premium-flights", 1210, "business")])
         # fremde Abflughäfen, $-/£-Preise: nichts
-        for kw in (["Mumbai"], ["Maldives"], ["Kilimanjaro"], ["Johannesburg"], ["Lisbon"]):
+        for kw in (["Maldives"], ["Kilimanjaro"], ["Johannesburg"], ["Lisbon"]):
             b = alert(origins=["@DE"], destinations=["BKK"], cabin="business", max_price=5000,
                       feed_keywords=[kw])
             self.assertEqual(fetch(source(["premium-flights"]), b), [], kw)
+        # ab Kopenhagen = Nachbar-Hub (Paket 4): Business zählt mit 80 € Zubringer
+        mumbai = alert(origins=["@DE"], destinations=["BKK"], cabin="business", max_price=5000,
+                       feed_keywords=[["Mumbai"]])
+        self.assertEqual([(o.price, o.via_hub, o.surcharge)
+                          for o in fetch(source(["premium-flights"]), mumbai)], [(1990, "CPH", 80)])
         cph = alert(origins=["CPH"], destinations=["BOM"], cabin="business", max_price=2000,
                     feed_keywords=[["Mumbai"]])
         self.assertEqual([o.price for o in fetch(source(["premium-flights"]), cph)], [1910])

@@ -46,7 +46,9 @@ CN_AIRPORTS: dict[str, str] = {
     "CKG": "Chongqing", "HGH": "Hangzhou", "XMN": "Xiamen", "KMG": "Kunming",
     "XIY": "Xi'an", "NKG": "Nanjing", "TAO": "Qingdao", "WUH": "Wuhan",
     "CSX": "Changsha", "SHE": "Shenyang", "TSN": "Tianjin", "DLC": "Dalian",
-    "CGO": "Zhengzhou", "HAK": "Haikou", "SYX": "Sanya",
+    "CGO": "Zhengzhou", "HAK": "Haikou", "SYX": "Sanya", "FOC": "Fuzhou", "HRB": "Harbin",
+    "CGQ": "Changchun", "URC": "Ürümqi", "WNZ": "Wenzhou", "NNG": "Nanning", "TNA": "Jinan",
+    "HFE": "Hefei", "KHN": "Nanchang",
     "HKG": "Hongkong", "MFM": "Macau",
 }
 #: Häufige fremde Abflug-/Zielorte (Stadtcodes), damit Alarme sie als Von/Nach nutzen
@@ -69,7 +71,7 @@ WORLD_AIRPORTS: dict[str, str] = {
     "ATL": "Atlanta", "YTO": "Toronto", "YMQ": "Montreal", "YVR": "Vancouver",
     "SYD": "Sydney", "MEL": "Melbourne", "AKL": "Auckland", "JNB": "Johannesburg",
     "CPT": "Kapstadt", "NBO": "Nairobi", "SAO": "São Paulo", "BUE": "Buenos Aires",
-    "MEX": "Mexiko-Stadt",
+    "MEX": "Mexiko-Stadt", "SXB": "Straßburg",
 }
 
 # Code -> Anzeigename (deutsch)
@@ -77,6 +79,30 @@ AIRPORT_NAMES: dict[str, str] = {**DE_AIRPORTS, **CH_AIRPORTS, **AT_AIRPORTS,
                                  **CN_AIRPORTS, **WORLD_AIRPORTS}
 #: DACH-Flughäfen ("Heimat": Abflug ab Deutschland, Schweiz oder Österreich)
 HOME_CODES: frozenset[str] = frozenset({*DE_AIRPORTS, *CH_AIRPORTS, *AT_AIRPORTS})
+#: Europa (DACH + europäische Codes aus ``WORLD_AIRPORTS``) - alles andere gilt als Langstrecke
+EUROPE_CODES: frozenset[str] = HOME_CODES | frozenset("""
+    AMS LIS MAD PAR LON MIL ROM ATH BUD WAW PRG BRU CPH STO OSL DUB BCN OPO IST LUX MAN HEL VCE
+    LYS NCE KRK GDN EDI RIX VNO TLL SOF BUH BEG ZAG LJU BTS KEF GOT SXB
+""".split())
+
+#: Nachbar-Hubs (Stadtcodes) je Stufe: A = mit Zug/Auto in etwa 4 h erreichbar,
+#: B = mit Zubringerflug. Aufschläge stehen in ``dealmonitor.hubs`` (einstellbar).
+NEIGHBOR_HUBS: dict[str, frozenset[str]] = {
+    "A": frozenset({"LUX", "BRU", "AMS", "SXB", "MIL", "PRG", "CPH"}),
+    "B": frozenset({"BUD", "WAW", "OSL", "STO", "ROM", "MAD", "BCN", "ATH", "IST", "HEL"}),
+}
+#: Flughafen -> Stadtcode des Hubs (Quellen wie Travel-Dealz nennen "Rom [FCO]")
+HUB_AIRPORTS: dict[str, str] = {
+    "FCO": "ROM", "CIA": "ROM", "MXP": "MIL", "LIN": "MIL", "BGY": "MIL", "ARN": "STO",
+    "BMA": "STO", "NYO": "STO", "SAW": "IST", "CRL": "BRU", "WMI": "WAW",
+}
+
+
+def hub_tier(code: str) -> str | None:
+    """"A" oder "B" für einen Nachbar-Hub (Stadtcode), sonst ``None``."""
+    code = str(code or "").upper()
+    return next((tier for tier, codes in NEIGHBOR_HUBS.items() if code in codes), None)
+
 
 REGIONS: dict[str, list[str]] = {
     # Die großen deutschen Abflughäfen mit Langstrecken-/Umsteigeverbindungen
@@ -88,18 +114,28 @@ REGIONS: dict[str, list[str]] = {
     "DACH": ["FRA", "MUC", "BER", "DUS", "HAM", "STR", "CGN", "ZRH", "GVA", "BSL", "VIE"],
     # Festland-China - Städte mit Direkt- oder guten Umsteigeverbindungen aus Europa
     "CN": ["BJS", "SHA", "CAN", "SZX", "CTU", "CKG", "HGH", "XMN", "KMG",
-           "XIY", "NKG", "TAO", "WUH", "CSX", "SHE", "TSN"],
+           "XIY", "NKG", "TAO", "WUH", "CSX", "SHE", "TSN", "DLC", "CGO", "HAK", "SYX"],
+    # Alle bekannten Festland-Städte (für Deal-Seiten; für Preis-APIs besser @CN_MAJOR)
+    "CN_ALL": ["BJS", "SHA", "CAN", "SZX", "CTU", "CKG", "HGH", "XMN", "KMG",
+               "XIY", "NKG", "TAO", "WUH", "CSX", "SHE", "TSN", "DLC", "CGO", "HAK", "SYX",
+               "FOC", "HRB", "CGQ", "URC", "WNZ", "NNG", "TNA", "HFE", "KHN"],
     # Nur die großen Gateways (weniger API-Abfragen)
     "CN_MAJOR": ["BJS", "SHA", "CAN", "SZX", "CTU", "HGH"],
     "CN_HK": ["BJS", "SHA", "CAN", "SZX", "CTU", "CKG", "HGH", "XMN", "KMG",
-              "XIY", "NKG", "TAO", "WUH", "CSX", "SHE", "TSN", "HKG", "MFM"],
+              "XIY", "NKG", "TAO", "WUH", "CSX", "SHE", "TSN", "DLC", "CGO", "HAK", "SYX",
+              "HKG", "MFM"],
+    # Wie @CN_HK plus Taipeh (oft mit Air China/China Eastern gebündelt, kein China-Ziel)
+    "CN_TW": ["BJS", "SHA", "CAN", "SZX", "CTU", "CKG", "HGH", "XMN", "KMG",
+              "XIY", "NKG", "TAO", "WUH", "CSX", "SHE", "TSN", "DLC", "CGO", "HAK", "SYX",
+              "HKG", "MFM", "TPE"],
 }
 
 #: Region -> Namen, die in Deal-Überschriften für die ganze Region stehen
 REGION_NAMES: dict[str, list[str]] = {
     "DE": ["Deutschland"], "DE_HUBS": ["Deutschland"], "CH": ["Schweiz"], "AT": ["Österreich"],
     "DACH": ["Deutschland", "Schweiz", "Österreich"],
-    "CN": ["China"], "CN_MAJOR": ["China"], "CN_HK": ["China", "Hongkong"],
+    "CN": ["China"], "CN_MAJOR": ["China"], "CN_ALL": ["China"], "CN_HK": ["China", "Hongkong"],
+    "CN_TW": ["China", "Hongkong", "Taiwan"],
 }
 
 
@@ -147,6 +183,9 @@ CITY_SYNONYMS: list[tuple[str, ...]] = [
     ("Xi'an", "Xian", "Xi’an"), ("Nanjing", "Nanking"), ("Chengdu",), ("Shanghai",),
     ("Shenzhen",), ("Hangzhou",), ("Chongqing",), ("Xiamen",), ("Kunming",), ("Tianjin",),
     ("Qingdao", "Tsingtao"), ("Macau", "Macao"), ("China", "Volksrepublik China", "PRC"),
+    ("Fuzhou",), ("Harbin",), ("Ürümqi", "Urumqi", "Urumchi"), ("Wenzhou",), ("Nanning",),
+    ("Changchun",), ("Jinan",), ("Hefei",), ("Sanya",), ("Haikou",), ("Dalian",), ("Zhengzhou",),
+    ("Shenyang",), ("Nanchang",), ("Wuhan",), ("Changsha",), ("Taiwan",),
     # Asien / Pazifik
     ("Tokio", "Tokyo"), ("Osaka",), ("Seoul", "Südkorea", "South Korea", "Korea"),
     ("Bangkok",), ("Singapur", "Singapore"), ("Kuala Lumpur",), ("Hanoi",),
@@ -171,7 +210,8 @@ CITY_SYNONYMS: list[tuple[str, ...]] = [
     ("Kopenhagen", "Copenhagen", "København"), ("Stockholm",), ("Oslo",), ("Dublin",),
     ("Barcelona",), ("Porto",), ("Istanbul",), ("Luxemburg", "Luxembourg"), ("Manchester",),
     ("Helsinki",), ("Venedig", "Venice", "Venezia"), ("Lyon",), ("Nizza", "Nice"),
-    ("Krakau", "Krakow", "Kraków", "Cracow"), ("Danzig", "Gdansk", "Gdańsk"),
+    ("Straßburg", "Strasbourg"), ("Krakau", "Krakow", "Kraków", "Cracow"),
+    ("Danzig", "Gdansk", "Gdańsk"),
     ("Breslau", "Wroclaw", "Wrocław"), ("Edinburgh",), ("Riga",), ("Vilnius",), ("Tallinn",),
     ("Sofia",), ("Bukarest", "Bucharest"), ("Belgrad", "Belgrade"), ("Zagreb",),
     ("Ljubljana",), ("Bratislava",), ("Reykjavik", "Reykjavík"), ("Göteborg", "Gothenburg"),
@@ -203,7 +243,8 @@ FOREIGN_PLACES: tuple[str, ...] = (
     "Amsterdam", "Lissabon", "Madrid", "Paris", "London", "Mailand", "Rom", "Athen", "Budapest",
     "Warschau", "Prag", "Brüssel", "Kopenhagen", "Stockholm", "Oslo", "Dublin", "Barcelona",
     "Porto", "Istanbul", "Luxemburg", "Manchester", "Helsinki", "Venedig", "Lyon", "Nizza",
-    "Krakau", "Danzig", "Breslau", "Edinburgh", "Riga", "Vilnius", "Tallinn", "Sofia", "Bukarest",
+    "Krakau", "Danzig", "Breslau", "Straßburg", "Edinburgh", "Riga", "Vilnius", "Tallinn", "Sofia",
+    "Bukarest",
     "Belgrad", "Zagreb", "Ljubljana", "Bratislava", "Reykjavik", "Göteborg", "Neapel", "Bologna",
     "Turin", "Florenz", "Sevilla", "Valencia", "Málaga", "Palma", "Eindhoven", "Rotterdam",
     "Glasgow", "Birmingham", "Bergen", "Marseille", "Spanien", "Italien", "Frankreich",
@@ -215,7 +256,7 @@ FOREIGN_PLACES: tuple[str, ...] = (
     "Manila", "Jakarta", "Bali", "Taipeh", "Delhi", "Mumbai", "Dubai", "Abu Dhabi", "Doha",
     "Tel Aviv", "Kairo", "Sydney", "Melbourne", "Auckland", "Japan", "Thailand", "Vietnam", "Indien",
     "Indonesien", "Malaysia", "Philippinen", "Australien", "China", "Peking", "Shanghai",
-    "Hongkong", "Kanton", "Kuwait", "Riad", "Dschidda",
+    "Hongkong", "Kanton", "Kuwait", "Riad", "Dschidda", "Taiwan",
     "New York", "Los Angeles", "San Francisco", "Miami", "Chicago", "Washington", "Boston",
     "Seattle", "Houston", "Atlanta", "Toronto", "Montreal", "Vancouver", "USA", "Kanada", "Mexiko",
     "Mexiko-Stadt", "Johannesburg", "Kapstadt", "Nairobi", "Südafrika", "São Paulo", "Buenos Aires",
