@@ -10,3 +10,7 @@ data/*
 !data/.gitkeep
 .env
 tests/e2e/screenshots/
+
+# große Roh-Downloads der Recherche
+docs/handoff/research/**/*.body
+docs/handoff/research/**/*.html
