@@ -1,0 +1,15 @@
+{
+ "success": true,
+ "data": [
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "FRA", "destination": "BJS", "depart_date": "2027-03-10", "return_date": "2027-03-24", "number_of_changes": 1, "value": 1789, "found_at": "2026-11-04T18:22:10+00:00", "distance": 7795, "actual": true},
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "MUC", "destination": "SHA", "depart_date": "2027-02-02", "return_date": "2027-02-16", "number_of_changes": 0, "value": 1950, "found_at": "2026-11-05T02:10:44+00:00", "distance": 9014, "actual": true},
+  {"show_to_affiliates": false, "trip_class": 0, "origin": "FRA", "destination": "BJS", "depart_date": "2027-03-10", "return_date": "2027-03-24", "number_of_changes": 1, "value": 520, "found_at": "2026-11-04T18:22:10+00:00", "distance": 7795, "actual": true},
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "LEJ", "destination": "BJS", "depart_date": "2027-03-01", "return_date": "2027-03-15", "number_of_changes": 2, "value": 1499, "found_at": "2026-11-04T09:00:00+00:00", "distance": 7400, "actual": true},
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "FRA", "destination": "SHA", "depart_date": "2027-01-20", "return_date": "2027-02-03", "number_of_changes": 1, "value": 1399, "found_at": "2026-11-01T11:00:00+00:00", "distance": 8900, "actual": false},
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "HAM", "destination": "BJS", "depart_date": "2027-09-01", "return_date": "2027-09-15", "number_of_changes": 1, "value": 1650, "found_at": "2026-11-04T12:00:00+00:00", "distance": 7600, "actual": true},
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "FRA", "destination": "CTU", "depart_date": "2027-02-11", "return_date": "", "number_of_changes": 1, "value": 990, "found_at": "2026-11-04T12:00:00+00:00", "distance": 8100, "actual": true},
+  {"show_to_affiliates": false, "trip_class": 1, "origin": "DUS", "destination": "CAN", "depart_date": "2027-04-05", "return_date": "2027-04-19", "number_of_changes": 1, "value": 0, "found_at": "2026-11-04T12:00:00+00:00", "distance": 9100, "actual": true},
+  "kaputt"
+ ],
+ "error": null
+}

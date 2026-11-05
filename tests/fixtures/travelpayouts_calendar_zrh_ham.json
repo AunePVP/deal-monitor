@@ -1,0 +1,12 @@
+{
+ "success": true,
+ "data": {
+  "2027-01-14": {"origin": "ZRH", "destination": "HAM", "price": 39, "transfers": 0, "airline": "EW", "flight_number": 8421, "departure_at": "2027-01-14T06:40:00Z", "return_at": "2027-01-18T19:05:00Z", "expires_at": "2026-11-07T10:12:00Z"},
+  "2027-01-15": {"origin": "ZRH", "destination": "HAM", "price": 52, "transfers": 1, "airline": "LX", "flight_number": 1052, "departure_at": "2027-01-15T07:05:00Z", "return_at": "2027-01-19T18:40:00Z", "expires_at": "2026-11-06T21:30:00Z"},
+  "2027-01-16": {"origin": "ZRH", "destination": "HAM", "price": 31, "transfers": 0, "airline": "EW", "flight_number": 8421, "departure_at": "2027-01-16T06:40:00Z", "return_at": "2027-01-20T19:05:00Z", "expires_at": "2026-11-01T08:00:00Z"},
+  "2027-01-17": {"origin": "ZRH", "destination": "HAM", "price": 44, "transfers": 0, "airline": "EW", "flight_number": 8423, "departure_at": "2027-01-17T09:10:00Z", "expires_at": "2026-11-08T08:00:00Z"},
+  "2027-01-18": {"origin": "ZRH", "destination": "HAM", "price": null, "transfers": 0, "airline": "LX"},
+  "2027-01-19": "kaputt"
+ },
+ "error": null
+}

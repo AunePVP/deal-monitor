@@ -1122,7 +1122,7 @@
       : c ? ["ok", "Token gesetzt"] : ["warn", "Token fehlt – ohne Token keine Preise"]),
     google_flights: () => ["ok", "Kein Key nötig · inoffiziell, kann zeitweise blockiert sein"],
     amadeus: (c, demo) => (demo ? ["warn", "In der Demo nicht abgefragt"]
-      : c ? ["ok", "Key und Secret gesetzt · ungetestet"] : ["warn", "Kein Key – Self-Service eingestellt, nur mit altem/Enterprise-Key nutzbar"]),
+      : c ? ["warn", "Abgeschaltet seit 17.07.2026 · nur mit Enterprise-Key nutzbar"] : ["warn", "Abgeschaltet seit 17.07.2026 – nicht mehr verfügbar"]),
     feeds: (c) => (c ? ["ok", "Deal-Seiten ausgewählt"] : ["warn", "Keine Deal-Seite ausgewählt"]),
   };
 
