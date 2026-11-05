@@ -502,8 +502,8 @@ class SettingsTest(ServerTest):
         v = data["values"]
         self.assertEqual(v["sources"], ["travelpayouts", "google_flights", "feeds"])
         self.assertEqual(v["feed_presets"],
-                         ["travel-dealz", "travel-dealz-suche", "mydealz-fluege", "fly4free",
-                          "premium-flights"])
+                         ["travel-dealz", "travel-dealz-rest", "travel-dealz-suche", "secretflying",
+                          "mydealz-fluege", "fly4free", "premium-flights", "yhbu", "reisetopia"])
         self.assertEqual((v["feed_interval_minutes"], v["google_max_requests"], v["google_verify"],
                           v["amadeus_env"], v["amadeus_max_requests"]), (30, 40, True, "test", 100))
         self.assertEqual((v["radar_enabled"], v["radar_economy_max"], v["radar_economy_min"],
@@ -512,7 +512,7 @@ class SettingsTest(ServerTest):
         self.assertEqual(data["secrets"]["amadeus_api_key"], {"set": False, "hint": None})
         self.assertEqual(data["secrets"]["amadeus_api_secret"], {"set": False, "hint": None})
         presets = {p["id"]: p for p in data["presets"]}
-        self.assertEqual(len(presets), 7)
+        self.assertEqual(len(presets), 12)
         self.assertFalse(presets["urlaubspiraten"]["default"])
         self.assertTrue(presets["travel-dealz-suche"]["search"])
         self.assertTrue(presets["mydealz-fluege"]["homepage"].startswith("https://"))
@@ -598,7 +598,8 @@ class SettingsTest(ServerTest):
         self.assertEqual((src[0].token, src[0].marker, src[0].scan_months), ("t", "777", 4))
         # Deal-Seiten: Standard-Presets inkl. Suche, keine eigenen Feeds
         self.assertEqual([p.id for p in src[1].presets],
-                         ["travel-dealz", "mydealz-fluege", "fly4free", "premium-flights"])
+                         ["travel-dealz", "travel-dealz-rest", "secretflying", "mydealz-fluege",
+                          "fly4free", "premium-flights", "yhbu", "reisetopia"])
         self.assertTrue(src[1].search_enabled)
         self.assertEqual(src[1].extra_feeds, [])
 

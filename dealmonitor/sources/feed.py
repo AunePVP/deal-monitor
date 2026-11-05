@@ -2,7 +2,8 @@
 
 Hier wird nichts gescrapt - es werden nur die öffentlichen Feeds gelesen. Die
 Artikel werden per Stichwort den Alarmen zugeordnet, der "ab"-Preis wird aus
-der Überschrift (bzw. bei mydealz aus der Beschreibung) gelesen. Der
+der Überschrift (bzw. bei mydealz aus der Beschreibung, bei reisetopia aus der
+Infobox im Artikeltext ``content:encoded``) gelesen. Der
 Originaltitel und der Link zum Artikel bleiben erhalten (Prinzip: Quelle nennen).
 
 Aufbau
@@ -63,12 +64,21 @@ class Profile:
     """Wie ein Feed gelesen wird."""
 
     lang: str = "de"                    # "de" | "en"
-    price_from: str = "title"           # "title" | "title+description" | "description+title"
+    #: Teile mit "+": "title", "description", "content" (Artikeltext aus content:encoded)
+    price_from: str = "title"
     default_origin: str = "unknown"     # "home": ohne Angabe = Abflug DACH (Travel-Dealz-Prinzip)
     use_categories: bool = True         # Kategorien für die Flug-Erkennung nutzen
     flight_words_required: bool = False  # Titel muss "Flug"/"Flights"/Airline nennen (mydealz)
     cabins: tuple[str, ...] | None = None   # nur diese Kabinen übernehmen (premium-flights)
     description_chars: int = 600         # so viele Zeichen der Beschreibung nach Preisen durchsuchen
+    #: Preis nur aus diesem Muster (Gruppe 1), nicht die erste €-Zahl (reisetopia-Infobox)
+    price_regex: str | None = None
+    #: Infobox im Artikeltext lesen: Strecke "… Class von X nach Y" und "Buchungszeitraum: Bis …"
+    infobox: bool = False
+    #: Kabine, wenn die Überschrift keine nennt (Seiten nur mit Premium-Tickets, z. B. YHBU)
+    default_cabin: str | None = None
+    #: Strecke aus der Überschrift: Muster mit den Gruppen ``orig`` und ``dest`` (feste Titelform)
+    title_route: str | None = None
 
 
 @dataclass(frozen=True)
@@ -111,6 +121,18 @@ TRAVEL_DEALZ_PROFILE = Profile(lang="de", price_from="title", default_origin="ho
 MYDEALZ_PROFILE = Profile(lang="de", price_from="description+title", use_categories=False,
                           flight_words_required=True, description_chars=240)
 GENERIC_PROFILE = Profile(lang="de", price_from="title")
+# reisetopia: Preis nur in der Infobox des Artikeltexts ("Buchbar ab nur 2.019 Euro pro Person");
+# im Fließtext stehen oft andere Beträge (Gebühren, "unter 2.200 Euro")
+REISETOPIA_PROFILE = Profile(lang="de", price_from="content", infobox=True,
+                             price_regex=r"Buchbar ab (?:nur )?(\d[\d.]*)\s*Euro pro Person")
+PREMIUM_CABINS = ("business", "first")
+# YHBU: "DEAL: Hainan Business Budapest – China (Return): 1.490 Euro",
+# "Etihad First Apartment A380 / A321 First Paris – Asien (Return): 2900 Euro"
+YHBU_PROFILE = Profile(
+    lang="de", price_from="title", use_categories=False, default_cabin="business",
+    title_route=r"\b(?:Business|First|Economy)(?:\s+(?:Light|Apartment|NONSTOP|First|"
+                r"A\d{3}(?:\s*/\s*A\d{3})?))*\s+(?P<orig>[^–:()]+?)\s+[–-]\s+"
+                r"(?P<dest>[^–:()]+?)\s*(?:[(:–]|$)")
 
 FEED_PRESETS: list[Preset] = [
     Preset("travel-dealz", "Travel-Dealz", (
@@ -121,25 +143,52 @@ FEED_PRESETS: list[Preset] = [
         "https://travel-dealz.de/kategorie/business-class/feed/",
     ), "de", True, TRAVEL_DEALZ_PROFILE, "https://travel-dealz.de/",
         "Artikel, Ticker und Business-Class-Kategorie"),
+    Preset("travel-dealz-rest", "Travel-Dealz (schnell)", (), "de", True, TRAVEL_DEALZ_PROFILE,
+           "https://travel-dealz.de/", "Neue Flug-Deals alle paar Minuten, mit Abflug und Ziel",
+           loader="dealmonitor.sources.traveldealz_rest:fetch_items", lane="fast"),
     Preset("travel-dealz-suche", "Travel-Dealz-Suche", (TRAVEL_DEALZ_SEARCH,), "de", True,
            TRAVEL_DEALZ_PROFILE, "https://travel-dealz.de/",
            "Suche nach den Stichwörtern deiner Alarme (wie der Schlagwortalarm)", search=True),
+    Preset("secretflying", "Secret Flying", (), "en", True, Profile(lang="en"),
+           "https://www.secretflying.com/",
+           "Error Fares und Fernflüge, oft Stunden vor allen anderen",
+           loader="dealmonitor.sources.secretflying:fetch_items", lane="fast"),
     Preset("mydealz-fluege", "mydealz Flüge", ("https://www.mydealz.de/rss/gruppe/fluege",), "de",
            True, MYDEALZ_PROFILE, "https://www.mydealz.de/gruppe/fluege",
            "Preis steht in der Beschreibung, nur Flug-Deals"),
     Preset("fly4free", "fly4free", ("https://www.fly4free.com/feed/",), "en", True,
            Profile(lang="en", price_from="title"), "https://www.fly4free.com/",
            "Englisch, Abflug oft nicht aus DACH"),
-    Preset("premium-flights", "premium-flights", ("https://www.premium-flights.com/feed/",), "en",
-           True, Profile(lang="en", price_from="title", cabins=("business", "first")),
-           "https://www.premium-flights.com/", "Business/First Class, nur €-Preise"),
+    Preset("fly4free-business", "fly4free Business", (
+        "https://www.fly4free.com/flight-deals/business-class/feed/",), "en", False,
+           Profile(lang="en", price_from="title", cabins=PREMIUM_CABINS),
+           "https://www.fly4free.com/flight-deals/business-class/",
+           "nur Business Class, selten neue Artikel"),
+    Preset("premium-flights", "premium-flights", (
+        "https://premium-flights.com/feed/",
+        "https://premium-flights.com/tag/china/feed/",
+        "https://premium-flights.com/tag/pek/feed/",
+        "https://premium-flights.com/tag/shanghai/feed/",
+    ), "en", True, Profile(lang="en", price_from="title", cabins=PREMIUM_CABINS),
+           "https://premium-flights.com/", "Business/First Class, nur €-Preise, auch China-Seiten"),
+    Preset("yhbu", "You have been upgraded", (
+        "https://youhavebeenupgraded.boardingarea.com/category/billige-premium-tickets/feed/",),
+           "de", True, YHBU_PROFILE, "https://youhavebeenupgraded.boardingarea.com/",
+           "Business/First-Schnäppchen, oft ab Nachbarländern (z. B. Budapest)"),
+    Preset("reisetopia", "reisetopia", (
+        "https://reisetopia.de/feed/",
+        "https://reisetopia.de/feed/?paged=2",
+        "https://reisetopia.de/tag/business-class/feed/",
+    ), "de", True, REISETOPIA_PROFILE, "https://reisetopia.de/",
+           "Business-Class-Deals, Preis aus dem Artikeltext"),
     Preset("urlaubspiraten", "Urlaubspiraten", ("https://www.urlaubspiraten.de/feed",), "de",
            False, Profile(lang="de", price_from="title+description", use_categories=False,
                           flight_words_required=True),
            "https://www.urlaubspiraten.de/", "meist Pauschal/Hotel, Preise selten im Titel"),
-    Preset("reisetopia", "reisetopia", ("https://reisetopia.de/feed/",), "de", False,
-           Profile(lang="de", price_from="title"), "https://reisetopia.de/",
-           "meist Hotels/Meilen, Flug-Deals selten"),
+    Preset("errorfarealerts", "ErrorFareAlerts", (), "de", False, Profile(lang="de"),
+           "https://errorfarealerts.com/deals/flights",
+           "Deals ab DACH auf Deutsch, meldet aber oft Stunden später",
+           loader="dealmonitor.sources.errorfarealerts:fetch_items"),
 ]
 PRESETS_BY_ID: dict[str, Preset] = {p.id: p for p in FEED_PRESETS}
 CUSTOM_SOURCE = "feed:custom"
@@ -149,12 +198,17 @@ SOURCE_LABELS: dict[str, str] = {
     "travelpayouts": "Travelpayouts (Preis-API)",
     "travel-dealz-feed": "Travel-Dealz-Artikel",
     "feed:travel-dealz": "Travel-Dealz-Artikel",
+    "feed:travel-dealz-rest": "Travel-Dealz",
     "feed:travel-dealz-suche": "Travel-Dealz-Suche",
+    "feed:secretflying": "Secret Flying",
     "feed:mydealz-fluege": "mydealz",
     "feed:fly4free": "fly4free",
+    "feed:fly4free-business": "fly4free Business",
     "feed:premium-flights": "premium-flights",
+    "feed:yhbu": "You have been upgraded",
     "feed:urlaubspiraten": "Urlaubspiraten",
     "feed:reisetopia": "reisetopia",
+    "feed:errorfarealerts": "ErrorFareAlerts",
     CUSTOM_SOURCE: "Eigener Feed",
     "google_flights": "Google Flights",
     "amadeus-dates": "Amadeus (Monatsscan)",
@@ -344,7 +398,7 @@ NON_FLIGHT_TITLE_RE = re.compile(
     r"\btgv\b|\bice\b|kreditkarte|credit card|"
     r"\baida\b|\bmsc\b|\bcosta (?:toscana|smeralda|serena|diadema|deliziosa|fascinosa|favolosa|"
     r"fortuna|pacifica|firenze|crociere|kreuzfahrt)|/night\b|"
-    r"/double\b|rundreise|hostel|apartment|ferienhaus|skipass|therme|musical|\btrain\b|"
+    r"/double\b|rundreise|hostel|(?<!first )apartment|ferienhaus|skipass|therme|musical|\btrain\b|"
     r"\bfähre|\bferry\b|mietwagen|gutscheinkarte|geschenkkarte|"
     r"\binkl(?:\.|usive)?\s+fl(?:ug|üge)\b", re.I)
 # ... und Wörter, die nur ohne Flug-/Kabinenwort gegen einen Flug-Deal sprechen
@@ -577,6 +631,111 @@ def parse_price(text: str, lang: str = "de") -> float | None:
     return min(candidates, key=lambda c: c[0])[1]   # erster Betrag nach "ab/für/nur/von"
 
 
+def regex_price(text: str, profile: Profile) -> float | None:
+    """Preis über ``profile.price_regex`` (Gruppe 1) - z. B. nur die reisetopia-Infobox."""
+    try:
+        m = re.search(profile.price_regex or "", text)
+    except re.error:
+        return None
+    if not m or not m.lastindex:
+        return None
+    value = _amount(m.group(1), profile.lang)
+    return value if value is not None and value > 0 else None
+
+
+# -- Artikeltext (content:encoded) ---------------------------------------------------------
+
+CONTENT_TAG = "{http://purl.org/rss/1.0/modules/content/}encoded"
+#: so viele Zeichen Artikeltext (ohne HTML) bleiben je Artikel
+CONTENT_CHARS = 20_000
+# reisetopia-Infobox: "Business Class von Frankfurt nach São Paulo Buchbar ab nur 2.019 Euro …
+# Buchungszeitraum: Bis 12. November 2026"
+INFOBOX_ROUTE_RE = re.compile(r"Class von (.{3,40}?) nach (.{3,40}?)\s+Buchbar ab", re.S)
+INFOBOX_UNTIL_RE = re.compile(r"Buchungszeitraum:\s*bis\s+(?:zum\s+)?(\d{1,2})\.\s*"
+                              r"(?:(\d{1,2})\.\s*|([a-zäö]+)\s+)(\d{4})", re.I)
+MONTHS_DE = {"januar": 1, "jänner": 1, "februar": 2, "märz": 3, "maerz": 3, "april": 4, "mai": 5,
+             "juni": 6, "juli": 7, "august": 8, "september": 9, "oktober": 10, "november": 11,
+             "dezember": 12}
+FIRST_WORD_RE = re.compile(r"\bFirst\b")
+ECONOMY_WORD_RE = re.compile(r"\beconomy\b", re.I)
+
+
+def place_codes(names: str) -> set[str]:
+    """IATA-Codes für "Frankfurt und München", "Barcelona" oder einen Regionsnamen
+    ("Deutschland" -> deutsche Flughäfen, "China" -> chinesische Städte)."""
+    out: set[str] = set()
+    for raw in _SPLIT_RE.split(names or ""):
+        name = raw.strip(" .,")
+        codes = regions.codes_for(name) if name else set()
+        if not codes and name:
+            key = regions.normalize_name(name)
+            for region, words in regions.REGION_NAMES.items():
+                if key in {regions.normalize_name(w) for w in words}:
+                    codes = set(regions.REGIONS[region])
+                    break
+        out |= codes
+    return out
+
+
+def _until(text: str) -> datetime | None:
+    """"Buchungszeitraum: Bis 12. November 2026" -> Ende dieses Tages (UTC); sonst None."""
+    m = INFOBOX_UNTIL_RE.search(text)
+    if not m:
+        return None
+    month = int(m.group(2)) if m.group(2) else MONTHS_DE.get(m.group(3).lower())
+    try:
+        day = datetime(int(m.group(4)), month or 0, int(m.group(1)), tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return None
+    return day + timedelta(days=1)
+
+
+def read_infobox(text: str, price_regex: str | None) -> dict:
+    """Strecke und Buchungsende aus der Infobox (reisetopia): ``origin_codes``, ``dest_codes``,
+    ``expires`` - nur, was sicher gelesen wurde. Die Strecke ist das *letzte* "Class von … nach …"
+    vor dem Preis (weiter oben im Text stehen oft andere Strecken)."""
+    try:
+        m = re.search(price_regex, text) if price_regex else None
+    except re.error:
+        m = None
+    if not m:
+        return {}
+    out: dict = {}
+    start = text.rfind("Class von", 0, m.start())
+    route = INFOBOX_ROUTE_RE.match(text, start) if start >= 0 else None
+    if route and route.end() >= m.start():
+        for key, names in (("origin_codes", route.group(1)), ("dest_codes", route.group(2))):
+            codes = place_codes(names)
+            if codes:
+                out[key] = codes
+    expires = _until(text[m.end():m.end() + 2000])
+    if expires is not None:
+        out["expires"] = expires
+    return out
+
+
+def _enrich(item: dict, profile: Profile | None) -> None:
+    """Zusatzschlüssel aus Artikeltext und Profil (Infobox, Standard-Kabine) setzen."""
+    if profile is None:
+        return
+    if profile.infobox:
+        item.update(read_infobox(item.get("content_text") or "", profile.price_regex))
+    title = item["title"]
+    try:
+        route = re.search(profile.title_route, title) if profile.title_route else None
+    except re.error:
+        route = None
+    if route:
+        for key, group in (("origin_codes", "orig"), ("dest_codes", "dest")):
+            codes = place_codes(route.groupdict().get(group) or "")
+            if codes and key not in item:
+                item[key] = codes
+    if profile.default_cabin and detect_cabin(title, item["categories"]) == "economy" \
+            and not ECONOMY_WORD_RE.search(title):
+        # "Etihad First Tunis – Bangkok": "First" allein zählt hier als Kabine
+        item["cabin"] = "first" if FIRST_WORD_RE.search(title) else profile.default_cabin
+
+
 # -- Abflugort ---------------------------------------------------------------------------
 
 _NAME = r"[A-ZÄÖÜ][\w'’.-]*(?:\s+(?:am\s+Main|del\s+\w+|de\s+\w+))?(?:\s+[A-ZÄÖÜ][\w'’.-]*)?"
@@ -795,8 +954,13 @@ def _price(item: dict, profile: Profile) -> float | None:
         desc = strip_html(item.get("description") or "")
     order = profile.price_from.split("+")
     for part in order:
-        text = title if part == "title" else desc[:profile.description_chars]
-        p = parse_price(text, profile.lang)
+        if part == "title":
+            text = title
+        elif part == "content":
+            text = item.get("content_text") or ""
+        else:
+            text = desc[:profile.description_chars]
+        p = regex_price(text, profile) if profile.price_regex else parse_price(text, profile.lang)
         if p is not None:
             return p
     if item.get("merchant_price"):
@@ -980,7 +1144,10 @@ class FeedSource:
     def _feed_jobs(self) -> list[tuple[str, Preset | None]]:
         jobs: list[tuple[str, Preset | None]] = []
         taken: set[str] = set()       # gleiche URL nicht doppelt laden (Preset + eigener Feed)
-        candidates = [(u, p) for p in self.presets for u in p.jobs] + \
+        # schnelle Quellen zuerst: beim Dedup gewinnt der erste Artikel, so trägt derselbe Deal
+        # dieselbe Quelle wie im schnellen Takt (und behält deren Zusatzschlüssel)
+        presets = sorted(self.presets, key=lambda p: p.lane != "fast")
+        candidates = [(u, p) for p in presets for u in p.jobs] + \
             [(u, preset_for_url(u)) for u in self.extra_feeds]
         for url, preset in candidates:
             key = normalize_link(url) or url
@@ -1098,8 +1265,13 @@ class FeedSource:
             raise SourceError(self._error)
         return items
 
-    def parse(self, xml: bytes, url: str = "") -> list[dict]:
+    def parse(self, xml: bytes, url: str = "", profile: Profile | None = None) -> list[dict]:
+        """Artikel eines RSS-Feeds. ``profile`` (sonst das Preset der URL) steuert Zusatzschlüssel
+        wie Strecke/Ablauf aus der Infobox; ohne passendes Preset bleibt es beim Grundformat."""
         root = ET.fromstring(xml)
+        if profile is None and url:
+            preset = next((p for p in FEED_PRESETS if url in p.urls), None) or preset_for_url(url)
+            profile = preset.profile if preset else None
         out = []
         cutoff = datetime.now(timezone.utc) - timedelta(days=self.max_age_days)
         for item in root.iter("item"):
@@ -1126,10 +1298,15 @@ class FeedSource:
             for child in item:                       # mydealz: <pepper:merchant price="297€"/>
                 if child.tag.endswith("}merchant") or child.tag == "merchant":
                     merchant_price = child.get("price")
-            out.append({"title": title, "link": link, "published": published,
-                        "categories": categories, "feed": url, "description": description,
-                        "description_text": strip_html(description)[:1000],
-                        "merchant_price": merchant_price})
+            it = {"title": title, "link": link, "published": published,
+                  "categories": categories, "feed": url, "description": description,
+                  "description_text": strip_html(description)[:1000],
+                  "merchant_price": merchant_price}
+            content = item.findtext(CONTENT_TAG)
+            if content:
+                it["content_text"] = strip_html(content)[:CONTENT_CHARS]
+            _enrich(it, profile)
+            out.append(it)
         return out
 
     # -- Suche (Travel-Dealz-Schlagwortalarm) --------------------------------------------------
