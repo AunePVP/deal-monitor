@@ -287,7 +287,10 @@ class YhbuTest(unittest.TestCase):
         infos = [analyze(it) for it in items]
         priced = [i for i in infos if i.flight and i.price is not None]
         self.assertGreaterEqual(len(priced), 40)
-        self.assertTrue(all(i.cabin in ("business", "first") for i in priced))
+        # einzige Ausnahme: "Eurowings Business" ist BIZclass (Economy mit freiem Mittelsitz)
+        self.assertEqual([it["title"] for it, i in zip(items, infos)
+                          if i.flight and i.price is not None and i.cabin not in ("business", "first")],
+                         ["400 QUALIFYING POINTS: Eurowings Business Deutschland – Jeddah (Return): 520 Euro"])
         hainan = analyze(by_title(items, "Hainan Business Budapest"))
         self.assertEqual((hainan.price, hainan.cabin, hainan.origin, hainan.origin_codes),
                          (1490, "business", "foreign", {"BUD"}))

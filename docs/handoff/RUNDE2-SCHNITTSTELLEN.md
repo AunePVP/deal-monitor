@@ -171,6 +171,17 @@ Getestet in `tests/test_scoring.py`. Alles zusätzlich; alte Zeilen ohne die Fel
 - **Abgleich der Artikel**: Ein Ort in DACH ist Ziel, wenn die Quelle ihn als Ziel nennt oder er nach
   „nach“/„to“ steht („Zürich nach Hamburg“ → `HAM-economy-OW`, Abflug ZRH). Das Radar legt Artikel
   mit bekanntem, verschiedenem Abflug nicht zusammen („Bangkok ab Athen“ ≠ „FRA–Bangkok“).
+- **Gemeinsamer Abgleich** (`dealmonitor/dedupe.py`, seit 05.11.): `radar.same_deal` und
+  `sightings.first_report` rufen beide `dedupe.match(a, b)` mit `dedupe.DealKey` (Kabine, one-way,
+  Ziele ohne Abflug, Preis, Abflug, Airlines, Veröffentlichung, Link). Ziel/Abflug: `dedupe.route`
+  (ohne Orte in Airline-Namen). Preis ± 5 %, ± 15 % (`SAME_AIRLINE_TOLERANCE`) bei gleicher Airline
+  (`dedupe.airlines`), verschiedene Airlines nie; ≤ 7 Tage; zwei Links derselben Seite nie. Spalte
+  `sightings.airline` (per ALTER TABLE nachgerüstet; leer in alten Zeilen → 5 %). Radar-Hauptartikel
+  ist der günstigste; die Erstmeldung zeigt `lead`.
+- **Radar-Relevanz**: `regions.haul(title, dest_codes, origin_codes)` → `"long"`/`"short"`/`None`;
+  Einstellung `radar_long_haul_only` (Standard an). `radar.BLIND_RE` (nie ein Treffer),
+  `feed.pseudo_business` (Eurowings „Business“ = Economy, auch für Alarme), `radar.hot_reason(…, source)`
+  ignoriert den ErrorFareAlerts-Slogan.
 - Zusammenspiel P7/P8 (kompletter `run_alert` mit Secret Flying, Travel-Dealz-REST und
   Google-Rotation): `tests/test_runde2_zusammenspiel.py`.
 - **Beinahe-Deals**: `/api/alerts[].near_deals` = Liste (höchstens 5, je Strecke einer) aus den

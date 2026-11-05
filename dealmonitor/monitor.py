@@ -624,7 +624,10 @@ def run_radar(sources: list, store: Store, cfg: Config, settings: radar.RadarSet
             to_notify.append((d, status))
     _record_twins(store, twins, merged, sources)
     _refresh_sources(store, merged, [d for d, _ in kept])
-    seen = {d.fingerprint for d, _ in kept}
+    # Erstmeldungen, denen ein Treffer dieses Laufs zugeordnet wurde, laufen weiter: auch wenn
+    # ihr eigener Artikel jetzt günstiger bei einer anderen Seite steht (Hauptartikel =
+    # günstigster) oder dort schon verschwunden ist - der Deal ist ja noch da
+    seen = {d.fingerprint for d, _ in kept} | set(merged)
     partial = getattr(feed, "load_errors", None)
     if partial:
         result.errors.append(f"[{radar.RADAR_ALERT_ID}] {feed.name}: {partial}")

@@ -227,6 +227,12 @@ class RadarOriginTest(unittest.TestCase):
         ka, kb, kc = (radar.deal_key(it["title"], analyze(it)) for it in (a, b, c))
         self.assertFalse(radar.same_deal(ka, kb))
         self.assertTrue(radar.same_deal(kb, kc))       # FRA (Loader) = Frankfurt (Titel)
+        # Schlüssel: Ziel ohne Abflug, Abflug, Airlines, Veröffentlichung (dealmonitor.dedupe)
+        self.assertEqual((ka.cabin, ka.oneway, ka.price, ka.origins), ("business", False, 1274, {"ATH"}))
+        self.assertIn("BKK", ka.dests)
+        self.assertNotIn("ATH", ka.dests)
+        self.assertEqual((kb.origins, kb.airlines), ({"FRA"}, frozenset()))
+        self.assertIsNone(kb.published)          # normalize_item ohne Lauf-Kontext: kein Datum
 
 
 if __name__ == "__main__":

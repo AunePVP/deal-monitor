@@ -382,7 +382,7 @@ class RadarRunTest(unittest.TestCase):
         # darf deshalb nicht aus dem Radar verschwinden
         feed = XmlFeed([HAMBURG, ERROR_FARE])
         r = run(cfg([alert(max_price=50)]), [feed], [], self.store, today=TODAY,
-                radar_settings=RadarSettings())
+                radar_settings=RadarSettings(long_haul_only=False))   # ZRH–HAM ist Kurzstrecke
         self.assertEqual((r.deals, r.radar), (0, 2))
         self.assertIn(HAMBURG[0], self.radar_titles())
 
@@ -398,7 +398,7 @@ class RadarRunTest(unittest.TestCase):
     def test_without_alert_article_goes_to_radar(self):
         feed = XmlFeed([HAMBURG, CRUISE, AMSTERDAM])
         r = run(cfg([]), [feed], [self.notifier], self.store, today=TODAY,
-                radar_settings=RadarSettings())
+                radar_settings=RadarSettings(long_haul_only=False))   # ZRH–HAM ist Kurzstrecke
         self.assertEqual(r.radar, 1)
         self.assertEqual(self.radar_titles(), [HAMBURG[0]])
 

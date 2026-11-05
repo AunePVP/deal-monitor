@@ -5,10 +5,11 @@ Die **erste** Quelle alarmiert. Spätere Meldungen desselben Deals werden nicht 
 gemeldet, sondern ergänzen den ersten: Quellenliste (Payload ``sources``) und Vorsprung
 (``lead``, als Grund "Erstmeldung Secret Flying, 19 h vor ErrorFareAlerts").
 
-Derselbe Deal heißt: andere Quelle, gleiches Ziel (ein gemeinsamer IATA-Code), gleiche Kabine
-und Reiseart, Abflug gleich oder bei einer Seite unbekannt, Preis höchstens 5 % auseinander
-und höchstens 7 Tage zwischen den Veröffentlichungen. Gespeichert in der Tabelle
-``sightings``; jede Zeile zeigt auf die Deal-Zeile der Erstmeldung.
+Derselbe Deal heißt: andere Quelle und :func:`dealmonitor.dedupe.match` (gleiches Ziel,
+gleiche Kabine und Reiseart, Abflug gleich oder bei einer Seite unbekannt, höchstens 7 Tage
+auseinander, Preis ± 5 % - ± 15 %, wenn beide dieselbe Airline nennen; verschiedene Airlines
+nie). Gespeichert in der Tabelle ``sightings`` (mit den Airlines der Überschrift); jede Zeile
+zeigt auf die Deal-Zeile der Erstmeldung.
 
 Nur Artikel (Deals mit Überschrift): Preis-Quellen haben Reisedaten und werden schon im Lauf
 über ``monitor.best_across_sources`` zusammengefasst. Fehler hier stoppen nie den Lauf.
@@ -16,75 +17,28 @@ Nur Artikel (Deals mit Überschrift): Preis-Quellen haben Reisedaten und werden 
 
 from __future__ import annotations
 
-import re
-from datetime import datetime, timedelta
-from urllib.parse import urlsplit
+from datetime import datetime
 
-from . import regions
+from . import dedupe
 from .models import Deal, Offer
 from .sources import feed
 
-WINDOW = timedelta(days=7)
-TOLERANCE = 0.05
+WINDOW = dedupe.WINDOW
+TOLERANCE = dedupe.TOLERANCE
 LEAD_PREFIX = "Erstmeldung"
-#: erstes Ziel nach "nach"/"to": ein oder zwei großgeschriebene Wörter ("New York", "Phuket")
-DEST_WORD_RE = re.compile(r"\b(?:nach|to)\s+([A-ZÄÖÜ][\w'’.-]+(?:\s+[A-ZÄÖÜ][\w'’.-]+)?)")
-
-
-def _expand(codes) -> set[str]:
-    """Codes samt Stadt-/Flughafen-Gruppe ("PEK" -> {"BJS", "PEK", "PKX"})."""
-    out: set[str] = set()
-    for c in codes or ():
-        c = str(c).strip().upper()
-        if not c:
-            continue
-        out.add(c)
-        out |= regions.codes_for(regions.name(c))
-    return out
-
-
-def dest_word(title: str) -> str | None:
-    """Ziel nach "nach"/"to" als Schlüssel-Wort, auch wenn der Ort unbekannt ist ("Frankfurt,
-    Germany to Phuket, Thailand" und "Von Frankfurt nach Phuket ab 496 €" -> "~phuket")."""
-    m = DEST_WORD_RE.search(title or "")
-    if not m:
-        return None
-    word = m.group(1)
-    if regions.place_kind(word) == "home":
-        return None
-    return "~" + regions.normalize_name(word)
 
 
 def parts(o: Offer, origins=(), dests=()) -> tuple[list[str], set[str]] | None:
     """``(Schlüssel, Abflug-Codes)`` eines Artikels - ``None`` ohne Überschrift, Preis oder
-    erkennbares Ziel. Ziel = Codes der Quelle (Loader), Orte im Titel und das Wort nach
-    "nach"/"to"; so finden "SEL" (Titel "Seoul") und "ICN" (Loader) zusammen."""
+    erkennbares Ziel. Ziel und Abflug: :func:`dedupe.route` (Codes der Quelle, Orte im Titel
+    ohne Airline-Namen, Wort nach "nach"/"to")."""
     if not o.title or not o.price or o.price <= 0:
         return None
-    origin_set = _expand(set(origins) | {c for c in (o.via_hub, o.origin) if c})
-    origin_set |= _expand(feed.origin_codes(o.title, "de") | feed.origin_codes(o.title, "en"))
-    dest_set = _expand(dests)
-    # Ziel in DACH ("Zürich nach Hamburg"): ein Heimat-Ort ist Ziel, wenn die Quelle ihn als
-    # Ziel nennt oder er nach "nach"/"to" steht - sonst gilt er als Abflug
-    m = DEST_WORD_RE.search(o.title)
-    hints = dest_set | (regions.codes_for(m.group(1)) if m else set())
-    home_dest: set[str] = set()
-    for place in regions.places_in(o.title):
-        codes = regions.codes_for(place)
-        if regions.place_kind(place) != "home":
-            dest_set |= codes
-        elif codes and codes <= hints:
-            home_dest |= codes
-        else:
-            origin_set |= codes
-    origin_set -= home_dest
-    dest_set = (dest_set - origin_set) | home_dest
-    if (word := dest_word(o.title)):
-        dest_set |= regions.codes_for(word[1:]) - origin_set or {word}
-    if not dest_set and o.destination:     # Alarm mit genau einem Ziel
-        dest_set = _expand({o.destination})
-    if not dest_set:
+    r = dedupe.route(o.title, set(origins) | {c for c in (o.via_hub, o.origin) if c}, dests,
+                     o.destination)
+    if r is None:
         return None
+    dest_set, origin_set = r
     trip = "RT" if o.roundtrip else "OW"
     return sorted(f"{d}-{o.cabin}-{trip}" for d in dest_set), origin_set
 
@@ -110,19 +64,40 @@ def first_report(store, deal: Deal, info: tuple | None, valid=None) -> str | Non
                     and fp != deal.fingerprint and (fp in (valid or ()) or store.has_deal(fp)):
                 return fp
     when = _seen(o)
+    mine = _deal_key(keys, origins, o.price, dedupe.airlines(o.title or ""), when, o.link)
     for row in store.sightings(keys, since=when - WINDOW, until=when + WINDOW):
         if row["source"] == o.source or row["fingerprint"] == deal.fingerprint:
             continue
-        lo, hi = sorted((row["price"], o.price))
-        if hi > lo * (1 + TOLERANCE):
-            continue
-        theirs = set(filter(None, (row["origin"] or "").split(",")))
-        if origins and theirs and not origins & theirs:
+        theirs = _deal_key([row["deal_key"]], set(filter(None, (row["origin"] or "").split(","))),
+                           row["price"], _airline_set(row.get("airline")),
+                           datetime.fromisoformat(row["first_seen"]), row["link"])
+        if not dedupe.match(mine, theirs):
             continue
         fp = row["fingerprint"]
         if fp in (valid or ()) or store.has_deal(fp):
             return fp
     return None
+
+
+def _deal_key(keys: list[str], origins, price: float, airlines, published, link
+              ) -> dedupe.DealKey | None:
+    """Schlüssel wie "BKK-business-RT" (siehe :func:`parts`) -> :class:`dedupe.DealKey`."""
+    split = [k.rsplit("-", 2) for k in keys]
+    split = [x for x in split if len(x) == 3]
+    if not split:
+        return None
+    _, cabin, trip = split[0]
+    return dedupe.DealKey(cabin=cabin, oneway=trip == "OW",
+                          dests=frozenset(d for d, c, t in split if (c, t) == (cabin, trip)),
+                          price=float(price or 0), origins=frozenset(origins or ()),
+                          airlines=frozenset(airlines or ()), published=published,
+                          link=link or "")
+
+
+def _airline_set(value: str | None) -> frozenset[str]:
+    """Spalte ``sightings.airline`` ("turkmenistan,lufthansa") -> Menge; leer = keine Angabe
+    (auch alte Zeilen vor der Spalte: dann gilt die 5-%-Regel)."""
+    return frozenset(filter(None, (value or "").split(",")))
 
 
 def record(store, o: Offer, info: tuple | None, fingerprint: str) -> None:
@@ -131,7 +106,8 @@ def record(store, o: Offer, info: tuple | None, fingerprint: str) -> None:
         return
     keys, origins = info
     store.add_sighting(keys, ",".join(sorted(origins)), o.source, _seen(o), o.price,
-                       fingerprint, o.link)
+                       fingerprint, o.link,
+                       airline=",".join(sorted(dedupe.airlines(o.title or ""))))
 
 
 def sources_of(store, fingerprint: str) -> list[dict]:
@@ -139,16 +115,11 @@ def sources_of(store, fingerprint: str) -> list[dict]:
     Eine Seite zählt einmal, auch über zwei Wege (Travel-Dealz RSS und REST: gleicher Host)."""
     out: dict[str, dict] = {}
     for row in store.sightings(fingerprint=fingerprint):
-        site = _site(row["link"]) or row["source"]
+        site = dedupe.site(row["link"]) or row["source"]
         if site not in out:
             out[site] = {"source": row["source"], "label": feed.source_label(row["source"]),
                          "seen": row["first_seen"], "price": row["price"], "link": row["link"]}
     return list(out.values())
-
-
-def _site(link: str | None) -> str | None:
-    host = urlsplit(link or "").hostname or ""
-    return host.removeprefix("www.") or None
 
 
 def lead_text(sources: list[dict]) -> str | None:

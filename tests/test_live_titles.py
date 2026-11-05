@@ -155,32 +155,35 @@ class LiveRadarTest(unittest.TestCase):
     def test_reported_hits(self):
         deals = scan(live_items(), RadarSettings())
         got = sorted((d.offer.title[:30], d.offer.price, d.offer.cabin) for d in deals)
+        # nur Langstrecke; nicht mehr dabei: Island, Izmir, Paris, Stockholm, Antalya (Kurz-/
+        # Mittelstrecke), Blind Booking, Erbil (Eurowings „Business Class“ = Economy)
         expected = sorted([
             ("New York: Nonstop in der Condo", 640, "premium"),
-            ("Island ab 156€ mit Discover Ai", 156, "economy"),
             ("Condor: Oneway-Flüge nach San ", 210, "economy"),
-            ("Erbil, Irak ab 390€ in der Eur", 390, "business"),
             ("Bangkok: Business Class von Fr", 1208, "business"),
             ("Kuala Lumpur: Business Class v", 1148, "business"),
             ("Peking: Business Class von Fra", 1123, "business"),
-            ("Blind Booking bei Austrian Air", 99, "economy"),
-            ("Direktflüge nach Izmir / Türke", 125, "economy"),
             ("Flüge USA / New York von Münch", 298, "economy"),
-            ("Paris (Frankreich): Hin- und R", 72, "economy"),
-            ("SAS: Stockholm ab 85€ und viel", 85, "economy"),
-            ("Direktflüge nach Antalya / Tür", 59, "economy"),
         ])
         self.assertEqual(got, expected)
+        # ohne "nur Langstrecke" wie früher (außer Blind Booking und Eurowings „Business“)
+        old = {d.offer.title[:30] for d in scan(live_items(), RadarSettings(long_haul_only=False))}
+        self.assertLessEqual({"Island ab 156€ mit Discover Ai", "Paris (Frankreich): Hin- und R",
+                              "Direktflüge nach Antalya / Tür"}, old)
+        self.assertFalse(any(t.startswith(("Blind Booking", "Erbil")) for t in old))
 
-    def test_blind_booking_is_economy_not_business(self):
-        # vorher: "Business Class ≤ 1.300 €" für den Economy-Preis 99 €
-        d = find(scan(live_items()), "Blind Booking")
-        self.assertEqual((d.offer.cabin, d.offer.price, d.reasons), ("economy", 99, ["Economy ≤ 300 €"]))
+    def test_blind_booking_never_reported(self):
+        # Ziel unbekannt: weder der Economy-Preis 99 € noch "Business Class ab 229€" zählen
+        for settings in (None, {"radar_economy_max": 50}, {"radar_long_haul_only": False}):
+            self.assertFalse(any(d.offer.title.startswith("Blind Booking")
+                                 for d in scan(live_items(), settings)), settings)
 
     def test_other_cabin_price_in_title_is_used(self):
-        # Economy-Grenze 50 €: 99 € Economy reicht nicht, aber "Business Class ab 229€" schon
-        d = find(scan(live_items(), {"radar_economy_max": 50}), "Blind Booking")
-        self.assertEqual((d.offer.cabin, d.offer.price), ("business", 229))
+        # Economy 650 € über der Grenze, aber "Business Class ab 1.199€" darunter
+        it = make_item(99, "Tokio ab 650€ von Frankfurt (Business Class ab 1.199€)", ["Flüge"],
+                       "travel-dealz", "")
+        d = find(scan([it]), "Tokio ab 650€")
+        self.assertEqual((d.offer.cabin, d.offer.price), ("business", 1199))
         self.assertEqual(d.reasons, ["Business Class ≤ 1.300 €"])
 
     def test_same_deal_on_two_sites_reported_once(self):
@@ -206,10 +209,10 @@ class LiveRadarTest(unittest.TestCase):
             self.assertFalse(any(t.startswith(bad) for t in titles), bad)
 
     def test_notification_shows_price_for_mydealz(self):
-        # mydealz-Titel nennen den Preis oft nicht ("Direktflüge nach Antalya …")
-        d = find(scan(live_items()), "Direktflüge nach Antalya")
+        # mydealz-Titel nennen den Preis oft nicht ("Flüge USA / New York … (Okt - Apr / Icelandair)")
+        d = find(scan(live_items()), "Flüge USA / New York")
         text = format_text(d, "new")
-        self.assertIn("Preis: ab 59 €", text.splitlines()[1])
+        self.assertIn("Preis: ab 298 €", text.splitlines()[1])
 
 
 class LiveParserTest(unittest.TestCase):
@@ -233,7 +236,8 @@ class LiveParserTest(unittest.TestCase):
         i = self.info("Oneway: SAS Business Class Thailand")
         self.assertEqual((i.cabin, i.price, i.alt_prices, i.oneway, i.origin),
                          ("business", 806, {"economy": 233}, True, "foreign"))
-        for prefix, cabin, price in (("Erbil", "business", 390), ("New York: Nonstop in der Condor", "premium", 640),
+        # Erbil: Eurowings „Business Class“ ist BIZclass = Economy mit freiem Mittelsitz
+        for prefix, cabin, price in (("Erbil", "economy", 390), ("New York: Nonstop in der Condor", "premium", 640),
                                      ("Peking: Business", "business", 1123)):
             i = self.info(prefix)
             self.assertEqual((i.cabin, i.price, i.alt_prices), (cabin, price, {}), prefix)

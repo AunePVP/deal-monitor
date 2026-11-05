@@ -547,7 +547,28 @@ def normalize_link(link: str) -> str:
                                     urllib.parse.urlencode(query), ""))
 
 
+#: Eurowings (ohne "Discover") hat keine Business Class: "Eurowings „Business Class“"/BIZclass ist
+#: ein Economy-Sitz mit freiem Mittelsitz (Travel-Dealz vergibt trotzdem die Kategorie Business
+#: Class). Dasselbe gilt für "Business Class" in Anführungszeichen ("sogenannte").
+_EUROWINGS_RE = re.compile(r"\beurowings\b", re.I)
+_DISCOVER_RE = re.compile(r"\bdiscover\b", re.I)
+_BIZ_RE = re.compile(r"\b(?:business|biz)", re.I)
+_QUOTED_BUSINESS_RE = re.compile(r"[„“\"‚‘]\s*business[\s-]*class\s*[“”\"‘’]", re.I)
+
+
+def pseudo_business(title: str) -> bool:
+    """Überschrift nennt eine "Business Class", die keine ist (Eurowings, „Business Class“)."""
+    title = title or ""
+    if _QUOTED_BUSINESS_RE.search(title):
+        return True
+    return bool(_EUROWINGS_RE.search(title) and not _DISCOVER_RE.search(title)
+                and _BIZ_RE.search(title))
+
+
 def detect_cabin(title: str, categories: list[str] | None = None) -> str:
+    if pseudo_business(title):
+        categories = [c for c in categories or [] if "business" not in c.lower()]
+        title = _BIZ_RE.sub(" ", title)
     cats = " | ".join(categories or []).lower()
     for cabin, needle in CATEGORY_CABIN:
         if needle in cats:
@@ -1076,6 +1097,10 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
         pairs = cabin_prices(title, profile.lang) if flight else []
     cabin = item.get("cabin") if item.get("cabin") in CABINS else \
         price_cabin(title, cats, price, pairs, profile.lang)
+    if pseudo_business(title):      # Eurowings „Business Class“ ist Economy (auch für Alarme)
+        pairs = [(c, p) for c, p in pairs if c != "business"]
+        if cabin == "business":
+            cabin = "economy"
     alt: dict[str, float] = {}
     for c, p in pairs:
         if c != cabin and c not in alt and (not profile.cabins or c in profile.cabins):

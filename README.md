@@ -88,11 +88,13 @@ Stichwörter: Ein Alarm ohne eigene Stichwörter bekommt sie automatisch aus Von
 
 Unabhängig von deinen Alarmen prüft das Radar **alle** Flug-Artikel der aktiven Deal-Seiten (bei jedem Lauf und zusätzlich alle 30 Minuten):
 
-- **Immer gemeldet:** Error Fare, Fehlerpreis, Preisfehler, Hammer, Kracher, Knaller, Wahnsinn, Mistake Fare in Überschrift/Kategorie.
+- **Immer gemeldet:** Error Fare, Fehlerpreis, Preisfehler, Mistake Fare in Überschrift/Kategorie. „Hammer“, „Kracher“, „Knaller“, „Wahnsinn“, Preissturz zählen nur auf Langstrecke. Der feste Werbe-Slogan am Ende der ErrorFareAlerts-Titel („– Asien zum Hammerpreis!“) zählt nicht.
 - **Sonst nach Preisgrenze:** Economy 40–300 € (darunter sind es meist Kurzstrecken-Promos wie „ab 14,99 €“), Premium Economy ≤ 700 €, Business ≤ 1.300 €, First ≤ 2.500 €.
+- **Nur Langstrecke** (Standard, abschaltbar): Economy zählt nur nach USA, Asien, Karibik, Südafrika & Co. – Europa, Island, Türkei, Kanaren, Nordafrika und Nahost nur als Error Fare. Ist die Strecke nicht erkennbar, zählt nur eine Error Fare. Business/First auf Kurz- und Mittelstrecke zählt nur bis zur Economy-Grenze. Eurowings „Business Class“/BIZclass (Economy-Sitz mit freiem Mittelsitz) gilt als Economy.
+- **Nie:** Blind Booking, Surprise, Wundertüte (Ziel unbekannt) – auch nicht über einen genannten Business-Preis.
 - Standardmäßig nur Abflug aus Deutschland/Österreich/Schweiz (oder ohne Angabe).
 - Treffer erscheinen unter **Deals** mit Badge „Radar“ (Filter-Chip „Radar“) und werden gemeldet wie Alarm-Deals. Ein Artikel, der schon zu einem Alarm passt, kommt nicht doppelt.
-- Derselbe Deal auf zwei Seiten (gleiche Kabine, gleiche Zielstadt, Preis ± 5 %) wird einmal gemeldet – mit Hinweis „Auch bei premium-flights: 1.210 €“.
+- **Derselbe Deal auf mehreren Seiten** wird einmal gemeldet – mit dem günstigsten Artikel und „Auch bei ErrorFareAlerts: 1.288 €“; wer zuerst war, steht in der Quellenliste. Gleich heißt: gleiche Kabine und Reiseart, gleiches Ziel, Abflug gleich oder unbekannt, höchstens 7 Tage auseinander und Preis ± 5 % – **± 15 %, wenn beide dieselbe Airline nennen** (Turkmenistan Airlines Frankfurt–Bangkok: Travel-Dealz 1.208 €, eine Woche später ErrorFareAlerts 1.288 €). Nennen beide verschiedene Airlines, ist es nie derselbe Deal (Hongkong mit China Eastern 484 € ≠ Air China 469 €), ebenso zwei Artikel derselben Seite. Das gilt im selben Lauf und über Läufe hinweg.
 - Nennt eine Überschrift zwei Kabinen („Wien ab 99 € (Business Class ab 229 €)“), gilt jeder Preis für seine Kabine.
 
 Alles unter **Einstellungen → Radar** änderbar (oder per `RADAR_*` in `.env`).

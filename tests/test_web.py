@@ -355,10 +355,10 @@ class RunTest(ServerTest):
         self.run_and_wait()
         r = self.get("/api/runs")[1]["runs"][0]
         # 450 € ≠ 900 € -> verworfen; "Hamburg – Zürich" fliegt ab Hamburg -> kein Deal des
-        # Alarms Zürich → Hamburg, aber ein Radar-Treffer
-        self.assertEqual((r["radar"], r["rejected"], r["errors"]), (3, 1, []))
+        # Alarms Zürich → Hamburg und auch kein Radar-Treffer (keine Langstrecke)
+        self.assertEqual((r["radar"], r["rejected"], r["errors"]), (2, 1, []))
         st = self.get("/api/status")[1]
-        self.assertEqual(st["counts"]["radar_deals"], 3)
+        self.assertEqual(st["counts"]["radar_deals"], 2)
         deals = self.get("/api/deals")[1]["deals"]
         zrh = next(d for d in deals if d["source"] == "travelpayouts")
         self.assertTrue(zrh["verified"])
@@ -366,16 +366,15 @@ class RunTest(ServerTest):
         self.assertEqual(zrh["source_label"], "Travelpayouts (Preis-API)")
         self.assertFalse(any(d["origin"] == "FRA" for d in deals))     # verworfen
         radar_deals = self.get("/api/deals?alert_id=radar")[1]["deals"]
-        self.assertEqual(len(radar_deals), 3)
+        self.assertEqual(len(radar_deals), 2)
         for d in radar_deals:
             self.assertEqual((d["alert_name"], d["rating"], d["source_label"], d["verified"]),
                              ("Radar: Hammer-Deals", "Radar", "Travel-Dealz-Artikel", False))
         self.assertEqual({d["headline"] for d in radar_deals},
                          {"Error Fare: Lufthansa First Class nach Tokio ab 1.499€",
-                          "Qatar Airways: Business Class nach Bangkok ab 1.199€",
-                          "Swiss: Hamburg – Zürich ab 79€ hin und zurück"})
+                          "Qatar Airways: Business Class nach Bangkok ab 1.199€"})
         # Radar-Deals stehen in "Alle", nach den Alarm-Deals (Rang "Radar")
-        self.assertEqual([d["rating"] for d in deals][-3:], ["Radar"] * 3)
+        self.assertEqual([d["rating"] for d in deals][-2:], ["Radar"] * 2)
         # Google nicht erreichbar -> Deal bleibt, mit Hinweis "nicht gegengeprüft"
         google.prices = None
         self.offers = [offer(85)]
@@ -508,7 +507,8 @@ class SettingsTest(ServerTest):
                           v["amadeus_env"], v["amadeus_max_requests"]), (30, 40, True, "test", 100))
         self.assertEqual((v["radar_enabled"], v["radar_economy_max"], v["radar_economy_min"],
                           v["radar_premium_max"], v["radar_business_max"], v["radar_first_max"],
-                          v["radar_home_only"]), (True, 300, 40, 700, 1300, 2500, True))
+                          v["radar_home_only"], v["radar_long_haul_only"]),
+                         (True, 300, 40, 700, 1300, 2500, True, True))
         self.assertEqual(data["secrets"]["amadeus_api_key"], {"set": False, "hint": None})
         self.assertEqual(data["secrets"]["amadeus_api_secret"], {"set": False, "hint": None})
         presets = {p["id"]: p for p in data["presets"]}
@@ -531,7 +531,7 @@ class SettingsTest(ServerTest):
                            "google_verify": "aus", "amadeus_env": "Production",
                            "amadeus_max_requests": 50, "radar_enabled": False,
                            "radar_business_max": "1.100,5", "radar_economy_max": 250,
-                           "radar_home_only": "nein"},
+                           "radar_home_only": "nein", "radar_long_haul_only": "nein"},
                 "secrets": {"amadeus_api_key": "amadeus-dummy-key-AAAA",
                             "amadeus_api_secret": "amadeus-dummy-secret-BBBB"}}
         status, data, _ = self.call("PUT", "/api/settings", body)
@@ -555,7 +555,8 @@ class SettingsTest(ServerTest):
         self.assertEqual(self.get("/api/status")[1]["feed_interval_minutes"], 15)
         with self.ctx.store() as store:
             rs = self.ctx.settings(store).radar_settings()
-        self.assertEqual((rs.enabled, rs.business_max, rs.home_only), (False, 1100.5, False))
+        self.assertEqual((rs.enabled, rs.business_max, rs.home_only, rs.long_haul_only),
+                         (False, 1100.5, False, False))
 
         for bad, word in (({"feed_interval_minutes": 5}, "mindestens 10"),
                           ({"feed_interval_minutes": 2.5}, "ganze Zahl"),

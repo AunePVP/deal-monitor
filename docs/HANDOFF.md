@@ -23,7 +23,28 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   - Takt: schnelle Quellen alle 10 min, Sofort-Prüfung bei schnellem Treffer, Quellen-Gesundheit mit Meldung bei Wechsel.
   - Bewertung: Google-Bezugspreis, Fehlerpreis-Verdacht, Erstmeldung über Quellen, Beinahe-Deals.
   - UI: Preisverlauf, Badges, Beinahe-Deals, Seite „Quellen“; Demo mit allen neuen Feldern.
-- Tests: `python3 -m unittest discover -s tests` → **665 grün**; `node tests/e2e/ui.mjs` → **44 Schritte grün**.
+- Tests: `python3 -m unittest discover -s tests` → **688 grün**; `node tests/e2e/ui.mjs` → **44 Schritte grün**.
+
+### Radar-Qualität (05.11.2026, `dealmonitor/dedupe.py`, `regions.haul`)
+Live-Probelauf mit allen 12 Quellen ergab **14 Radar-Treffer, davon 4 relevant** (einer doppelt), 7 irrelevant
+(2× Blind Booking, 5× Kurz-/Mittelstrecke), 2 falsch gelesen (Eurowings „Business Class“), 1 nur wegen des
+ErrorFareAlerts-Slogans „zum Hammerpreis!“. Jetzt:
+- **Ein Abgleich** für Radar und Erstmeldung (`dedupe.match`): gleiches Ziel (ohne Abflug, ohne Orte aus
+  Airline-Namen), Kabine, Reiseart, Abflug gleich/unbekannt, ≤ 7 Tage, nie zwei Links derselben Seite. Preis ± 5 %,
+  **± 15 % bei gleicher Airline**, verschiedene Airlines nie. Neue Spalte `sightings.airline` (Migration, alte Zeilen
+  → 5 %). Radar-Hauptartikel = günstigster; Erstmeldung bleibt über `lead` sichtbar. Dabei behoben: wurde der
+  Hauptartikel eines späteren Laufs ein anderer, lief die gespeicherte Erstmeldung ab (`run_radar`).
+- **Relevanz** (`radar_long_haul_only`, Standard an): Economy nur Langstrecke (`regions.haul`), unbekannte Strecke nur
+  mit Error Fare; „Hammer“/Preissturz nur Langstrecke; Business auf Kurz-/Mittelstrecke nur bis zur Economy-Grenze;
+  Blind Booking/Surprise/Wundertüte nie. Eurowings „Business“/BIZclass = Economy (auch für Alarme).
+  ErrorFareAlerts-Slogan zählt nicht als Hot-Grund.
+- Ergebnis Live-Lauf (alle 12 Presets, frische DB, `run --mode feeds --dry-run`): **3 Radar-Meldungen** –
+  Bangkok Business 1.208 € (TD, „Auch bei ErrorFareAlerts: 1.288 €“, „Erstmeldung Travel-Dealz, 7 Tage vor
+  ErrorFareAlerts“), New York 295 € (ErrorFareAlerts, auch Urlaubspiraten 297 €/mydealz 298 €, „Erstmeldung
+  Urlaubspiraten“), Condor San José del Cabo one-way 210 €. Dazu 2 Artikel > 14 Tage still gespeichert
+  (Turkmenistan Weltreisebaustein FRA↔Asien 612 € one-way, YHBU Istanbul–Peking Business 900 € + 180 €).
+- Tests: `tests/test_radar_quality.py` (Live-Titel als Fixture: 14 → 3, Turkmenistan über Läufe, Hongkong CE/CA,
+  Johannesburg SF/mydealz, Migration). Abschaltbar unter Einstellungen → Radar oder `RADAR_LONG_HAUL_ONLY=false`.
 
 ### Altersregel der Deal-Seiten (05.11.2026, `feed.is_current`)
 Vorher fiel jeder Artikel nach 14 Tagen weg – auch mit Ablaufdatum in der Zukunft – und lief damit sofort ab.
@@ -107,8 +128,12 @@ Behoben dabei (mit Test): „von Westkanada“ galt als Abflug ohne Angabe → l
   dauerhaft gehen, ist **nicht** gemessen – im Container beobachten, ggf. `max_requests` senken.
 - HAJ–HGH Hin/Rück liefert bei Google weder mit 17 noch mit 7 Nächten Verbindungen (one-way einmal Fehler 13).
   Andere seltene Paare können ebenso leer bleiben. Tageszeit nicht untersucht.
-- Derselbe Deal mit > 5 % Preisunterschied (Turkmenistan Bangkok 1.208 € TD / 1.288 € EFA) erscheint zweimal im Radar.
-- Radar Economy 40–300 € meldet auch Kurz-/Mittelstrecke und Blind Booking; Eurowings „Business“ zählt als Business.
+- ~~Derselbe Deal mit > 5 % Preisunterschied (Turkmenistan Bangkok 1.208 € TD / 1.288 € EFA) erscheint zweimal im Radar.~~
+  Erledigt 05.11. (gleiche Airline ± 15 %, siehe „Radar-Qualität“).
+- ~~Radar Economy 40–300 € meldet auch Kurz-/Mittelstrecke und Blind Booking~~ – erledigt 05.11. (`radar_long_haul_only`).
+- ~~Eurowings „Business“ zählt als Business~~ – erledigt 05.11. (`feed.pseudo_business`).
+- Streckenlänge per Ortsliste (`regions.LONG_HAUL_PLACES`/`SHORT_HAUL_PLACES`): unbekannte Orte (z. B. Kasachstan,
+  Salala) gelten als „nicht erkennbar“ → Economy dort nur mit Error Fare. Liste bei Bedarf ergänzen.
 - Zubringer-Aufschläge 80/180 € und Gesundheits-Schwellen (reisetopia 36 h) sind Annahmen.
 - Amadeus nie live getestet (Self-Service eingestellt). SSRF-DNS-Prüfung eigener Feeds entfällt hinter HTTP-Proxy.
 

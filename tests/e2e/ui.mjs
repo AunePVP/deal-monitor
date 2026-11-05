@@ -1124,6 +1124,14 @@ async function desktopFlows(browser) {
     await waitToast(page, /Einstellungen gespeichert/);
     s = await api("GET", "/api/settings");
     assert(s.values.radar_business_max === 1300 && s.values.radar_home_only === true, "Radar nicht zurückgesetzt");
+    // „Economy nur Langstrecke“: Standard an, Schalter speichert
+    assert(await page.isChecked("#s-radar_long_haul_only") && s.values.radar_long_haul_only === true, "„Nur Langstrecke“ nicht an");
+    for (const want of [false, true]) {
+      await page.click('label.switch:has(#s-radar_long_haul_only)');
+      await page.click("#settings-save");
+      await waitFor(async () => (await api("GET", "/api/settings")).values.radar_long_haul_only === want,
+        { timeout: 5000, msg: `„Nur Langstrecke“ nicht ${want} gespeichert` });
+    }
   });
 
   await ctx.close();

@@ -36,8 +36,9 @@ class SettingsTest(unittest.TestCase):
         s = RadarSettings()
         self.assertEqual((s.economy_max, s.economy_min, s.business_max, s.first_max, s.premium_max),
                          (300, 40, 1300, 2500, 700))
-        self.assertTrue(s.enabled and s.home_only)
+        self.assertTrue(s.enabled and s.home_only and s.long_haul_only)
         self.assertEqual(set(radar.DEFAULTS), set(radar.LABELS))
+        self.assertFalse(RadarSettings.from_values({"radar_long_haul_only": "aus"}).long_haul_only)
         s = RadarSettings.from_values({"radar_economy_max": "250", "radar_home_only": "false",
                                        "radar_enabled": 0, "business_max": 999})
         self.assertEqual((s.economy_max, s.home_only, s.enabled, s.business_max), (250, False, False, 999))
@@ -71,8 +72,11 @@ class CheckTest(unittest.TestCase):
     def test_short_haul_promos_ignored(self):
         self.assertIsNone(check(item("Ryanair Blitzverkauf: Flüge ab 14,99€", ["Economy Class"])))
         self.assertIsNone(check(item("Mailand ab 35€ von Berlin", ["Economy Class"])))
+        # Kurzstrecke: auch ohne Untergrenze kein Treffer - nur mit "nicht nur Langstrecke"
+        self.assertIsNone(check(item("Mailand ab 35€ von Berlin", ["Economy Class"]),
+                                RadarSettings(economy_min=0)))
         self.assertEqual(check(item("Mailand ab 35€ von Berlin", ["Economy Class"]),
-                               RadarSettings(economy_min=0)), ["Economy ≤ 300 €"])
+                               RadarSettings(economy_min=0, long_haul_only=False)), ["Economy ≤ 300 €"])
 
     def test_other_cabins(self):
         self.assertEqual(check(item("Peking: Business Class von Frankfurt ab 1.123€", ["Business Class"])),
@@ -136,27 +140,27 @@ class ScanTest(unittest.TestCase):
             return hits[0]
 
         find("Peking: Business Class von Frankfurt ab 1.123€")      # Business ≤ 1.300
-        find("Flüge USA / New York von München")                   # mydealz 298 €
+        find("Bestpreis ‼️ New York Flüge mit Icelandair")          # Urlaubspiraten 297 €
         find("Frankfurt → Bangkok Business Class Round Trip 1210€")  # premium-flights 1.210 €
-        # Urlaubspiraten "Bestpreis ‼️ New York Flüge mit Icelandair" (297 €) ist derselbe Deal
-        # wie mydealz (298 €) -> einmal gemeldet, mit Hinweis auf die zweite Seite
-        self.assertIn("Auch bei Urlaubspiraten: 297 €", find("Flüge USA / New York von München").reasons)
-        self.assertFalse(any(t.startswith("Bestpreis ‼️ New York") for t in titles))
+        # mydealz "Flüge USA / New York … Icelandair" (298 €) ist derselbe Deal wie Urlaubspiraten
+        # (297 €) -> einmal gemeldet, mit dem günstigeren Artikel und Hinweis auf die zweite Seite
+        self.assertIn("Auch bei mydealz: 298 €", find("Bestpreis ‼️ New York").reasons)
+        self.assertFalse(any(t.startswith("Flüge USA / New York") for t in titles))
         for bad in ("Costa Toscana", "Ryanair Blitzverkauf", "🏝️ CARIBBEAN DEAL", "Copenhagen → Mumbai",
                     "Houston", "New York ab 306€", "CHEAP 💥 Flights from several German",
                     "Erbil"):   # Erbil steckt nur im Suchfeed, der hier nicht abgefragt wird
             self.assertFalse(any(t.startswith(bad) for t in titles), bad)
         self.assertEqual(len(deals), 3)
-        d = find("Flüge USA / New York von München")
+        d = find("Bestpreis ‼️ New York")
         self.assertEqual((d.alert.id, d.alert.name, d.rating), ("radar", "Radar: Hammer-Deals", "Radar"))
-        self.assertEqual(d.reasons, ["Economy ≤ 300 €", "Auch bei Urlaubspiraten: 297 €"])
-        self.assertEqual(d.offer.source, "feed:mydealz-fluege")
+        self.assertEqual(d.reasons, ["Economy ≤ 300 €", "Auch bei mydealz: 298 €"])
+        self.assertEqual(d.offer.source, "feed:urlaubspiraten")
         self.assertEqual(d.headline, d.offer.title)
         self.assertEqual(d.fingerprint[:6], "radar:")
         self.assertIsNone(d.reference_price)
         prices = [d.offer.price for d in deals]
         self.assertEqual(prices, sorted(prices))
-        self.assertEqual(radar.sources_used(deals) >= {"feed:mydealz-fluege", "feed:premium-flights"}, True)
+        self.assertEqual(radar.sources_used(deals) >= {"feed:urlaubspiraten", "feed:premium-flights"}, True)
 
     def test_matched_articles_not_repeated(self):
         src = self.all_presets()

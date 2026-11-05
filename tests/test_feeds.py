@@ -157,7 +157,8 @@ class FlightItemTest(unittest.TestCase):
 
     def test_cabin_english(self):
         self.assertEqual(detect_cabin("Stockholm → USA FIRST Class Round Trip from 3375€"), "first")
-        self.assertEqual(detect_cabin("London: Eurowings BIZClass ab 240€"), "business")
+        # Eurowings BIZclass ist ein Economy-Sitz mit freiem Mittelsitz
+        self.assertEqual(detect_cabin("London: Eurowings BIZClass ab 240€"), "economy")
 
 
 class OriginTest(unittest.TestCase):

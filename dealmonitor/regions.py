@@ -420,6 +420,113 @@ def places_in(text: str) -> set[str]:
     return out
 
 
+# -- Streckenlänge (Radar: nur Langstrecke) ----------------------------------------------------
+
+#: Länder/Regionen/Orte ohne eigenen Code in ``AIRPORT_NAMES``, die sicher Langstrecke ab DACH sind
+LONG_HAUL_PLACES: tuple[str, ...] = (
+    "USA", "Vereinigte Staaten", "United States", "Kanada", "Canada", "Mexiko", "Mexico",
+    "Karibik", "Caribbean", "Kuba", "Cuba", "Dominikanische Republik", "Dominican Republic",
+    "Punta Cana", "Cancún", "Cancun", "San José del Cabo", "Los Cabos", "Jamaika", "Jamaica",
+    "Bonaire", "Aruba", "Curaçao", "Curacao", "Barbados", "Bahamas", "Puerto Rico", "Havanna",
+    "Havana", "Varadero", "Martinique", "Guadeloupe",
+    "Brasilien", "Brazil", "Argentinien", "Argentina", "Kolumbien", "Colombia", "Peru",
+    "Costa Rica", "Panama", "Chile", "Mittelamerika", "Südamerika", "Nordamerika",
+    "South America", "North America", "Central America", "Hawaii", "Florida", "Kalifornien",
+    "California", "Las Vegas", "Orlando", "Denver", "Dallas", "Calgary", "Ottawa", "Halifax",
+    "Rio de Janeiro", "Belo Horizonte", "Recife", "Fortaleza", "Lima", "Bogotá", "Bogota",
+    "Medellín", "Medellin", "Cartagena", "Quito", "Ecuador", "Santiago de Chile",
+    "Kathmandu", "Nepal", "Colombo",
+    "China", "Volksrepublik China", "Japan", "Thailand", "Phuket", "Vietnam", "Indien", "India",
+    "Indonesien", "Indonesia", "Malaysia", "Philippinen", "Philippines", "Taiwan", "Sri Lanka",
+    "Asien", "Asia", "Südostasien", "Fernost",
+    "Australien", "Australia", "Neuseeland", "New Zealand",
+    "Südafrika", "South Africa", "Mauritius", "Malediven", "Maldives", "Seychellen",
+    "Seychelles", "Kenia", "Kenya", "Tansania", "Tanzania", "Sansibar", "Zanzibar", "Namibia",
+)
+#: Kurz-/Mittelstrecke ab DACH: Europa (Codes in ``EUROPE_CODES`` und die europäischen
+#: ``FOREIGN_PLACES``), dazu Ziele rund ums Mittelmeer und im Nahen Osten
+SHORT_HAUL_PLACES: tuple[str, ...] = (
+    "Spanien", "Italien", "Frankreich", "Niederlande", "Polen", "Tschechien", "Belgien",
+    "Portugal", "Großbritannien", "Dänemark", "Schweden", "Norwegen", "Finnland", "Irland",
+    "Ungarn", "Griechenland", "Türkei", "Island", "Skandinavien", "Baltikum", "Kroatien",
+    "Rumänien", "Bulgarien", "Slowakei", "Slowenien", "Serbien", "Litauen", "Lettland",
+    "Estland", "Breslau", "Neapel", "Bologna", "Turin", "Florenz", "Sevilla", "Valencia",
+    "Málaga", "Palma", "Eindhoven", "Rotterdam", "Glasgow", "Birmingham", "Bergen", "Marseille",
+    "Europa", "Europe", "Izmir", "Antalya", "Bodrum", "Dalaman", "Kanaren", "Canary Islands",
+    "Teneriffa", "Tenerife", "Gran Canaria", "Fuerteventura", "Lanzarote", "Madeira", "Azoren",
+    "Kreta", "Rhodos", "Korfu", "Zypern", "Cyprus", "Malta", "Sizilien", "Sardinien",
+    "Albanien", "Montenegro", "Nordmazedonien", "Bosnien", "Moldau", "Georgien", "Tiflis",
+    "Armenien", "Eriwan", "Marokko", "Morocco", "Marrakesch", "Marrakech", "Agadir", "Ägypten",
+    "Egypt", "Hurghada", "Marsa Alam", "Tunesien", "Tunisia", "Djerba", "Nordafrika",
+    "Irak", "Iraq", "Erbil", "Saudi-Arabien", "Saudi Arabia", "Dschidda", "Jeddah", "Riad",
+    "Riyadh", "Jordanien", "Jordan", "Amman", "Akaba", "Israel", "Libanon", "Beirut", "Kuwait",
+)
+#: Codes außerhalb Europas, die trotzdem Mittelstrecke sind (Tel Aviv, Kairo)
+NEAR_CODES: frozenset[str] = frozenset({"TLV", "CAI"})
+#: Wortanfänge: "Europaflüge", "Langstreckenflüge", "Asienreise"
+_SHORT_WORD_RE = re.compile(r"\b(?:europa|europe|kurzstrecke|mittelstrecke|inlandsfl)", re.I)
+_LONG_WORD_RE = re.compile(r"\b(?:langstrecke|long[\s-]?haul|übersee|asien|karibik|"
+                           r"(?<!nord)(?<!nord-)afrika|(?<!north )africa\b)", re.I)
+
+
+def _name_set(names: tuple[str, ...]) -> frozenset[str]:
+    """Normalisierte Namen samt Synonymen ("Palma" -> auch "mallorca", "Island" -> "iceland")."""
+    return frozenset(normalize_name(s) for n in names for s in synonyms(n)
+                     if not _CODE_RE.match(s))
+
+
+_LONG_NAMES = _name_set(LONG_HAUL_PLACES)
+_SHORT_NAMES = _name_set(SHORT_HAUL_PLACES)
+
+
+def _names_in(text: str, names: frozenset[str]) -> set[str]:
+    """Welche der (normalisierten) ``names`` als ganze Wörter in ``text`` stehen (bis 4 Wörter)."""
+    tokens = [normalize_name(t) for t in _TOKEN_RE.findall(text or "")]
+    out: set[str] = set()
+    for i in range(len(tokens)):
+        for n in (4, 3, 2, 1):
+            cand = " ".join(tokens[i:i + n])
+            if len(tokens[i:i + n]) == n and cand in names:
+                out.add(cand)
+                break
+    return out
+
+
+def haul(title: str, dest_codes=(), origin_codes=()) -> str | None:
+    """Streckenlänge ab DACH laut Überschrift und Ziel-Codes der Quelle: "long", "short" oder
+    ``None`` (nicht erkennbar). Langstrecke gewinnt ("Island-Stopover nach New York").
+
+    Langstrecke: ein bekannter Code außerhalb Europas (``AIRPORT_NAMES`` ohne ``EUROPE_CODES``
+    und ``NEAR_CODES``) oder ein Ort aus ``LONG_HAUL_PLACES``; Kurz-/Mittelstrecke: Codes in
+    Europa, ``SHORT_HAUL_PLACES``. Orte, deren Codes Abflug sind (``origin_codes``, "Bangkok
+    ab Athen"), zählen nicht. Airline-Namen ("China Eastern", "Singapore Airlines") muss der
+    Aufrufer vorher entfernen (``feed.AIRLINE_NOISE_RE``)."""
+    origins = {str(c).upper() for c in origin_codes or ()}
+    long = short = False
+
+    def code_kind(code: str) -> None:
+        nonlocal long, short
+        if code in EUROPE_CODES or code in NEAR_CODES:
+            short = True
+        elif code in AIRPORT_NAMES:
+            long = True
+
+    for c in dest_codes or ():
+        code_kind(str(c).upper())
+    for place in places_in(title):
+        codes = codes_for(place)
+        if place_kind(place) == "home" or (codes and codes <= origins):
+            continue
+        for c in codes:
+            code_kind(c)
+    long = long or bool(_names_in(title, _LONG_NAMES)) or bool(_LONG_WORD_RE.search(title or ""))
+    short = short or bool(_names_in(title, _SHORT_NAMES)) or bool(
+        _SHORT_WORD_RE.search(title or ""))
+    if long:
+        return "long"
+    return "short" if short else None
+
+
 def region_names(codes: list[str]) -> list[str]:
     """Namen der Regionen, die in ``codes`` vollständig enthalten sind (z. B. "Deutschland")."""
     present = set(c.upper() for c in codes)

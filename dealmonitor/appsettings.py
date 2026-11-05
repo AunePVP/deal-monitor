@@ -111,6 +111,8 @@ VALUES: dict[str, Spec] = {
     "radar_first_max": Spec("float", _R["radar_first_max"], radar.LABELS["radar_first_max"],
                             0, 100000),
     "radar_home_only": Spec("bool", _R["radar_home_only"], radar.LABELS["radar_home_only"]),
+    "radar_long_haul_only": Spec("bool", _R["radar_long_haul_only"],
+                                 radar.LABELS["radar_long_haul_only"]),
     # Nachbar-Hubs (Abflug Amsterdam, Budapest, Rom … mit Zubringer-Aufschlag)
     "hubs_enabled": Spec("bool", _H["hubs_enabled"], hubs.LABELS["hubs_enabled"]),
     "hub_surcharge_a": Spec("float", _H["hub_surcharge_a"], hubs.LABELS["hub_surcharge_a"],

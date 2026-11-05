@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS sightings (
     price       REAL NOT NULL,
     fingerprint TEXT NOT NULL,          -- Deal der Erstmeldung
     link        TEXT,
+    airline     TEXT NOT NULL DEFAULT '',   -- Airlines der Überschrift, kommagetrennt
     UNIQUE (deal_key, source, fingerprint)
 );
 CREATE INDEX IF NOT EXISTS sightings_key ON sightings (deal_key);
@@ -125,6 +126,9 @@ REVIVE_AFTER = timedelta(hours=24)
 #: später hinzugekommene Zähler der Tabelle ``runs`` (werden per ALTER TABLE nachgerüstet):
 #: radar = Radar-Treffer, rejected = bei Google Flights verworfene Deals
 RUN_EXTRA_COLUMNS = ("radar", "rejected")
+#: später hinzugekommene Spalten der Tabelle ``sightings`` (Name -> SQL-Typ): airline = Airlines
+#: der Überschrift für ``dedupe.match`` (leer in alten Zeilen: dann gilt die 5-%-Regel)
+SIGHTING_EXTRA_COLUMNS = {"airline": "TEXT NOT NULL DEFAULT ''"}
 #: Läufe nur der schnellen Deal-Seiten (``Preset.lane == "fast"``, eigener Takt)
 FAST_TRIGGERS = ("fast", "manual-fast")
 #: Sofort-Prüfung eines Alarms bei Google nach einem heißen Deal (kleines Budget)
@@ -218,6 +222,10 @@ class Store:
         for col in RUN_EXTRA_COLUMNS:
             if col not in cols:
                 self.db.execute(f"ALTER TABLE runs ADD COLUMN {col} INTEGER NOT NULL DEFAULT 0")
+        cols = {r[1] for r in self.db.execute("PRAGMA table_info(sightings)")}
+        for col, kind in SIGHTING_EXTRA_COLUMNS.items():
+            if col not in cols:
+                self.db.execute(f"ALTER TABLE sightings ADD COLUMN {col} {kind}")
         self._migrate_feed_source()
         self.db.commit()
 
@@ -504,16 +512,17 @@ class Store:
     # -- Meldungen derselben Deals bei mehreren Quellen (dealmonitor.sightings) -----
     def add_sighting(self, keys: list[str], origin: str, source: str, seen: datetime,
                      price: float, fingerprint: str, link: str | None = None,
-                     now: datetime | None = None) -> None:
+                     now: datetime | None = None, airline: str = "") -> None:
         """Meldung einer Quelle merken (je Schlüssel eine Zeile; vorhandene bleiben, damit
-        ``first_seen`` die erste Meldung ist). Räumt Meldungen älter als 30 Tage weg."""
+        ``first_seen`` die erste Meldung ist). ``airline``: Airlines der Überschrift,
+        kommagetrennt. Räumt Meldungen älter als 30 Tage weg."""
         cutoff = ((now or datetime.now()) - SIGHTINGS_MAX_AGE).isoformat(timespec="seconds")
         self.db.execute("DELETE FROM sightings WHERE first_seen < ?", (cutoff,))
         self.db.executemany(
             "INSERT OR IGNORE INTO sightings (deal_key, origin, source, first_seen, price, "
-            "fingerprint, link) VALUES (?,?,?,?,?,?,?)",
+            "fingerprint, link, airline) VALUES (?,?,?,?,?,?,?,?)",
             [(k, origin, source, seen.isoformat(timespec="seconds"), float(price), fingerprint,
-              link) for k in keys])
+              link, airline or "") for k in keys])
         self.db.commit()
 
     def sightings(self, keys: list[str] | None = None, *, fingerprint: str | None = None,
