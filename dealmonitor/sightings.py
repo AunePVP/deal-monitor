@@ -64,13 +64,21 @@ def parts(o: Offer, origins=(), dests=()) -> tuple[list[str], set[str]] | None:
     origin_set = _expand(set(origins) | {c for c in (o.via_hub, o.origin) if c})
     origin_set |= _expand(feed.origin_codes(o.title, "de") | feed.origin_codes(o.title, "en"))
     dest_set = _expand(dests)
+    # Ziel in DACH ("Zürich nach Hamburg"): ein Heimat-Ort ist Ziel, wenn die Quelle ihn als
+    # Ziel nennt oder er nach "nach"/"to" steht - sonst gilt er als Abflug
+    m = DEST_WORD_RE.search(o.title)
+    hints = dest_set | (regions.codes_for(m.group(1)) if m else set())
+    home_dest: set[str] = set()
     for place in regions.places_in(o.title):
         codes = regions.codes_for(place)
-        if regions.place_kind(place) == "home":
-            origin_set |= codes
-        else:
+        if regions.place_kind(place) != "home":
             dest_set |= codes
-    dest_set -= origin_set
+        elif codes and codes <= hints:
+            home_dest |= codes
+        else:
+            origin_set |= codes
+    origin_set -= home_dest
+    dest_set = (dest_set - origin_set) | home_dest
     if (word := dest_word(o.title)):
         dest_set |= regions.codes_for(word[1:]) - origin_set or {word}
     if not dest_set and o.destination:     # Alarm mit genau einem Ziel

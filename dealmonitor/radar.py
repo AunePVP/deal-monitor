@@ -274,19 +274,28 @@ DUPLICATE_TOLERANCE = 0.05
 
 
 def deal_key(title: str, info: feed_mod.ItemInfo) -> tuple | None:
-    """(Kabine, one-way, Ziele, Preis) eines Artikels - ``None``, wenn kein Ziel/Preis erkennbar."""
+    """(Kabine, one-way, Ziele, Preis, Abflug-Codes) eines Artikels - ``None``, wenn kein
+    Ziel/Preis erkennbar."""
+    origins = set(getattr(info, "origin_codes", None) or ())
+    origins |= feed_mod.origin_codes(title, "de") | feed_mod.origin_codes(title, "en")
     places = frozenset(p for p in regions.places_in(title) if regions.place_kind(p) != "home")
     if not places or not info.price or info.price <= 0:
         return None
-    return info.cabin, info.oneway, places, info.price
+    codes = set()
+    for c in origins:      # Flughafen und Stadt: "FRA" und "Frankfurt" sind derselbe Abflug
+        codes |= {c.upper()} | regions.codes_for(regions.name(c.upper()))
+    return info.cabin, info.oneway, places, info.price, frozenset(codes)
 
 
 def same_deal(a: tuple | None, b: tuple | None) -> bool:
     """Gleiche Kabine/Reisetyp, ein gemeinsames Ziel mit Flughafen (Stadt, nicht nur Land:
-    "Antalya / Türkei" und "Izmir / Türkei" bleiben getrennt) und fast gleicher Preis."""
+    "Antalya / Türkei" und "Izmir / Türkei" bleiben getrennt), kein verschiedener bekannter
+    Abflug ("Bangkok ab Athen" ist nicht "Frankfurt – Bangkok") und fast gleicher Preis."""
     if a is None or b is None or a[:2] != b[:2]:
         return False
     if not any(regions.codes_for(p) for p in a[2] & b[2]):
+        return False
+    if a[4] and b[4] and not a[4] & b[4]:
         return False
     lo, hi = sorted((a[3], b[3]))
     return hi <= lo * (1 + DUPLICATE_TOLERANCE)

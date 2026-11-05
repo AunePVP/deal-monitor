@@ -245,6 +245,8 @@ class Memory:
                 continue
             rows = expand_rows(entry.get("rows"))
             if rows:
+                if at.tzinfo is not None:       # wie die übrigen Offers: naive Ortszeit
+                    at = at.astimezone().replace(tzinfo=None)
                 insight = entry.get("insight")
                 out[day] = {"at": at, "rows": rows,
                             "insight": dict(insight) if isinstance(insight, dict) else None}

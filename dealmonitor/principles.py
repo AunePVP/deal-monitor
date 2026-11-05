@@ -156,8 +156,10 @@ def market_notes(offer: Offer) -> list[str]:
 
 def warning_signs(offer: Offer, *, median_price: float | None = None,
                   market: Market | None = None) -> list[str]:
-    """Hinweise auf einen Fehlerpreis: weit unter der typischen Spanne oder dem Median,
-    Business kaum teurer als Economy, Preissturz gegenüber den eigenen Beobachtungen."""
+    """Hinweise auf einen Fehlerpreis: weit unter der typischen Spanne (kennt Google sie, zählt
+    nur sie - der Median liegt höher, auf ZRH⇄HAM wäre sonst jeder 39-€-Sale verdächtig) oder
+    sonst dem Median, Business kaum teurer als Economy, Preissturz gegenüber den eigenen
+    Beobachtungen."""
     p = offer.price
     if not p or p <= 0:
         return []
@@ -165,7 +167,7 @@ def warning_signs(offer: Offer, *, median_price: float | None = None,
     lo = google_levels(offer.insight)["typical_low"]
     if lo and p < ERROR_SHARE * lo:
         signs.append(f"{ERROR_PREFIX}: {_pct(1 - p / lo)} {RANGE_TEXT}")
-    elif median_price and p < ERROR_SHARE * median_price:
+    elif not lo and median_price and p < ERROR_SHARE * median_price:
         signs.append(f"{ERROR_PREFIX}: {_pct(1 - p / median_price)} unter dem Median "
                      f"{euro(median_price)}")
     market = market or Market()
@@ -290,10 +292,6 @@ def headline(alert: Alert, offer: Offer) -> str:
     if details:
         text += " (" + ", ".join(details) + ")"
     return text
-
-
-REF_MEDIAN = "Median der letzten Beobachtungen"
-REF_BASELINE = "Normalpreis laut Konfiguration"
 
 
 def assess(alert: Alert, price: float, ref: float | None,

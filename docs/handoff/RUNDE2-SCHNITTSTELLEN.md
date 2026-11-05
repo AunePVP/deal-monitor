@@ -134,6 +134,8 @@ als Hinweis an die Integration.
 - `Offer.legs` (in `EXTRA_FIELDS`): zwei Teilstrecken `{origin, destination, departure, price, airline,
   stops, link, seen}` = „kombiniert aus 2 One-way“ (Grund in der Meldung über `rotation.note`, Badge
   „2× One-way“ in der UI). Eigene `ident`: nie derselbe Deal wie ein echtes Hin/Rück.
+- Offers aus dem Gedächtnis (und Kombis) tragen als `found_at` den Zeitpunkt der Abfrage;
+  `monitor._seen_today` schreibt nur heute gesehene Preise in den Preisverlauf (kein Doppelzählen).
 
 ## 9. Deal-Bewertung (Paket 8)
 
@@ -152,6 +154,13 @@ Getestet in `tests/test_scoring.py`. Alles zusätzlich; alte Zeilen ohne die Fel
 - **Erstmeldung** (`dealmonitor/sightings.py`, Tabelle `sightings`): nur Artikel. Deal-Payload
   `sources` = `[{source, label, seen, price, link}]` (früheste zuerst, ab 2 Seiten) und `lead` (Text).
   Spätere Meldungen derselben Deals werden nicht gespeichert und nicht gemeldet.
+- **Fehlerpreis-Verdacht** (Preis < 40 %): gegen `typical_low`, wenn Google die Spanne kennt, sonst
+  gegen den Median. Sonst wäre auf ZRH⇄HAM jeder 39-€-Sale (Median ~100 €) „verdächtig“.
+- **Abgleich der Artikel**: Ein Ort in DACH ist Ziel, wenn die Quelle ihn als Ziel nennt oder er nach
+  „nach“/„to“ steht („Zürich nach Hamburg“ → `HAM-economy-OW`, Abflug ZRH). Das Radar legt Artikel
+  mit bekanntem, verschiedenem Abflug nicht zusammen („Bangkok ab Athen“ ≠ „FRA–Bangkok“).
+- Zusammenspiel P7/P8 (kompletter `run_alert` mit Secret Flying, Travel-Dealz-REST und
+  Google-Rotation): `tests/test_runde2_zusammenspiel.py`.
 - **Beinahe-Deals**: `/api/alerts[].near_deals` = Liste (höchstens 5, je Strecke einer) aus den
   Bestpreisen mit `near: [Gründe]`, z. B. `["61 € über deiner Grenze", "7% unter typischer Spanne (600 €–1.050 €)"]`.
   Nie gemeldet. Gespeichert als Feld `near` im Bestpreis-Eintrag (`store.cheapest`).

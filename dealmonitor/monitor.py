@@ -372,7 +372,7 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
                                                     min_samples=s.min_history_samples)):
                     near[id(o)] = close
             if source.records_history:
-                store.add_prices(route_offers)
+                store.add_prices(_seen_today(route_offers))
 
         result.article_links |= {normalize_link(d.offer.link) for d in deals
                                  if d.offer.title and d.offer.link}
@@ -432,6 +432,14 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
             store.upsert_deal(d, s.renotify_drop, notify=False)
     _refresh_sources(store, merged, [d for d, _ in checked])
     return to_notify, result
+
+
+def _seen_today(offers: list[Offer]) -> list[Offer]:
+    """Für den Preisverlauf nur heute gesehene Preise: Angebote aus dem Gedächtnis einer Quelle
+    (Google-Rotation: ``found_at`` = Zeitpunkt der Abfrage) stehen dort schon - sonst zählte
+    derselbe Preis jeden Tag neu und verschöbe den Median."""
+    today = datetime.now().date()
+    return [o for o in offers if not o.found_at or o.found_at.date() >= today]
 
 
 def _market(store: Store, route_key: str, settings) -> principles.Market:

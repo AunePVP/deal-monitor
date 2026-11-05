@@ -749,9 +749,12 @@ class GoogleFlightsSource:
             for day, entry in sorted(self.memory.get(o, d, alert.cabin, today, now).items()):
                 if (o, d, day) in fresh or day > last:
                     continue
-                out += self.to_offers(entry["rows"], alert, o, d, day, None,
-                                      build_url(o, d, day, None, alert.cabin, False),
-                                      insight=entry["insight"])
+                recalled = self.to_offers(entry["rows"], alert, o, d, day, None,
+                                          build_url(o, d, day, None, alert.cabin, False),
+                                          insight=entry["insight"])
+                for offer in recalled:      # gesehen, als der Tag abgefragt wurde
+                    offer.found_at = entry["at"]
+                out += recalled
         return out
 
     def _legs(self, origin: str, dest: str, alert: Alert, today: date,
@@ -800,7 +803,8 @@ class GoogleFlightsSource:
                      airline=airline, stops=max(stops) if stops else None,
                      duration_out_min=there.get("duration_min"),
                      duration_back_min=back.get("duration_min"),
-                     link=there["link"], ident=ident, legs=legs)
+                     link=there["link"], ident=ident, legs=legs,
+                     found_at=max(there["at"], back["at"]))
 
     def _release_share(self, share: int | None) -> None:
         """Alarm fertig gescannt: sein (ggf. unverbrauchter) Anteil ist nicht mehr reserviert."""
