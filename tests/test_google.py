@@ -172,6 +172,7 @@ class BlockDetectionTest(unittest.TestCase):
         self.assertTrue(kw["full"])
         self.assertEqual(kw["retries"], 0, "bei Google nie stur wiederholen")
         self.assertEqual(kw["timeout"], 30)
+        self.assertEqual(kw["max_bytes"], gf.MAX_PAGE_BYTES)              # keine Riesen-Antworten
         self.assertIn("Chrome", kw["headers"]["User-Agent"])
         self.assertEqual(kw["headers"]["Accept-Language"], "de-DE,de;q=0.9")
 
@@ -201,8 +202,12 @@ class BlockDetectionTest(unittest.TestCase):
             status = 200
             headers = {"Content-Type": "text/html"}
 
-            def read(self):
-                return b"<html>ok</html>"
+            def __init__(self):
+                self.rest = b"<html>ok</html>"
+
+            def read(self, n=-1):           # wie HTTPResponse: stückweise, am Ende b""
+                out, self.rest = self.rest, b""
+                return out
 
             def geturl(self):
                 return "https://www.google.com/travel/flights?final"
@@ -213,7 +218,7 @@ class BlockDetectionTest(unittest.TestCase):
             def __exit__(self, *a):
                 return False
 
-        with mock.patch("urllib.request.urlopen", return_value=FakeResp()):
+        with mock.patch("urllib.request.urlopen", side_effect=lambda *a, **k: FakeResp()):
             resp = http.request("https://www.google.com/travel/flights", full=True)
             raw = http.request("https://www.google.com/travel/flights")
         self.assertIsInstance(resp, http.Response)
@@ -372,6 +377,22 @@ class SourceTest(unittest.TestCase):
             src.fetch(alert())
         self.assertIn("Alle 2", str(cm.exception))
 
+    def test_network_down_trips_breaker(self):
+        calls = []
+
+        def fetcher(url):
+            calls.append(url)
+            raise http.HttpError("Name or service not known", None, network=True)
+
+        src = GoogleFlightsSource(max_requests=40, delay=0, today=TODAY, fetcher=fetcher)
+        a = alert(origins=["ZRH", "GVA", "BSL"], destinations=["HAM"])
+        with self.assertRaises(SourceError) as cm:
+            src.fetch(a)
+        self.assertEqual(len(calls), GoogleFlightsSource.MAX_CONSECUTIVE_FAILURES)
+        self.assertIn("nicht erreichbar", str(cm.exception))
+        self.assertIsNone(src.verify("ZRH", "HAM", date(2027, 1, 15), date(2027, 1, 19)))
+        self.assertEqual(len(calls), GoogleFlightsSource.MAX_CONSECUTIVE_FAILURES)
+
     def test_cabin_and_trip_safety_net(self):
         # Google liefert Economy-Seite für Business-Suche -> keine Economy-Preise als Business
         src = source(page=ZRH_HAM)
@@ -401,13 +422,32 @@ class SourceTest(unittest.TestCase):
     def test_verify(self):
         src = source()
         hit = src.verify("ZRH", "HAM", date(2027, 1, 15), date(2027, 1, 19), "economy", True)
-        self.assertEqual(hit, {"price": 168.0, "airline": "KLM", "stops": 1,
+        self.assertEqual(hit, {"price": 168.0, "airline": "KLM", "airline_code": "KL", "stops": 1,
+                               "duration_min": 215,
                                "link": build_url("ZRH", "HAM", date(2027, 1, 15), date(2027, 1, 19))})
         self.assertEqual((src.requests_made, src.verifications), (1, 1))
         self.assertIsNone(src.last_error)
         # gleiche Daten nochmal: aus dem Cache, keine Anfrage, zählt nicht als Gegenprüfung
         src.verify("ZRH", "HAM", date(2027, 1, 15), date(2027, 1, 19))
         self.assertEqual((src.requests_made, src.verifications), (1, 1))
+
+    def test_verify_respects_alert_rules(self):
+        # Fixture: 168 € KLM (1 Umstieg, 3:35 h), 183 € SWISS nonstop (1:35 h), ...
+        src = source()
+        args = ("ZRH", "HAM", date(2027, 1, 15), date(2027, 1, 19), "economy", True)
+        hit = src.verify(*args, max_stops=0)
+        self.assertEqual((hit["price"], hit["airline"], hit["stops"], hit["duration_min"]),
+                         (183.0, "SWISS", 0, 90))
+        hit = src.verify(*args, max_minutes=120, exclude_airlines=["KL"])
+        self.assertEqual((hit["price"], hit["stops"]), (183.0, 0))
+        hit = src.verify(*args, exclude_airlines=["LX", "KL", "EW", "BA"])
+        self.assertEqual(hit["price"], 291.0)        # SWISS und Brussels Airlines (ohne Code)
+        # Google zeigt Flüge, aber keiner passt -> kein Preis, mit Grund
+        hit = src.verify(*args, max_minutes=60)
+        self.assertIsNone(hit["price"])
+        self.assertEqual(hit["cheapest"], 168.0)
+        self.assertIn("kein passender Flug", hit["reason"])
+        self.assertEqual(src.requests_made, 1, "alles aus dem Cache")
 
     def test_verify_limits(self):
         src = source(max_requests=4)
@@ -431,6 +471,50 @@ class SourceTest(unittest.TestCase):
         self.assertIsNone(src.verify("ZRH", "HAM", date(2027, 1, 15), date(2027, 1, 19)))
         self.assertIn("nicht erreichbar", src.last_error)
         self.assertFalse(src.down, "Netzwerkfehler ist keine Sperre")
+
+
+class BudgetTest(unittest.TestCase):
+    """Budget: Reserve für die Gegenprüfung, faire Verteilung auf die Alarme."""
+
+    def test_rules_filter_before_cut_to_ten(self):
+        rows = [{"price": 100.0 + i, "airline": "KLM", "airline_code": "KL", "stops": 1,
+                 "duration_min": 200, "roundtrip": True} for i in range(12)]
+        rows.append({"price": 150.0, "airline": "SWISS", "airline_code": "LX", "stops": 0,
+                     "duration_min": 95, "roundtrip": True})
+        src = source()
+        offers = src.to_offers(rows, alert(max_stops=0), "ZRH", "HAM", date(2027, 1, 15),
+                               date(2027, 1, 19), "https://g/")
+        self.assertEqual([(o.price, o.stops) for o in offers], [(150.0, 0)])
+        offers = src.to_offers(rows, alert(exclude_airlines=["LX"]), "ZRH", "HAM",
+                               date(2027, 1, 15), date(2027, 1, 19), "https://g/")
+        self.assertEqual(len(offers), 10)
+        self.assertNotIn("SWISS", {o.airline for o in offers})
+
+    def test_reserve_left_for_verification(self):
+        src = source(max_requests=4, verify_reserve=2)
+        src.fetch(alert(months_ahead=2))              # 4 Termine geplant
+        self.assertEqual(src.requests_made, 2)
+        self.assertIn("2 von 4 Abfragen (Limit)", src.incomplete["message"])
+        self.assertIsNotNone(src.verify("ZRH", "HAM", date(2027, 3, 3), date(2027, 3, 9)))
+        self.assertEqual(src.requests_made, 3)
+
+    def test_budget_shared_fairly_between_alerts(self):
+        src = source(max_requests=40, verify_reserve=10)
+        small = alert(id="klein", origins=["HAM"], destinations=["ZRH"],
+                      months_ahead=1)                                   # 2 Abfragen
+        mid = alert(id="mittel", months_ahead=6)                        # 12 Abfragen
+        china = alert(id="china", origins=["@DE"], destinations=["@CN_MAJOR"],
+                      months_ahead=6, max_price=500)                    # 792 Abfragen
+        src.begin_run([mid, small, china])
+        self.assertEqual(src._shares, {"klein": 2, "mittel": 12, "china": 16})
+        for a in (mid, small, china):
+            src.fetch(a)
+        self.assertEqual(src.requests_made, 30)
+        self.assertIn("16 von 792 Abfragen (Limit)", src.incomplete["message"])
+        # ohne Planung (direkter Aufruf) gilt wie bisher das ganze Scan-Budget
+        src = source(max_requests=3)
+        src.fetch(alert(months_ahead=6))
+        self.assertEqual(src.requests_made, 3)
 
 
 class MonitorIntegrationTest(unittest.TestCase):

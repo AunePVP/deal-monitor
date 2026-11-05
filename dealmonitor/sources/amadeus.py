@@ -1,10 +1,10 @@
 """Preisquelle: Amadeus Self-Service APIs (Flight Cheapest Date Search, Flight Offers Search).
 
-Kostenloser API-Key: https://developers.amadeus.com -> "My Self-Service Workspace" -> App
-anlegen -> "API Key" und "API Secret". Die Test-Umgebung (``test.api.amadeus.com``) ist
-kostenlos, liefert aber nur einen Ausschnitt der echten Daten (gecachte Preise ausgewählter
-Strecken); Produktion (``api.amadeus.com``) hat ein monatliches Freikontingent, danach
-kostet jede Anfrage. Die Umgebung wählt die Einstellung ``amadeus_env`` ("test"|"production").
+Achtung: Der Amadeus Self-Service (developers.amadeus.com, kostenlose Keys) ist laut Anbieter
+seit 17.07.2026 eingestellt; neue Keys gibt es nur noch für Enterprise-Kunden (Recherche in
+docs/handoff/research/preis-apis/NOTES.md). Die Quelle ist nur mit einem noch gültigen Key
+nutzbar. Test-Umgebung ``test.api.amadeus.com``, Produktion ``api.amadeus.com``; die Umgebung
+wählt die Einstellung ``amadeus_env`` ("test"|"production").
 
 **Stand: strikt nach Doku umgesetzt (OpenAPI-Spezifikation und Developer-Guides von
 amadeus4dev auf GitHub), mit Fixture-Tests - aber ohne Key noch nicht live geprüft.**
@@ -69,8 +69,10 @@ MIN_LEAD_DAYS = 1
 
 KEY_REJECTED = "Amadeus lehnt den Key ab"
 KEY_HINT = "bitte API Key und Secret in den Einstellungen prüfen"
-MISSING_KEY = ("Amadeus-Key/Secret fehlen - kostenlos unter developers.amadeus.com anlegen und in "
-               "den Einstellungen eintragen (oder AMADEUS_API_KEY/AMADEUS_API_SECRET setzen).")
+MISSING_KEY = ("Amadeus-Key/Secret fehlen - der Self-Service ist laut Anbieter seit 17.07.2026 "
+               "eingestellt (nur Enterprise). Mit einem gültigen Key in den Einstellungen "
+               "eintragen (oder AMADEUS_API_KEY/AMADEUS_API_SECRET setzen), sonst Amadeus "
+               "ausschalten.")
 RATE_LIMITED = "Amadeus-Limit erreicht (HTTP 429{detail}) - später erneut"
 
 #: JSON-Felder aus Fehlerantworten, die in der Meldung landen (Reihenfolge = Vorrang)

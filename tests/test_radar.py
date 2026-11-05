@@ -138,15 +138,18 @@ class ScanTest(unittest.TestCase):
         find("Peking: Business Class von Frankfurt ab 1.123€")      # Business ≤ 1.300
         find("Flüge USA / New York von München")                   # mydealz 298 €
         find("Frankfurt → Bangkok Business Class Round Trip 1210€")  # premium-flights 1.210 €
-        find("Bestpreis ‼️ New York Flüge mit Icelandair")          # Urlaubspiraten 297 €
+        # Urlaubspiraten "Bestpreis ‼️ New York Flüge mit Icelandair" (297 €) ist derselbe Deal
+        # wie mydealz (298 €) -> einmal gemeldet, mit Hinweis auf die zweite Seite
+        self.assertIn("Auch bei Urlaubspiraten: 297 €", find("Flüge USA / New York von München").reasons)
+        self.assertFalse(any(t.startswith("Bestpreis ‼️ New York") for t in titles))
         for bad in ("Costa Toscana", "Ryanair Blitzverkauf", "🏝️ CARIBBEAN DEAL", "Copenhagen → Mumbai",
                     "Houston", "New York ab 306€", "CHEAP 💥 Flights from several German",
                     "Erbil"):   # Erbil steckt nur im Suchfeed, der hier nicht abgefragt wird
             self.assertFalse(any(t.startswith(bad) for t in titles), bad)
-        self.assertEqual(len(deals), 4)
+        self.assertEqual(len(deals), 3)
         d = find("Flüge USA / New York von München")
         self.assertEqual((d.alert.id, d.alert.name, d.rating), ("radar", "Radar: Hammer-Deals", "Radar"))
-        self.assertEqual(d.reasons, ["Economy ≤ 300 €"])
+        self.assertEqual(d.reasons, ["Economy ≤ 300 €", "Auch bei Urlaubspiraten: 297 €"])
         self.assertEqual(d.offer.source, "feed:mydealz-fluege")
         self.assertEqual(d.headline, d.offer.title)
         self.assertEqual(d.fingerprint[:6], "radar:")

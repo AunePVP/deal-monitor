@@ -7,6 +7,7 @@ statt fehlzuschlagen.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -99,6 +100,10 @@ RUN_EXTRA_COLUMNS = ("radar", "rejected")
 #: Läufe, die nur die Deal-Seiten (Feeds + Radar) prüfen - zählen nicht als volle Prüfung
 FEED_TRIGGERS = ("feeds", "manual-feeds")
 
+#: alte Quelle der Travel-Dealz-Artikel und ihr heutiger Name (Deal-Seiten-Preset)
+LEGACY_FEED_SOURCE = "travel-dealz-feed"
+FEED_SOURCE = "feed:travel-dealz"
+
 _INIT_LOCK = threading.Lock()
 _READY: set[str] = set()   # Dateien, deren Schema in diesem Prozess schon angelegt ist
 
@@ -162,7 +167,27 @@ class Store:
         for col in RUN_EXTRA_COLUMNS:
             if col not in cols:
                 self.db.execute(f"ALTER TABLE runs ADD COLUMN {col} INTEGER NOT NULL DEFAULT 0")
+        self._migrate_feed_source()
         self.db.commit()
+
+    def _migrate_feed_source(self) -> None:
+        """Artikel-Deals der alten Quelle ``travel-dealz-feed`` (bis Version 0.1) auf
+        ``feed:travel-dealz`` umschreiben - samt Fingerprint, sonst käme derselbe Artikel nach
+        dem Update erneut als NEU und die alte Zeile liefe nie ab."""
+        rows = self.db.execute(
+            "SELECT fingerprint, alert_id, link, headline FROM deals "
+            "WHERE source=?", (LEGACY_FEED_SOURCE,)).fetchall()
+        for fp, alert_id, link, headline in rows:
+            offer_fp = hashlib.sha1(
+                f"{FEED_SOURCE}|{link}|{headline}".encode()).hexdigest()[:16]
+            new_fp = f"{alert_id}:{offer_fp}"
+            if self.db.execute("SELECT 1 FROM deals WHERE fingerprint=?", (new_fp,)).fetchone():
+                self.db.execute("DELETE FROM deals WHERE fingerprint=?", (fp,))
+            else:
+                self.db.execute("UPDATE deals SET fingerprint=?, source=? WHERE fingerprint=?",
+                                (new_fp, FEED_SOURCE, fp))
+            self.db.execute("UPDATE notifications SET fingerprint=? WHERE fingerprint=?",
+                            (new_fp, fp))
 
     def close(self) -> None:
         try:
@@ -195,8 +220,46 @@ class Store:
         return [r[0] for r in rows]
 
     # -- Deals ------------------------------------------------------------
-    def upsert_deal(self, deal: Deal, renotify_drop: float, now: datetime | None = None) -> str:
-        """Speichert den Deal. Rückgabe: 'new', 'cheaper', 'revived' oder 'known'."""
+    def _deal_row(self, fingerprint: str):
+        return self.db.execute(
+            "SELECT status, notified_price, expired_at FROM deals WHERE fingerprint=?",
+            (fingerprint,)).fetchone()
+
+    @staticmethod
+    def _status(row, price: float, renotify_drop: float, now: datetime | None) -> str:
+        """Meldestatus eines Deals gegenüber seiner gespeicherten Zeile (ohne zu schreiben)."""
+        if row is None:
+            return "new"
+        notified = row["notified_price"]
+        cheaper = bool(notified) and price <= notified * (1 - renotify_drop)
+        if row["status"] == "expired":
+            # Nur melden, wenn deutlich billiger oder schon länger weg - sonst still reaktivieren
+            gone_since = None
+            if row["expired_at"]:
+                try:
+                    gone_since = datetime.fromisoformat(row["expired_at"])
+                except ValueError:
+                    pass
+            long_gone = gone_since is None or (now or datetime.now()) - gone_since >= REVIVE_AFTER
+            if cheaper or long_gone or not notified:
+                return "revived"
+            return "known"
+        if notified is None:
+            return "new"          # gespeichert, aber noch nie gemeldet (z. B. aussortiert)
+        return "cheaper" if cheaper else "known"
+
+    def deal_status(self, deal: Deal, renotify_drop: float, now: datetime | None = None) -> str:
+        """Was ``upsert_deal`` zurückgeben würde - ohne etwas zu speichern."""
+        return self._status(self._deal_row(deal.fingerprint), deal.offer.price, renotify_drop, now)
+
+    def upsert_deal(self, deal: Deal, renotify_drop: float, now: datetime | None = None, *,
+                    notify: bool = True) -> str:
+        """Speichert den Deal. Rückgabe: 'new', 'cheaper', 'revived' oder 'known'.
+
+        ``notify=False``: speichern, ohne ihn als gemeldet zu vermerken (Deal wurde in diesem
+        Lauf aussortiert, z. B. über ``max_deals_per_alert``) - Rückgabe dann immer 'known';
+        ein späterer Lauf meldet ihn als 'new'.
+        """
         now_s = (now or datetime.now()).isoformat(timespec="seconds")
         o = deal.offer
         payload = json.dumps({
@@ -208,10 +271,7 @@ class Store:
             "reference_price": deal.reference_price, "discount": deal.discount,
             "reasons": deal.reasons, "alert_name": deal.alert.name,
         }, ensure_ascii=False)
-        row = self.db.execute(
-            "SELECT status, notified_price, expired_at FROM deals WHERE fingerprint=?",
-            (deal.fingerprint,),
-        ).fetchone()
+        row = self._deal_row(deal.fingerprint)
 
         if row is None:
             self.db.execute(
@@ -219,34 +279,25 @@ class Store:
                 "notified_price, source, link, payload, first_seen, last_seen) "
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                 (deal.fingerprint, deal.alert.id, deal.rating, deal.headline, o.price,
-                 o.price, o.source, o.link, payload, now_s, now_s),
+                 o.price if notify else None, o.source, o.link, payload, now_s, now_s),
             )
             self.db.commit()
-            return "new"
+            return "new" if notify else "known"
 
-        result = "known"
-        notified = row["notified_price"]
-        cheaper = bool(notified) and o.price <= notified * (1 - renotify_drop)
-        if row["status"] == "expired":
-            # Nur melden, wenn deutlich billiger oder schon länger weg - sonst still reaktivieren
-            gone_since = None
-            if row["expired_at"]:
-                try:
-                    gone_since = datetime.fromisoformat(row["expired_at"])
-                except ValueError:
-                    pass
-            long_gone = gone_since is None or (now or datetime.now()) - gone_since >= REVIVE_AFTER
-            if cheaper or long_gone or not notified:
-                result = "revived"
-        elif cheaper:
-            result = "cheaper"
+        if notify:
+            result = self._status(row, o.price, renotify_drop, now)
+            set_notified, reset_notified = result != "known", False
+        else:
+            # still: ein wieder aufgetauchter Deal gilt bis zur nächsten Meldung als ungemeldet
+            result, set_notified = "known", False
+            reset_notified = row["status"] == "expired"
         self.db.execute(
             "UPDATE deals SET status='active', expired_at=NULL, rating=?, headline=?, "
             "price=?, link=?, payload=?, last_seen=?, "
-            "notified_price=CASE WHEN ? THEN ? ELSE notified_price END "
+            "notified_price=CASE WHEN ? THEN ? WHEN ? THEN NULL ELSE notified_price END "
             "WHERE fingerprint=?",
             (deal.rating, deal.headline, o.price, o.link, payload, now_s,
-             result != "known", o.price, deal.fingerprint),
+             set_notified, o.price, reset_notified, deal.fingerprint),
         )
         self.db.commit()
         return result
@@ -293,6 +344,18 @@ class Store:
         )
         self.db.commit()
         return len(gone)
+
+    def expire_stale_articles(self, max_age_days: int, now: datetime | None = None) -> int:
+        """Aktive Artikel-Deals (Deal-Seiten, Radar) ablaufen lassen, die seit ``max_age_days``
+        in keinem Lauf mehr gesehen wurden - z. B. von einer abgewählten Deal-Seite."""
+        now_dt = now or datetime.now()
+        cutoff = (now_dt - timedelta(days=max_age_days)).isoformat(timespec="seconds")
+        cur = self.db.execute(
+            "UPDATE deals SET status='expired', expired_at=? WHERE status='active' "
+            "AND last_seen<? AND (source LIKE 'feed:%' OR source LIKE '%-feed')",
+            (now_dt.isoformat(timespec="seconds"), cutoff))
+        self.db.commit()
+        return cur.rowcount
 
     def expire_departed(self, today: date, now: datetime | None = None) -> int:
         """Aktive Deals, deren Abflug heute oder früher ist, als abgelaufen markieren.

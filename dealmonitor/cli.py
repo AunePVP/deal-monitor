@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import logging
 import os
+import sqlite3
 import sys
+import tempfile
 
 from . import appsettings, notify, regions, report
 from .appsettings import Context
@@ -24,23 +26,51 @@ def context(args) -> Context:
     return ctx
 
 
+def dry_run_context(args, tmp: str) -> Context:
+    """Probelauf: Kopie der Datenbank in ``tmp`` - die echte bleibt unberührt (sonst gälten
+    die gefundenen Deals als gemeldet und kämen nie in Inbox/Webhook)."""
+    real = Context(getattr(args, "data", None), args.config)
+    ctx = Context(tmp, args.config)
+    if real.db_path.exists():
+        src = sqlite3.connect(f"file:{real.db_path}?mode=ro", uri=True)
+        dst = sqlite3.connect(str(ctx.db_path))
+        try:
+            src.backup(dst)
+        finally:
+            src.close()
+            dst.close()
+    ctx.seed()
+    return ctx
+
+
 def cmd_run(args) -> int:
-    ctx = context(args)
     names = [n.strip() for n in args.sources.split(",") if n.strip()] if args.sources else None
-    notifiers = [notify.Console()] if args.dry_run else None
-    total = {"offers": 0, "deals": 0, "notified": 0, "expired": 0, "errors": []}
-    for alert_id in args.alert or [None]:
-        row = execute(ctx, alert_id, "cli", source_names=names, notifiers=notifiers)
-        for k in total:
-            total[k] += row[k]
-    with ctx.store() as store:
-        path = report.write(ctx.build_config(store), store)
+    tmp = tempfile.TemporaryDirectory(prefix="dealmonitor-probe-") if args.dry_run else None
+    try:
+        ctx = dry_run_context(args, tmp.name) if tmp else context(args)
+        notifiers = [notify.Console()] if args.dry_run else None
+        total = {"offers": 0, "deals": 0, "radar": 0, "rejected": 0, "notified": 0,
+                 "expired": 0, "errors": []}
+        for alert_id in args.alert or [None]:
+            row = execute(ctx, alert_id, "cli", source_names=names, notifiers=notifiers,
+                          mode=args.mode)
+            for k in total:
+                total[k] += row.get(k) or ([] if k == "errors" else 0)
+        if tmp:
+            where = "Probelauf – nichts gespeichert, nichts gemeldet (nur Konsole)"
+        else:
+            with ctx.store() as store:
+                where = f"Bericht: {report.write(ctx.build_config(store), store)}"
+    finally:
+        if tmp:
+            tmp.cleanup()
     print(f"\n{total['offers']} Angebote geprüft · {total['deals']} Deals · "
-          f"{total['notified']} gemeldet · {total['expired']} abgelaufen · Bericht: {path}")
+          f"{total['radar']} Radar · {total['rejected']} bei Google verworfen · "
+          f"{total['notified']} gemeldet · {total['expired']} abgelaufen · {where}")
     for e in total["errors"]:
         print("WARNUNG:", e, file=sys.stderr)
     # Fehler nur dann als Exit-Code melden, wenn gar nichts geprüft werden konnte
-    return 1 if total["errors"] and total["offers"] == 0 else 0
+    return 1 if total["errors"] and not (total["offers"] or total["radar"]) else 0
 
 
 def cmd_alerts(args) -> int:
@@ -185,9 +215,13 @@ def main(argv: list[str] | None = None) -> int:
 
     r = sub.add_parser("run", help="Alle Alarme prüfen und Deals melden")
     r.add_argument("--sources", default=None,
-                   help="Kommagetrennt: travelpayouts,feed (Standard: aus den Einstellungen)")
+                   help="Kommagetrennt: travelpayouts,amadeus,google_flights,feeds "
+                        "(Standard: aus den Einstellungen)")
+    r.add_argument("--mode", choices=["full", "feeds"], default="full",
+                   help="full = alle Quellen (Standard), feeds = nur Deal-Seiten + Radar")
     r.add_argument("--alert", action="append", help="Nur diesen Alarm (mehrfach möglich)")
-    r.add_argument("--dry-run", action="store_true", help="Nur Konsole, keine Benachrichtigungen")
+    r.add_argument("--dry-run", action="store_true",
+                   help="Probelauf: nur Konsole, keine Benachrichtigungen, Datenbank unverändert")
     r.set_defaults(fn=cmd_run)
 
     sub.add_parser("alerts", help="Gespeicherte Alarme anzeigen").set_defaults(fn=cmd_alerts)
@@ -206,7 +240,7 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--max-stops", type=int, default=1)
     a.add_argument("--min-nights", type=int)
     a.add_argument("--max-nights", type=int)
-    a.add_argument("--keywords", nargs="+", help="Stichwörter für den Travel-Dealz-Feed (UND)")
+    a.add_argument("--keywords", nargs="+", help="Stichwörter für die Deal-Seiten (UND)")
     a.add_argument("--both-directions", action="store_true",
                    help="Zusätzlich Alarm für die Gegenrichtung anlegen")
     a.set_defaults(fn=cmd_add)
@@ -238,6 +272,10 @@ def main(argv: list[str] | None = None) -> int:
     sv.add_argument("--no-scheduler", action="store_true",
                     help="Kein automatischer Zeitplan (manuelle Prüfungen gehen trotzdem)")
     sv.set_defaults(fn=cmd_serve)
+
+    for sp in sub.choices.values():   # "-v" auch nach dem Befehl: "run --dry-run -v"
+        sp.add_argument("-v", "--verbose", action="store_true", default=argparse.SUPPRESS,
+                        help="Ausführliche Ausgabe")
 
     args = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING,

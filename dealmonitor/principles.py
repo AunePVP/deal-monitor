@@ -109,6 +109,42 @@ def headline(alert: Alert, offer: Offer) -> str:
     return text
 
 
+REF_MEDIAN = "Median der letzten Beobachtungen"
+REF_BASELINE = "Normalpreis laut Konfiguration"
+
+
+def assess(alert: Alert, price: float, ref: float | None,
+           ref_source: str = REF_BASELINE) -> tuple[str, float | None, list[str]] | None:
+    """Preis gegen Grenze/Referenz prüfen: ``(rating, discount, reasons)`` oder ``None``."""
+    discount = (1 - price / ref) if ref else None
+    reasons: list[str] = []
+
+    if alert.max_price is not None:
+        # Die vom Nutzer gesetzte Grenze ist hart.
+        if price > alert.max_price:
+            return None
+        reasons.append(f"unter deiner Grenze von {euro(alert.max_price)}")
+    else:
+        if discount is None or discount < alert.min_discount:
+            return None
+
+    if discount is not None and ref:
+        if discount > 0:
+            reasons.append(f"{discount:.0%} unter Referenz {euro(ref)} ({ref_source})")
+        else:
+            reasons.append(f"Referenz {euro(ref)} ({ref_source}) - kein Rabatt, aber im Budget")
+
+    if discount is not None and discount >= TOP_DEAL:
+        rating = "Top-Deal"
+    elif discount is not None and discount >= VERY_GOOD:
+        rating = "Sehr gut"
+    elif discount is None and alert.max_price and price <= 0.75 * alert.max_price:
+        rating = "Sehr gut"
+    else:
+        rating = "Deal"
+    return rating, discount, reasons
+
+
 def evaluate(
     alert: Alert,
     offer: Offer,
@@ -122,35 +158,11 @@ def evaluate(
         return None
 
     ref = reference_price(alert, history, min_samples)
-    discount = (1 - offer.price / ref) if ref else None
-    reasons: list[str] = []
-
-    if alert.max_price is not None:
-        # Die vom Nutzer gesetzte Grenze ist hart.
-        if offer.price > alert.max_price:
-            return None
-        reasons.append(f"unter deiner Grenze von {euro(alert.max_price)}")
-    else:
-        if discount is None or discount < alert.min_discount:
-            return None
-
-    if discount is not None and ref:
-        source = "Median der letzten Beobachtungen" if len(history) >= min_samples \
-            else "Normalpreis laut Konfiguration"
-        if discount > 0:
-            reasons.append(f"{discount:.0%} unter Referenz {euro(ref)} ({source})")
-        else:
-            reasons.append(f"Referenz {euro(ref)} ({source}) - kein Rabatt, aber im Budget")
-
-    if discount is not None and discount >= TOP_DEAL:
-        rating = "Top-Deal"
-    elif discount is not None and discount >= VERY_GOOD:
-        rating = "Sehr gut"
-    elif discount is None and alert.max_price and offer.price <= 0.75 * alert.max_price:
-        rating = "Sehr gut"
-    else:
-        rating = "Deal"
-
+    ref_source = REF_MEDIAN if len(history) >= min_samples else REF_BASELINE
+    result = assess(alert, offer.price, ref, ref_source)
+    if result is None:
+        return None
+    rating, discount, reasons = result
     return Deal(
         alert=alert,
         offer=offer,
@@ -159,4 +171,22 @@ def evaluate(
         discount=discount,
         reasons=reasons,
         headline=headline(alert, offer),
+        reference_source=ref_source,
     )
+
+
+def reprice(deal: Deal, price: float, today: date | None = None) -> bool:
+    """Deal auf einen neuen (z. B. bei Google bestätigten) Preis umrechnen: Rabatt, Gründe,
+    Bewertung und Überschrift neu. ``False``, wenn er damit kein Deal mehr ist (Grenze/Rabatt
+    verfehlt oder Flug passt nicht mehr zu den Regeln) - der Deal bleibt dann unverändert."""
+    o = deal.offer
+    old = o.price
+    o.price = price
+    result = None if quality_problems(deal.alert, o, today) else assess(
+        deal.alert, price, deal.reference_price, deal.reference_source or REF_BASELINE)
+    if result is None:
+        o.price = old
+        return False
+    deal.rating, deal.discount, deal.reasons = result[0], result[1], list(result[2])
+    deal.headline = headline(deal.alert, o)
+    return True

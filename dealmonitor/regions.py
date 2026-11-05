@@ -222,6 +222,13 @@ FOREIGN_PLACES: tuple[str, ...] = (
     "Brasilien", "Argentinien",
 )
 
+#: IATA-Codes, die zugleich gewöhnliche (englische/deutsche) Wörter sind - in Großbuchstaben-
+#: Titeln ("YES YOU CAN!", "WAS IST LOS") zählen sie nur im Strecken-Kontext ("FRA-CAN")
+AMBIGUOUS_CODES: frozenset[str] = frozenset("""
+    CAN MAN SEA SIN DEL BUD WAS IST MAD GOT SHE INN LAX PAR BEG DUB MEL MIA BOS BTS LUX PAD
+    SOF HAN TAO CAI MIL LON VIE ATL BOM SEL OSA
+""".split())
+
 _AIRPORT_SUFFIXES = ("Capital", "Daxing", "Pudong", "Hongqiao", "Tianfu")
 
 
@@ -323,6 +330,47 @@ def place_kind(place: str) -> str:
 
 def is_home(code: str) -> bool:
     return code.upper() in HOME_CODES
+
+
+def country(code: str) -> str | None:
+    """"DE", "CH" oder "AT" für DACH-Flughäfen, sonst None."""
+    code = code.upper()
+    for name, table in (("DE", DE_AIRPORTS), ("CH", CH_AIRPORTS), ("AT", AT_AIRPORTS)):
+        if code in table:
+            return name
+    return None
+
+
+_TOKEN_RE = re.compile(r"[^\W\d_][\w'’-]*")
+
+
+def places_in(text: str) -> set[str]:
+    """Bekannte Orte in einem Text (kanonischer Name je Synonym-Gruppe, z. B. {"Bangkok", "Frankfurt"}).
+
+    IATA-Codes zählen nur in Großschreibung ("MAN" ja, "man" nein).
+    """
+    tokens = _TOKEN_RE.findall(text or "")
+    out: set[str] = set()
+    i = 0
+    while i < len(tokens):
+        for n in (3, 2, 1):
+            words = tokens[i:i + n]
+            if len(words) < n:
+                continue
+            cand = " ".join(words)
+            gi = _INDEX.get(normalize_name(cand))
+            if gi is not None and n == 1 and cand in AMBIGUOUS_CODES:
+                continue
+            if gi is None or (n == 1 and len(cand) == 3 and not cand.isupper()
+                              and cand.upper() in AIRPORT_NAMES
+                              and normalize_name(cand) not in
+                              {normalize_name(x) for x in _GROUPS[gi] if not _CODE_RE.match(x)}):
+                continue
+            out.add(_GROUPS[gi][0])
+            i += n - 1
+            break
+        i += 1
+    return out
 
 
 def region_names(codes: list[str]) -> list[str]:

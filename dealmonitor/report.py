@@ -10,7 +10,7 @@ from urllib.parse import quote
 from . import regions
 from .config import Config
 from .principles import CABIN_LABEL, euro
-from .sources.feed import source_label
+from .sources.feed import SAFE_LINK_RE, source_label
 from .store import Store
 
 CSS = """
@@ -78,14 +78,14 @@ def _card(d: dict) -> str:
     if expired and d.get("expired_at"):
         meta.append("abgelaufen " + e(d["expired_at"][:16].replace("T", " ")))
     links = []
-    if d.get("link"):
+    if d.get("link") and SAFE_LINK_RE.match(d["link"]):   # nur http(s), kein "javascript:"
         links.append(f'<a href="{e(d["link"])}" rel="noopener" target="_blank">Zum Angebot</a>')
     if (gf := _gf_link(d)):
         links.append(f'<a href="{e(gf)}" rel="noopener" target="_blank">Bei Google Flights gegenprüfen</a>')
     reasons = "".join(f"<li>{e(r)}</li>" for r in d.get("reasons") or [])
     return f"""<div class="card{' expired' if expired else ''}">
 <div class="row"><div><div>{badge}</div><div class="title">{e(d['headline'])}</div>
-<div class="meta">{' · '.join(meta)}</div></div><div class="price">{euro(d['price'])}</div></div>
+<div class="meta">{' · '.join(meta)}</div></div><div class="price">{euro(d['price']) if d['price'] else 'Preis im Artikel'}</div></div>
 {f'<ul>{reasons}</ul>' if reasons else ''}
 {f'<div class="links">{"".join(links)}</div>' if links else ''}</div>"""
 

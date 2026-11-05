@@ -29,6 +29,7 @@ import re
 from dataclasses import dataclass, fields
 from datetime import datetime
 
+from . import regions
 from .models import Alert, Deal, Offer
 from .principles import CABIN_LABEL, euro
 from .sources import feed as feed_mod
@@ -126,6 +127,8 @@ def check(item: dict, settings: RadarSettings | None = None,
     """Gründe, warum dieser Artikel ein Radar-Treffer ist - ``None`` = kein Treffer.
 
     ``item`` ist ein Eintrag aus :meth:`FeedSource.parse`/``load`` (mit ``profile``).
+    Trifft nicht der Hauptpreis, sondern ein weiterer Kabinenpreis der Überschrift zu
+    ("Tokio ab 650€ (Business ab 1.199€)"), werden ``info.cabin``/``info.price`` darauf gesetzt.
     """
     settings = settings or RadarSettings()
     info = info or feed_mod.analyze(item)
@@ -138,11 +141,18 @@ def check(item: dict, settings: RadarSettings | None = None,
     if hot:
         reasons.append(hot)
     price = info.price
-    if price is not None and price > 0:
-        limit = settings.limit(info.cabin)
-        if price <= limit and (info.cabin != "economy" or price >= settings.economy_min):
-            reasons.append(f"{CABIN_LABEL.get(info.cabin, info.cabin)} ≤ {euro(limit)}")
-    elif hot:
+    # Hauptpreis, dann weitere Kabinen mit eigenem Preis ("Tokio ab 650€ (Business ab 1.199€)")
+    options = [(info.cabin, price)] + list(info.alt_prices.items())
+    for cabin, p in options:
+        if p is None or p <= 0:
+            continue
+        limit = settings.limit(cabin)
+        if p <= limit and (cabin != "economy" or p >= settings.economy_min):
+            reasons.append(f"{CABIN_LABEL.get(cabin, cabin)} ≤ {euro(limit)}")
+            if (cabin, p) != (info.cabin, price):
+                info.cabin, info.price = cabin, p   # der Treffer gilt für diese Kabine
+            break
+    if hot and not any(p is not None and p > 0 for _, p in options):
         reasons.append("Preis nicht in der Überschrift" if not info.foreign_currency
                        else "Preis nur in Fremdwährung")
     if not reasons:
@@ -166,9 +176,10 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
          exclude_links: set[str] | None = None) -> list[Deal]:
     """Alle Flug-Artikel prüfen und Radar-Deals liefern (günstigste zuerst, Error Fares vorn).
 
-    ``items_or_source``: eine :class:`FeedSource` (``load``/``all_items`` wird aufgerufen,
-    bereits Alarmen zugeordnete Artikel aus ``matched_links`` werden ausgelassen) oder
-    eine Liste von Artikel-Dicts. ``settings``: :class:`RadarSettings` oder Dict mit
+    ``items_or_source``: eine :class:`FeedSource` (``load``/``all_items`` wird aufgerufen)
+    oder eine Liste von Artikel-Dicts. ``exclude_links``: normalisierte Links, die nicht
+    gemeldet werden (der Monitor übergibt die Artikel, die Deal eines Alarms wurden); ohne
+    Angabe werden die Artikel aus ``FeedSource.matched_links`` ausgelassen. ``settings``: :class:`RadarSettings` oder Dict mit
     ``radar_*``-Werten. Fehler beim Laden (``SourceError``) werden durchgereicht.
     """
     if isinstance(settings, dict) or settings is None:
@@ -176,31 +187,71 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
     if not settings.enabled:
         return []
     exclude = set(exclude_links or ())
+    use_matched = exclude_links is None
     if hasattr(items_or_source, "all_items"):
         items = items_or_source.all_items()
-        exclude |= getattr(items_or_source, "matched_links", set())
+        if use_matched:
+            exclude |= getattr(items_or_source, "matched_links", set())
     elif hasattr(items_or_source, "load"):
         items = items_or_source.load()
-        exclude |= getattr(items_or_source, "matched_links", set())
+        if use_matched:
+            exclude |= getattr(items_or_source, "matched_links", set())
     else:
         items = list(items_or_source)
     out: list[Deal] = []
+    kept: list[tuple[Deal, tuple | None]] = []
     seen: set[str] = set()
-    for it in items:
-        info = feed_mod.analyze(it)
-        key = info.link or it.get("link") or it["title"]
+    analyzed = [(it, feed_mod.analyze(it)) for it in items]
+    keys = [info.link or it.get("link") or it["title"] for it, info in analyzed]
+    # Derselbe Deal auf einer anderen Seite wie ein Alarm-Deal: auch nicht melden
+    taken = [deal_key(it["title"], info) for (it, info), k in zip(analyzed, keys) if k in exclude]
+    for (it, info), key in zip(analyzed, keys):
         if key in exclude or key in seen:
             continue
         reasons = check(it, settings, info)
         if not reasons:
             continue
         seen.add(key)
-        out.append(Deal(alert=RADAR_ALERT, offer=_offer(it, info), rating=RATING,
-                        reference_price=None, discount=None, reasons=reasons,
-                        headline=it["title"]))
+        dkey = deal_key(it["title"], info)
+        if any(same_deal(dkey, t) for t in taken):
+            continue
+        twin = next((d for d, k in kept if same_deal(dkey, k)), None)
+        if twin is not None:      # gleicher Deal bei einer zweiten Seite: einmal melden
+            twin.reasons.append(f"Auch bei {feed_mod.source_label(info.source)}: "
+                                f"{euro(info.price)}")
+            continue
+        deal = Deal(alert=RADAR_ALERT, offer=_offer(it, info), rating=RATING,
+                    reference_price=None, discount=None, reasons=reasons, headline=it["title"])
+        kept.append((deal, dkey))
+        out.append(deal)
     out.sort(key=lambda d: (0 if hot_reason(d.offer.title or "") else 1,
                             d.offer.price if d.offer.price > 0 else float("inf")))
     return out
+
+
+#: Zwei Artikel gelten als derselbe Deal, wenn Kabine, Reisetyp und mindestens eine Zielstadt
+#: übereinstimmen und die Preise höchstens so weit auseinanderliegen (Travel-Dealz 1.208 € /
+#: premium-flights 1.210 € für Frankfurt–Bangkok Business)
+DUPLICATE_TOLERANCE = 0.05
+
+
+def deal_key(title: str, info: feed_mod.ItemInfo) -> tuple | None:
+    """(Kabine, one-way, Ziele, Preis) eines Artikels - ``None``, wenn kein Ziel/Preis erkennbar."""
+    places = frozenset(p for p in regions.places_in(title) if regions.place_kind(p) != "home")
+    if not places or not info.price or info.price <= 0:
+        return None
+    return info.cabin, info.oneway, places, info.price
+
+
+def same_deal(a: tuple | None, b: tuple | None) -> bool:
+    """Gleiche Kabine/Reisetyp, ein gemeinsames Ziel mit Flughafen (Stadt, nicht nur Land:
+    "Antalya / Türkei" und "Izmir / Türkei" bleiben getrennt) und fast gleicher Preis."""
+    if a is None or b is None or a[:2] != b[:2]:
+        return False
+    if not any(regions.codes_for(p) for p in a[2] & b[2]):
+        return False
+    lo, hi = sorted((a[3], b[3]))
+    return hi <= lo * (1 + DUPLICATE_TOLERANCE)
 
 
 def sources_used(deals: list[Deal]) -> set[str]:

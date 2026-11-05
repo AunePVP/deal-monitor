@@ -1,4 +1,4 @@
-# Übergabe – Stand 04.11.2026, abends (Limit fast erreicht, Arbeit pausiert)
+# Übergabe – Stand 05.11.2026 (Review-Fixes fertig, nichts committet)
 
 Wenn der Nutzer **„mach weiter“** schreibt: diese Datei lesen, Branch `wip/quellen-ausbau` auschecken
 und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat alles vorab freigegeben
@@ -14,37 +14,49 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
 
 ## Stand
 - `main` (Commit 684b115): fertige Web-App mit Travelpayouts + Travel-Dealz-Feed, Docker, Unraid-Vorlage. Image gebaut, öffentlich.
-- `wip/quellen-ausbau` (dieser Branch): Bau-Runde 1 „mehr Quellen“ nach `docs/handoff/SPEC-2-quellen.md`, **mittendrin gestoppt**.
-  `python3 -m unittest discover -s tests` → **219 Tests grün** zum Zeitpunkt des Stopps. E2E (`node tests/e2e/ui.mjs`) NICHT gelaufen.
+- **05.11.2026: alles auf `main` gemergt und gepusht** (Image wird per Actions gebaut). `wip/quellen-ausbau` = gleicher Stand.
+- `wip/quellen-ausbau`: „Mehr Quellen“ nach
+  `docs/handoff/SPEC-2-quellen.md` komplett: A Feeds, B Radar, C Google Flights, D Amadeus, E Integration
+  (Agenten-Berichte: `docs/handoff/agent-results/bau-runde-1.json`).
+- Review (Parsing, Backend, Sicherheit, Vollständigkeit) gelaufen, **alle 25 bestätigten Befunde behoben** (05.11.2026), u. a.:
+  Google-Gegenprüfung nimmt nur Flüge, die zu den Alarm-Regeln passen (Umstiege/Dauer/Airline), meldet den Google-Preis
+  und verwirft über der Grenze; nächstgünstiger Termin wird geprüft, wenn der günstigste durchfällt; aussortierte Deals
+  gelten nicht mehr als gemeldet; Google-Budget: ¼ Reserve für Gegenprüfung, Rest fair auf alle Alarme verteilt;
+  Feed-Erkennung (First Minute, Businessclass, Premium-Economy, Airline-Namen als Abflug, „Kanton Zürich“, „YES YOU CAN“,
+  Abflug Schweiz bei @DE-Alarm, Meilen/Nächte-Titel, „1,210€“); Ablauf alter/abgewählter Feed-Deals, Migration
+  `travel-dealz-feed` → `feed:travel-dealz`, einmalige Einstellungs-Migration von `main`; HTTP-Größen-/Zeitlimit;
+  eigene Feeds nur öffentliche Adressen; Links nur http(s); `run --dry-run` arbeitet auf einer DB-Kopie;
+  Amadeus-Texte („Self-Service eingestellt“); Unraid-Vorlage ohne Secret-Felder, `ALLOWED_HOSTS` nicht mehr `*`
+  (dafür gehen Heimnetz-Namen immer: `tower`, `*.local`, `*.lan`, `*.home.arpa`, `*.internal`, `*.fritz.box`).
+- Google pausiert nach 3 Netzwerkfehlern hintereinander für den Rest des Laufs (Lauf ohne Netz: 29 s statt alle Abfragen).
+- Docker lokal gebaut + gestartet: `healthy`, erster Lauf endet sauber (hier ohne DNS im Container → Fehler je Quelle gemeldet).
+- GitGuardian-Dummies erledigt (`123456:test-dummy`, `test-dummy-token`, `test-pw`, Amadeus-Fixture-Token).
+- Tests: `python3 -m unittest discover -s tests` → **297 grün**; `node tests/e2e/ui.mjs` → **37 Schritte grün**
+  (neue Tests: `tests/test_review_fixes.py`, Erweiterungen in `test_integration.py`, `test_google.py`, `test_web.py`).
+- Live (05.11.2026): `run --dry-run --sources feeds`: 190 Artikel (≤ 14 Tage, dedupliziert), 92 Flug-Artikel,
+  0 Alarm-Treffer (aktuell kein passender Artikel), 10 Radar-Treffer (Antalya 59 €, Paris 72 €, Stockholm 85 €,
+  Izmir 125 €, Island 156 €, Cabo one-way 210 €, New York 298 €, Erbil „Business“ 390 €, Condor Premium NYC 640 €,
+  Bangkok Business 1.208 €); keine Kreuzfahrten/Fremdabflüge. Google 1 Gegenprüf-Abfrage ZRH–HAM 15.–19.01.2027
+  mit „nonstop, ohne KL“: 183 € SWISS (168 € KLM mit Umstieg korrekt übersprungen).
 
-### Fertig (Agenten-Berichte in `docs/handoff/agent-results/bau-runde-1.json`)
-- **A Feeds** (`sources/feed.py`, `regions.py`): Presets travel-dealz (5 Feeds), Suche, mydealz, fly4free, premium-flights,
-  urlaubspiraten/reisetopia optional; Synonyme de/en, Auto-Stichwörter, Abflugort-Erkennung, Dedup per Link. Tests `tests/test_feeds.py`.
-- **B Radar** (`radar.py`, `tests/test_radar.py`).
-- **C Google Flights** (`sources/googleflights.py`, `tests/test_google.py`, 3 Live-Fixtures).
-- **D Amadeus** (`sources/amadeus.py`, `tests/test_amadeus.py`; ohne Key, nicht live getestet).
-
-### Abgebrochen mitten in E (Integration) – unbedingt prüfen
-Der Integrations-Agent hat bereits geändert: `appsettings.py, scheduler.py, monitor.py, web.py, store.py, config.py, demo.py,
-notify.py, report.py, http.py, static/app.js, static/index.html, config/alerts.toml, tests/test_web.py, tests/test_fixes.py`.
-Unklar, was davon vollständig ist. Gegen SPEC-2 Abschnitt E Punkt für Punkt prüfen und vervollständigen, besonders:
-Quellen-Fabrik in `appsettings.Context.sources()` (google_flights, amadeus, feeds/Alias feed), zweiter Scheduler-Takt
-(`feed_interval_minutes`), Radar-Lauf + Google-Verifikation + `RunResult.rejected` in `monitor.py`, `/api/run` mit `mode`,
-Frontend-Karten „Quellen“ + „Radar“, Radar-Chip/Badge, `style.css` (noch unverändert!), README-Quellen-Tabelle,
-`.env.example`, `unraid/deal-monitor.xml`, E2E-Schritte in `tests/e2e/ui.mjs`.
+### Offene Punkte (bewusst nicht geändert / Entscheidung des Nutzers)
+- Feed-Artikel älter als 14 Tage werden ignoriert (`feed_max_age_days`) – dadurch fehlt z. B. „Peking Business ab
+  Frankfurt 1.123 €“ vom 30.09.; ob noch buchbar, ist unbekannt (RSS kennzeichnet abgelaufene Deals nicht).
+- Travel-Dealz-Suche max. 8 Suchen/Lauf: Hangzhou, Chongqing, Xiamen werden nie gesucht – steht jetzt als Hinweis im
+  Lauf, deren Such-Deals laufen dann nicht ab.
+- Google liefert manchmal nur die Suchmaske (zählt als Fehlschlag, kein zweiter Versuch); Pause zwischen Abfragen
+  2–4 s zufällig (laut Spec, kann < 3 s sein).
+- Derselbe Deal von zwei Seiten wird nur im Radar zusammengeführt, bei Alarm-Deals nicht.
+- Radar Economy 40–300 € meldet auch Kurz-/Mittelstrecke; Eurowings „Business“ zählt als Business.
+- Mobil: Radar-Chip erst nach Wischen in der Chip-Leiste sichtbar.
+- Amadeus nie live getestet (Self-Service laut Anbieter eingestellt); Amadeus-Budget wird (anders als Google) nicht
+  auf die Alarme verteilt.
+- SSRF-Schutz eigener Feeds: Die DNS-Prüfung entfällt, wenn ein HTTP-Proxy die Namen auflöst (wie in der Cloud-Session).
+- Voller Lauf mit allen Quellen (Travelpayouts-Token fehlt hier) lief live nicht; zweiter Zeitplan-Takt nur per Test.
 
 ## Nächste Schritte (Reihenfolge)
-1. Integration E fertigstellen (s. o.), Unit-Tests + `node tests/e2e/ui.mjs` grün.
-2. Live-Lauf: `python3 -m dealmonitor --data /tmp/x run --dry-run --sources feeds -v` → Zuordnung kritisch prüfen
-   (keine Kreuzfahrten/Bahn, keine Fremdabflüge bei @DE, keine 14,99 €-Promos im Radar, „China Eastern: Amsterdam–Tokio“ kein China-Deal).
-   Google kurz live: max. 4 Abfragen.
-3. Review (Parsing, Backend, Sicherheit, Vollständigkeit) → verifizieren → fixen. Workflow-Vorlage: `docs/handoff/workflows/bau-runde-1.js`
-   (Phasen E2E/Review/Verify/Fix ab Zeile „phase('E2E')“ wiederverwendbar).
-4. GitGuardian-Fehlalarme entschärfen: Testwerte `999999:SECRETTOKENabcdefgh` (tests/test_fixes.py), `tp-e2e-geheim-9f3a`
-   (tests/e2e/ui.mjs), `sesam` (tests/test_web.py) durch offensichtliche Dummies ersetzen (z. B. `123456:test-dummy`, `test-dummy`).
-5. Docker-Image lokal bauen + starten (`docker compose up -d --build`, Health prüfen), dann auf `main` mergen, pushen,
-   GitHub-Actions-Lauf „Container-Image“ abwarten und Ergebnis melden.
-6. Kurze Abschlussmeldung an den Nutzer (was live getestet ist, was nicht).
+Schritte 1–6 erledigt (Integration, Live-Lauf, Review + Fixes, GitGuardian-Dummies, Docker + Merge/Push auf `main`,
+Abschlussmeldung). Offen nur noch: Runde 2 – **nur nach OK des Nutzers**.
 
 ## Runde 2 (Recherche-Ergebnisse einbauen) – NUR nach OK des Nutzers
 Der Nutzer hat Runde 2 wegen Limit ausdrücklich zurückgestellt. Erst nach Schritt 6 anbieten.

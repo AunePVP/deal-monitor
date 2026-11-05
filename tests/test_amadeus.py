@@ -191,7 +191,7 @@ class TokenTest(ApiCase):
         self.assertEqual(first.headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(first.data, b"grant_type=client_credentials&client_id=KEY&client_secret=SECRET")
         data_call = self.api.of(DATES_PATH)[0]
-        self.assertEqual(data_call.headers["Authorization"], "Bearer CpjU0sEenniHCgPDrndzOSWFk5mN")
+        self.assertEqual(data_call.headers["Authorization"], "Bearer test-dummy-access-token")
         self.assertIn("application/vnd.amadeus+json", data_call.headers["Accept"])
         self.assertEqual(data_call.method, None, "GET")
         # zweiter Abruf: Token aus dem Cache

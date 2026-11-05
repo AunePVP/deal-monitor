@@ -53,6 +53,8 @@ HEADERS = {
 }
 TIMEOUT = 30
 BLOCKED_MESSAGE = "Google Flights blockiert gerade – später erneut"
+#: Obergrenze für eine Ergebnisseite (komprimiert; normal ~0,3 MB gzip / 2,4 MB entpackt)
+MAX_PAGE_BYTES = 8_000_000
 #: günstigste Ergebnisse je Abfrage, die als Offers weitergegeben werden
 MAX_RESULTS_PER_QUERY = 10
 CABIN_QUERY = {"economy": "", "premium": " premium economy class",
@@ -150,7 +152,8 @@ def blocked_reason(url: str, html: str) -> str | None:
 def fetch_html(url: str, timeout: float = TIMEOUT) -> str:
     """Lädt eine Google-Flights-Seite. ``GoogleBlocked`` bei Sperre, ``HttpError`` sonst."""
     try:
-        resp = http.request(url, headers=HEADERS, timeout=timeout, retries=0, full=True)
+        resp = http.request(url, headers=HEADERS, timeout=timeout, retries=0, full=True,
+                            max_bytes=MAX_PAGE_BYTES)
     except http.HttpError as e:
         if e.status in (403, 429):
             raise GoogleBlocked(f"HTTP {e.status}") from e
@@ -281,6 +284,30 @@ def page_settings(html: str) -> dict[str, str | None]:
     return out
 
 
+def row_problem(row: dict, *, max_stops: int | None = None, max_minutes: float | None = None,
+                exclude_airlines=()) -> str | None:
+    """Warum eine Ergebniszeile nicht zu den Alarm-Regeln passt (None = passt)."""
+    stops, minutes = row.get("stops"), row.get("duration_min")
+    if max_stops is not None and stops is not None and stops > max_stops:
+        return f"{stops} Umstiege"
+    if max_minutes is not None and minutes is not None and minutes > max_minutes:
+        return f"{minutes / 60:.1f} h"
+    excluded = {a.upper() for a in exclude_airlines or ()}
+    if excluded:
+        code = (row.get("airline_code") or "").upper()
+        name = (row.get("airline") or "").upper()
+        if code in excluded or name in excluded:
+            return f"Airline {row.get('airline') or code} ausgeschlossen"
+    return None
+
+
+def alert_criteria(alert: Alert) -> dict:
+    """Umstiege, Dauer und ausgeschlossene Airlines eines Alarms (für ``row_problem``)."""
+    return {"max_stops": alert.max_stops,
+            "max_minutes": alert.max_duration_hours * 60 if alert.max_duration_hours else None,
+            "exclude_airlines": alert.exclude_airlines}
+
+
 # -- Datumsplanung ----------------------------------------------------------------------
 def _months(start: date, count: int) -> list[tuple[int, int]]:
     out, y, m = [], start.year, start.month
@@ -347,8 +374,11 @@ class GoogleFlightsSource:
         timeout: float = TIMEOUT,
         fetcher=None,
         seed: int | None = None,
+        verify_reserve: int = 0,
     ) -> None:
         self.max_requests = max(int(max_requests), 0)
+        #: so viele Abfragen lässt der Scan für die Gegenprüfung übrig
+        self.verify_reserve = min(max(int(verify_reserve), 0), self.max_requests)
         self.delay = max(float(delay), 0.0)
         self.verify_only = verify_only
         self.scan_months = scan_months
@@ -374,6 +404,27 @@ class GoogleFlightsSource:
         self._cache: dict[str, list[dict]] = {}
         self._last_request_at: float | None = None
         self._consecutive_failures = 0
+        #: Scan-Budget je Alarm (``begin_run``); ohne Eintrag gilt das ganze Scan-Budget
+        self._shares: dict[str, int] = {}
+
+    @property
+    def scan_budget(self) -> int:
+        """Abfragen, die der Scan insgesamt verbrauchen darf (Rest bleibt der Gegenprüfung)."""
+        return max(self.max_requests - self.verify_reserve, 0)
+
+    def begin_run(self, alerts: list[Alert]) -> None:
+        """Scan-Budget fair auf die Alarme des Laufs verteilen: jeder bekommt gleich viel,
+        wer weniger braucht, gibt den Rest an die anderen weiter. Sonst verbrauchen die ersten
+        Alarme alles und die letzten (z. B. China mit hunderten Strecken) bekommen nie Google."""
+        self._shares = {}
+        if self.verify_only:
+            return
+        needs = sorted((len(self.plan(a)), a.id) for a in alerts)
+        budget = self.scan_budget
+        for k, (need, alert_id) in enumerate(needs):
+            given = min(need, budget // (len(needs) - k))   # kleinster Bedarf zuerst
+            self._shares[alert_id] = given
+            budget -= given
 
     @property
     def remaining(self) -> int:
@@ -418,6 +469,15 @@ class GoogleFlightsSource:
             page = self.fetcher(url) if self.fetcher else fetch_html(url, self.timeout)
         except GoogleBlocked as e:
             self._down = f"{BLOCKED_MESSAGE} ({e})"
+            raise
+        except http.HttpError as e:
+            if e.network:   # Netz weg/Zeitüberschreitung: nicht alle Abfragen durchprobieren
+                self._consecutive_failures += 1
+                if self._consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
+                    self._down = ("Google Flights nicht erreichbar "
+                                  f"({self._consecutive_failures} Abfragen hintereinander) – "
+                                  "pausiert bis zum nächsten Lauf")
+                    raise GoogleBlocked(self._down) from None
             raise
         finally:
             self._last_request_at = time.monotonic()
@@ -474,12 +534,18 @@ class GoogleFlightsSource:
         errors = 0
         skipped = 0
         affected: set[tuple[str, str]] = set()
+        share = self._shares.get(alert.id)
+        used = 0
         for origin, dest, dep, ret in plan:
             url = build_url(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
-            if url not in self._cache and self.requests_made >= self.max_requests:
+            cached = url in self._cache
+            if not cached and (self.requests_made >= self.scan_budget
+                               or (share is not None and used >= share)):
                 skipped += 1
                 affected.add((origin, dest))
                 continue
+            if not cached:
+                used += 1
             try:
                 results = self.query(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
             except GoogleBlocked:
@@ -504,10 +570,12 @@ class GoogleFlightsSource:
     def to_offers(self, results: list[dict], alert: Alert, origin: str, dest: str,
                   departure: date, return_date: date | None, link: str) -> list[Offer]:
         offers: list[Offer] = []
-        for row in results[:MAX_RESULTS_PER_QUERY]:
+        # erst nach den Alarm-Regeln filtern, dann kürzen - sonst verdrängen 10 billigere
+        # Umsteigeflüge einen passenden Nonstop-Flug
+        criteria = alert_criteria(alert)
+        fitting = [r for r in results if row_problem(r, **criteria) is None]
+        for row in fitting[:MAX_RESULTS_PER_QUERY]:
             code = row.get("airline_code")
-            if code and code.upper() in alert.exclude_airlines:
-                continue
             offers.append(Offer(
                 source=self.name,
                 origin=origin.upper(),
@@ -528,9 +596,14 @@ class GoogleFlightsSource:
 
     # -- Gegenprüfung ---------------------------------------------------------
     def verify(self, origin: str, dest: str, departure: date, return_date: date | None,
-               cabin: str = "economy", roundtrip: bool = True) -> dict | None:
-        """Günstigster Google-Preis für genau diese Daten: ``{price, airline, stops, link}``.
+               cabin: str = "economy", roundtrip: bool = True, *, max_stops: int | None = None,
+               max_minutes: float | None = None, exclude_airlines=()) -> dict | None:
+        """Günstigster *passender* Google-Flug für genau diese Daten:
+        ``{price, airline, airline_code, stops, duration_min, link}``.
 
+        Passend heißt: höchstens ``max_stops`` Umstiege, Hinflug höchstens ``max_minutes``,
+        keine Airline aus ``exclude_airlines`` (die Regeln des Alarms). Zeigt Google Flüge,
+        aber keiner passt, kommt ``{"price": None, "cheapest": …, "reason": …}`` zurück.
         ``None`` heißt "nicht gegenprüfbar" (Sperre, Netzwerk, Budget erschöpft, keine
         Ergebnisse) - der Grund steht danach in ``last_error``. Zählt auf ``max_requests``;
         pro Lauf höchstens ``verify_limit`` echte Gegenprüfungen.
@@ -561,6 +634,14 @@ class GoogleFlightsSource:
         if not results:
             self.last_error = "Google Flights: keine Flüge für diese Daten gefunden"
             return None
-        best = results[0]
-        return {"price": float(best["price"]), "airline": best.get("airline") or best.get("airline_code"),
-                "stops": best.get("stops"), "link": url}
+        criteria = {"max_stops": max_stops, "max_minutes": max_minutes,
+                    "exclude_airlines": exclude_airlines}
+        best = next((r for r in results if row_problem(r, **criteria) is None), None)
+        if best is None:
+            first = results[0]
+            return {"price": None, "cheapest": float(first["price"]), "link": url,
+                    "reason": f"kein passender Flug (günstigster: {row_problem(first, **criteria)})"}
+        return {"price": float(best["price"]),
+                "airline": best.get("airline") or best.get("airline_code"),
+                "airline_code": best.get("airline_code"), "stops": best.get("stops"),
+                "duration_min": best.get("duration_min"), "link": url}

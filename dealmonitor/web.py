@@ -139,6 +139,7 @@ def _int_param(query: dict, name: str, default: int, lo: int = 1, hi: int = 1000
 # -- Request-Handler ----------------------------------------------------------------
 
 LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1"}
+LAN_SUFFIXES = (".local", ".lan", ".home", ".home.arpa", ".internal", ".fritz.box")
 
 
 def host_allowed(host_header: str | None, extra: set[str]) -> bool:
@@ -152,6 +153,10 @@ def host_allowed(host_header: str | None, extra: set[str]) -> bool:
         host = host.partition(":")[0]
     host = host.rstrip(".")
     if host in LOCAL_HOSTS or host.endswith(".localhost") or "*" in extra or host in extra:
+        return True
+    # Namen im Heimnetz (tower, tower.local, nas.fritz.box …) kann keine fremde Webseite
+    # per DNS-Rebinding auf sich umbiegen - die gibt es nur im eigenen Netz.
+    if host and re.fullmatch(r"[a-z0-9-]+", host) or host.endswith(LAN_SUFFIXES):
         return True
     try:
         ipaddress.ip_address(host)
@@ -361,6 +366,7 @@ class Handler(BaseHTTPRequestHandler):
             "demo": self.ctx.demo,
             "running": st["running"],
             "last_run": st["last_run"],
+            "last_full_run": st["last_full_run"],
             "next_run": st["next_run"],
             "next_feed_run": st["next_feed_run"],
             "interval_hours": st["interval_hours"],
@@ -382,9 +388,12 @@ class Handler(BaseHTTPRequestHandler):
         active = app.get("sources")
         configured = app.configured(self.ctx.demo)
         last = store.last_run()
-        errors = (last or {}).get("errors") or []
+        # Preis-APIs/Google laufen nur in vollen Läufen - deren Fehler aus dem letzten vollen
+        # Lauf, nicht aus dem letzten (evtl. reinen Feed-)Lauf
+        last_full = store.last_run(feed_runs=False)
         out = []
         for name in SOURCE_NAMES:
+            errors = ((last if name == "feeds" else last_full) or {}).get("errors") or []
             needles = {name, SOURCE_LABELS[name]}
             if name == "amadeus":
                 needles |= {"amadeus-dates", "amadeus-offers"}
@@ -394,7 +403,8 @@ class Handler(BaseHTTPRequestHandler):
             out.append({"id": name, "name": SOURCE_LABELS[name], "enabled": name in active,
                         "configured": bool(configured.get(name)),
                         "last_error": hits[0] if hits else None})
-        return 200, {"sources": out, "last_run_at": (last or {}).get("finished_at")}
+        return 200, {"sources": out, "last_run_at": (last or {}).get("finished_at"),
+                     "last_full_run_at": (last_full or {}).get("finished_at")}
 
     def api_deals(self, store, query, **_):
         status = query.get("status", ["active"])[0] or "active"

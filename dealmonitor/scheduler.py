@@ -87,7 +87,9 @@ def execute(ctx: Context, alert_id: str | None = None, trigger: str = "manual", 
                                   "(Einstellungen → Quellen)")
         sources = ctx.sources(cfg, store, names, app) if not res.errors else []
         if not sources and not res.errors:
-            res.errors.append("Keine Preisquelle aktiviert (Einstellungen → Quellen)")
+            res.errors.append("Keine Deal-Seite ausgewählt (Einstellungen → Quellen → Deal-Seiten)"
+                              if mode == "feeds" else
+                              "Keine Preisquelle aktiviert (Einstellungen → Quellen)")
         if notifiers is None:
             notifiers = ctx.notifiers(store, app)
         if sources and not res.errors:
@@ -171,10 +173,10 @@ class Scheduler:
 
     # -- Zeitplan ---------------------------------------------------------------
     def _intervals(self, store) -> tuple[float, int, bool]:
-        """(Stunden voller Lauf, Minuten Feed-Lauf, Feeds aktiv?)"""
+        """(Stunden voller Lauf, Minuten Feed-Lauf, Feeds aktiv und Deal-Seite gewählt?)"""
         app = self.ctx.settings(store)
-        return (float(app.get("interval_hours")), int(app.get("feed_interval_minutes")),
-                "feeds" in app.get("sources"))
+        feeds_on = "feeds" in app.get("sources") and bool(app.configured()["feeds"])
+        return (float(app.get("interval_hours")), int(app.get("feed_interval_minutes")), feeds_on)
 
     def next_run(self) -> datetime | None:
         """Nächster voller Lauf (Feed-Läufe zählen nicht)."""
@@ -206,13 +208,16 @@ class Scheduler:
     def status(self) -> dict:
         with self.ctx.store() as store:
             last = store.last_run()
+            # reine Feed-Läufe (alle 30 min) fragen Travelpayouts/Google nicht ab - deren Fehler
+            # stehen im letzten vollen Lauf und dürfen nicht hinter einem Feed-Lauf verschwinden
+            last_full = store.last_run(feed_runs=False)
             interval, minutes, _ = self._intervals(store)
         nxt = self.next_run()
         nxt_feed = self.next_feed_run()
         # Steht der volle Lauf früher an, erübrigt sich der Feed-Lauf davor
         if nxt and nxt_feed and nxt <= nxt_feed:
             nxt_feed = None
-        return {"running": self.running, "last_run": last,
+        return {"running": self.running, "last_run": last, "last_full_run": last_full,
                 "next_run": nxt.isoformat(timespec="seconds") if nxt else None,
                 "next_feed_run": nxt_feed.isoformat(timespec="seconds") if nxt_feed else None,
                 "interval_hours": interval, "feed_interval_minutes": minutes}

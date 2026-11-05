@@ -73,6 +73,9 @@ class Offer:
     link: str | None = None
     title: str | None = None             # bei Feed-Deals: Originalüberschrift
     found_at: datetime = field(default_factory=datetime.now)
+    #: feste Identität (Fingerprint), wenn Angaben nachträglich geändert wurden - z. B. Airline
+    #: und Umstiege aus der Google-Gegenprüfung -, damit der Deal derselbe bleibt
+    ident: str | None = field(default=None, repr=False, compare=False)
 
     @property
     def nights(self) -> int | None:
@@ -87,6 +90,8 @@ class Offer:
     @property
     def fingerprint(self) -> str:
         """Identifiziert "denselben" Deal über mehrere Läufe hinweg."""
+        if self.ident:
+            return self.ident
         if self.title:  # Feed-Artikel: Überschrift + Link reichen
             raw = f"{self.source}|{self.link}|{self.title}"
         else:
@@ -110,6 +115,8 @@ class Deal:
     discount: float | None        # 0.35 = 35 % unter Referenz
     reasons: list[str]
     headline: str
+    #: Herkunft des Referenzpreises (Median der Beobachtungen / Normalpreis) - für ``reprice``
+    reference_source: str | None = None
 
     @property
     def fingerprint(self) -> str:

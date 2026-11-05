@@ -13,9 +13,10 @@ from dataclasses import dataclass, fields
 from datetime import date
 from pathlib import Path
 from typing import Callable
+from urllib.parse import urlsplit
 
 from . import config as config_mod
-from . import notify, radar
+from . import http, notify, radar
 from .config import Config, Settings
 from .models import Alert
 from .sources.feed import FEED_PRESETS, default_preset_ids
@@ -31,6 +32,8 @@ DEFAULT_DATA = ROOT / "data"
 SOURCE_NAMES = ("travelpayouts", "amadeus", "google_flights", "feeds")
 SOURCE_ALIASES = {"feed": "feeds"}            # alter Name aus früheren Versionen
 DEFAULT_SOURCES = ["travelpayouts", "google_flights", "feeds"]
+#: Anteil des Google-Budgets, den der Scan für die Gegenprüfung übrig lässt (1/4)
+VERIFY_RESERVE_DIVISOR = 4
 SOURCE_LABELS = {"travelpayouts": "Travelpayouts (Preis-API)", "google_flights": "Google Flights",
                  "amadeus": "Amadeus", "feeds": "Deal-Seiten (Feeds)"}
 
@@ -107,6 +110,8 @@ VALUES: dict[str, Spec] = {
 }
 SETTINGS_FIELDS = [f.name for f in fields(Settings) if f.name not in ("database", "report")]
 URL_RE = re.compile(r"^https?://[^\s/$.?#][^\s]*$", re.I)
+#: Zahl mit Tausenderpunkten ("1.300", "12.500"); "0.35" oder "1.5" sind Dezimalzahlen
+THOUSANDS_RE = re.compile(r"-?[1-9]\d{0,2}(?:\.\d{3})+")
 TRUE_WORDS = {"1", "true", "ja", "yes", "on", "an", "wahr"}
 FALSE_WORDS = {"0", "false", "nein", "no", "off", "aus", "falsch", ""}
 
@@ -139,7 +144,11 @@ def coerce(name: str, value):
         raise ValueError(f"{label}: bitte an oder aus (true/false) angeben")
     if spec.kind in ("int", "float"):
         if isinstance(value, str):
-            value = value.strip().replace(",", ".")
+            value = value.strip()
+            if "," in value:                       # deutsch: "1.299,50" / "1,5"
+                value = value.replace(".", "").replace(",", ".")
+            elif THOUSANDS_RE.fullmatch(value):     # "1.300" = 1300 € (nicht 1,3)
+                value = value.replace(".", "")
             try:
                 value = float(value)
             except ValueError:
@@ -201,6 +210,15 @@ def coerce(name: str, value):
                              f"(erlaubt: {', '.join(spec.choices)})")
         if spec.url and not URL_RE.match(v):
             raise ValueError(f"{label}: '{v}' ist keine http(s)-Adresse")
+        if name == "feeds":
+            # Eigene Feeds lädt der Server selbst - nicht ins eigene Netz (localhost, NAS, Router)
+            try:
+                reason = http.internal_host(urlsplit(v).hostname)
+            except ValueError:
+                reason = "ungültige Adresse"
+            if reason:
+                raise ValueError(f"{label}: '{v}' ist nicht erlaubt ({reason}) - nur öffentliche "
+                                 "Feeds aus dem Internet")
         out.append(v)
     return out
 
@@ -268,7 +286,8 @@ class AppSettings:
                 "presets": [{"id": p.id, "name": p.name, "homepage": p.homepage,
                              "description": p.description, "language": p.language,
                              "default": p.enabled, "search": p.search} for p in FEED_PRESETS],
-                "source_names": list(SOURCE_NAMES)}
+                "source_names": list(SOURCE_NAMES),
+                "env_names": {n: env_name(n) for n in [*VALUES, *SECRETS]}}
 
     def update(self, values: dict | None = None, secrets: dict | None = None) -> None:
         """Teil-Update. Erst alles prüfen, dann speichern. Gesperrte Felder werden ignoriert."""
@@ -316,11 +335,12 @@ class AppSettings:
         return {
             "travelpayouts": demo or bool(self.get("travelpayouts_token")),
             "google_flights": True,       # braucht keinen Key (inoffiziell, kann blockiert sein)
-            "amadeus": not demo and bool(self.get("amadeus_api_key")
-                                         and self.get("amadeus_api_secret")),
+            "amadeus": bool(self.get("amadeus_api_key") and self.get("amadeus_api_secret")),
             "feeds": feeds_ready,
             "feed": feeds_ready,          # alter Name (Alias)
-            "radar": feeds_ready and bool(self.get("radar_enabled")),
+            # Radar braucht aktive Deal-Seiten (es prüft deren Artikel)
+            "radar": feeds_ready and bool(self.get("radar_enabled"))
+                     and "feeds" in (self.get("sources") or []),
             "webhook": bool(self.get("webhook_url")),
             "ntfy": bool(self.get("ntfy_topic")),
             "telegram": bool(self.get("telegram_bot_token") and self.get("telegram_chat_id")),
@@ -368,6 +388,43 @@ def ensure_seeded(store: Store, path: str | Path) -> bool:
     import_config(store, path)
     store.kv_set("seeded", True)
     return True
+
+
+#: Stand der gespeicherten Einstellungen; ältere Datenbanken werden einmal angepasst
+SETTINGS_VERSION = 2
+
+
+def migrate_settings(store: Store) -> list[str]:
+    """Gespeicherte Einstellungen älterer Versionen einmalig anpassen. Rückgabe: Änderungen.
+
+    Version 1 (bis 0.1, nur Travelpayouts + Travel-Dealz-Feed): Die alte Oberfläche speicherte
+    ``sources = ["travelpayouts", "feed"]`` (= alles, was es gab) und die TOML
+    ``feeds = ["https://travel-dealz.de/feed/"]``. Ohne Anpassung bliebe Google Flights aus
+    (keine Gegenprüfung) und der Travel-Dealz-Hauptfeed würde neben dem Preset doppelt geladen.
+    """
+    from .sources.feed import PRESETS_BY_ID, normalize_link
+    if (store.kv_get("settings_version") or 1) >= SETTINGS_VERSION:
+        return []
+    changes = []
+    raw = store.kv_get("sources")
+    if isinstance(raw, list) and {SOURCE_ALIASES.get(x, x) for x in raw} == {"travelpayouts", "feeds"}:
+        store.kv_set("sources", list(DEFAULT_SOURCES))
+        changes.append("sources")
+    feeds = store.kv_get("feeds")
+    if isinstance(feeds, list) and feeds:
+        presets = store.kv_get("feed_presets")
+        if not isinstance(presets, list):
+            presets = default_preset_ids()
+        known = {normalize_link(u) for pid in presets if pid in PRESETS_BY_ID
+                 for u in PRESETS_BY_ID[pid].urls}
+        kept = [u for u in feeds if not (isinstance(u, str) and normalize_link(u) in known)]
+        if kept != feeds:
+            store.kv_set("feeds", kept)
+            changes.append("feeds")
+    store.kv_set("settings_version", SETTINGS_VERSION)
+    if changes:
+        log.info("Einstellungen aus älterer Version übernommen: %s", ", ".join(changes))
+    return changes
 
 
 # -- Laufzeit-Kontext -------------------------------------------------------------
@@ -425,7 +482,9 @@ class Context:
 
     def seed(self) -> bool:
         with self.store() as store:
-            return ensure_seeded(store, self.config_path)
+            seeded = ensure_seeded(store, self.config_path)
+            migrate_settings(store)
+            return seeded
 
     def build_config(self, store: Store, app: AppSettings | None = None) -> Config:
         app = app or self.settings(store)
@@ -475,9 +534,13 @@ class Context:
                     env=app.get("amadeus_env"), max_requests=app.get("amadeus_max_requests"),
                     scan_months=s.scan_months, request_delay=s.request_delay, today=self.today)
             elif n == "google_flights":
+                max_requests = app.get("google_max_requests")
+                # Ein Teil des Budgets bleibt der Gegenprüfung gecachter Preise vorbehalten
+                verifies = app.get("google_verify") and bool({"travelpayouts", "amadeus"} & set(names))
                 out.append(GoogleFlightsSource(
-                    max_requests=app.get("google_max_requests"), delay=3.0,
-                    scan_months=s.scan_months, today=self.today))
+                    max_requests=max_requests, delay=3.0, scan_months=s.scan_months,
+                    today=self.today,
+                    verify_reserve=max_requests // VERIFY_RESERVE_DIVISOR if verifies else 0))
             elif n == "feeds":
                 presets = app.get("feed_presets")
                 if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen

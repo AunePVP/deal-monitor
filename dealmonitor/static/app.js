@@ -74,6 +74,15 @@
     if (tomorrow) return `morgen ${hm}`;
     return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. ${hm}`;
   }
+  // Zeitpunkt in der Zukunft: "in 12 Min." (unter einer Stunde), sonst wie fmtTime
+  function untilTime(s) {
+    const d = parseIso(s);
+    if (!d) return "";
+    const min = Math.round((d.getTime() - Date.now()) / 60000);
+    if (min <= 0) return "gleich";
+    if (min < 60) return `in ${min} Min.`;
+    return fmtTime(s);
+  }
   function relTime(s) {
     const d = parseIso(s);
     if (!d) return "";
@@ -242,12 +251,16 @@
     } else if (!running) {
       parts.push("Noch keine Prüfung");
     }
+    // Nach einem reinen Feed-Check: Fehler der letzten vollen Prüfung (Preis-APIs, Google) nicht verstecken
+    const lf = s.last_full_run;
+    const fullErrs = lf && s.last_run && lf.id !== s.last_run.id && Array.isArray(lf.errors) ? lf.errors.length : 0;
+    if (fullErrs) parts.push(`volle Prüfung ${relTime(lf.finished_at || lf.started_at)}: ${plural(fullErrs, "Fehler", "Fehler")}`);
     if (s.next_run) parts.push(`nächste ${fmtTime(s.next_run)}`);
     else if (!running) parts.push("kein automatischer Zeitplan aktiv");
-    if (s.next_feed_run) parts.push(`nächster Feed-Check ${fmtTime(s.next_feed_run)}`);
+    if (s.next_feed_run) parts.push(`nächster Feed-Check ${untilTime(s.next_feed_run)}`);
     const line = $("#status-line");
     line.textContent = parts.join(" · ");
-    if (s.last_run && s.last_run.errors && s.last_run.errors.length) {
+    if ((s.last_run && s.last_run.errors && s.last_run.errors.length) || fullErrs) {
       line.append(" ", el("a", { href: "#einstellungen" }, "Details"));
     }
 
@@ -261,6 +274,9 @@
     badge.textContent = unread > 99 ? "99+" : String(unread);
     badge.setAttribute("aria-label", `${unread} ungelesen`);
     $("#mark-all-read-btn").disabled = unread === 0;
+    // Radar-Chip und Zähler hängen am Status (counts.radar_deals, configured.radar)
+    if (state.route === "deals" && state.alerts.length) renderDealFilters();
+    renderSourceStates();
   }
 
   async function pollStatus() {
@@ -431,7 +447,8 @@
         el("button", { type: "button", class: "btn btn-primary", onclick: () => { location.hash = "#alarme"; openAlertForm(null); } }, "Ersten Alarm anlegen"));
       return box;
     }
-    box.append(el("p", { class: "empty-title" }, state.dealFilter ? "Für diesen Alarm gibt es gerade keinen Deal" : "Gerade kein Deal, der deine Kriterien erfüllt"));
+    box.append(el("p", { class: "empty-title" }, state.dealFilter === RADAR_ID ? "Das Radar hat gerade keinen Hammer-Deal gefunden"
+      : state.dealFilter ? "Für diesen Alarm gibt es gerade keinen Deal" : "Gerade kein Deal, der deine Kriterien erfüllt"));
     const hint = s.next_run ? `Der Monitor prüft automatisch wieder ${fmtTime(s.next_run)}.` : "Starte eine Prüfung, um nach neuen Deals zu suchen.";
     box.append(el("p", null, "Das ist normal – gute Deals sind selten. " + hint));
     if (s.configured && s.configured.travelpayouts === false && (s.sources || []).includes("travelpayouts")) {
@@ -454,7 +471,8 @@
 
     const route = d.origin && d.destination ? `${d.origin} → ${d.destination}` : null;
     const priceBox = el("div", { class: "price-box" },
-      el("div", { class: "price" }, euro(d.price)),
+      // Radar: als Error Fare angekündigt, aber ohne €-Preis in der Überschrift -> Preis 0
+      d.price > 0 ? el("div", { class: "price" }, euro(d.price)) : el("div", { class: "price price-none" }, "Preis im Artikel"),
       el("div", { class: "price-sub" }, d.roundtrip === false ? "p. P. one-way" : "p. P. hin & zurück"),
       typeof d.discount === "number" && d.discount > 0 && typeof d.reference_price === "number"
         ? el("div", { class: "price-ref" }, el("span", { class: "discount" }, `−${Math.round(d.discount * 100)} %`), " statt ", el("s", null, euro(d.reference_price)))
@@ -479,7 +497,8 @@
       extLink(d.link, "Zum Angebot", "btn btn-primary"),
       extLink(d.compare, "Bei Google Flights gegenprüfen", "btn"));
 
-    return el("article", { class: `deal-card${expired ? " expired" : ""}` },
+    const isRadar = d.alert_id === RADAR_ID || (Array.isArray(d.alert_ids) && d.alert_ids.includes(RADAR_ID));
+    return el("article", { class: `deal-card${expired ? " expired" : ""}${isRadar ? " is-radar" : ""}${verified && !expired ? " is-verified" : ""}` },
       el("div", { class: "deal-top" }, el("div", { class: "deal-top-left" }, badges, route ? el("p", { class: "route" }, route) : null), priceBox),
       el("h2", { class: "deal-title" }, d.headline || "Deal"),
       factsEl, reasons, meta, actions.childElementCount ? actions : null);
@@ -971,10 +990,10 @@
     { key: "travelpayouts_token", group: "travelpayouts", type: "secret", label: "Travelpayouts-Token", help: "Kostenlos – ohne Token gibt es keine Preise aus der API." },
     { key: "travelpayouts_marker", group: "travelpayouts", type: "text", label: "Travelpayouts-Marker (optional)", help: "Deine Partner-ID für Buchungslinks. Nicht nötig." },
     { key: "google_max_requests", group: "google", type: "int", label: "Max. Abfragen pro Lauf", min: 2, max: 500, help: "Gilt für alle Alarme zusammen, inkl. Gegenprüfungen (höchstens die Hälfte). Zwischen Abfragen wird 2–4 s gewartet." },
-    { key: "google_verify", group: "google", type: "bool", label: "Deals aus Preis-APIs bei Google gegenprüfen", help: "Gecachte Preise (Travelpayouts, Amadeus-Monatsscan) werden mit genau diesen Daten bei Google geprüft: ≤ 25 % teurer = bestätigt, sonst verworfen. Ist Google nicht erreichbar, wird der Deal mit Hinweis „nicht gegengeprüft“ gemeldet." },
+    { key: "google_verify", group: "google", type: "bool", label: "Deals aus Preis-APIs bei Google gegenprüfen", help: "Gecachte Preise (Travelpayouts, Amadeus-Monatsscan) werden mit genau diesen Daten bei Google geprüft: Ein Flug, der zu den Regeln des Alarms passt, höchstens 25 % teurer und unter der Grenze = bestätigt (gemeldet mit Google-Preis), sonst verworfen. Ist Google nicht erreichbar, wird der Deal mit Hinweis „nicht gegengeprüft“ gemeldet." },
     { key: "amadeus_api_key", group: "amadeus", type: "secret", label: "Amadeus API Key" },
     { key: "amadeus_api_secret", group: "amadeus", type: "secret", label: "Amadeus API Secret" },
-    { key: "amadeus_env", group: "amadeus", type: "select", label: "Umgebung", options: [["test", "Test (kostenlos, wenig Daten)"], ["production", "Produktion (Freikontingent, dann kostenpflichtig)"]] },
+    { key: "amadeus_env", group: "amadeus", type: "select", label: "Umgebung", options: [["test", "Test (wenig Daten)"], ["production", "Produktion"]] },
     { key: "amadeus_max_requests", group: "amadeus", type: "int", label: "Max. Abfragen pro Lauf", min: 1, max: 2000 },
     { key: "feed_interval_minutes", group: "feeds", type: "int", label: "Feed-Intervall (Minuten)", min: 10, max: 1440, help: "So oft werden nur die Deal-Seiten + Radar geprüft (zusätzlich zum vollen Lauf). Mindestens 10." },
     { key: "feed_max_age_days", group: "feeds", type: "int", label: "Artikel max. Alter (Tage)", min: 1 },
@@ -1001,9 +1020,13 @@
     { key: "request_delay", group: "advanced", type: "float", label: "Pause zwischen API-Anfragen (s)", min: 0, step: 0.05 },
   ];
   const SOURCE_STATE = {
-    travelpayouts: (c) => (c ? ["ok", "Token gesetzt"] : ["warn", "Token fehlt – ohne Token keine Preise"]),
+    // Demo: "configured" ist dort immer true (Beispielpreise) - nicht "Token gesetzt" behaupten,
+    // während das Token-Feld darunter "nicht gesetzt" zeigt
+    travelpayouts: (c, demo) => (demo ? ["ok", "Demo: Beispielpreise, kein Token nötig"]
+      : c ? ["ok", "Token gesetzt"] : ["warn", "Token fehlt – ohne Token keine Preise"]),
     google_flights: () => ["ok", "Kein Key nötig · inoffiziell, kann zeitweise blockiert sein"],
-    amadeus: (c) => (c ? ["ok", "Key und Secret gesetzt · ungetestet"] : ["warn", "Key/Secret fehlen – kostenlos registrieren, hier noch nicht live getestet"]),
+    amadeus: (c, demo) => (demo ? ["warn", "In der Demo nicht abgefragt"]
+      : c ? ["ok", "Key und Secret gesetzt · ungetestet"] : ["warn", "Kein Key – Self-Service eingestellt, nur mit altem/Enterprise-Key nutzbar"]),
     feeds: (c) => (c ? ["ok", "Deal-Seiten ausgewählt"] : ["warn", "Keine Deal-Seite ausgewählt"]),
   };
 
@@ -1016,6 +1039,11 @@
     } catch (e) {
       showSettingsError(`Einstellungen konnten nicht geladen werden: ${e.message}`);
     }
+  }
+
+  function envName(key) {
+    const names = state.settings && state.settings.env_names;
+    return names && names[key] ? ` (${names[key]})` : "";
   }
 
   function isLocked(key) {
@@ -1037,21 +1065,29 @@
     // Quellen: Schalter je Karte + Zustand
     const srcLocked = isLocked("sources");
     const srcs = Array.isArray(values.sources) ? values.sources : [];
-    const configured = (state.status && state.status.configured) || {};
     for (const cb of $$("#sources-group input[name=src]")) {
       cb.checked = srcs.includes(cb.value);
       cb.disabled = srcLocked;
       setSourceCard(cb);
     }
     $("#sources-locked").hidden = !srcLocked;
+    $("#sources-locked").textContent = `Quellen-Auswahl per Umgebungsvariable gesetzt${envName("sources")}`;
+    renderSourceStates();
+    renderPresets(values, s.presets);
+  }
+
+  // Zustand je Quelle (Token/Key gesetzt?) - kommt aus /api/status, das evtl. erst nach den
+  // Einstellungen geladen ist -> auch aus renderStatus aufgerufen
+  function renderSourceStates() {
+    if (!state.status || !state.status.configured) return;
+    const configured = state.status.configured;
     for (const p of $$("#sources-group .source-state")) {
       const id = p.dataset.state;
       const fn = SOURCE_STATE[id];
-      const [cls, text] = fn ? fn(configured[id] === true) : ["", ""];
+      const [cls, text] = fn ? fn(configured[id] === true, !!state.status.demo) : ["", ""];
       p.className = `source-state ${cls}`;
       p.textContent = text;
     }
-    renderPresets(values, s.presets);
   }
 
   function setSourceCard(cb) {
@@ -1074,6 +1110,7 @@
         p.description ? el("span", { class: "help-inline" }, ` – ${p.description}`) : null);
     }));
     $("#presets-locked").hidden = !locked;
+    $("#presets-locked").textContent = `per Umgebungsvariable gesetzt${envName("feed_presets")}`;
     box.closest(".field").hidden = !("feed_presets" in values);
   }
 
@@ -1110,7 +1147,7 @@
     input.dataset.type = f.type;
     if (locked) input.disabled = true;
     const helps = [];
-    if (locked) helps.push(el("p", { class: "help locked-hint" }, "per Umgebungsvariable gesetzt"));
+    if (locked) helps.push(el("p", { class: "help locked-hint" }, `per Umgebungsvariable gesetzt${envName(f.key)}`));
     if (f.help) helps.push(el("p", { class: "help", id: helpId }, f.help));
     if (f.help) input.setAttribute("aria-describedby", helpId);
     if (f.type === "bool") {

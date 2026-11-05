@@ -157,9 +157,9 @@
             <div class="source-head">
               <div class="source-title">
                 <h3 id="src-h-amadeus">Amadeus Self-Service</h3>
-                <p class="help">Offizielle Flug-API. Kostenlos registrieren auf
-                  <a href="https://developers.amadeus.com/" target="_blank" rel="noopener noreferrer">developers.amadeus.com</a>
-                  (App anlegen → API Key + Secret). <strong>Hier noch nicht live getestet</strong> – nach Doku umgesetzt, Key eintragen und ausprobieren.</p>
+                <p class="help">Offizielle Flug-API. <strong>Self-Service laut Anbieter am 17.07.2026 eingestellt</strong>
+                  (neue Keys nur noch für Enterprise-Kunden). Nur sinnvoll mit einem noch gültigen Key.
+                  Code nach Doku umgesetzt, <strong>hier nicht live getestet</strong>.</p>
               </div>
               <label class="switch">
                 <input type="checkbox" name="src" value="amadeus" role="switch" aria-label="Amadeus nutzen">
@@ -341,7 +341,7 @@
       <div class="field">
         <label for="f-keywords">Stichwörter für die Deal-Seiten (Feeds)</label>
         <textarea id="f-keywords" name="feed_keywords" rows="3" placeholder="Zürich, Hamburg&#10;China, Business"></textarea>
-        <p class="help">Pro Zeile eine Gruppe. Innerhalb einer Zeile müssen alle Wörter (kommagetrennt) im Artikel vorkommen, von den Zeilen reicht eine. Leer = Feed für diesen Alarm ignorieren.</p>
+        <p class="help">Pro Zeile eine Gruppe. Innerhalb einer Zeile müssen alle Wörter (kommagetrennt) im Artikel vorkommen, von den Zeilen reicht eine. Leer = automatisch aus Von/Nach (Städte-, Länder- und Regionsnamen, auch englisch).</p>
       </div>
 
       <label class="check">

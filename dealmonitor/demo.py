@@ -8,9 +8,10 @@ Quellen der Demo (kein Netz):
 * Deal-Seiten: die Beispiel-Feed-Fixture (inkl. zwei Radar-Beispielen: Error Fare und
   Business Class ≤ 1.300 €)
 
-Die Google-Gegenprüfung ist in der Demo standardmäßig aus: die erfundenen
-Travelpayouts-Preise würden an der echten Google-Seite scheitern (lässt sich in den
-Einstellungen einschalten - dann werden sie verworfen, so wie es im Betrieb passiert).
+Die Google-Gegenprüfung ist an (wie im Betrieb): Für den erfundenen 89-€-Deal
+Zürich ⇄ Hamburg (15.–19.01.2027) antwortet die Demo mit einer Kopie der echten Seite, deren
+Bestpreis auf 92 € gesetzt ist - so zeigt die Demo eine "Google Flights bestätigt"-Karte.
+Alle anderen Gegenprüfungen bekommen "keine Flüge" und erscheinen als "nicht gegengeprüft".
 """
 
 from __future__ import annotations
@@ -33,6 +34,8 @@ from .store import Store
 FIXTURES = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
 DEMO_TODAY = date(2026, 11, 4)
 GOOGLE_FIXTURE = "google_flights_zrh_ham.html"
+#: Gegenprüfungen, die die Demo bestätigt: Suchanfrage -> (echter Bestpreis, Demo-Preis)
+DEMO_VERIFIED = {"Flights from ZRH to HAM on 2027-01-15 through 2027-01-19": ("168", "92")}
 NO_FLIGHTS_PAGE = ('<html><head><title>Google Flights</title></head><body>'
                    '<div>Für diese Suche wurden keine Flüge gefunden.</div></body></html>')
 
@@ -78,6 +81,10 @@ def google_fixture_page(url: str) -> str:
     """Demo-Antwort für eine Google-Flights-URL: die echte Beispielseite für Zürich ⇄ Hamburg
     (Economy, hin und zurück), sonst eine Seite ohne Flüge."""
     q = parse_qs(urlsplit(url).query).get("q", [""])[0]
+    if q in DEMO_VERIFIED:
+        real, fake = DEMO_VERIFIED[q]
+        page = (FIXTURES / GOOGLE_FIXTURE).read_text(encoding="utf-8")
+        return page.replace(f"{real} Euro", f"{fake} Euro").replace(f"{real} €", f"{fake} €")
     zrh_ham = q.startswith("Flights from ZRH to HAM") or q.startswith("Flights from HAM to ZRH")
     if zrh_ham and " through " in q and " class" not in q:
         return (FIXTURES / GOOGLE_FIXTURE).read_text(encoding="utf-8")
@@ -98,7 +105,7 @@ DEMO_HISTORY = {
     "FRA-SHA-RT-economy": [690, 740, 810, 720, 765, 699, 780, 755],
 }
 #: Einstellungen, die die Demo beim ersten Start setzt (in der Oberfläche änderbar)
-DEMO_SETTINGS = {"google_verify": False}
+DEMO_SETTINGS: dict = {}
 
 
 def check_fixtures() -> None:
@@ -137,8 +144,10 @@ def demo(config_path: str) -> Path:
     store = Store(":memory:")
     add_history(store)
     from .radar import RadarSettings
-    run(cfg, make_sources(cfg), [notify.Console()], store, today=DEMO_TODAY,
-        radar_settings=RadarSettings())
+    sources = make_sources(cfg)
+    verifier = next((s for s in sources if s.name == "google_flights"), None)
+    run(cfg, sources, [notify.Console()], store, today=DEMO_TODAY,
+        radar_settings=RadarSettings(), verifier=verifier)
     out = Path(cfg.settings.report).with_name("demo-report.html")
     return report.write(cfg, store, str(out), demo=True)
 
