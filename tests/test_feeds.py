@@ -52,10 +52,15 @@ def fetch(src: FeedSource, a: Alert):
 class PresetTest(unittest.TestCase):
     def test_presets_and_defaults(self):
         ids = [p.id for p in FEED_PRESETS]
-        self.assertEqual(ids, ["travel-dealz", "travel-dealz-suche", "mydealz-fluege", "fly4free",
-                               "premium-flights", "urlaubspiraten", "reisetopia"])
-        self.assertEqual(default_preset_ids(), ["travel-dealz", "travel-dealz-suche",
-                                                "mydealz-fluege", "fly4free", "premium-flights"])
+        # Runde 2: neue Quellen (Loader, YHBU, fly4free Business), reisetopia jetzt an
+        self.assertEqual(ids, ["travel-dealz", "travel-dealz-rest", "travel-dealz-suche",
+                               "secretflying", "mydealz-fluege", "fly4free", "fly4free-business",
+                               "premium-flights", "yhbu", "reisetopia", "urlaubspiraten",
+                               "errorfarealerts"])
+        self.assertEqual(default_preset_ids(), ["travel-dealz", "travel-dealz-rest",
+                                                "travel-dealz-suche", "secretflying",
+                                                "mydealz-fluege", "fly4free", "premium-flights",
+                                                "yhbu", "reisetopia"])
         self.assertEqual(len(PRESETS_BY_ID["travel-dealz"].urls), 5)
         self.assertIn("https://travel-dealz.de/ticker/feed/", PRESETS_BY_ID["travel-dealz"].urls)
         for p in FEED_PRESETS:
