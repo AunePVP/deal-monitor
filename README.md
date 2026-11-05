@@ -1,7 +1,8 @@
 # ✈️ Deal-Monitor
 
 Dein eigener Flug-Deal-Alarm im Stil von Travel-Dealz – mit Weboberfläche. Prüft automatisch alle 3 Stunden
-alle Quellen und alle 30 Minuten die Deal-Seiten (Radar für Error Fares und Hammer-Deals).
+alle Quellen, alle 30 Minuten die Deal-Seiten und alle 10 Minuten die schnellen Deal-Quellen
+(Radar für Error Fares und Hammer-Deals).
 
 **So startest du es:**
 1. `docker compose up -d` (ohne Docker: `./start.sh`)
@@ -71,11 +72,15 @@ Jede Quelle lässt sich unter **Einstellungen → Quellen** einzeln ein- und aus
 | **Travelpayouts** (Aviasales) | Gecachte Preise aus Suchen der letzten Tage, alle Alarm-Strecken × Monate | kostenloser Token | getestet, Standard an |
 | **Google Flights** | Echte Live-Preise je Strecke (2 Termine pro Monat) und **Gegenprüfung** der Travelpayouts-/Amadeus-Monatspreise: Der günstigste Google-Flug, der zu deinen Regeln passt (Umstiege, Dauer, Airlines), darf höchstens 25 % teurer sein und muss unter deiner Grenze bleiben = „✓ Google Flights bestätigt“ (gemeldet wird dann der Google-Preis mit Airline/Umstiegen dieses Flugs), sonst verworfen – dann wird der nächstgünstige Termin im selben Monat geprüft; nicht erreichbar = „nicht gegengeprüft“ | kein Key | **inoffiziell** (liest die normale Ergebnisseite) – kann jederzeit brechen oder zeitweise blockiert sein; dann pausiert die Quelle bis zum nächsten Lauf. Live getestet am 04./05.11.2026. Max. 40 Abfragen pro Lauf (¼ davon bleibt für Gegenprüfungen, der Rest wird gleichmäßig auf die Alarme verteilt), 2–4 s Pause |
 | **Amadeus Self-Service** | Monats-Scan Economy (`flight-dates`), Business/First/Premium als Angebote (`flight-offers`) | API Key + Secret – **Self-Service laut Anbieter am 17.07.2026 eingestellt** (neue Keys nur noch für Enterprise-Kunden) | **ungetestet** – nach offizieller Doku gebaut, nie live gelaufen; nur sinnvoll, wenn du noch einen gültigen Key hast. Standard aus |
-| **Deal-Seiten (Feeds)** | Artikel von Travel-Dealz (Artikel, Ticker, Business-Class, Suche nach deinen Stichwörtern), mydealz Flüge, fly4free, premium-flights (inkl. China-Seiten), reisetopia (Preis aus dem Artikeltext), You have been upgraded (Business/First); optional Urlaubspiraten, fly4free Business, eigene RSS-Feeds | kein Key | getestet, Standard an; nur €-Preise, keine Kreuzfahrten/Bahn/Hotels, Fremdabflüge (z. B. „von Amsterdam“) werden bei DACH-Alarmen verworfen |
-| **Schnelle Deal-Quellen** | Secret Flying (Error Fares, oft Stunden vor allen anderen), Travel-Dealz (schnell, direkt von der Seite statt über den Feed); optional ErrorFareAlerts | kein Key | Standard an (ErrorFareAlerts aus); fällt eine aus, laufen die anderen weiter |
+| **Deal-Seiten (Feeds)** | Artikel von Travel-Dealz (Artikel, Ticker, Business-Class, Suche nach deinen Stichwörtern), mydealz Flüge, fly4free, premium-flights (inkl. China-Seiten), reisetopia (Preis aus dem Artikeltext), You have been upgraded (Business/First); optional Urlaubspiraten, fly4free Business, eigene RSS-Feeds | kein Key | getestet, Standard an; nur €-Preise, keine Kreuzfahrten/Bahn/Hotels, Fremdabflüge (z. B. „von Amsterdam“) zählen bei DACH-Alarmen nur als Nachbar-Hub (siehe unten) |
+| **Schnelle Deal-Quellen** | Secret Flying (Error Fares, oft Stunden vor allen anderen), Travel-Dealz (schnell, direkt von der Seite statt über den Feed); optional ErrorFareAlerts | kein Key | Standard an (ErrorFareAlerts aus), alle 10 Minuten; fällt eine aus, laufen die anderen weiter. Meldet eine schnelle Quelle einen Deal, prüft Google Flights den Alarm sofort nach (höchstens 5 Abfragen) |
 | Skyscanner, Kiwi | – | keine frei zugängliche API (nur Partnerprogramme) | nicht eingebaut |
 
 Stichwörter: Ein Alarm ohne eigene Stichwörter bekommt sie automatisch aus Von/Nach (Städte-, Länder-, Regionsnamen, deutsch und englisch, z. B. Zürich/Zurich, Peking/Beijing).
+
+**Nachbar-Hubs:** Viele Business-Deals nach China starten in Budapest, Luxemburg oder Rom. Bei Alarmen ab DACH in Business/First oder auf die Langstrecke zählen solche Abflüge mit einem geschätzten Zubringer-Aufschlag: +80 € (Zug/Auto: Luxemburg, Brüssel, Amsterdam, Straßburg, Mailand, Prag, Kopenhagen) bzw. +180 € (Zubringerflug: Budapest, Warschau, Oslo, Stockholm, Rom, Madrid, Barcelona, Athen, Istanbul, Helsinki). Die Grenze gilt für Ticket + Aufschlag, die Meldung nennt beides („Abflug Nachbar-Hub Budapest (+180 € Zubringer): Ticket 1.440 €, mit Zubringer 1.620 €“). Abschaltbar und änderbar unter **Einstellungen → Quellen → Deal-Seiten** (oder per `HUBS_ENABLED`, `HUB_SURCHARGE_A/B` in `.env`).
+
+**Quellen-Gesundheit:** Nach jedem Lauf wird jede Deal-Seite eingestuft (OK, Leer, Veraltet, Fehler). Ändert sich der Zustand, kommt eine Meldung per ntfy/Webhook/Telegram, dazu einmal täglich ein Lebenszeichen. Abruf: `GET /api/sources/health`.
 
 ### Radar – keinen Hammer-Deal verpassen
 

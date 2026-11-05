@@ -408,14 +408,14 @@ class SettingsMigrationTest(unittest.TestCase):
                 self.assertEqual(AppSettings(st, {}).get("sources"), ["travelpayouts", "feeds"])
 
     def test_fresh_install_untouched(self):
-        from dealmonitor.appsettings import AppSettings, Context
+        from dealmonitor.appsettings import SETTINGS_VERSION, AppSettings, Context
         with tempfile.TemporaryDirectory() as tmp:
             ctx = Context(tmp, ROOT / "config" / "alerts.toml", env={})
             ctx.seed()
             with ctx.store() as st:
                 self.assertEqual(AppSettings(st, {}).get("sources"),
                                  ["travelpayouts", "google_flights", "feeds"])
-                self.assertEqual(st.kv_get("settings_version"), 2)
+                self.assertEqual(st.kv_get("settings_version"), SETTINGS_VERSION)
 
 
 class StatusAndScheduleTest(unittest.TestCase):

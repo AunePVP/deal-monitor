@@ -168,6 +168,7 @@ def verify_deal(deal: Deal, verifier, today: date | None = None) -> str:
         log.info("Deal verworfen: %s - bei Google Flights %s, damit kein Deal mehr", what,
                  euro(google_price))
         return "rejected"
+    o.insight = found.get("insight") or o.insight   # Preisniveau der Google-Strecke
     details = [x for x in (o.airline, None if o.stops is None else
                            ("direkt" if o.stops == 0 else f"{o.stops} Umstieg"
                             + ("e" if o.stops > 1 else ""))) if x]

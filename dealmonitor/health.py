@@ -57,6 +57,9 @@ RULES: dict[str, Rule] = {
     "feed:premium-flights": Rule(24),
     "feed:errorfarealerts": Rule(48),        # Schübe mit Lücken bis 25 h
     "feed:reisetopia": Rule(36, need_parsed=False),   # Annahme; meist Hotels/Meilen
+    # YHBU postet etwa einmal pro Woche: 0 Artikel in 14 Tagen ist dort normal
+    "feed:yhbu": Rule(240, need_items=False),
+    "feed:fly4free-business": Rule(None, need_items=False),   # selten neue Artikel
     "feed:urlaubspiraten": Rule(72, need_parsed=False),  # Preise selten im Titel
     # Suche: 0 Treffer ist normal (Stichwort ohne aktuellen Deal)
     "feed:travel-dealz-suche": Rule(None, need_items=False, need_parsed=False),

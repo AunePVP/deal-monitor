@@ -132,10 +132,12 @@
   const REGION_LABEL = {
     DE: "Deutschland", DE_HUBS: "Deutschland (Hubs)", CH: "Schweiz", AT: "Österreich", DACH: "DACH",
     CN: "China", CN_MAJOR: "China (große Städte)", CN_HK: "China inkl. HK/Macau",
+    CN_ALL: "China (alle Städte)", CN_TW: "China inkl. HK/Macau/Taiwan",
   };
   const NOTE_STATUS = { new: "Neu", cheaper: "Billiger", revived: "Wieder da", test: "Test" };
   const TRIGGER = { manual: "manuell", schedule: "Zeitplan", scheduler: "Zeitplan", startup: "Start", demo: "Demo", cli: "CLI",
-    feeds: "Feed-Check", "manual-feeds": "manuell (nur Feeds)" };
+    feeds: "Feed-Check", "manual-feeds": "manuell (nur Feeds)", fast: "Schnell-Check",
+    "manual-fast": "manuell (schnell)", hot: "Sofort-Prüfung" };
   const CHANNEL = { inbox: "Meldungen (hier)", console: "Konsole", telegram: "Telegram", ntfy: "ntfy", webhook: "Webhook" };
 
   const stopsLabel = (n) => (n === 0 ? "direkt" : typeof n === "number" ? plural(n, "Umstieg", "Umstiege") : null);
@@ -1092,6 +1094,7 @@
     { key: "amadeus_env", group: "amadeus", type: "select", label: "Umgebung", options: [["test", "Test (wenig Daten)"], ["production", "Produktion"]] },
     { key: "amadeus_max_requests", group: "amadeus", type: "int", label: "Max. Abfragen pro Lauf", min: 1, max: 2000 },
     { key: "feed_interval_minutes", group: "feeds", type: "int", label: "Feed-Intervall (Minuten)", min: 10, max: 1440, help: "So oft werden nur die Deal-Seiten + Radar geprüft (zusätzlich zum vollen Lauf). Mindestens 10." },
+    { key: "fast_interval_minutes", group: "feeds", type: "int", label: "Schnell-Intervall (Minuten)", min: 5, max: 1440, help: "So oft werden die schnellen Deal-Quellen (Secret Flying, Travel-Dealz schnell) + Radar geprüft. Mindestens 5." },
     { key: "feed_max_age_days", group: "feeds", type: "int", label: "Artikel max. Alter (Tage)", min: 1 },
     { key: "feeds", group: "feeds", type: "lines", label: "Eigene Feed-URLs (eine pro Zeile)", wide: true, help: "Weitere RSS-Feeds, z. B. die Kategorie-Feeds einer Deal-Seite." },
     { key: "hubs_enabled", group: "feeds", type: "bool", label: "Abflug ab Nachbar-Hub zulassen", help: "Business/First und Langstrecke: Deals ab Amsterdam, Budapest, Rom … zählen mit Aufschlag für die Anreise. Die Preisgrenze gilt für Ticket + Aufschlag." },

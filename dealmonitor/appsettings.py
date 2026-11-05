@@ -404,7 +404,10 @@ def ensure_seeded(store: Store, path: str | Path) -> bool:
 
 
 #: Stand der gespeicherten Einstellungen; ältere Datenbanken werden einmal angepasst
-SETTINGS_VERSION = 2
+SETTINGS_VERSION = 3
+#: Deal-Seiten, die mit Version 3 neu und standardmäßig an sind: wer seine Auswahl schon
+#: gespeichert hat, bekommt sie einmal dazu (bestehende Presets bleiben, wie gewählt)
+NEW_PRESETS_V3 = ("travel-dealz-rest", "secretflying", "yhbu")
 
 
 def migrate_settings(store: Store) -> list[str]:
@@ -414,11 +417,21 @@ def migrate_settings(store: Store) -> list[str]:
     ``sources = ["travelpayouts", "feed"]`` (= alles, was es gab) und die TOML
     ``feeds = ["https://travel-dealz.de/feed/"]``. Ohne Anpassung bliebe Google Flights aus
     (keine Gegenprüfung) und der Travel-Dealz-Hauptfeed würde neben dem Preset doppelt geladen.
+
+    Version 2: gespeicherte ``feed_presets`` kennen die neuen Deal-Seiten :data:`NEW_PRESETS_V3`
+    noch nicht -> einmal ergänzen.
     """
     from .sources.feed import PRESETS_BY_ID, normalize_link
-    if (store.kv_get("settings_version") or 1) >= SETTINGS_VERSION:
+    version = store.kv_get("settings_version") or 1
+    if version >= SETTINGS_VERSION:
         return []
     changes = []
+    saved = store.kv_get("feed_presets")
+    if isinstance(saved, list):
+        added = [p for p in NEW_PRESETS_V3 if p in PRESETS_BY_ID and p not in saved]
+        if added:
+            store.kv_set("feed_presets", saved + added)
+            changes.append("feed_presets")
     raw = store.kv_get("sources")
     if isinstance(raw, list) and {SOURCE_ALIASES.get(x, x) for x in raw} == {"travelpayouts", "feeds"}:
         store.kv_set("sources", list(DEFAULT_SOURCES))

@@ -3,7 +3,7 @@
 # Preise immer pro Person in EUR. trip = "roundtrip" (Hin- und Rückflug) oder "oneway".
 # origins/destinations: IATA-Codes (Stadtcodes bevorzugt: BER, BJS, SHA ...) oder
 # Regionen mit @, siehe dealmonitor/regions.py:
-#   @DE, @DE_HUBS, @CH, @AT, @DACH, @CN, @CN_MAJOR, @CN_HK
+#   @DE, @DE_HUBS, @CH, @AT, @DACH, @CN, @CN_MAJOR, @CN_ALL, @CN_HK, @CN_TW
 #
 # Wann ist es ein Deal?
 #   max_price      harte Obergrenze. Alles darüber wird nie gemeldet.
