@@ -75,7 +75,34 @@ class ApiError(Exception):
 
 # -- JSON-Formen ----------------------------------------------------------------
 
-def alert_json(raw: dict, stats: dict | None = None) -> dict:
+#: so viele Strecken zeigt die Bestpreis-Liste eines Alarms höchstens
+CHEAPEST_ROUTES = 8
+
+
+def cheapest_json(entries: list[dict] | None) -> dict | None:
+    """Bestpreis-Übersicht eines Alarms: günstigstes Angebot insgesamt (``best``), günstigster
+    Live-/bestätigter Preis, falls der beste nur ein Cache-Preis ist (``best_live``), und je
+    Strecke das günstigste Angebot (``routes``)."""
+    if not entries:
+        return None
+    items = []
+    for e in sorted(entries, key=lambda x: x["price"]):
+        e = dict(e)
+        e["compare"] = _gf_link(e)
+        e["source_label"] = source_label(e["source"])
+        items.append(e)
+    best = items[0]
+    live = next((e for e in items if e.get("confirmed")), None)
+    routes: dict[str, dict] = {}
+    for e in items:
+        key = e["route"] if e["route"] == "artikel" else f"{e.get('origin')}-{e.get('destination')}"
+        routes.setdefault(key, e)
+    return {"best": best, "best_live": None if live is best else live,
+            "routes": list(routes.values())[:CHEAPEST_ROUTES], "route_count": len(routes),
+            "updated_at": max(e["seen_at"] for e in items)}
+
+
+def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = None) -> dict:
     out = dict(raw)
     try:
         a = Alert(**raw)
@@ -86,6 +113,7 @@ def alert_json(raw: dict, stats: dict | None = None) -> dict:
     st = (stats or {}).get(raw["id"], {})
     out["active_deals"] = st.get("active_deals", 0)
     out["best_price"] = st.get("best_price")
+    out["cheapest"] = cheapest_json((cheapest or {}).get(raw["id"]))
     return out
 
 
@@ -414,8 +442,8 @@ class Handler(BaseHTTPRequestHandler):
         return 200, {"deals": deal_list(store, status, alert_id)}
 
     def api_alerts(self, store, **_):
-        stats = store.deal_stats()
-        return 200, {"alerts": [alert_json(a, stats) for a in store.alert_rows()]}
+        stats, cheapest = store.deal_stats(), store.cheapest()
+        return 200, {"alerts": [alert_json(a, stats, cheapest) for a in store.alert_rows()]}
 
     def api_create_alert(self, store, body, **_):
         data = dict(body)
@@ -451,7 +479,12 @@ class Handler(BaseHTTPRequestHandler):
         except (TypeError, ValueError) as e:
             raise ApiError(400, str(e)) from None
         store.update_alert(raw)
-        return 200, {"alert": alert_json(raw, store.deal_stats())}
+        # Andere Regeln (Strecken, Kabine, Umstiege …) -> alte Bestpreise passen nicht mehr
+        cosmetic = ("name", "enabled")
+        if {k: v for k, v in raw.items() if k not in cosmetic} != \
+                {k: v for k, v in existing.items() if k not in cosmetic}:
+            store.delete_cheapest(id)
+        return 200, {"alert": alert_json(raw, store.deal_stats(), store.cheapest(id))}
 
     def api_delete_alert(self, store, id, **_):
         if not store.delete_alert(id):

@@ -390,6 +390,7 @@
     if (!state.alerts.length) await loadAlertsData();
     if (state.dealFilter && state.dealFilter !== RADAR_ID && !state.alerts.some((a) => a.id === state.dealFilter)) state.dealFilter = null;
     renderDealFilters();
+    renderBestPrices();
     $("#show-expired").checked = state.showExpired;
     const q = new URLSearchParams({ status: state.showExpired ? "all" : "active" });
     if (state.dealFilter) q.set("alert_id", state.dealFilter);
@@ -403,6 +404,70 @@
       if (req !== dealsReq) return;
       list.replaceChildren(el("div", { class: "empty" }, el("p", null, `Deals konnten nicht geladen werden: ${e.message}`)));
     }
+  }
+
+  // ------------------------------------------------------------------ Bestpreise (auch ohne Deal)
+  function shortDates(e) {
+    if (!e.departure) return null;
+    const d = fmtDate(e.departure);
+    return e.return_date ? `${d.slice(0, 6)} – ${fmtDate(e.return_date)}` : d;
+  }
+  /** Angaben eines Bestpreises: Strecke, Termin, Nächte, Airline, Umstiege (bzw. Artikel-Titel). */
+  function bestFacts(e) {
+    if (e.kind === "article") return [e.title || "Artikel einer Deal-Seite"];
+    return [e.origin && e.destination ? `${e.origin} → ${e.destination}` : null, shortDates(e),
+      typeof e.nights === "number" ? plural(e.nights, "Nacht", "Nächte") : null,
+      e.airline || null, stopsLabel(e.stops)].filter(Boolean);
+  }
+  function bestNote(e) {
+    if (e.kind === "article") return "Artikel";
+    if (e.kind === "live") return "Live-Preis";
+    return e.confirmed ? "✓ bei Google Flights bestätigt" : "Cache-Preis, ungeprüft";
+  }
+  /** Abstand zur Preisgrenze: "73 € über deiner Grenze von 110 €" / "unter deiner Grenze". */
+  function bestGap(a, price) {
+    if (typeof a.max_price !== "number" || typeof price !== "number") return null;
+    const diff = Math.round(price - a.max_price);
+    return diff > 0
+      ? el("span", { class: "best-gap over" }, `${euro(diff)} über deiner Grenze von ${euro(a.max_price)}`)
+      : el("span", { class: "best-gap under" }, `unter deiner Grenze von ${euro(a.max_price)}`);
+  }
+  const joinDots = (items) => items.flatMap((f, i) => (i ? [" · ", f] : [f]));
+
+  function bestRow(a) {
+    const c = a.cheapest;
+    const name = el("p", { class: "best-alert" }, a.name || a.id, a.enabled === false ? el("span", { class: "muted" }, " · pausiert") : null);
+    if (!c || !c.best) {
+      return el("div", { class: "best-row is-empty" },
+        el("div", { class: "best-main" }, name,
+          el("p", { class: "best-meta" }, a.enabled === false ? "Kein aktueller Preis – Alarm ist pausiert."
+            : "Noch kein passender Preis – erscheint nach der nächsten Prüfung.")),
+        el("div", { class: "best-price" }, el("div", { class: "price price-none" }, "–")));
+    }
+    const e = c.best;
+    const live = c.best_live;
+    const sub = e.roundtrip === false ? "p. P. one-way" : "p. P. hin & zurück";
+    const main = el("div", { class: "best-main" }, name,
+      el("p", { class: "best-facts" }, ...joinDots(bestFacts(e))),
+      live ? el("p", { class: "best-live" }, `Live bei ${live.source_label || "Google Flights"}: ab ${euro(live.price)}`,
+        shortDates(live) ? ` (${shortDates(live)})` : "") : null,
+      el("p", { class: "best-meta" }, `Quelle: ${sourceLabel(e)} · ${bestNote(e)} · Stand ${relTime(c.updated_at)}`,
+        c.route_count > 1 ? ` · ${plural(c.route_count, "Strecke", "Strecken")} geprüft` : ""));
+    const priceBox = el("div", { class: "best-price" },
+      el("div", { class: "price" }, euro(e.price)), el("div", { class: "price-sub" }, sub), bestGap(a, e.price));
+    const actions = el("div", { class: "best-actions" },
+      extLink(e.link, e.kind === "article" ? "Artikel" : "Ansehen", "btn btn-small"),
+      extLink(e.compare, "Google Flights", "btn btn-small"));
+    return el("div", { class: "best-row" }, main, priceBox, actions.childElementCount ? actions : null);
+  }
+
+  function renderBestPrices() {
+    const box = $("#best-prices");
+    const f = state.dealFilter;
+    const alerts = f === RADAR_ID ? [] : state.alerts.filter((a) => (f ? a.id === f : a.enabled !== false || a.cheapest));
+    box.hidden = !alerts.length;
+    if (!alerts.length) return;
+    $("#best-list").replaceChildren(...alerts.map(bestRow));
   }
 
   function renderDealFilters() {
@@ -592,12 +657,38 @@
         el("li", null, el("span", { class: "fact-k" }, "Kabine"), el("span", { class: "fact-v" }, CABIN[a.cabin || "economy"] || a.cabin)),
         el("li", null, el("span", { class: "fact-k" }, "Reiseart"), el("span", { class: "fact-v" }, roundtrip ? "Hin- und Rückflug" : "one-way")),
         el("li", null, el("span", { class: "fact-k" }, "Deals"), el("span", { class: `fact-v${a.active_deals ? " good" : ""}` }, dealsText))),
+      alertBest(a),
       el("div", { class: "alert-actions" },
         runBtn,
         a.active_deals ? el("a", { class: "btn btn-small", href: "#deals", onclick: () => { state.dealFilter = a.id; } }, "Deals ansehen") : null,
         el("button", { type: "button", class: "btn btn-small", onclick: () => openAlertForm(a) }, "Bearbeiten"),
         el("button", { type: "button", class: "btn btn-small btn-danger-ghost", onclick: () => deleteAlert(a) }, "Löschen")));
     return card;
+  }
+
+  /** Bestpreis auf der Alarm-Karte; bei mehreren Strecken aufklappbar je Strecke. */
+  function alertBest(a) {
+    const c = a.cheapest;
+    if (!c || !c.best) {
+      return el("div", { class: "alert-best" }, el("span", { class: "fact-k" }, "Bestpreis jetzt"),
+        el("span", { class: "muted" }, "noch keiner – erscheint nach der nächsten Prüfung"));
+    }
+    const e = c.best;
+    const link = (x) => extLink(x.link || x.compare, x.kind === "article" ? "Artikel" : "ansehen", "inline-link");
+    const routeLine = (x) => el("li", null, el("strong", null, euro(x.price)), " · ", ...joinDots(bestFacts(x)),
+      el("span", { class: "muted" }, ` · ${sourceLabel(x)}`), " ", link(x));
+    const parts = [
+      el("span", { class: "fact-k" }, "Bestpreis jetzt"),
+      el("p", { class: "alert-best-price" }, el("strong", { class: "best-inline-price" }, euro(e.price)), " ", bestGap(a, e.price)),
+      el("p", { class: "alert-best-facts" }, ...joinDots(bestFacts(e)), " ", link(e)),
+      el("p", { class: "best-meta" }, `${sourceLabel(e)} · ${bestNote(e)} · Stand ${relTime(c.updated_at)}`),
+    ];
+    if (c.routes && c.routes.length > 1) {
+      const more = c.route_count > c.routes.length ? el("li", { class: "muted" }, `+ ${c.route_count - c.routes.length} weitere`) : null;
+      parts.push(el("details", { class: "best-details" }, el("summary", null, `Je Strecke (${c.route_count})`),
+        el("ul", { class: "best-routes" }, ...c.routes.map(routeLine), more)));
+    }
+    return el("div", { class: "alert-best" }, ...parts);
   }
 
   async function deleteAlert(a) {
@@ -1310,6 +1401,12 @@
     // Sprunglink: nur fokussieren – "#main" als Hash würde sonst auf die Deals-Seite wechseln
     $(".skip-link").addEventListener("click", (e) => { e.preventDefault(); $("#main").focus(); });
     $("#show-expired").addEventListener("change", (e) => setShowExpired(e.target.checked));
+    // Bestpreise auf-/zugeklappt merken (pro Browser)
+    const bestToggle = $("#best-toggle");
+    try { if (localStorage.getItem("dm.bestOpen") === "0") bestToggle.open = false; } catch (e) { /* egal */ }
+    bestToggle.addEventListener("toggle", () => {
+      try { localStorage.setItem("dm.bestOpen", bestToggle.open ? "1" : "0"); } catch (e) { /* egal */ }
+    });
     $("#new-alert-btn").addEventListener("click", () => openAlertForm(null));
     $("#alert-form").addEventListener("submit", submitAlert);
     for (const b of $$("#alert-dialog [data-close]")) b.addEventListener("click", () => $("#alert-dialog").close());

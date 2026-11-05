@@ -10,6 +10,8 @@ alle Quellen und alle 30 Minuten die Deal-Seiten (Radar für Error Fares und Ham
    Google Flights und die Deal-Seiten laufen ohne Key.
 
 Fertig. Alarme legst du in der Oberfläche unter **Alarme** an, Treffer landen unter **Meldungen**.
+Unter **Deals → Bestpreise jetzt** (und auf jeder Alarm-Karte) steht je Alarm das aktuell günstigste passende
+Angebot – auch wenn es noch über deiner Grenze liegt, mit Abstand zur Grenze, Quelle und Stand.
 
 **Unraid:** Fertiges Image `ghcr.io/aunepvp/deal-monitor:latest`. Im Terminal einmal
 `wget -O /boot/config/plugins/dockerMan/templates-user/my-deal-monitor.xml https://raw.githubusercontent.com/AunePVP/deal-monitor/main/unraid/deal-monitor.xml`,

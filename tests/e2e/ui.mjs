@@ -308,6 +308,50 @@ async function desktopFlows(browser) {
     await waitFor(async () => (await page.locator(".deal-card").count()) === (await api("GET", "/api/deals")).deals.length, { msg: "„Alle“ nach Radar" });
   });
 
+  await step("Bestpreise je Alarm – auch ohne Deal, Filter, Einklappen", async () => {
+    const alerts = (await api("GET", "/api/alerts")).alerts;
+    const withBest = alerts.filter((a) => a.cheapest && a.cheapest.best);
+    assert(withBest.length >= 3, `Demo mit zu wenigen Bestpreisen: ${withBest.length}`);
+    assert(await page.isVisible("#best-prices"), "Bestpreis-Panel fehlt");
+    const rows = page.locator("#best-list .best-row");
+    const shown = alerts.filter((a) => a.enabled !== false || a.cheapest);
+    assert(await rows.count() === shown.length, `Bestpreis-Zeilen ${await rows.count()} ≠ ${shown.length}`);
+    const de = (v) => new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v).replace(/\s/g, " ");
+    for (const a of withBest) {
+      const row = rows.filter({ has: page.locator(".best-alert", { hasText: a.name }) });
+      const txt = norm(await row.textContent());
+      assert(txt.includes(de(a.cheapest.best.price)), `${a.id}: Preis ${de(a.cheapest.best.price)} fehlt: ${txt}`);
+      assert(/Quelle: /.test(txt) && /Stand /.test(txt), `${a.id}: Quelle/Stand fehlt: ${txt}`);
+      assert(/(über|unter) deiner Grenze/.test(txt), `${a.id}: Abstand zur Grenze fehlt: ${txt}`);
+      assert(!/feed:|google_flights|travelpayouts\b/.test(txt), `${a.id}: interner Quellenname: ${txt}`);
+    }
+    const empty = alerts.find((a) => !a.cheapest && a.enabled !== false);
+    if (empty) {
+      const row = rows.filter({ has: page.locator(".best-alert", { hasText: empty.name }) });
+      assert(/Noch kein passender Preis/.test(await row.textContent()), "Leerer Bestpreis ohne Hinweis");
+    }
+    const hrefs = await page.$$eval("#best-list a", (as) => as.map((a) => a.getAttribute("href")));
+    assert(hrefs.length && hrefs.every((h) => /^https?:\/\//.test(h)), `Unsichere Bestpreis-Links: ${hrefs}`);
+    // Filter: ein Alarm -> eine Zeile; Radar -> Panel weg
+    const one = withBest[0];
+    await page.locator("#deal-filters .chip").filter({ hasText: one.name }).click();
+    await waitFor(async () => (await rows.count()) === 1, { msg: "Alarm-Filter zeigt nicht genau eine Bestpreis-Zeile" });
+    await page.locator('#deal-filters .chip[data-id="radar"]').click();
+    await waitFor(async () => !(await page.isVisible("#best-prices")), { msg: "Radar-Filter zeigt Bestpreise" });
+    await page.locator('#deal-filters .chip[data-id=""]').click();
+    await waitFor(async () => (await rows.count()) === shown.length, { msg: "„Alle“ zeigt nicht alle Bestpreise" });
+    // Einklappen bleibt nach Reload
+    await page.click("#best-toggle > summary");
+    assert(!(await page.isVisible("#best-list")), "Einklappen wirkt nicht");
+    await page.reload();
+    await page.waitForSelector(".deal-card");
+    assert(!(await page.isVisible("#best-list")), "Eingeklappt-Zustand nicht gemerkt");
+    await page.click("#best-toggle > summary");
+    assert(await page.isVisible("#best-list"), "Aufklappen wirkt nicht");
+    await noHScroll(page, "Deals mit Bestpreisen");
+    await shot(page, "desktop-bestpreise");
+  });
+
   await step("Status: „nächster Feed-Check in …“", async () => {
     // Die Demo läuft ohne Zeitplan - Status-Antwort einmal mit einem Feed-Termin anreichern
     const local = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
@@ -374,6 +418,15 @@ async function desktopFlows(browser) {
     assert(/aktive[r]? Deal/.test(txt) && /ab \d+\s€/.test(txt), `Deal-Zähler/Bestpreis fehlt: ${txt}`);
     const cn = await alertCard(page, alertsBefore.find((a) => a.id === "de-cn-economy").name);
     assert(/Strecken/.test(await cn.textContent()), "Regionen-Alarm ohne Streckenzahl");
+    // Bestpreis auf der Karte (auch über der Grenze sichtbar), je Strecke aufklappbar
+    const best = norm(await zrh.locator(".alert-best").textContent());
+    assert(/Bestpreis jetzt/.test(best) && /\d+\s€/.test(best) && /Stand /.test(best), `Bestpreis auf Karte fehlt: ${best}`);
+    const multi = alertsBefore.find((a) => a.cheapest && a.cheapest.route_count > 1);
+    if (multi) {
+      const card = await alertCard(page, multi.name);
+      await card.locator(".best-details summary").click();
+      assert(await card.locator(".best-routes li").count() >= 2, `${multi.id}: Strecken-Liste fehlt`);
+    }
     await noHScroll(page, "Alarme");
     await shot(page, "desktop-alarme");
   });
@@ -824,9 +877,11 @@ async function desktopFlows(browser) {
     await page.check("[data-delete=amadeus_api_secret]");
     await srcSwitch("amadeus").click();
     await page.click("#settings-save");
-    await waitToast(page, /Einstellungen gespeichert/);
-    const s2 = await api("GET", "/api/settings");
-    assert(!s2.secrets.amadeus_api_key.set && !s2.secrets.amadeus_api_secret.set && !s2.values.sources.includes("amadeus"), "Amadeus nicht aufgeräumt");
+    // nicht auf den Toast warten - der vom ersten Speichern kann noch sichtbar sein
+    await waitFor(async () => {
+      const s2 = await api("GET", "/api/settings");
+      return !s2.secrets.amadeus_api_key.set && !s2.secrets.amadeus_api_secret.set && !s2.values.sources.includes("amadeus");
+    }, { timeout: 5000, msg: "Amadeus nicht aufgeräumt" });
   });
 
   await step("Radar-Einstellungen speichern → Reload → Feed-Check wirkt", async () => {

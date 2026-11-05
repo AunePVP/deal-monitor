@@ -73,6 +73,15 @@
       </label>
     </div>
     <div class="chips" id="deal-filters" role="group" aria-label="Nach Alarm oder Radar filtern"></div>
+    <section class="best-panel" id="best-prices" aria-labelledby="h-best" hidden>
+      <details id="best-toggle" open>
+        <summary class="best-head">
+          <h2 id="h-best">Bestpreise jetzt</h2>
+          <span class="help">Günstigstes passendes Angebot je Alarm aus der letzten Prüfung – auch wenn es (noch) kein Deal ist.</span>
+        </summary>
+        <div class="best-list" id="best-list"></div>
+      </details>
+    </section>
     <div class="deal-grid" id="deal-list" aria-live="polite"></div>
   </section>
 
@@ -126,7 +135,7 @@
                 <h3 id="src-h-travelpayouts">Travelpayouts (Preis-API)</h3>
                 <p class="help">Gecachte Preise aus Suchen der letzten Tage – kostenlos mit Token:
                   <a href="https://www.travelpayouts.com/" target="_blank" rel="noopener noreferrer">travelpayouts.com</a>
-                  → „Tools“ → „API“.</p>
+                  → unten links Profil → Reiter „API token“ (vorher unter „Programs“ dem Aviasales-Programm beitreten).</p>
               </div>
               <label class="switch">
                 <input type="checkbox" name="src" value="travelpayouts" role="switch" aria-label="Travelpayouts nutzen">

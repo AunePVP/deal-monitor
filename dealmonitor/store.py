@@ -76,6 +76,18 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 CREATE INDEX IF NOT EXISTS notifications_read ON notifications (read);
 
+-- günstigstes regelkonformes Angebot je Alarm, Quelle und Strecke - auch über der Preisgrenze
+-- ("Bestpreis": zeigt, wo der Markt gerade steht, wenn es keinen Deal gibt)
+CREATE TABLE IF NOT EXISTS cheapest (
+    alert_id    TEXT NOT NULL,
+    source      TEXT NOT NULL,
+    route       TEXT NOT NULL,          -- "ZRH-HAM", bei Artikeln "artikel"
+    price       REAL NOT NULL,
+    payload     TEXT NOT NULL,          -- JSON
+    seen_at     TEXT NOT NULL,
+    PRIMARY KEY (alert_id, source, route)
+);
+
 CREATE TABLE IF NOT EXISTS runs (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     trigger     TEXT NOT NULL,
@@ -103,6 +115,9 @@ FEED_TRIGGERS = ("feeds", "manual-feeds")
 #: alte Quelle der Travel-Dealz-Artikel und ihr heutiger Name (Deal-Seiten-Preset)
 LEGACY_FEED_SOURCE = "travel-dealz-feed"
 FEED_SOURCE = "feed:travel-dealz"
+
+#: Bestpreise, die so lange in keinem Lauf mehr gesehen wurden, werden nicht mehr angezeigt
+CHEAPEST_MAX_AGE = timedelta(days=3)
 
 _INIT_LOCK = threading.Lock()
 _READY: set[str] = set()   # Dateien, deren Schema in diesem Prozess schon angelegt ist
@@ -437,11 +452,58 @@ class Store:
         return cur.rowcount > 0
 
     def delete_alert(self, alert_id: str) -> bool:
-        """Löscht den Alarm samt seiner Deals."""
+        """Löscht den Alarm samt seiner Deals und Bestpreise."""
         cur = self.db.execute("DELETE FROM alerts WHERE id=?", (alert_id,))
         self.db.execute("DELETE FROM deals WHERE alert_id=?", (alert_id,))
+        self.db.execute("DELETE FROM cheapest WHERE alert_id=?", (alert_id,))
         self.db.commit()
         return cur.rowcount > 0
+
+    # -- Bestpreise (günstigstes Angebot je Alarm, auch ohne Deal) ----------
+    def save_cheapest(self, alert_id: str, source: str, entries: dict[str, dict], *,
+                      replace: bool, now: datetime | None = None) -> None:
+        """Bestpreise einer Quelle für einen Alarm speichern (``entries``: Strecke -> Angaben
+        mit ``price``). ``replace``: Die Quelle hat vollständig geantwortet - ihre alten
+        Einträge fallen weg; sonst werden nur die neuen Strecken überschrieben."""
+        now_s = (now or datetime.now()).isoformat(timespec="seconds")
+        if replace:
+            self.db.execute("DELETE FROM cheapest WHERE alert_id=? AND source=?",
+                            (alert_id, source))
+        for route, e in entries.items():
+            self.db.execute(
+                "INSERT OR REPLACE INTO cheapest (alert_id, source, route, price, payload, seen_at) "
+                "VALUES (?,?,?,?,?,?)",
+                (alert_id, source, route, float(e["price"]),
+                 json.dumps(e, ensure_ascii=False), now_s))
+        self.db.commit()
+
+    def cheapest(self, alert_id: str | None = None, *, today: date | None = None,
+                 now: datetime | None = None) -> dict[str, list[dict]]:
+        """Aktuelle Bestpreise je Alarm (günstigste zuerst) - ohne veraltete Einträge
+        (``CHEAPEST_MAX_AGE``) und ohne Flüge, deren Abflug schon vorbei ist."""
+        today = today or date.today()
+        cutoff = ((now or datetime.now()) - CHEAPEST_MAX_AGE).isoformat(timespec="seconds")
+        sql, args = "SELECT * FROM cheapest WHERE seen_at >= ?", [cutoff]
+        if alert_id:
+            sql += " AND alert_id=?"
+            args.append(alert_id)
+        out: dict[str, list[dict]] = {}
+        for r in self.db.execute(sql + " ORDER BY price", args):
+            try:
+                e = json.loads(r["payload"])
+            except ValueError:
+                continue
+            dep = e.get("departure")
+            if dep and dep <= today.isoformat():
+                continue
+            e.update(source=r["source"], route=r["route"], price=r["price"],
+                     seen_at=r["seen_at"])
+            out.setdefault(r["alert_id"], []).append(e)
+        return out
+
+    def delete_cheapest(self, alert_id: str) -> None:
+        self.db.execute("DELETE FROM cheapest WHERE alert_id=?", (alert_id,))
+        self.db.commit()
 
     # -- Schlüssel/Wert (Einstellungen, Flags) ----------------------------
     def kv_get(self, key: str, default=None):

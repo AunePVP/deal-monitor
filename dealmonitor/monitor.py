@@ -27,7 +27,7 @@ from .config import Config
 from .models import Alert, Deal, Offer
 from .principles import euro
 from .sources import SourceError
-from .sources.feed import normalize_link
+from .sources.feed import SAFE_LINK_RE, normalize_link
 from .store import Store
 
 log = logging.getLogger(__name__)
@@ -201,6 +201,62 @@ def _verified_best(deals: list[Deal], verifier, today: date | None) -> tuple[lis
     return sorted(kept, key=lambda d: d.offer.price), rejected
 
 
+ARTICLE_ROUTE = "artikel"
+
+
+def cheapest_entries(alert: Alert, offers: list[Offer], deals: list[Deal],
+                     rejected_fps: set[str], today: date | None = None) -> dict[str, dict[str, dict]]:
+    """Bestpreise: je Offer-Quelle und Strecke das günstigste Angebot, das zu den Regeln des
+    Alarms passt (Kabine, Reiseart, Umstiege, Dauer, Nächte, Airlines) - *ohne* Preisgrenze.
+    Bei Google verworfene Cache-Preise zählen nicht (nicht buchbar). Artikel der Deal-Seiten
+    zählen je Seite als eine Strecke ``artikel``.
+
+    Rückgabe: ``{offer.source: {strecke: angaben}}``.
+    """
+    confirmed = {d.offer.fingerprint for d in deals if is_confirmed(d)}
+    out: dict[str, dict[str, dict]] = defaultdict(dict)
+    for o in offers:
+        if principles.quality_problems(alert, o, today):
+            continue
+        fp = o.fingerprint
+        if f"{alert.id}:{fp}" in rejected_fps:
+            continue
+        if o.title:
+            route = ARTICLE_ROUTE
+        elif o.origin and o.destination:
+            route = f"{o.origin}-{o.destination}"
+        else:
+            continue
+        cur = out[o.source].get(route)
+        if cur is not None and cur["price"] <= o.price:
+            continue
+        out[o.source][route] = {
+            "price": o.price,
+            "origin": o.origin or None, "destination": o.destination or None,
+            "departure": o.departure.isoformat() if o.departure else None,
+            "return_date": o.return_date.isoformat() if o.return_date else None,
+            "nights": o.nights, "airline": o.airline, "stops": o.stops,
+            "duration_min": o.duration_out_min, "cabin": o.cabin, "roundtrip": o.roundtrip,
+            "link": o.link if o.link and SAFE_LINK_RE.match(o.link) else None,
+            "title": o.title,
+            "kind": "article" if o.title else ("live" if o.source in LIVE_SOURCES else "cache"),
+            "confirmed": o.source in LIVE_SOURCES or fp in confirmed,
+        }
+    return out
+
+
+def _save_cheapest(store: Store, alert: Alert, source, entries: dict[str, dict[str, dict]],
+                   incomplete: dict | None) -> None:
+    """Bestpreise speichern: Hat die Quelle vollständig geantwortet, ersetzen sie die alten;
+    sonst (Limit, einzelne Fehler) werden nur die neu gesehenen Strecken überschrieben."""
+    partial = incomplete.get("sources") if incomplete else None
+    names = set(getattr(source, "offer_sources", None) or [source.name]) | set(entries)
+    for name in sorted(names):
+        complete = incomplete is None or (partial is not None and name not in partial)
+        if complete or entries.get(name):
+            store.save_cheapest(alert.id, name, entries.get(name, {}), replace=complete)
+
+
 def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
               today: date | None = None, *, verifier=None) -> tuple[list[tuple[Deal, str]], RunResult]:
     s = cfg.settings
@@ -262,6 +318,11 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
         for d in deals:
             if d.fingerprint not in best_fps and d.fingerprint not in rejected_fps:
                 store.refresh_deal(d)
+        try:
+            _save_cheapest(store, alert, source,
+                           cheapest_entries(alert, offers, deals, rejected_fps, today), incomplete)
+        except Exception:  # noqa: BLE001 - Anzeige darf den Lauf nie stoppen
+            log.exception("[%s] %s: Bestpreise nicht gespeichert", alert.id, source.name)
         result.deals += len(best)
         candidates += best
         # Eine Quelle kann mehrere Offer.source-Werte liefern (Feeds: "feed:<preset>")
