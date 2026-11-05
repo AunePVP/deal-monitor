@@ -53,6 +53,10 @@ class Alert:
         return [(o, d) for o in self.origins for d in self.destinations if o != d]
 
 
+#: optionale Offer-Felder, die ``Offer.extras`` ausgibt (Reihenfolge = Ausgabe)
+EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "hot", "uid")
+
+
 @dataclass
 class Offer:
     """Ein konkretes Preisangebot aus einer Quelle (pro Person, in EUR)."""
@@ -76,12 +80,38 @@ class Offer:
     #: feste Identität (Fingerprint), wenn Angaben nachträglich geändert wurden - z. B. Airline
     #: und Umstiege aus der Google-Gegenprüfung -, damit der Deal derselbe bleibt
     ident: str | None = field(default=None, repr=False, compare=False)
+    # -- optionale Zusatzangaben (Runde 2); alle mit Default, ändern weder Vergleich noch
+    # Fingerprint. Gespeichert/ausgeliefert werden nur gesetzte Werte (siehe ``extras``).
+    #: Preisniveau der Google-Seite: {"lowest", "typical", "typical_low", "typical_high", …}
+    insight: dict | None = field(default=None, repr=False, compare=False)
+    #: Abflug ab Nachbar-Hub (IATA), z. B. "BUD"; ``surcharge`` = angenommener Zubringer (€)
+    via_hub: str | None = field(default=None, compare=False)
+    surcharge: float | None = field(default=None, compare=False)
+    #: Ende des Buchungszeitraums laut Quelle (aware oder naiv = UTC)
+    expires: datetime | None = field(default=None, compare=False)
+    #: Marker der Quelle wie "ERROR FARE", "CRAZY HOT", "PRICE DROP"
+    hot: str | None = field(default=None, compare=False)
+    #: stabile ID der Quelle (Bluesky ``post.uri``, Travel-Dealz ``id:modified``)
+    uid: str | None = field(default=None, repr=False, compare=False)
 
     @property
     def nights(self) -> int | None:
         if self.departure and self.return_date:
             return (self.return_date - self.departure).days
         return None
+
+    def extras(self) -> dict:
+        """Gesetzte Zusatzangaben als JSON-taugliches Dict (für Store-Payload und API).
+        Fehlende Werte fehlen auch im Dict - alte Daten ohne diese Felder bleiben gleich."""
+        out: dict = {}
+        for name in EXTRA_FIELDS:
+            value = getattr(self, name)
+            if value is None:
+                continue
+            if isinstance(value, datetime):
+                value = value.isoformat(timespec="minutes")
+            out[name] = value
+        return out
 
     @property
     def route_key(self) -> str:

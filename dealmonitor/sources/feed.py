@@ -16,12 +16,24 @@ Aufbau
   (``dealmonitor.radar``) genutzt, das *alle* Flug-Artikel prüft.
 * Abwärtskompatibel: ``FeedSource(["https://…/feed/"])`` liest eine URL-Liste wie
   bisher (Name ``travel-dealz-feed``).
+
+Quellen ohne RSS (Bluesky, WP-REST, …) hängen sich über ``Preset.loader`` ein: ein
+Funktionsname ``"modul:funktion"`` (``"secretflying:fetch_items"`` = Modul unter
+``dealmonitor.sources``), Signatur ``fetch_items(*, timeout=20.0, state=None) -> list[dict]``.
+Sie liefert Artikel wie :meth:`FeedSource.parse` plus optionale Schlüssel (``price_eur``,
+``origin_codes``, ``dest_codes``, ``cabin``, ``oneway``, ``expires``, ``hot``, ``uid``) und wirft
+bei Fehlern ``SourceError``. ``state`` ist ein Dict aus ``store.source_state(preset.id)``; die
+Funktion ändert es (Cursor), ``FeedSource`` speichert es nach einem fehlerfreien Abruf zurück.
+Details: ``docs/handoff/RUNDE2-SCHNITTSTELLEN.md``.
 """
 
 from __future__ import annotations
 
+import copy
 import html as html_mod
+import importlib
 import logging
+import math
 import re
 import unicodedata
 import urllib.parse
@@ -70,10 +82,27 @@ class Preset:
     homepage: str
     description: str = ""
     search: bool = False                # Suchfeed: URLs entstehen pro Alarm aus Stichwörtern
+    #: Quelle ohne RSS: "modul:funktion" (siehe Moduldoku), ``urls`` bleibt dann leer
+    loader: str | None = None
+    #: Takt: "fast" (schnelle Quellen, eigener Takt) oder "normal" (wie die RSS-Feeds)
+    lane: str = "normal"
+
+    def __post_init__(self) -> None:
+        if self.lane not in LANES:
+            raise ValueError(f"[{self.id}] lane muss 'fast' oder 'normal' sein")
 
     @property
     def source(self) -> str:
         return f"feed:{self.id}"
+
+    @property
+    def jobs(self) -> tuple[str, ...]:
+        """Was pro Lauf geladen wird: die Feed-URLs bzw. der Loader."""
+        return self.urls or ((self.loader,) if self.loader else ())
+
+
+LANES = ("fast", "normal")
+CABINS = ("economy", "premium", "business", "first")
 
 
 TRAVEL_DEALZ_PROFILE = Profile(lang="de", price_from="title", default_origin="home")
@@ -151,6 +180,112 @@ def preset_for_url(url: str) -> Preset | None:
             if (urllib.parse.urlsplit(u).hostname or "").lower().removeprefix("www.") == host:
                 return p
     return None
+
+
+# -- Loader (Quellen ohne RSS) ------------------------------------------------------
+
+def load_loader(spec: str):
+    """``"secretflying:fetch_items"`` bzw. ``"dealmonitor.sources.x:fetch_items"`` -> Funktion.
+    Importiert erst beim Aufruf; Fehler (Modul fehlt, Name falsch) als ``SourceError``."""
+    module, _, name = (spec or "").partition(":")
+    if not module or not name:
+        raise SourceError(f"Loader '{spec}' hat nicht die Form 'modul:funktion'")
+    if not module.startswith("dealmonitor."):
+        module = f"{__package__}.{module}"
+    try:
+        fn = getattr(importlib.import_module(module), name)
+    except (ImportError, AttributeError) as e:
+        raise SourceError(f"Loader '{spec}' nicht verfügbar: {e}") from None
+    if not callable(fn):
+        raise SourceError(f"Loader '{spec}' ist keine Funktion")
+    return fn
+
+
+def _aware(value) -> datetime | None:
+    """datetime oder ISO-Text -> datetime mit Zeitzone (ohne Angabe = UTC); sonst None."""
+    if isinstance(value, str) and value.strip():
+        try:
+            value = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    if not isinstance(value, datetime):
+        return None
+    return value if value.tzinfo is not None else value.replace(tzinfo=timezone.utc)
+
+
+def _codes(value) -> set[str]:
+    if isinstance(value, str):
+        value = [value]
+    try:
+        return {str(c).strip().upper() for c in value or () if IATA_RE.match(str(c).strip().upper())}
+    except TypeError:
+        return set()
+
+
+def is_expired(item: dict, now: datetime | None = None) -> bool:
+    """Liegt ``item["expires"]`` (Ende des Buchungszeitraums) in der Vergangenheit?"""
+    expires = _aware(item.get("expires"))
+    return expires is not None and expires < (now or datetime.now(timezone.utc))
+
+
+def normalize_item(raw: dict, feed: str = "", *, max_age_days: int | None = None,
+                   now: datetime | None = None) -> dict | None:
+    """Artikel eines Loaders ins Format von :meth:`FeedSource.parse` bringen (fehlende Schlüssel
+    ergänzen, Typen prüfen). Optionale Schlüssel werden bereinigt oder weggelassen, ``hot`` wird
+    zusätzlich als Kategorie angehängt (für ``radar.hot_reason``). ``None`` = verwerfen: kein
+    Titel, abgelaufen (``expires``), zu alt (``published``) oder als abgelaufen markiert."""
+    if not isinstance(raw, dict):
+        return None
+    title = str(raw.get("title") or "").strip()
+    if not title:
+        return None
+    now = now or datetime.now(timezone.utc)
+    it = dict(raw)
+    link = str(raw.get("link") or "").strip()
+    it["title"], it["link"] = title, link if SAFE_LINK_RE.match(link) else ""
+    it["published"] = _aware(raw.get("published"))
+    cats = raw.get("categories") or []
+    cats = [cats] if isinstance(cats, str) else cats if isinstance(cats, (list, tuple, set)) else []
+    it["categories"] = [str(c) for c in cats if c]
+    it["feed"] = raw.get("feed") or feed
+    it["description"] = str(raw.get("description") or "")
+    if not isinstance(raw.get("description_text"), str):
+        it["description_text"] = strip_html(it["description"])[:1000]
+    it.setdefault("merchant_price", None)
+    for key in ("price_eur", "origin_codes", "dest_codes", "cabin", "oneway", "expires", "hot",
+                "uid"):
+        it.pop(key, None)
+    price = raw.get("price_eur")
+    if isinstance(price, (int, float)) and not isinstance(price, bool) \
+            and math.isfinite(price) and price > 0:
+        it["price_eur"] = float(price)
+    for key in ("origin_codes", "dest_codes"):
+        codes = _codes(raw.get(key))
+        if codes:
+            it[key] = codes
+    cabin = str(raw.get("cabin") or "").lower()
+    if cabin in CABINS:
+        it["cabin"] = cabin
+    if isinstance(raw.get("oneway"), bool):
+        it["oneway"] = raw["oneway"]
+    expires = _aware(raw.get("expires"))
+    if expires is not None:
+        if expires < now:
+            return None
+        it["expires"] = expires
+    hot = str(raw.get("hot") or "").strip()
+    if hot:
+        it["hot"] = hot
+        if hot not in it["categories"]:
+            it["categories"].append(hot)
+    if raw.get("uid"):
+        it["uid"] = str(raw["uid"])
+    if max_age_days is not None and it["published"] is not None \
+            and it["published"] < now - timedelta(days=max_age_days):
+        return None
+    if EXPIRED_RE.search(title):
+        return None
+    return it
 
 
 # -- Preise ---------------------------------------------------------------------------
@@ -622,10 +757,23 @@ class ItemInfo:
     foreign_currency: bool = False   # Preis nur in $/£/CHF
     #: weitere Kabinen mit eigenem Preis in der Überschrift ("(Business Class ab 229€)")
     alt_prices: dict[str, float] = field(default_factory=dict)
+    #: aus den optionalen Item-Schlüsseln (Loader-Quellen), sonst leer/None
+    dest_codes: set[str] = field(default_factory=set)
+    expires: datetime | None = None
+    hot: str | None = None
+    uid: str | None = None
 
 
-def _is_flight(item: dict, profile: Profile) -> bool:
-    title, cats, link = item["title"], item.get("categories") or [], item.get("link") or ""
+def _plain_categories(item: dict) -> list[str]:
+    """Kategorien ohne den angehängten ``hot``-Marker (der zählt nur fürs Radar)."""
+    cats = list(item.get("categories") or [])
+    hot = item.get("hot")
+    return [c for c in cats if c != hot] if hot else cats
+
+
+def _is_flight(item: dict, profile: Profile, cats: list[str] | None = None) -> bool:
+    title, link = item["title"], item.get("link") or ""
+    cats = _plain_categories(item) if cats is None else cats
     if profile.use_categories:
         if not is_flight_item(title, cats, link):
             return False
@@ -656,17 +804,34 @@ def _price(item: dict, profile: Profile) -> float | None:
     return None
 
 
+def _given_price(item: dict) -> float | None:
+    p = item.get("price_eur")
+    if isinstance(p, (int, float)) and not isinstance(p, bool) and math.isfinite(p) and p > 0:
+        return float(p)
+    return None
+
+
 def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
-    """Flug-Artikel? Preis, Kabine, one-way, Abflugort. ``item`` wie aus :meth:`FeedSource.parse`."""
+    """Flug-Artikel? Preis, Kabine, one-way, Abflugort. ``item`` wie aus :meth:`FeedSource.parse`.
+
+    Optionale Schlüssel (Loader-Quellen) haben Vorrang vor dem Titel: ``price_eur`` (Preis,
+    dann ohne Kabinen-Nebenpreise), ``cabin``, ``oneway``, ``origin_codes`` (Abflug: "home",
+    wenn ein Code in DACH liegt, sonst "foreign"). Ein abgelaufenes ``expires`` macht den
+    Artikel zu "kein Flug-Deal"."""
     profile = profile or item.get("profile") or GENERIC_PROFILE
     title = item["title"]
-    cats = item.get("categories") or []
+    cats = _plain_categories(item)
     link = normalize_link(item.get("link") or "")
     source = item.get("source") or CUSTOM_SOURCE
-    flight = _is_flight(item, profile)
-    price = _price(item, profile) if flight else None
-    pairs = cabin_prices(title, profile.lang) if flight else []
-    cabin = price_cabin(title, cats, price, pairs, profile.lang)
+    flight = _is_flight(item, profile, cats) and not is_expired(item)
+    given = _given_price(item) if flight else None
+    if given is not None:
+        price, pairs = given, []
+    else:
+        price = _price(item, profile) if flight else None
+        pairs = cabin_prices(title, profile.lang) if flight else []
+    cabin = item.get("cabin") if item.get("cabin") in CABINS else \
+        price_cabin(title, cats, price, pairs, profile.lang)
     alt: dict[str, float] = {}
     for c, p in pairs:
         if c != cabin and c not in alt and (not profile.cabins or c in profile.cabins):
@@ -678,13 +843,21 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
         else:
             flight, price = False, None
     foreign_currency = flight and price is None and bool(FOREIGN_CURRENCY_RE.search(title))
-    origin = detect_origin(title, profile.lang)
-    codes = origin_codes(title, profile.lang) if origin != "unknown" else set()
-    if origin == "unknown" and profile.default_origin == "home":
-        origin = "home"
-    return ItemInfo(flight=flight, price=price, cabin=cabin, oneway=is_oneway(title),
+    codes = _codes(item.get("origin_codes"))
+    if codes:
+        origin = "home" if any(regions.is_home(c) for c in codes) else "foreign"
+    else:
+        origin = detect_origin(title, profile.lang)
+        codes = origin_codes(title, profile.lang) if origin != "unknown" else set()
+        if origin == "unknown" and profile.default_origin == "home":
+            origin = "home"
+    oneway = item["oneway"] if isinstance(item.get("oneway"), bool) else is_oneway(title)
+    hot = item.get("hot") or None
+    return ItemInfo(flight=flight, price=price, cabin=cabin, oneway=oneway,
                     origin=origin, origin_codes=codes, source=source, link=link,
-                    foreign_currency=foreign_currency, alt_prices=alt if flight else {})
+                    foreign_currency=foreign_currency, alt_prices=alt if flight else {},
+                    dest_codes=_codes(item.get("dest_codes")), expires=_aware(item.get("expires")),
+                    hot=str(hot) if hot else None, uid=str(item["uid"]) if item.get("uid") else None)
 
 
 def origin_ok(alert: Alert, info: ItemInfo) -> bool:
@@ -711,15 +884,24 @@ class FeedSource:
     ``FeedSource(presets=["travel-dealz", "mydealz-fluege"], extra_feeds=[...],
     search_enabled=True, max_age_days=14)`` - oder abwärtskompatibel
     ``FeedSource(["https://…/feed/"])`` (nur URL-Liste, Name ``travel-dealz-feed``).
+
+    ``state_store``: Objekt mit ``source_state(name)``/``set_source_state(name, dict)`` (der
+    :class:`~dealmonitor.store.Store`) für den Zustand der Loader; ohne bekommen sie ``{}``.
+    ``lanes``: nur Presets dieser Takte laden (``{"fast"}`` für den schnellen Takt; ``None`` = alle).
+
+    Nach ``load``: ``stats[offer_source] = {"items", "parsed", "newest", "error"}`` je Quelle
+    (Artikel geladen, davon Flug-Deals mit Preis, neuester ``published``, Fehlertext oder None).
     """
 
     records_history = False
 
     def __init__(self, feeds: list[str] | None = None, *, presets: list[str] | None = None,
                  extra_feeds: list[str] | None = None, search_enabled: bool | None = None,
-                 max_age_days: int = 14, max_searches: int = 8) -> None:
+                 max_age_days: int = 14, max_searches: int = 8, state_store=None,
+                 lanes: set[str] | None = None) -> None:
         self.max_age_days = max_age_days
         self.max_searches = max_searches
+        self.state_store = state_store
         if presets is None and extra_feeds is None and search_enabled is None:
             # Alte Schnittstelle: reine URL-Liste (Standard: Travel-Dealz-Hauptfeed)
             self.legacy = True
@@ -734,12 +916,18 @@ class FeedSource:
             unknown = [i for i in ids if i not in PRESETS_BY_ID]
             if unknown:
                 raise ValueError(f"Unbekannte Feed-Presets: {', '.join(unknown)}")
-            self.presets = [PRESETS_BY_ID[i] for i in ids if not PRESETS_BY_ID[i].search]
+            self.presets = [PRESETS_BY_ID[i] for i in ids if not PRESETS_BY_ID[i].search
+                            and (lanes is None or PRESETS_BY_ID[i].lane in lanes)]
             self.extra_feeds = list(extra_feeds or []) + list(feeds or [])
             self.search_enabled = ("travel-dealz-suche" in ids) if search_enabled is None \
                 else bool(search_enabled)
+        if lanes is not None and "normal" not in lanes:
+            self.extra_feeds = []           # eigene Feeds laufen im normalen Takt
+            self.search_enabled = False
         self.feeds: list[str] = [u for p in self.presets for u in p.urls] + self.extra_feeds
         self._items: list[dict] | None = None   # einmal pro Lauf laden
+        #: Gesundheit je ``Offer.source`` nach ``load`` (siehe Klassendoku)
+        self.stats: dict[str, dict] = {}
         self._error: str | None = None
         self._partial: str | None = None        # einige (nicht alle) Feeds fehlgeschlagen
         self._failed_sources: set[str] = set()  # Offer.source der fehlgeschlagenen Feeds
@@ -792,7 +980,7 @@ class FeedSource:
     def _feed_jobs(self) -> list[tuple[str, Preset | None]]:
         jobs: list[tuple[str, Preset | None]] = []
         taken: set[str] = set()       # gleiche URL nicht doppelt laden (Preset + eigener Feed)
-        candidates = [(u, p) for p in self.presets for u in p.urls] + \
+        candidates = [(u, p) for p in self.presets for u in p.jobs] + \
             [(u, preset_for_url(u)) for u in self.extra_feeds]
         for url, preset in candidates:
             key = normalize_link(url) or url
@@ -818,8 +1006,47 @@ class FeedSource:
                 it["source"] = preset.source if preset else CUSTOM_SOURCE
                 it["profile"] = preset.profile if preset else GENERIC_PROFILE
             it["preset"] = preset.id if preset else None
-            it["key"] = normalize_link(it["link"]) or it["title"]
+            it["key"] = normalize_link(it["link"]) or (f"uid:{it['uid']}" if it.get("uid")
+                                                       else it["title"])
         return items
+
+    def _stat(self, source: str) -> dict:
+        return self.stats.setdefault(source, {"items": 0, "parsed": 0, "newest": None,
+                                              "error": None})
+
+    def _record(self, source: str, items: list[dict] | None = None,
+                error: str | None = None) -> None:
+        """Zähler für ``stats`` fortschreiben (``items`` schon mit ``_tag`` versehen)."""
+        st = self._stat(source)
+        if error:
+            st["error"] = f"{st['error']}; {error}" if st["error"] else error
+        for it in items or []:
+            st["items"] += 1
+            info = analyze(it)
+            if info.flight and (info.price is not None or info.alt_prices):
+                st["parsed"] += 1
+            pub = it.get("published")
+            if pub is not None and (st["newest"] is None or pub > st["newest"]):
+                st["newest"] = pub
+
+    def _fetch_loader(self, preset: Preset) -> list[dict]:
+        """Artikel einer Loader-Quelle; ihr Zustand wird nur nach fehlerfreiem Abruf gespeichert."""
+        fn = load_loader(preset.loader or "")
+        state = self.state_store.source_state(preset.id) if self.state_store else {}
+        work = copy.deepcopy(state)
+        raw = fn(timeout=20.0, state=work)
+        if not isinstance(raw, list):
+            raise SourceError(f"{preset.name}: Loader lieferte keine Liste")
+        items = [it for it in (normalize_item(r, f"loader:{preset.id}",
+                                              max_age_days=self.max_age_days) for r in raw) if it]
+        if self.state_store is not None and work != state:
+            self.state_store.set_source_state(preset.id, work)
+        return items
+
+    def _fetch_job(self, url: str, preset: Preset | None) -> list[dict]:
+        if preset is not None and preset.loader and url == preset.loader and not preset.urls:
+            return self._fetch_loader(preset)
+        return self._fetch_one(url)
 
     def _fetch_one(self, url: str) -> list[dict]:
         # Fremde Server: kein Antworttext in Fehlermeldungen, Größe/Dauer begrenzt;
@@ -838,19 +1065,24 @@ class FeedSource:
         errors = []
         jobs = self._feed_jobs()
         for url, preset in jobs:
-            shown = http.redact(url)            # keine Zugangsdaten in Meldungen/Log
+            # keine Zugangsdaten in Meldungen/Log; Loader unter ihrem Namen
+            shown = preset.name if preset is not None and url == preset.loader else http.redact(url)
+            source = self._job_source(preset)
             try:
-                fetched = self._tag(self._fetch_one(url), preset)
-            except (http.HttpError, ET.ParseError) as e:
+                fetched = self._tag(self._fetch_job(url, preset), preset)
+            except (http.HttpError, ET.ParseError, SourceError) as e:
                 errors.append(f"{shown}: {e}")
-                self._failed_sources.add(self._job_source(preset))
+                self._failed_sources.add(source)
+                self._record(source, error=f"{shown}: {e}")
                 log.warning("Feed %s nicht lesbar: %s", shown, e)
                 continue
             except Exception as e:  # noqa: BLE001 - kaputter Feed darf den Lauf nicht stoppen
                 errors.append(f"{shown}: unerwarteter Fehler: {e}")
-                self._failed_sources.add(self._job_source(preset))
+                self._failed_sources.add(source)
+                self._record(source, error=f"{shown}: unerwarteter Fehler: {e}")
                 log.warning("Feed %s nicht lesbar: %s", shown, e)
                 continue
+            self._record(source, fetched)
             for it in fetched:                      # Dedup über alle Feeds (erster gewinnt)
                 if it["key"] in seen:
                     continue
@@ -920,10 +1152,12 @@ class FeedSource:
                 url = TRAVEL_DEALZ_SEARCH.format(word=urllib.parse.quote(word))
                 try:
                     self._search_cache[key] = self._tag(self._fetch_one(url), preset)
+                    self._record(preset.source, self._search_cache[key])
                 except Exception as e:  # noqa: BLE001 - Suche ist Zugabe, nie fatal
                     self._search_cache[key] = []
                     self._search_failed.add(key)
                     self._search_errors.append(f"Suche '{word}': {e}")
+                    self._record(preset.source, error=f"Suche '{word}': {e}")
                     log.warning("Travel-Dealz-Suche '%s' fehlgeschlagen: %s", word, e)
             if key in self._search_failed:
                 failed.append(word)
@@ -970,20 +1204,24 @@ class FeedSource:
             info = analyze(it)
             if not info.flight:
                 continue
-            text = it["title"] + " " + " ".join(it["categories"])
+            text = it["title"] + " " + " ".join(_plain_categories(it))
             kw_args = {"title": it["title"], "lang": it["profile"].lang}
+            # Bei Travel-Dealz-Artikeln ohne Abflugangabe (= Deutschland) reicht das Nach-Wort,
+            # wenn der Alarm ab DACH geht (nur für Alarme ab einer ganzen Region wie @DE - bei
+            # einzelnen Städten wie Zürich/Hamburg muss die Stadt im Titel stehen)
+            implied = (it["profile"].default_origin == "home" and not info.origin_codes
+                       and not origin_candidates(it["title"], it["profile"].lang)
+                       and all(regions.is_home(o) for o in alert.origins)
+                       and bool(regions.region_names(alert.origins)))
             if keywords:
                 hit = matches(alert, text, keywords, **kw_args)
             else:
-                # Ohne eigene Stichwörter: Von- und Nach-Wort; bei Travel-Dealz-Artikeln ohne
-                # Abflugangabe (= Deutschland) reicht das Nach-Wort, wenn der Alarm ab DACH geht
-                # (nur für Alarme ab einer ganzen Region wie @DE - bei einzelnen Städten wie
-                # Zürich/Hamburg muss die Stadt im Titel stehen)
-                implied = (it["profile"].default_origin == "home" and not origin_candidates(
-                    it["title"], it["profile"].lang) and all(regions.is_home(o) for o in alert.origins)
-                    and bool(regions.region_names(alert.origins)))
+                # Ohne eigene Stichwörter: Von- und Nach-Wort (bzw. nur Nach-Wort, siehe oben)
                 hit = matches(alert, text, auto_keywords(alert, origin_required=not implied),
                               **kw_args)
+            if not hit and info.dest_codes & set(alert.destinations):
+                # Quelle nennt Ziel-Codes (Loader): Ziel passt, Abflug muss belegt sein
+                hit = bool(info.origin_codes & set(alert.origins)) or implied
             if not hit:
                 continue
             if not origin_ok(alert, info):
@@ -1005,6 +1243,7 @@ class FeedSource:
                 title=it["title"],
                 found_at=(it["published"].astimezone().replace(tzinfo=None)
                           if it["published"] else datetime.now()),
+                expires=info.expires, hot=info.hot, uid=info.uid,
             ))
             self.matched_links.add(info.link or it["key"])
         return offers

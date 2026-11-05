@@ -285,6 +285,7 @@ class Store:
             "roundtrip": o.roundtrip, "nights": o.nights,
             "reference_price": deal.reference_price, "discount": deal.discount,
             "reasons": deal.reasons, "alert_name": deal.alert.name,
+            **o.extras(),       # insight, via_hub, … nur wenn gesetzt (alte Zeilen haben sie nicht)
         }, ensure_ascii=False)
         row = self._deal_row(deal.fingerprint)
 
@@ -533,6 +534,21 @@ class Store:
 
     def kv_all(self) -> dict:
         return {r[0]: json.loads(r[1]) for r in self.db.execute("SELECT key, value FROM kv")}
+
+    # Zustand einzelner Quellen (Cursor, Zeitstempel, Gesundheit) - eigener Schlüssel je
+    # Quelle ``state:<name>``, damit er nie mit Einstellungen kollidiert. Inhalt: JSON-Dict.
+    STATE_PREFIX = "state:"
+
+    def source_state(self, name: str) -> dict:
+        """Gespeicherter Zustand einer Quelle (leeres Dict, wenn keiner oder unbrauchbar)."""
+        value = self.kv_get(self.STATE_PREFIX + name)
+        return dict(value) if isinstance(value, dict) else {}
+
+    def set_source_state(self, name: str, state: dict) -> None:
+        """Zustand einer Quelle speichern (muss JSON-tauglich sein; Datumswerte als ISO-Text)."""
+        if not isinstance(state, dict):
+            raise TypeError("Quellen-Zustand muss ein Dict sein")
+        self.kv_set(self.STATE_PREFIX + name, state)
 
     # -- Meldungen (Inbox) ------------------------------------------------
     def add_notification(self, *, alert_id: str | None, alert_name: str | None, status: str,

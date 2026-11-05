@@ -169,6 +169,7 @@ def _offer(item: dict, info: feed_mod.ItemInfo) -> Offer:
         price=info.price if info.price is not None else 0.0,
         roundtrip=not info.oneway, cabin=info.cabin, link=item["link"], title=item["title"],
         found_at=(published.astimezone().replace(tzinfo=None) if published else datetime.now()),
+        expires=info.expires, hot=info.hot, uid=info.uid,
     )
 
 
@@ -202,7 +203,7 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
     kept: list[tuple[Deal, tuple | None]] = []
     seen: set[str] = set()
     analyzed = [(it, feed_mod.analyze(it)) for it in items]
-    keys = [info.link or it.get("link") or it["title"] for it, info in analyzed]
+    keys = [info.link or it.get("key") or it.get("link") or it["title"] for it, info in analyzed]
     # Derselbe Deal auf einer anderen Seite wie ein Alarm-Deal: auch nicht melden
     taken = [deal_key(it["title"], info) for (it, info), k in zip(analyzed, keys) if k in exclude]
     for (it, info), key in zip(analyzed, keys):

@@ -222,6 +222,7 @@ def _entry(o: Offer, confirmed: bool) -> dict:
         "published": o.found_at.isoformat(timespec="minutes") if o.title and o.found_at else None,
         "kind": "article" if o.title else ("live" if o.source in LIVE_SOURCES else "cache"),
         "confirmed": confirmed,
+        **o.extras(),
     }
 
 

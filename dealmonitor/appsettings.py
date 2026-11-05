@@ -545,7 +545,7 @@ class Context:
                 presets = app.get("feed_presets")
                 if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen
                     out.append(FeedSource(presets=presets, extra_feeds=s.feeds,
-                                          max_age_days=s.feed_max_age_days))
+                                          max_age_days=s.feed_max_age_days, state_store=store))
         return out
 
     def verifier(self, sources: list, app: AppSettings):
