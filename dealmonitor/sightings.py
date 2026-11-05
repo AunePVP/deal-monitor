@@ -101,6 +101,14 @@ def first_report(store, deal: Deal, info: tuple | None, valid=None) -> str | Non
         return None
     keys, origins = info
     o = deal.offer
+    if o.link:
+        # schon früher zugeordnet: bleibt so, auch wenn sich ``found_at`` verschoben hat
+        # (Artikel aktualisiert, Artikel ohne Datum) und die Erstmeldung aus dem Fenster fällt
+        for row in store.sightings(keys):
+            fp = row["fingerprint"]
+            if row["source"] == o.source and row["link"] == o.link \
+                    and fp != deal.fingerprint and (fp in (valid or ()) or store.has_deal(fp)):
+                return fp
     when = _seen(o)
     for row in store.sightings(keys, since=when - WINDOW, until=when + WINDOW):
         if row["source"] == o.source or row["fingerprint"] == deal.fingerprint:

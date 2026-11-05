@@ -200,9 +200,10 @@ class ReisetopiaTest(unittest.TestCase):
     def test_booking_deadline(self):
         items = load("reisetopia")
         latam = by_title(items, "São Paulo")
-        self.assertEqual(latam["expires"], datetime(2026, 11, 13, tzinfo=timezone.utc))
-        self.assertEqual(by_title(items, "Salala")["expires"],
-                         datetime(2026, 12, 1, tzinfo=timezone.utc))      # "Bis zum 30. November"
+        # Ende des Tages nach deutscher Zeit (23:59 MEZ = 22:59 UTC), nicht Mitternacht danach
+        self.assertEqual(latam["expires"], datetime(2026, 11, 12, 22, 59, tzinfo=timezone.utc))
+        self.assertEqual(by_title(items, "Salala")["expires"],          # "Bis zum 30. November"
+                         datetime(2026, 11, 30, 22, 59, tzinfo=timezone.utc))
         self.assertNotIn("expires", by_title(items, "Mailand"))          # "Schnellstmöglich"
         ktm = by_title(items, "Kathmandu")                                # "Bis 5. November 2026"
         self.assertFalse(_is_expired(ktm, NOW))
@@ -263,7 +264,7 @@ class InfoboxTest(unittest.TestCase):
                 "Reisezeitraum: Offen Buchungszeitraum: Bis 12.11.2026 Fluggesellschaft: LATAM")
         box = read_infobox(text, self.RX)
         self.assertEqual((box["origin_codes"], box["dest_codes"]), ({"FRA"}, {"SAO"}))
-        self.assertEqual(box["expires"], datetime(2026, 11, 13, tzinfo=timezone.utc))
+        self.assertEqual(box["expires"], datetime(2026, 11, 12, 22, 59, tzinfo=timezone.utc))
         # unbekannte Form -> nichts erfinden, nie abstürzen
         self.assertEqual(read_infobox("Buchbar ab 45.075 Meilen", self.RX), {})
         self.assertEqual(read_infobox("", None), {})

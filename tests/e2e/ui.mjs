@@ -447,7 +447,7 @@ async function desktopFlows(browser) {
     assert(norm(await page.textContent(".health-headline")) === `${ok} von ${rep.sources.length} Quellen OK`, "Zusammenfassung falsch");
     const first = rows.first();
     assert((await first.getAttribute("class")).includes("h-warn") && norm(await first.locator(".h-label").textContent()) === "Veraltet", "Veraltete Quelle nicht oben/gelb");
-    assert(/premium-flights/.test(await first.textContent()) && /neuester Artikel vor 30 Std\. \(erwartet: höchstens 24 Std\.\)/.test(norm(await first.textContent())), `Alter fehlt: ${norm(await first.textContent())}`);
+    assert(/premium-flights/.test(await first.textContent()) && /neuester Artikel vor 6 Tagen \(erwartet: höchstens 5 Tage\)/.test(norm(await first.textContent())), `Alter fehlt: ${norm(await first.textContent())}`);
     const light = await first.locator(".h-light").evaluate((e) => getComputedStyle(e).backgroundColor);
     assert(light === "rgb(180, 83, 9)", `Ampel nicht gelb: ${light}`);
     const google = norm(await page.locator('.health-row[data-id="google_flights"]').textContent());
@@ -461,6 +461,53 @@ async function desktopFlows(browser) {
     await shot(page, "desktop-quellen");
     await go(page, "deals");               // weitere Schritte beginnen auf der Deals-Seite
     await page.waitForSelector(".deal-card");
+  });
+
+  await step("Berliner Zeit: Ablauf mit Zeitzone, Veraltet-Text, Ladefehler der Quellen", async () => {
+    // eigener Kontext in Europe/Berlin (der Container läuft in UTC, da fiele der Fehler nicht auf)
+    const bctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: "de-DE", timezoneId: "Europe/Berlin" });
+    try {
+      const p3 = await bctx.newPage();
+      // "Bis 15. Januar" bzw. "Bis 15. Juli": Tagesende deutscher Zeit, gespeichert in UTC
+      await p3.route("**/api/deals*", async (route) => {
+        const res = await route.fetch();
+        const json = await res.json();
+        const [winter] = json.deals.filter((d) => d.via_hub);    // fehlt einer, schlägt unten fehl
+        const [summer] = json.deals.filter((d) => d.status !== "expired" && !d.via_hub);
+        if (winter) winter.expires = "2030-01-15T22:59+00:00";
+        if (summer) summer.expires = "2030-07-15T21:59+00:00";
+        await route.fulfill({ response: res, json });
+      });
+      let healthFails = false;
+      await p3.route("**/api/sources/health", async (route) => {
+        if (healthFails) return route.fulfill({ status: 500, contentType: "application/json", body: '{"error":"kaputt"}' });
+        await route.fulfill({ json: { sources: [
+          { id: "feed:a", name: "Seite A", state: "veraltet", label: "Veraltet", age_hours: 73, threshold_hours: 72, items: 3, parsed: 1 },
+          { id: "feed:b", name: "Seite B", state: "veraltet", label: "Veraltet", age_hours: 100, threshold_hours: 72, items: 3, parsed: 1 },
+          { id: "feed:c", name: "Seite C", state: "ok", label: "OK", age_hours: 0.4, threshold_hours: 72, items: 3, parsed: 1 },
+        ], labels: {}, not_used: [{ name: "X", reason: "Y" }] } });
+      });
+      await p3.goto(base + "/#deals");
+      await p3.waitForSelector(".deal-card");
+      const badges = await p3.locator(".signals .badge", { hasText: "läuft ab" }).evaluateAll((bs) => bs.map((b) => [b.textContent.trim(), b.title]));
+      assert(badges.some(([t, title]) => t === "läuft ab 15.01." && /15\.01\.2030, 23:59 Uhr/.test(title)), `Ablauf Winter: ${JSON.stringify(badges)}`);
+      assert(badges.some(([t, title]) => t === "läuft ab 15.07." && /15\.07\.2030, 23:59 Uhr/.test(title)), `Ablauf Sommer: ${JSON.stringify(badges)}`);
+      await go(p3, "quellen");
+      await p3.waitForSelector(".health-row");
+      const text = (id) => p3.locator(`.health-row[data-id="${id}"] .health-facts`).textContent().then(norm);
+      assert(/^neuester Artikel vor 73 Std\. \(erwartet: höchstens 72 Std\.\)/.test(await text("feed:a")), `Veraltet knapp: ${await text("feed:a")}`);
+      assert(/^neuester Artikel vor 4 Tagen \(erwartet: höchstens 3 Tage\)/.test(await text("feed:b")), `Veraltet Tage: ${await text("feed:b")}`);
+      assert(/^neuester Artikel vor weniger als 1 Std\./.test(await text("feed:c")), `Unter 1 Std.: ${await text("feed:c")}`);
+      assert(await p3.isVisible("#health-summary") && await p3.isVisible("#unused-panel"), "Zusammenfassung fehlt");
+      // Ladefehler: keine alte Zusammenfassung neben der Fehlermeldung
+      healthFails = true;
+      await go(p3, "deals");
+      await go(p3, "quellen");
+      await p3.waitForFunction(() => /konnte nicht geladen werden/.test(document.querySelector("#health-list").textContent));
+      assert(!(await p3.isVisible("#health-summary")) && !(await p3.isVisible("#unused-panel")), "alte Zusammenfassung steht neben dem Fehler");
+    } finally {
+      await bctx.close().catch(() => {});
+    }
   });
 
   await step("Status: „nächster Feed-Check in …“", async () => {

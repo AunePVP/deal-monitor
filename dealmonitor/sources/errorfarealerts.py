@@ -31,6 +31,9 @@ log = logging.getLogger(__name__)
 BASE = "https://errorfarealerts.com"
 LIST_URL = BASE + "/deals/flights"
 MAX_BYTES = 2_000_000
+#: so viele Deals merkt sich die Quelle (``state["deals"]``), höchstens so alt
+KEEP_DEALS = 60
+KEEP_DAYS = 14
 #: Plausible Preisspanne in € (alles andere ist ein Lesefehler)
 MIN_PRICE, MAX_PRICE = 10.0, 30_000.0
 
@@ -62,20 +65,8 @@ def route_url(from_iata: str, to_iata: str, page: int = 1) -> str:
 
 # -- Zeit ------------------------------------------------------------------------------------
 
-def _last_sunday(year: int, month: int) -> datetime:
-    day = datetime(year, month + 1, 1, tzinfo=timezone.utc) - timedelta(days=1)
-    return day - timedelta(days=(day.weekday() + 1) % 7)
-
-
-def berlin_to_utc(local: datetime) -> datetime:
-    """Ortszeit Europe/Berlin -> UTC (EU-Regel: Sommerzeit vom letzten Sonntag im März bis
-    zum letzten Sonntag im Oktober, jeweils 01:00 UTC). Ohne ``zoneinfo``/tzdata, die im
-    schlanken Container fehlen können."""
-    local = local.replace(tzinfo=timezone.utc)
-    start = _last_sunday(local.year, 3) + timedelta(hours=1)
-    end = _last_sunday(local.year, 10) + timedelta(hours=1)
-    utc = local - timedelta(hours=2)
-    return utc if start <= utc < end else local - timedelta(hours=1)
+#: Ortszeit Europe/Berlin -> UTC (liegt in ``feed``, auch für das Buchungsende der Infobox)
+berlin_to_utc = feed.berlin_to_utc
 
 
 def parse_time(text: str, now: datetime | None = None) -> datetime | None:
@@ -219,7 +210,37 @@ def fetch_page(url: str, *, timeout: float = 20.0) -> list[dict]:
     return items
 
 
+def _now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _remembered(state: dict, cutoff: datetime) -> list[dict]:
+    """Gemerkte Deals aus ``state["deals"]`` (Kaputtes und zu Altes fällt still weg)."""
+    out = []
+    raw = state.get("deals")
+    for d in raw if isinstance(raw, list) else []:
+        if not isinstance(d, dict) or not isinstance(d.get("title"), str) \
+                or not isinstance(d.get("link"), str):
+            continue
+        published = feed._aware(d.get("published"))
+        if published is None or published < cutoff:
+            continue
+        out.append(dict(d, published=published))
+    return out
+
+
 def fetch_items(*, timeout: float = 20.0, state: dict | None = None) -> list[dict]:
-    """Loader für ``FeedSource``: die neuesten 10 Deals (Seite 1). ``state`` wird nicht
-    gebraucht - Dedup läuft über den Link."""
-    return fetch_page(page_url(1), timeout=timeout)
+    """Loader für ``FeedSource``: die neuesten 10 Deals (Seite 1) plus die gemerkten Deals
+    der letzten ``KEEP_DAYS`` Tage (``state["deals"]``). Seite 1 reicht nur 2-3 Tage zurück;
+    ohne das Gedächtnis gälten ältere, noch buchbare Deals beim nächsten Lauf als abgelaufen."""
+    state = state if state is not None else {}
+    fresh = fetch_page(page_url(1), timeout=timeout)
+    cutoff = _now() - timedelta(days=KEEP_DAYS)
+    merged = {d["link"]: d for d in _remembered(state, cutoff)}
+    merged.update((d["link"], d) for d in fresh)          # frisch gelesen gewinnt
+    items = sorted(merged.values(), reverse=True,
+                   key=lambda d: d.get("published") or datetime.min.replace(tzinfo=timezone.utc))
+    items = items[:KEEP_DEALS]
+    state["deals"] = [dict(d, published=d["published"].isoformat() if d.get("published")
+                           else None) for d in items]
+    return items

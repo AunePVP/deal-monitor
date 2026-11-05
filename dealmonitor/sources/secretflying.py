@@ -14,7 +14,10 @@ Format von ``FeedSource.parse`` mit ``price_eur``, ``origin_codes``, ``dest_code
 ``hot`` und ``uid`` (siehe ``docs/handoff/RUNDE2-SCHNITTSTELLEN.md``). Gefiltert wird so:
 
 * Hotels ("per night", "5*") und abgelaufene Error Fares fallen weg.
-* Abflug DACH oder übriges Europa (Nachbar-Hub): behalten, mit ``origin_codes``.
+* Abflug DACH oder übriges Europa (Nachbar-Hub): behalten, mit ``origin_codes``. Ein ganzes
+  DACH-Land ("#Germany", "Austrian cities") wird zur Region und bekommt ``origin_region``
+  (passt dann nur zu Alarmen ab einer Region, nicht zu Zürich/Hamburg). Europa ohne Ort
+  ("UK cities", "European cities") bekommt ``origin_foreign`` - nie "Abflug unbekannt".
 * Abflug außerhalb Europas: nur mit Marker (ERROR FARE, CRAZY HOT, PRICE DROP) und
   bekanntem Abflug-Code - sonst ginge der Artikel als "Abflug unbekannt" durch jeden Alarm.
 * Teaser ("A new Business Class deal from Europe has just been posted"): Artikel ohne
@@ -99,9 +102,10 @@ EUROPE_CODES = frozenset("""
     AMS LIS MAD PAR LON MIL ROM ATH BUD WAW PRG BRU CPH STO OSL DUB BCN OPO IST LUX MAN HEL VCE
     LYS NCE KRK GDN EDI RIX VNO TLL SOF BUH BEG ZAG LJU BTS KEF GOT
 """.split())
-#: ganze DACH-Länder als Abflug ("#Germany to Moroccan cities") -> Region
-COUNTRY_REGIONS = {"germany": "DE", "deutschland": "DE", "switzerland": "CH", "schweiz": "CH",
-                   "austria": "AT", "oesterreich": "AT"}
+#: ganze DACH-Länder als Abflug ("#Germany to Moroccan cities", "Austrian cities") -> Region
+COUNTRY_REGIONS = {"germany": "DE", "deutschland": "DE", "german": "DE",
+                   "switzerland": "CH", "schweiz": "CH", "swiss": "CH",
+                   "austria": "AT", "oesterreich": "AT", "austrian": "AT", "dach": "DACH"}
 
 
 # -- Text ------------------------------------------------------------------------------------
@@ -187,24 +191,31 @@ def _is_europe(name: str) -> bool:
     return key in EUROPE_NAMES or key.startswith("europ")
 
 
-def classify_origin(part: str) -> tuple[str, set[str]]:
-    """Abflug -> ("home" | "europe" | "far", IATA-Codes). Ganze DACH-Länder werden zur Region."""
+def _classify(part: str) -> tuple[str, set[str], bool]:
+    """Wie :func:`classify_origin`, dazu ``True``, wenn die Codes ein ganzes Land sind."""
     names, country = _places(part)
     codes: set[str] = set()
     for n in names:
         codes |= _codes(n)
     places = names + ([country] if country else [])
-    if any(regions.is_home(c) for c in codes) or \
+    countries = [r for n in places if (r := COUNTRY_REGIONS.get(regions.normalize_name(n)))]
+    if any(regions.is_home(c) for c in codes) or countries or \
             any(regions.place_kind(n) == "home" for n in places):
-        if not any(regions.is_home(c) for c in codes):
-            for n in places:
-                region = COUNTRY_REGIONS.get(regions.normalize_name(n))
-                if region:
-                    codes |= set(regions.REGIONS[region])
-        return "home", codes
+        if any(regions.is_home(c) for c in codes):
+            return "home", codes, False
+        for region in countries:
+            codes |= set(regions.REGIONS[region])
+        return "home", codes, bool(countries)
     if codes & EUROPE_CODES or any(_is_europe(n) for n in places):
-        return "europe", codes
-    return "far", codes
+        return "europe", codes, False
+    return "far", codes, False
+
+
+def classify_origin(part: str) -> tuple[str, set[str]]:
+    """Abflug -> ("home" | "europe" | "far", IATA-Codes). Ganze DACH-Länder werden zur Region
+    ("#Germany", "Austrian cities", auch "Lugano, Switzerland" mit unbekannter Stadt)."""
+    kind, codes, _ = _classify(part)
+    return kind, codes
 
 
 def dest_codes(part: str) -> set[str]:
@@ -266,7 +277,7 @@ def _teaser(post: dict, lines: list[str], hot: str | None) -> dict | None:
     if found is None:
         return None
     line, m = found
-    kind, codes = classify_origin(m.group("region"))
+    kind, codes, country = _classify(m.group("region"))
     if kind == "far":
         return None
     cabin_m = CABIN_RE.search(" ".join(cleaned))
@@ -279,6 +290,8 @@ def _teaser(post: dict, lines: list[str], hot: str | None) -> dict | None:
         item["cabin"] = cabin
     if kind == "home" and codes:
         item["origin_codes"] = codes
+        if country:
+            item["origin_region"] = True
     return item
 
 
@@ -297,12 +310,18 @@ def post_item(post: dict) -> dict | None:
         return _teaser(post, lines, hot) if TEASER_RE.search(" ".join(lines)) else None
     if HOTEL_RE.search(text):
         return None
-    kind, codes = classify_origin(m.group("orig"))
+    kind, codes, country = _classify(m.group("orig"))
     if kind == "far" and not (hot and codes):
         return None
+    if kind == "home" and not codes:
+        return None     # DACH genannt, aber kein Ort erkannt: sonst "Abflug unbekannt"
     item = _base(post, _title(headline, hot), hot, lines)
     if codes:
         item["origin_codes"] = codes
+    else:
+        item["origin_foreign"] = True    # "UK cities", "European cities": Europa, nicht DACH
+    if country:
+        item["origin_region"] = True     # ganzes Land: passt nur zu Alarmen ab einer Region
     dest = dest_codes(m.group("dest"))
     if dest:
         item["dest_codes"] = dest

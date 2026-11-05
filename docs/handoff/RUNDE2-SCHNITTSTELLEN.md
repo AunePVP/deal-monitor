@@ -55,6 +55,8 @@ Optional (werten `normalize_item` und `analyze()` aus):
 |---|---|---|
 | `price_eur` | float > 0 | Preis; Vorrang vor Titel-Regex; dann keine Kabinen-Nebenpreise (`alt_prices` leer) |
 | `origin_codes` | set/list[str] IATA | Vorrang vor `detect_origin`: `home`, wenn ein Code in DACH liegt, sonst `foreign` |
+| `origin_region` | `True` | `origin_codes` sind ein ganzes Land ("#Germany to …"): belegen den Abflug nur für Alarme ab einer Region (@DE), nie für Stadt-Alarme (ZRH/HAM) |
+| `origin_foreign` | `True` | Abflug sicher nicht DACH, aber ohne Code ("UK cities", YHBU "Baku – Peking"): `origin = foreign` statt `unknown` |
 | `dest_codes` | set/list[str] IATA | `ItemInfo.dest_codes`; im Alarm-Abgleich Treffer auch ohne Stichwort, wenn Ziel passt **und** Abflug belegt ist (`origin_codes ∩ alert.origins` oder DACH-Regionsalarm ohne Abflugangabe) |
 | `cabin` | economy/premium/business/first | Vorrang vor Titel/Kategorie |
 | `oneway` | bool | Vorrang vor `is_oneway(title)` |

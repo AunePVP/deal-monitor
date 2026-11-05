@@ -10,7 +10,9 @@ Nach jedem Lauf wird jede gelesene Quelle eingestuft:
 * **FEHLER** - Quelle nicht lesbar
 
 Google Flights gilt als LEER, wenn in einem Lauf mehr als die Hälfte der Abrufe leer blieb
-(``empty_fetches``), und als FEHLER, wenn der Schutzschalter ausgelöst hat (``down``).
+(``empty_fetches``), und als FEHLER, wenn der Schutzschalter ausgelöst hat (``down``). Die
+Sofort-Prüfung (höchstens 5 Abfragen) stuft Google nur bei FEHLER neu ein - für "leer" sind
+das zu wenige Abrufe.
 
 Der Zustand liegt in ``store.kv["state:health"]``. Gemeldet (ntfy/Webhook/Telegram) wird nur
 ein **Wechsel** des Zustands, dazu einmal täglich ein Lebenszeichen mit Artikeln je Quelle.
@@ -53,8 +55,9 @@ class Rule:
 #: für weitere Feeds derselben Seite (``feed:premium-flights-…``).
 RULES: dict[str, Rule] = {
     "feed:travel-dealz-rest": Rule(20),      # größte Lücke 17,3 h (nachts)
-    "feed:secretflying": Rule(10),           # größte Lücke 8,8 h
-    "feed:premium-flights": Rule(24),
+    # Lücken je Nacht 12-15 h (Abflug Europa, 6 Nächte bis 05.11.2026)
+    "feed:secretflying": Rule(20),
+    "feed:premium-flights": Rule(120),       # Lücken 34 h, 39 h, 98,5 h in 10 Tagen
     "feed:errorfarealerts": Rule(48),        # Schübe mit Lücken bis 25 h
     "feed:reisetopia": Rule(36, need_parsed=False),   # Annahme; meist Hotels/Meilen
     # YHBU postet etwa einmal pro Woche: 0 Artikel in 14 Tagen ist dort normal
@@ -151,15 +154,16 @@ def classify_google(stat: dict) -> tuple[str, str | None]:
     return OK, None
 
 
-def collect(sources: list, now: datetime) -> dict[str, dict]:
+def collect(sources: list, now: datetime, *, quick: bool = False) -> dict[str, dict]:
     """Einstufung aller Quellen eines Laufs: ``{source: {state, detail, items, parsed, …}}``.
-    Quellen ohne Kennzahlen (Preis-APIs, nicht geladene Feeds) fehlen."""
+    Quellen ohne Kennzahlen (Preis-APIs, nicht geladene Feeds) fehlen; ``quick``
+    (Sofort-Prüfung): Google nur, wenn der Schutzschalter ausgelöst hat."""
     out: dict[str, dict] = {}
     for src in sources:
         stats = getattr(src, "stats", None)
         if getattr(src, "name", "") == GOOGLE and hasattr(src, "requests_made"):
             g = google_stat(src)
-            if g is not None:
+            if g is not None and not (quick and not g["error"]):
                 state, detail = classify_google(g)
                 out[GOOGLE] = {"state": state, "detail": detail, "items": g["items"],
                                "parsed": g["items"] - g["empty"], "newest": None,
@@ -200,16 +204,35 @@ def _heartbeat_text(sources: dict[str, dict]) -> str:
     return "\n".join(lines)
 
 
+def _names(sources: list) -> set[str]:
+    """Alle Gesundheits-Namen, die diese Quellen liefern können."""
+    out: set[str] = set()
+    for src in sources:
+        if getattr(src, "name", "") == GOOGLE:
+            out.add(GOOGLE)
+            continue
+        out |= set(getattr(src, "offer_sources", None) or ())
+        stats = getattr(src, "stats", None)
+        out |= set(stats) if isinstance(stats, dict) else set()
+    return out
+
+
 def update(store, sources: list, notifiers: list | None = None, *,
-           now: datetime | None = None) -> list[str]:
+           now: datetime | None = None, complete: bool = False,
+           quick: bool = False) -> list[str]:
     """Zustände nach einem Lauf fortschreiben und Wechsel melden. Rückgabe: Fehler beim Melden.
 
     Nur Quellen, die in diesem Lauf gelesen wurden, werden neu eingestuft; die übrigen
-    behalten ihren letzten Stand (z. B. ein Lauf nur der schnellen Deal-Seiten)."""
+    behalten ihren letzten Stand (z. B. ein Lauf nur der schnellen Deal-Seiten).
+    ``complete``: ``sources`` sind alle gewählten Quellen (voller Lauf) - abgewählte oder
+    abgeschaltete fallen dann heraus. ``quick``: Sofort-Prüfung (siehe :func:`collect`)."""
     now = now or datetime.now(timezone.utc)
-    current = collect(sources, now)
+    current = collect(sources, now, quick=quick)
     state = store.source_state(STATE_NAME)
     known = state.get("sources") if isinstance(state.get("sources"), dict) else {}
+    if complete:
+        wanted = _names(sources)
+        known = {name: e for name, e in known.items() if name in wanted}
     checked = _local(now)
     changes = []
     for name, entry in current.items():

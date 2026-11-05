@@ -270,6 +270,15 @@ class Store:
         )
         return [r[0] for r in rows]
 
+    def daily_best(self, route_key: str, days: int, now: datetime | None = None) -> list[float]:
+        """Bestpreis je Beobachtungstag (nicht jede Ergebniszeile: sonst läge der Median weit
+        über dem, was man tatsächlich buchen konnte)."""
+        since = ((now or datetime.now()) - timedelta(days=days)).date().isoformat()
+        rows = self.db.execute(
+            "SELECT MIN(price) FROM prices WHERE route_key=? AND observed_on>=? "
+            "GROUP BY observed_on", (route_key, since))
+        return [r[0] for r in rows]
+
     # -- Deals ------------------------------------------------------------
     def _deal_row(self, fingerprint: str):
         return self.db.execute(
@@ -469,6 +478,10 @@ class Store:
 
     def has_deal(self, fingerprint: str) -> bool:
         return self._deal_row(fingerprint) is not None
+
+    def deal_active(self, fingerprint: str) -> bool:
+        row = self._deal_row(fingerprint)
+        return row is not None and row["status"] == "active"
 
     def update_deal_payload(self, fingerprint: str, **fields) -> bool:
         """Einzelne Payload-Felder eines gespeicherten Deals setzen (z. B. ``sources``) - die

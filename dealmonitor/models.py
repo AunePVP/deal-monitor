@@ -154,6 +154,9 @@ class Deal:
     headline: str
     #: Herkunft des Referenzpreises (Median der Beobachtungen / Normalpreis) - für ``reprice``
     reference_source: str | None = None
+    #: Marktwissen aus der Bewertung (``principles.Market``) - damit ``reprice`` die
+    #: Fehlerpreis-Hinweise (Economy-Vergleich, Preissturz) nicht verliert
+    market: object | None = None
 
     @property
     def fingerprint(self) -> str:

@@ -108,9 +108,9 @@ def hot_alerts(sent: list) -> list[str]:
     return out
 
 
-def _update_health(store, sources: list, notifiers: list) -> list[str]:
+def _update_health(store, sources: list, notifiers: list, **kw) -> list[str]:
     try:
-        return health.update(store, sources, notifiers)
+        return health.update(store, sources, notifiers, **kw)
     except Exception as e:  # noqa: BLE001 - Gesundheit ist Zugabe, nie den Lauf stoppen
         log.exception("Quellen-Gesundheit nicht aktualisiert")
         return [f"Quellen-Gesundheit nicht aktualisiert: {e}"]
@@ -198,7 +198,9 @@ def execute(ctx: Context, alert_id: str | None = None, trigger: str = "manual", 
             res.add(r)
             if mode in ("feeds", "fast") and "google_flights" in active:
                 hot = hot_alerts(sent.items)
-            res.errors += _update_health(store, sources, notifiers)
+            # voller Lauf mit allen gewählten Quellen: Abgewähltes fällt aus der Gesundheit
+            res.errors += _update_health(store, sources, notifiers, quick=mode == "hot",
+                                         complete=mode == "full" and source_names is None)
     except Exception as e:  # noqa: BLE001 - ein Lauf darf nie den Server/Zeitplan beenden
         log.exception("Lauf fehlgeschlagen")
         res.errors.append(f"Lauf fehlgeschlagen: {e}")

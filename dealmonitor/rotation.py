@@ -6,9 +6,10 @@ einzelner billiger Eurowings-Tag fiele durchs Raster. Die Rotation prüft deshal
 Tag der nächsten ``HORIZON_DAYS`` Tage einzeln als One-way, pro Lauf ein Stück davon:
 
 * Die Einträge sind (Strecke, Tag). Jeder Tag hat einen festen Platz im Kreis (nach dem
-  Kalenderdatum), der Lauf-Index ``n = int(epoch / Takt)`` wählt ``per_run`` Plätze ab
-  ``(n * per_run) % Länge``. Das kommt ohne Datenbankzustand aus; ein neuer Tag am Ende des
-  Horizonts übernimmt den Platz des vergangenen.
+  Kalenderdatum), der Lauf-Index ``n`` wählt ``per_run`` Plätze ab ``(n * per_run) % Länge``;
+  ein neuer Tag am Ende des Horizonts übernimmt den Platz des vergangenen. ``n`` zählt je Lauf
+  um eins weiter (:meth:`Memory.run_number`) - aus der Uhrzeit allein (``epoch / Takt``)
+  übersprängen Läufe nahe einer Taktgrenze ganze Fenster.
 * Reicht das Budget für mehr als einen Durchgang pro ``CYCLE_HOURS``, kommen die nächsten 14
   Tage sowie Freitage und Sonntage ein zweites Mal dran.
 * ``per_run`` ist der Google-Anteil des Alarms (``GoogleFlightsSource.begin_run``) - die
@@ -93,9 +94,11 @@ def items(routes: list[tuple[str, str]], today: date, horizon_days: int = HORIZO
 
 def slice_for_run(now: datetime, routes: list[tuple[str, str]], horizon_days: int = HORIZON_DAYS,
                   per_run: int = PER_RUN, *, today: date | None = None,
-                  period_hours: float = PERIOD_HOURS) -> list[tuple[str, str, date]]:
+                  period_hours: float = PERIOD_HOURS,
+                  index: int | None = None) -> list[tuple[str, str, date]]:
     """Die Abfragen dieses Laufs: ``per_run`` Einträge ``(origin, dest, tag)`` des Kreises
-    ab ``(n * per_run) % Länge`` - ohne Doppelte, nach Datum sortiert."""
+    ab ``(n * per_run) % Länge`` - ohne Doppelte, nach Datum sortiert. ``n`` = ``index``,
+    ohne Angabe aus der Uhrzeit (:func:`run_index`)."""
     if per_run <= 0:
         return []
     today = today or now.date()
@@ -106,7 +109,8 @@ def slice_for_run(now: datetime, routes: list[tuple[str, str]], horizon_days: in
     if len(set(ring)) <= per_run:
         picked = list(dict.fromkeys(ring))
     else:
-        start = (run_index(now, period_hours) * per_run) % len(ring)
+        n = run_index(now, period_hours) if index is None else index
+        start = (n * per_run) % len(ring)
         picked = list(dict.fromkeys(ring[(start + i) % len(ring)] for i in range(per_run)))
     return sorted(picked, key=lambda x: (x[2], routes.index(x[:2])))
 
@@ -165,13 +169,19 @@ def _num(x) -> bool:
 
 
 def compact_rows(rows: list[dict]) -> list[list]:
-    """Ergebniszeilen platzsparend: je Airline/Umstiege die günstigste, höchstens ``MAX_ROWS``."""
-    out, seen = [], set()
+    """Ergebniszeilen platzsparend: je Airline/Umstiege die günstigste und jede teurere, die
+    schneller ist (sonst fiele bei einer Dauer-Grenze der passende Flug weg), höchstens
+    ``MAX_ROWS``."""
+    out, fastest = [], {}
     for r in sorted(rows, key=lambda r: r.get("price") or 0):
         key = (r.get("airline") or r.get("airline_code"), r.get("stops"))
-        if key in seen or not _num(r.get("price")) or r["price"] <= 0:
+        if not _num(r.get("price")) or r["price"] <= 0:
             continue
-        seen.add(key)
+        minutes = r.get("duration_min") if _num(r.get("duration_min")) else None
+        if key in fastest and (minutes is None or fastest[key] is None
+                               or minutes >= fastest[key]):
+            continue
+        fastest[key] = minutes
         out.append([float(r["price"]), r.get("airline"), r.get("airline_code"), r.get("stops"),
                     r.get("duration_min")])
         if len(out) >= MAX_ROWS:
@@ -204,7 +214,8 @@ class Memory:
     """Zuletzt gesehene One-way-Preise je Strecke, Kabine und Tag (JSON im Store).
 
     ``{"keep_h": 48, "legs": {"ZRH-HAM-economy": {"2027-01-14": {"at": ISO, "rows": [...],
-    "insight": {...}}}}}`` - kaputte oder fremde Inhalte werden ignoriert, nie ein Absturz.
+    "insight": {...}}}}, "runs": {alarm_id: {"n": 5, "at": ISO}}}`` - kaputte oder fremde
+    Inhalte werden ignoriert, nie ein Absturz.
     """
 
     def __init__(self, data: dict | None = None) -> None:
@@ -213,7 +224,31 @@ class Memory:
         self.legs: dict = legs if isinstance(legs, dict) else {}
         keep = data.get("keep_h")
         self.keep_hours: float = float(keep) if _num(keep) and keep > 0 else MIN_KEEP_HOURS
+        runs = data.get("runs")
+        self.runs: dict = runs if isinstance(runs, dict) else {}
         self.changed = False
+
+    def run_number(self, name: str, now: datetime, period_hours: float = PERIOD_HOURS) -> int:
+        """Lauf-Index der Rotation ``name`` (Alarm): je Lauf genau eins weiter - auch wenn
+        sich der Laufbeginn um eine Taktgrenze verschiebt oder ein Lauf ausfiel. Ein Lauf
+        weniger als einen halben Takt nach dem letzten bekommt denselben Index; ohne
+        gespeicherten Stand zählt die Uhrzeit (:func:`run_index`)."""
+        entry = self.runs.get(name)
+        try:
+            n, at = int(entry["n"]), datetime.fromisoformat(entry["at"])
+        except (TypeError, ValueError, KeyError):
+            n, at = None, None
+        if n is not None:
+            if (at.tzinfo is None) != (now.tzinfo is None):
+                at, now = at.replace(tzinfo=None), now.replace(tzinfo=None)
+            if abs((now - at).total_seconds()) < max(period_hours, 0.1) * 1800:
+                return n
+            n += 1
+        else:
+            n = run_index(now, period_hours)
+        self.runs[name] = {"n": n, "at": now.isoformat(timespec="minutes")}
+        self.changed = True
+        return n
 
     @staticmethod
     def key(origin: str, dest: str, cabin: str) -> str:
@@ -279,4 +314,4 @@ class Memory:
                 del self.legs[key]
 
     def dump(self) -> dict:
-        return {"keep_h": self.keep_hours, "legs": self.legs}
+        return {"keep_h": self.keep_hours, "legs": self.legs, "runs": self.runs}

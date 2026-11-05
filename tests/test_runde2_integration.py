@@ -200,7 +200,7 @@ class HubAcrossSourcesTest(unittest.TestCase):
 
 class HealthSeesNewSourcesTest(unittest.TestCase):
     def test_rules_for_new_sources(self):
-        self.assertEqual(health.rule_for("feed:secretflying").stale_hours, 10)
+        self.assertEqual(health.rule_for("feed:secretflying").stale_hours, 20)
         self.assertEqual(health.rule_for("feed:travel-dealz-rest").stale_hours, 20)
         self.assertEqual(health.rule_for("feed:errorfarealerts").stale_hours, 48)
         self.assertFalse(health.rule_for("feed:yhbu").need_items)     # postet etwa wöchentlich
@@ -243,7 +243,7 @@ class FastRunTest(unittest.TestCase):
                 deals = store.deals(alert_id="de-cn-business")
             self.assertEqual({k: v["state"] for k, v in report.items()},
                              {"feed:secretflying": health.OK, "feed:travel-dealz-rest": health.OK})
-            self.assertEqual(report["feed:secretflying"]["threshold_hours"], 10)
+            self.assertEqual(report["feed:secretflying"]["threshold_hours"], 20)
             budapest = [d for d in deals if "Budapest" in d["headline"]]
             self.assertEqual(len(budapest), 1)
             self.assertEqual(budapest[0]["price"], 1620)

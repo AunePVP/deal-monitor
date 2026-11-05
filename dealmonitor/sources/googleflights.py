@@ -504,13 +504,14 @@ class GoogleFlightsSource:
             time.sleep(wait)
 
     def query(self, origin: str, dest: str, departure: date, return_date: date | None,
-              cabin: str = "economy", roundtrip: bool = True) -> list[dict]:
+              cabin: str = "economy", roundtrip: bool = True, *, retry: bool = True) -> list[dict]:
         """Eine Google-Abfrage (gecacht pro Lauf, zählt auf ``max_requests``).
 
         Wirft ``GoogleBlocked`` (und setzt den Schutzschalter), ``http.HttpError`` bei
         Netzwerkfehlern, ``ParseError`` wenn keine Ergebnisse erkennbar sind (``EmptyPage``:
         auch der zweite Abruf leer) und ``SourceError`` wenn das Budget erschöpft ist.
-        Leere Suchmaske oder ErrorResponse -> genau ein zweiter Abruf (zählt aufs Budget).
+        Leere Suchmaske oder ErrorResponse -> genau ein zweiter Abruf (zählt aufs Budget;
+        ``retry=False``: keiner, weil der Anteil des Alarms schon aufgebraucht ist).
         Das Preisniveau der Seite steht danach in ``insight(url)``.
         """
         url = build_url(origin, dest, departure, return_date, cabin, roundtrip)
@@ -523,7 +524,7 @@ class GoogleFlightsSource:
         page = self._load(url)
         results = parse_results(page)
         problem = transient_problem(page, results)
-        if problem and self.requests_made < self.max_requests:
+        if problem and retry and self.requests_made < self.max_requests:
             log.info("Google Flights: %s, zweiter Abruf für %s",
                      "ErrorResponse" if problem == "error" else "leere Seite", url)
             self.retries += 1
@@ -645,10 +646,15 @@ class GoogleFlightsSource:
                 used += 1
                 self.scans_made += 1
             before = self.requests_made
+            # zweiter Abruf nur aus dem eigenen Anteil, nie aus Reserve oder fremdem Anteil
+            retry = self.scans_made < self.scan_budget and (share is None or used < share)
             try:
-                results = self.query(origin, dest, dep, ret, alert.cabin, roundtrip)
+                results = self.query(origin, dest, dep, ret, alert.cabin, roundtrip,
+                                     retry=retry)
             except GoogleBlocked:
                 self._release_share(share)
+                if alert.rotation:      # schon abgefragte Tage nicht verlieren
+                    self._save_memory(alert, total)
                 raise SourceError(self._down or BLOCKED_MESSAGE) from None
             except EmptyPage as e:
                 errors += 1
@@ -702,7 +708,8 @@ class GoogleFlightsSource:
         picked = rotation.slice_for_run(
             self._now(), rotation.routes_for(alert), rotation.horizon_for(alert, self.scan_months),
             rotation.PER_RUN if share is None else share, today=self.today or date.today(),
-            period_hours=self.period_hours)
+            period_hours=self.period_hours,
+            index=self.memory.run_number(alert.id, self._now(), self.period_hours))
         return [(o, d, day, None) for o, d, day in picked]
 
     @property

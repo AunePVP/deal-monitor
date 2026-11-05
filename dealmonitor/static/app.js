@@ -49,10 +49,13 @@
 
   function parseIso(s) {
     if (!s || typeof s !== "string") return null;
-    // "2026-11-04T16:20:00" (lokal) oder "2026-11-04"
-    const m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?/);
+    // "2026-11-04T16:20:00" (lokal), "2026-11-04" oder mit Zeitzone ("…T22:59+00:00", "…Z")
+    const m = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?(Z|[+-]\d{2}:?\d{2})?)?/);
     if (!m) return null;
-    return new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
+    const parts = [+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)];
+    if (!m[7]) return new Date(...parts);
+    const off = m[7] === "Z" ? 0 : (m[7][0] === "-" ? -1 : 1) * (+m[7].slice(1, 3) * 60 + +m[7].slice(-2));
+    return new Date(Date.UTC(...parts) - off * 60000);
   }
   const pad = (n) => String(n).padStart(2, "0");
   function fmtDate(s) {
@@ -1208,11 +1211,19 @@
     veraltet: { cls: "h-warn", icon: "!", text: "Veraltet" }, fehler: { cls: "h-bad", icon: "×", text: "Fehler" },
   };
   const GOOGLE_ID = "google_flights";
-  function hoursText(h) {
+  // "5 Std." / "3 Tagen" ("vor 3 Tagen"); dative=false: "3 Tage" ("höchstens 3 Tage")
+  function hoursText(h, dative = true) {
     if (!num(h)) return null;
-    if (h < 1) return "unter 1 Std.";
+    if (h < 1) return "weniger als 1 Std.";
     if (h < 48) return `${Math.round(h)} Std.`;
-    return `${Math.round(h / 24)} Tagen`;
+    return `${Math.round(h / 24)} ${dative ? "Tagen" : "Tage"}`;
+  }
+  // Veraltet: Alter und Grenze dürfen nie gleich aussehen ("vor 3 Tagen … höchstens 3 Tage")
+  function staleText(age, limit) {
+    const a = hoursText(age), l = hoursText(limit, false);
+    if (limit >= 48 && Math.round(age / 24) > Math.round(limit / 24)) return [a, l];
+    const hrs = (h) => `${(Math.round(h * 10) / 10).toLocaleString("de-DE")} Std.`;
+    return [hrs(age), hrs(limit)];
   }
 
   let healthReq = 0;
@@ -1226,6 +1237,9 @@
       renderHealth(data);
     } catch (e) {
       if (req !== healthReq) return;
+      // alte Zusammenfassung („Alle Quellen liefern“) darf dem Fehler nicht widersprechen
+      $("#health-summary").hidden = true;
+      $("#unused-panel").hidden = true;
       list.replaceChildren(el("div", { class: "empty" }, el("p", null, `Quellen-Zustand konnte nicht geladen werden: ${e.message}`)));
     }
   }
@@ -1238,8 +1252,10 @@
       if (num(s.items)) facts.push(`${s.items.toLocaleString("de-DE")} ${s.items === 1 ? "Abruf" : "Abrufe"} im letzten Lauf`);
       if (num(s.empty_share)) facts.push(`${Math.round(s.empty_share * 100)} % leer`);
     } else {
-      if (num(s.age_hours)) facts.push(`neuester Artikel vor ${hoursText(s.age_hours)}`
-        + (s.state === "veraltet" && num(s.threshold_hours) ? ` (erwartet: höchstens ${hoursText(s.threshold_hours)})` : ""));
+      if (num(s.age_hours) && s.state === "veraltet" && num(s.threshold_hours)) {
+        const [age, limit] = staleText(s.age_hours, s.threshold_hours);
+        facts.push(`neuester Artikel vor ${age} (erwartet: höchstens ${limit})`);
+      } else if (num(s.age_hours)) facts.push(`neuester Artikel vor ${hoursText(s.age_hours)}`);
       if (num(s.items)) facts.push(`${plural(s.items, "Artikel", "Artikel")} im letzten Lauf` + (num(s.parsed) && s.items ? `, ${s.parsed} mit Preis` : ""));
     }
     const when = [s.checked ? `geprüft ${relTime(s.checked)}` : null,

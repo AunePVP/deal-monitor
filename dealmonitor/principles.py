@@ -80,7 +80,7 @@ RANGE_TEXT = "unter typischer Spanne"
 class Market:
     """Was der Monitor zusätzlich über die Strecke weiß (alles optional)."""
 
-    #: eigene Preise der Strecke aus den letzten ``DROP_DAYS`` Tagen (vor diesem Lauf)
+    #: eigener Bestpreis je Tag der Strecke aus den letzten ``DROP_DAYS`` Tagen (vor diesem Lauf)
     recent: list[float] = field(default_factory=list)
     #: Median der Economy-Preise derselben Strecke (für Business/First)
     economy: float | None = None
@@ -159,7 +159,8 @@ def warning_signs(offer: Offer, *, median_price: float | None = None,
     """Hinweise auf einen Fehlerpreis: weit unter der typischen Spanne (kennt Google sie, zählt
     nur sie - der Median liegt höher, auf ZRH⇄HAM wäre sonst jeder 39-€-Sale verdächtig) oder
     sonst dem Median, Business kaum teurer als Economy, Preissturz gegenüber den eigenen
-    Beobachtungen."""
+    Beobachtungen (``market.recent`` = Bestpreis je Tag; der Median zählt auch hier nur ohne
+    Googles Spanne)."""
     p = offer.price
     if not p or p <= 0:
         return []
@@ -182,7 +183,7 @@ def warning_signs(offer: Offer, *, median_price: float | None = None,
         if p <= (1 - DROP) * best:
             signs.append(f"{DROP_PREFIX}: {_pct(1 - p / best)} unter dem bisherigen Bestpreis "
                          f"{euro(best)} – vermuteter Fehlerpreis")
-        elif p <= (1 - DROP) * mid and p < best:
+        elif not lo and p <= (1 - DROP) * mid and p < best:
             signs.append(f"{DROP_PREFIX}: {_pct(1 - p / mid)} unter dem Median der letzten "
                          f"{DROP_DAYS} Tage ({euro(mid)}) – vermuteter Fehlerpreis")
     return signs
@@ -356,6 +357,7 @@ def evaluate(
         reasons=_with_hub(offer, reasons, warning_signs(offer, median_price=mid, market=market)),
         headline=headline(alert, offer),
         reference_source=ref_source,
+        market=market,
     )
 
 
@@ -387,6 +389,7 @@ def reprice(deal: Deal, price: float, today: date | None = None) -> bool:
     mid = ref if source in (REF_MEDIAN, REF_GOOGLE_HISTORY) else None
     deal.reference_price, deal.reference_source = ref, source
     deal.rating, deal.discount = result[0], result[1]
-    deal.reasons = _with_hub(o, result[2], warning_signs(o, median_price=mid))
+    market = deal.market if isinstance(deal.market, Market) else None
+    deal.reasons = _with_hub(o, result[2], warning_signs(o, median_price=mid, market=market))
     deal.headline = headline(deal.alert, o)
     return True

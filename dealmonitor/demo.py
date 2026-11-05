@@ -96,11 +96,11 @@ def demo_articles(now: datetime) -> dict[str, list[dict]]:
              "published": ago(1), "price_eur": 439.0, "origin_codes": ["FRA"],
              "dest_codes": ["PEK"], "cabin": "economy", "oneway": False},
         ],
-        # neuester Artikel 30 h alt (Grenze 24 h): zeigt "Veraltet" in der Quellen-Gesundheit
+        # neuester Artikel 6 Tage alt (Grenze 5 Tage): zeigt "Veraltet" in der Quellen-Gesundheit
         "premium-flights": [
             {"title": "Business Class nach Bangkok ab 1.390 €",
              "link": "https://www.premium-flights.de/demo/bangkok-business/",
-             "published": ago(30), "price_eur": 1390.0, "cabin": "business", "oneway": False},
+             "published": ago(144), "price_eur": 1390.0, "cabin": "business", "oneway": False},
         ],
     }
 

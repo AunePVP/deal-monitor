@@ -22,7 +22,8 @@ Quellen ohne RSS (Bluesky, WP-REST, …) hängen sich über ``Preset.loader`` ei
 Funktionsname ``"modul:funktion"`` (``"secretflying:fetch_items"`` = Modul unter
 ``dealmonitor.sources``), Signatur ``fetch_items(*, timeout=20.0, state=None) -> list[dict]``.
 Sie liefert Artikel wie :meth:`FeedSource.parse` plus optionale Schlüssel (``price_eur``,
-``origin_codes``, ``dest_codes``, ``cabin``, ``oneway``, ``expires``, ``hot``, ``uid``) und wirft
+``origin_codes``, ``origin_region``, ``origin_foreign``, ``dest_codes``, ``cabin``, ``oneway``,
+``expires``, ``hot``, ``uid``) und wirft
 bei Fehlern ``SourceError``. ``state`` ist ein Dict aus ``store.source_state(preset.id)``; die
 Funktion ändert es (Cursor), ``FeedSource`` speichert es nach einem fehlerfreien Abruf zurück.
 Details: ``docs/handoff/RUNDE2-SCHNITTSTELLEN.md``.
@@ -307,7 +308,7 @@ def normalize_item(raw: dict, feed: str = "", *, max_age_days: int | None = None
         it["description_text"] = strip_html(it["description"])[:1000]
     it.setdefault("merchant_price", None)
     for key in ("price_eur", "origin_codes", "dest_codes", "cabin", "oneway", "expires", "hot",
-                "uid"):
+                "uid", "origin_region", "origin_foreign"):
         it.pop(key, None)
     price = raw.get("price_eur")
     if isinstance(price, (int, float)) and not isinstance(price, bool) \
@@ -317,6 +318,9 @@ def normalize_item(raw: dict, feed: str = "", *, max_age_days: int | None = None
         codes = _codes(raw.get(key))
         if codes:
             it[key] = codes
+    for key in ("origin_region", "origin_foreign"):
+        if raw.get(key) is True:
+            it[key] = True
     cabin = str(raw.get("cabin") or "").lower()
     if cabin in CABINS:
         it["cabin"] = cabin
@@ -677,17 +681,34 @@ def place_codes(names: str) -> set[str]:
     return out
 
 
+def _last_sunday(year: int, month: int) -> datetime:
+    day = datetime(year, month + 1, 1, tzinfo=timezone.utc) - timedelta(days=1)
+    return day - timedelta(days=(day.weekday() + 1) % 7)
+
+
+def berlin_to_utc(local: datetime) -> datetime:
+    """Ortszeit Europe/Berlin -> UTC (EU-Regel: Sommerzeit vom letzten Sonntag im März bis
+    zum letzten Sonntag im Oktober, jeweils 01:00 UTC). Ohne ``zoneinfo``/tzdata, die im
+    schlanken Container fehlen können."""
+    local = local.replace(tzinfo=timezone.utc)
+    start = _last_sunday(local.year, 3) + timedelta(hours=1)
+    end = _last_sunday(local.year, 10) + timedelta(hours=1)
+    utc = local - timedelta(hours=2)
+    return utc if start <= utc < end else local - timedelta(hours=1)
+
+
 def _until(text: str) -> datetime | None:
-    """"Buchungszeitraum: Bis 12. November 2026" -> Ende dieses Tages (UTC); sonst None."""
+    """"Buchungszeitraum: Bis 12. November 2026" -> 12.11. 23:59 deutscher Zeit (in UTC);
+    sonst None. Nicht Mitternacht des Folgetags: die Oberfläche zeigte sonst den 13.11."""
     m = INFOBOX_UNTIL_RE.search(text)
     if not m:
         return None
     month = int(m.group(2)) if m.group(2) else MONTHS_DE.get(m.group(3).lower())
     try:
-        day = datetime(int(m.group(4)), month or 0, int(m.group(1)), tzinfo=timezone.utc)
+        day = datetime(int(m.group(4)), month or 0, int(m.group(1)), 23, 59)
     except (TypeError, ValueError):
         return None
-    return day + timedelta(days=1)
+    return berlin_to_utc(day)
 
 
 def read_infobox(text: str, price_regex: str | None) -> dict:
@@ -714,6 +735,20 @@ def read_infobox(text: str, price_regex: str | None) -> dict:
     return out
 
 
+def _region_only(names: str) -> bool:
+    """"Deutschland" (nur Regionsname, keine einzelne Stadt) -> True."""
+    parts = [n.strip(" .,") for n in _SPLIT_RE.split(names or "") if n.strip(" .,")]
+    return bool(parts) and not any(regions.codes_for(n) for n in parts)
+
+
+def _foreign_place(names: str) -> bool:
+    """Abflugort aus einem festen Titelmuster, der weder DACH noch Europa als Ganzes ist."""
+    if EUROPE_WORD_RE.search(names):
+        return False         # "Europa – Johannesburg": kann auch ab Deutschland sein
+    return all(_lookup(n.strip(" .,"))[0] != "home"
+               for n in _SPLIT_RE.split(names) if n.strip(" .,"))
+
+
 def _enrich(item: dict, profile: Profile | None) -> None:
     """Zusatzschlüssel aus Artikeltext und Profil (Infobox, Standard-Kabine) setzen."""
     if profile is None:
@@ -730,6 +765,13 @@ def _enrich(item: dict, profile: Profile | None) -> None:
             codes = place_codes(route.groupdict().get(group) or "")
             if codes and key not in item:
                 item[key] = codes
+        orig = (route.groupdict().get("orig") or "").strip()
+        if orig and "origin_codes" not in item and not item.get("origin_foreign") \
+                and _foreign_place(orig):
+            # "Business Baku – Peking": fester Abflug, aber kein bekannter DACH-Ort
+            item["origin_foreign"] = True
+        elif item.get("origin_codes") and _region_only(orig):
+            item["origin_region"] = True     # "Deutschland – Seoul": ganzes Land als Abflug
     if profile.default_cabin and detect_cabin(title, item["categories"]) == "economy" \
             and not ECONOMY_WORD_RE.search(title):
         # "Etihad First Tunis – Bangkok": "First" allein zählt hier als Kabine
@@ -752,6 +794,7 @@ ARROWS = ("→", "->", "↔", "⇄", "⇆", "<->", "↔︎")
 #: Airline-Namen sind kein Abflugort ("von Air China", "Singapore Airlines – Business Class")
 _AIRLINE_CAND_RE = re.compile(r"^Air\s|\s(?:Airlines|Airways|Air\s+Lines|Air)$", re.I)
 _SPLIT_RE = re.compile(_SEP)
+EUROPE_WORD_RE = re.compile(r"\beurop", re.I)
 # Wörter, die nach "ab/von/from" kein Ort sind (Monate, Zeitangaben, ...)
 _NOT_PLACE_RE = re.compile(
     r"^(?:januar|februar|märz|maerz|april|mai|juni|juli|august|september|oktober|november|"
@@ -911,6 +954,8 @@ class ItemInfo:
     oneway: bool
     origin: str                      # "home" | "foreign" | "unknown"
     origin_codes: set[str] = field(default_factory=set)
+    #: ``origin_codes`` sind ein ganzes Land ("#Germany to …"), keine genannte Stadt
+    origin_region: bool = False
     source: str = CUSTOM_SOURCE
     link: str = ""                   # normalisiert
     foreign_currency: bool = False   # Preis nur in $/£/CHF
@@ -980,7 +1025,8 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
 
     Optionale Schlüssel (Loader-Quellen) haben Vorrang vor dem Titel: ``price_eur`` (Preis,
     dann ohne Kabinen-Nebenpreise), ``cabin``, ``oneway``, ``origin_codes`` (Abflug: "home",
-    wenn ein Code in DACH liegt, sonst "foreign"). Ein abgelaufenes ``expires`` macht den
+    wenn ein Code in DACH liegt, sonst "foreign"), ``origin_foreign`` (Abflug fremd, ohne
+    Code), ``origin_region`` (Codes = ganzes Land). Ein abgelaufenes ``expires`` macht den
     Artikel zu "kein Flug-Deal"."""
     profile = profile or item.get("profile") or GENERIC_PROFILE
     title = item["title"]
@@ -1010,6 +1056,8 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
     codes = _codes(item.get("origin_codes"))
     if codes:
         origin = "home" if any(regions.is_home(c) for c in codes) else "foreign"
+    elif item.get("origin_foreign") is True:
+        origin = "foreign"    # Abflug sicher nicht DACH, aber ohne Code ("UK cities")
     else:
         origin = detect_origin(title, profile.lang)
         codes = origin_codes(title, profile.lang) if origin != "unknown" else set()
@@ -1019,6 +1067,7 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
     hot = item.get("hot") or None
     return ItemInfo(flight=flight, price=price, cabin=cabin, oneway=oneway,
                     origin=origin, origin_codes=codes, source=source, link=link,
+                    origin_region=bool(codes) and item.get("origin_region") is True,
                     foreign_currency=foreign_currency, alt_prices=alt if flight else {},
                     dest_codes=_codes(item.get("dest_codes")), expires=_aware(item.get("expires")),
                     hot=str(hot) if hot else None, uid=str(item["uid"]) if item.get("uid") else None)
@@ -1412,8 +1461,11 @@ class FeedSource:
                               auto_keywords(alert, origin_required=not (implied or hub)),
                               **kw_args)
             if not hit and info.dest_codes & set(alert.destinations):
-                # Quelle nennt Ziel-Codes (Loader): Ziel passt, Abflug muss belegt sein
-                hit = bool(info.origin_codes & set(alert.origins)) or implied or bool(hub)
+                # Quelle nennt Ziel-Codes (Loader): Ziel passt, Abflug muss belegt sein. Ein
+                # ganzes Land als Abflug ("#Germany to …") belegt keine einzelne Stadt.
+                origin_hit = bool(info.origin_codes & set(alert.origins)) and (
+                    not info.origin_region or bool(regions.region_names(alert.origins)))
+                hit = origin_hit or implied or bool(hub)
             if not hit:
                 continue
             if hub is None and not origin_ok(alert, info):

@@ -116,13 +116,17 @@ NEAR_DEALS = 5
 
 def near_deals_json(entries: list[dict] | None) -> list[dict]:
     """Beinahe-Deals eines Alarms (über der Grenze, aber deutlich unter dem Üblichen; nur
-    anzeigen, nie melden): je Strecke der günstigste Bestpreis mit ``near``-Gründen."""
+    anzeigen, nie melden): je Strecke der günstigste Bestpreis - aber nur, wenn er
+    ``near``-Gründe trägt. Gibt es auf der Strecke (bei einer anderen Quelle) einen
+    billigeren Preis, etwa einen echten Treffer, ist dort nichts "knapp verpasst"."""
     out: dict[str, dict] = {}
+    seen: set[str] = set()
     for e in sorted(entries or [], key=lambda x: x["price"]):
-        if not e.get("near"):
-            continue
         key = e["route"] if e["route"] == "artikel" else f"{e.get('origin')}-{e.get('destination')}"
-        if key not in out:
+        if key in seen:
+            continue
+        seen.add(key)
+        if e.get("near"):
             out[key] = with_names(dict(e, compare=_gf_link(e),
                                        source_label=source_label(e["source"])))
     return list(out.values())[:NEAR_DEALS]
@@ -133,21 +137,26 @@ NO_DEAL_SITE_ROUTES = (frozenset({"ZRH", "HAM"}),)
 
 
 def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
-                  today: date, now: datetime, scan_months: int) -> dict | None:
+                  today: date, now: datetime, scan_months: int,
+                  google: bool = True) -> dict | None:
     """Abdeckung eines Alarms durch die Google-Tagesrotation: der Alarm rotiert selbst oder ist
     ein Hin/Rück-Alarm, dessen Strecken ein aktiver Rotations-Alarm (gleiche Kabine) abdeckt
-    (Kombinationen aus 2 One-ways). ``days`` = Abflugtage mit aktuellem Preis im Gedächtnis."""
+    (Kombinationen aus 2 One-ways). ``days`` = Abflugtage im Horizont mit aktuellem Preis im
+    Gedächtnis. Pausierter Alarm oder Google Flights abgewählt (``google``) -> None."""
     routes = rotation.routes_for(alert)
+    if not google or not alert.enabled:
+        return None
     source = alert if alert.rotation else next(
         (a for a in alerts if a.rotation and a.enabled and a.cabin == alert.cabin
          and alert.roundtrip and set(routes) <= set(rotation.routes_for(a))), None)
     if source is None or not routes:
         return None
     horizon = rotation.horizon_for(source, scan_months)
+    last = today + timedelta(days=horizon)
     days: set[date] = set()
     for o, d in routes:
         try:
-            days |= set(memory.get(o, d, alert.cabin, today, now))
+            days |= {day for day in memory.get(o, d, alert.cabin, today, now) if day <= last}
         except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
             log.exception("Google-Rotation: Gedächtnis nicht lesbar")
     airports = {c for pair in alert.pairs for c in pair}
@@ -525,14 +534,20 @@ class Handler(BaseHTTPRequestHandler):
         if not any(a.rotation for a in alerts):
             return {}
         memory = rotation.Memory(store.source_state(rotation.STATE_NAME))
+        app = self.ctx.settings(store)
         try:
-            months = int(self.ctx.settings(store).get("scan_months"))
+            months = int(app.get("scan_months"))
         except (KeyError, TypeError, ValueError):
             months = 6
+        try:
+            google = "google_flights" in (app.get("sources") or [])
+        except (KeyError, TypeError):
+            google = True
         today, now = self.ctx.today or date.today(), datetime.now()
         out = {}
         for a in alerts:
-            if (c := rotation_json(a, alerts, memory, today=today, now=now, scan_months=months)):
+            if (c := rotation_json(a, alerts, memory, today=today, now=now, scan_months=months,
+                                   google=google)):
                 out[a.id] = c
         return out
 

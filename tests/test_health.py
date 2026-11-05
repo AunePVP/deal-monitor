@@ -96,8 +96,9 @@ class ClassifyTest(unittest.TestCase):
         self.assertEqual(ok, health.OK)
 
     def test_rules(self):
-        self.assertEqual(health.rule_for("feed:secretflying").stale_hours, 10)
-        self.assertEqual(health.rule_for("feed:premium-flights-china").stale_hours, 24)
+        # gemessene Lücken (05.11.2026): Secret Flying nachts 12-15 h, premium-flights bis 98,5 h
+        self.assertEqual(health.rule_for("feed:secretflying").stale_hours, 20)
+        self.assertEqual(health.rule_for("feed:premium-flights-china").stale_hours, 120)
         self.assertEqual(health.rule_for("feed:errorfarealerts").stale_hours, 48)
         self.assertEqual(health.rule_for("feed:reisetopia").stale_hours, 36)
         self.assertEqual(health.rule_for("feed:unbekannt"), health.Rule())

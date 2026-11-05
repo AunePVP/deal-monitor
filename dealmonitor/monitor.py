@@ -419,6 +419,8 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
     for d, status in checked:
         if status == "known":
             store.upsert_deal(d, s.renotify_drop)       # Preis/last_seen aktualisieren
+        elif status == "quiet":
+            store.upsert_deal(d, s.renotify_drop, notify=False)
         else:
             pending.append((d, status))
     pending.sort(key=lambda x: x[0].offer.price)
@@ -443,10 +445,10 @@ def _seen_today(offers: list[Offer]) -> list[Offer]:
 
 
 def _market(store: Store, route_key: str, settings) -> principles.Market:
-    """Eigene Preise der Strecke für den Fehlerpreis-Verdacht: die letzten 30 Tage
-    (Preissturz) und - bei Business/First - der Economy-Median derselben Strecke."""
+    """Eigene Preise der Strecke für den Fehlerpreis-Verdacht: Bestpreis je Tag der letzten
+    30 Tage (Preissturz) und - bei Business/First - der Economy-Median derselben Strecke."""
     try:
-        recent = store.history(route_key, principles.DROP_DAYS)
+        recent = store.daily_best(route_key, principles.DROP_DAYS)
         market = principles.Market(
             recent=recent if len(recent) >= settings.min_history_samples else [])
         base, _, cabin = route_key.rpartition("-")
@@ -490,7 +492,8 @@ def first_reports(store: Store, pending: list[tuple[Deal, str]], sources: list
     """Neue Artikel-Deals gegen die Meldungen anderer Quellen prüfen (``sightings``): Hat eine
     andere Deal-Seite denselben Deal schon gemeldet, wird er nicht erneut gemeldet, sondern
     der Erstmeldung zugeordnet. Früher veröffentlichte Artikel zuerst, damit im selben Lauf
-    die älteste Meldung gewinnt. Rückgabe: (weiter zu meldende, {Erstmeldung: [Deals]})."""
+    die älteste Meldung gewinnt. Rückgabe: (weiter zu meldende, {Erstmeldung: [Deals]}).
+    Status "quiet": Erstmeldung abgelaufen - speichern, aber nicht melden."""
     codes = _article_codes(sources)
     kept: list[tuple[Deal, str]] = []
     merged: dict[str, list[Deal]] = defaultdict(list)
@@ -510,6 +513,10 @@ def first_reports(store: Store, pending: list[tuple[Deal, str]], sources: list
         if first is None:
             fresh.add(d.fingerprint)
             kept.append((d, status))
+        elif first not in fresh and not store.deal_active(first):
+            # Erstmeldung schon abgelaufen, hier läuft der Deal noch: still speichern (er war
+            # ja gemeldet), damit er aktiv bleibt und mit dieser Quelle abläuft
+            kept.append((d, "quiet"))
         else:
             log.info("Schon gemeldet (andere Quelle): %s", d.headline)
             merged[first].append(d)
@@ -582,7 +589,10 @@ def run_radar(sources: list, store: Store, cfg: Config, settings: radar.RadarSet
     kept, merged = first_reports(
         store, [(d, store.deal_status(d, s.renotify_drop)) for d in deals], sources)
     to_notify: list[tuple[Deal, str]] = []
-    for d, _ in kept:
+    for d, quiet in kept:
+        if quiet == "quiet":
+            store.upsert_deal(d, s.renotify_drop, notify=False)
+            continue
         status = store.upsert_deal(d, s.renotify_drop)
         if status != "known":
             to_notify.append((d, status))
