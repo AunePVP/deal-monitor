@@ -424,6 +424,11 @@
     if (e.kind === "live") return "Live-Preis";
     return e.confirmed ? "✓ bei Google Flights bestätigt" : "Cache-Preis, ungeprüft";
   }
+  /** Alter genau dieses Eintrags (nicht des jüngsten der Liste) – Artikel: Veröffentlichung. */
+  function bestAge(e) {
+    if (e.kind === "article" && e.published) return `veröffentlicht ${relTime(e.published)}`;
+    return e.seen_at ? `Stand ${relTime(e.seen_at)}` : "";
+  }
   /** Abstand zur Preisgrenze: "73 € über deiner Grenze von 110 €" / "unter deiner Grenze". */
   function bestGap(a, price) {
     if (typeof a.max_price !== "number" || typeof price !== "number") return null;
@@ -449,10 +454,10 @@
     const sub = e.roundtrip === false ? "p. P. one-way" : "p. P. hin & zurück";
     const main = el("div", { class: "best-main" }, name,
       el("p", { class: "best-facts" }, ...joinDots(bestFacts(e))),
-      live ? el("p", { class: "best-live" }, `Live bei ${live.source_label || "Google Flights"}: ab ${euro(live.price)}`,
-        shortDates(live) ? ` (${shortDates(live)})` : "") : null,
-      el("p", { class: "best-meta" }, `Quelle: ${sourceLabel(e)} · ${bestNote(e)} · Stand ${relTime(c.updated_at)}`,
-        c.route_count > 1 ? ` · ${plural(c.route_count, "Strecke", "Strecken")} geprüft` : ""));
+      live ? el("p", { class: "best-live" }, `${live.kind === "live" ? "Live" : "✓ Bestätigt"} bei ${live.kind === "live" ? (live.source_label || "Google Flights") : "Google Flights"}: ab ${euro(live.price)}`,
+        shortDates(live) ? ` (${shortDates(live)})` : "", el("span", { class: "muted" }, ` · ${bestAge(live)}`)) : null,
+      el("p", { class: "best-meta" }, `Quelle: ${sourceLabel(e)} · ${bestNote(e)} · ${bestAge(e)}`,
+        c.route_count > 1 ? ` · Preise für ${plural(c.route_count, "Strecke", "Strecken")}` : ""));
     const priceBox = el("div", { class: "best-price" },
       el("div", { class: "price" }, euro(e.price)), el("div", { class: "price-sub" }, sub), bestGap(a, e.price));
     const actions = el("div", { class: "best-actions" },
@@ -676,12 +681,12 @@
     const e = c.best;
     const link = (x) => extLink(x.link || x.compare, x.kind === "article" ? "Artikel" : "ansehen", "inline-link");
     const routeLine = (x) => el("li", null, el("strong", null, euro(x.price)), " · ", ...joinDots(bestFacts(x)),
-      el("span", { class: "muted" }, ` · ${sourceLabel(x)}`), " ", link(x));
+      el("span", { class: "muted" }, ` · ${sourceLabel(x)} · ${bestAge(x)}`), " ", link(x));
     const parts = [
       el("span", { class: "fact-k" }, "Bestpreis jetzt"),
       el("p", { class: "alert-best-price" }, el("strong", { class: "best-inline-price" }, euro(e.price)), " ", bestGap(a, e.price)),
       el("p", { class: "alert-best-facts" }, ...joinDots(bestFacts(e)), " ", link(e)),
-      el("p", { class: "best-meta" }, `${sourceLabel(e)} · ${bestNote(e)} · Stand ${relTime(c.updated_at)}`),
+      el("p", { class: "best-meta" }, `${sourceLabel(e)} · ${bestNote(e)} · ${bestAge(e)}`),
     ];
     if (c.routes && c.routes.length > 1) {
       const more = c.route_count > c.routes.length ? el("li", { class: "muted" }, `+ ${c.route_count - c.routes.length} weitere`) : null;

@@ -28,10 +28,14 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   eigene Feeds nur öffentliche Adressen; Links nur http(s); `run --dry-run` arbeitet auf einer DB-Kopie;
   Amadeus-Texte („Self-Service eingestellt“); Unraid-Vorlage ohne Secret-Felder, `ALLOWED_HOSTS` nicht mehr `*`
   (dafür gehen Heimnetz-Namen immer: `tower`, `*.local`, `*.lan`, `*.home.arpa`, `*.internal`, `*.fritz.box`).
+- **Bestpreise je Alarm** (Wunsch des Nutzers 05.11.): günstigstes regelkonformes Angebot je Alarm/Quelle/Strecke,
+  auch über der Grenze (Tabelle `cheapest`, `monitor.cheapest_entries`, `/api/alerts` → `cheapest`), Panel
+  „Bestpreise jetzt“ auf der Deals-Seite + Block auf jeder Alarm-Karte. Review (12 Befunde) behoben, u. a.: Google-
+  Gegenprüfungen reservieren das Scan-Budget späterer Alarme nicht mehr weg (`scans_made`, `_scan_pending`).
 - Google pausiert nach 3 Netzwerkfehlern hintereinander für den Rest des Laufs (Lauf ohne Netz: 29 s statt alle Abfragen).
 - Docker lokal gebaut + gestartet: `healthy`, erster Lauf endet sauber (hier ohne DNS im Container → Fehler je Quelle gemeldet).
 - GitGuardian-Dummies erledigt (`123456:test-dummy`, `test-dummy-token`, `test-pw`, Amadeus-Fixture-Token).
-- Tests: `python3 -m unittest discover -s tests` → **297 grün**; `node tests/e2e/ui.mjs` → **37 Schritte grün**
+- Tests: `python3 -m unittest discover -s tests` → **315 grün**; `node tests/e2e/ui.mjs` → **38 Schritte grün**
   (neue Tests: `tests/test_review_fixes.py`, Erweiterungen in `test_integration.py`, `test_google.py`, `test_web.py`).
 - Live (05.11.2026): `run --dry-run --sources feeds`: 190 Artikel (≤ 14 Tage, dedupliziert), 92 Flug-Artikel,
   0 Alarm-Treffer (aktuell kein passender Artikel), 10 Radar-Treffer (Antalya 59 €, Paris 72 €, Stockholm 85 €,

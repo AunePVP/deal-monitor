@@ -397,7 +397,11 @@ class GoogleFlightsSource:
     def reset(self) -> None:
         """Zähler, Cache und Schutzschalter für einen neuen Lauf zurücksetzen."""
         self.requests_made = 0
+        self.scans_made = 0          # echte Scan-Abfragen (ohne Gegenprüfungen)
         self.verifications = 0
+        #: Scan-Abfragen, die den noch nicht geprüften Alarmen zustehen (``begin_run``) -
+        #: so viel lässt die Gegenprüfung frei, damit spätere Alarme nicht leer ausgehen
+        self._scan_pending = 0
         self.incomplete = None
         self.last_error = None
         self._down: str | None = None
@@ -425,6 +429,7 @@ class GoogleFlightsSource:
             given = min(need, budget // (len(needs) - k))   # kleinster Bedarf zuerst
             self._shares[alert_id] = given
             budget -= given
+        self._scan_pending = sum(self._shares.values())
 
     @property
     def remaining(self) -> int:
@@ -539,16 +544,19 @@ class GoogleFlightsSource:
         for origin, dest, dep, ret in plan:
             url = build_url(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
             cached = url in self._cache
-            if not cached and (self.requests_made >= self.scan_budget
+            if not cached and (self.scans_made >= self.scan_budget
+                               or self.requests_made >= self.max_requests
                                or (share is not None and used >= share)):
                 skipped += 1
                 affected.add((origin, dest))
                 continue
             if not cached:
                 used += 1
+                self.scans_made += 1
             try:
                 results = self.query(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
             except GoogleBlocked:
+                self._release_share(share)
                 raise SourceError(self._down or BLOCKED_MESSAGE) from None
             except (http.HttpError, ParseError) as e:
                 errors += 1
@@ -556,6 +564,7 @@ class GoogleFlightsSource:
                 log.warning("Google Flights %s-%s %s: %s", origin, dest, dep, e)
                 continue
             offers += self.to_offers(results, alert, origin, dest, dep, ret, url)
+        self._release_share(share)
         if total and errors == total:
             raise SourceError(f"Alle {total} Google-Flights-Abfragen fehlgeschlagen")
         if skipped or errors:
@@ -566,6 +575,11 @@ class GoogleFlightsSource:
                 parts.append(f"{errors} von {total} Abfragen fehlgeschlagen")
             self.incomplete = {"message": "; ".join(parts), "routes": affected}
         return offers
+
+    def _release_share(self, share: int | None) -> None:
+        """Alarm fertig gescannt: sein (ggf. unverbrauchter) Anteil ist nicht mehr reserviert."""
+        if share:
+            self._scan_pending = max(self._scan_pending - share, 0)
 
     def to_offers(self, results: list[dict], alert: Alert, origin: str, dest: str,
                   departure: date, return_date: date | None, link: str) -> list[Offer]:
@@ -621,6 +635,10 @@ class GoogleFlightsSource:
                 return None
             if self.requests_made >= self.max_requests:
                 self.last_error = f"Google Flights: Limit von {self.max_requests} Abfragen erreicht"
+                return None
+            if self.requests_made >= self.max_requests - self._scan_pending:
+                self.last_error = ("Google Flights: Rest-Budget für die Preis-Suche der übrigen "
+                                   "Alarme reserviert")
                 return None
         try:
             results = self.query(origin, dest, departure, return_date, cabin, roundtrip)

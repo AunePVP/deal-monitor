@@ -321,7 +321,7 @@ async function desktopFlows(browser) {
       const row = rows.filter({ has: page.locator(".best-alert", { hasText: a.name }) });
       const txt = norm(await row.textContent());
       assert(txt.includes(de(a.cheapest.best.price)), `${a.id}: Preis ${de(a.cheapest.best.price)} fehlt: ${txt}`);
-      assert(/Quelle: /.test(txt) && /Stand /.test(txt), `${a.id}: Quelle/Stand fehlt: ${txt}`);
+      assert(/Quelle: /.test(txt) && /(Stand|veröffentlicht) (gerade|vor)/.test(txt), `${a.id}: Quelle/Stand fehlt: ${txt}`);
       assert(/(über|unter) deiner Grenze/.test(txt), `${a.id}: Abstand zur Grenze fehlt: ${txt}`);
       assert(!/feed:|google_flights|travelpayouts\b/.test(txt), `${a.id}: interner Quellenname: ${txt}`);
     }
@@ -420,7 +420,7 @@ async function desktopFlows(browser) {
     assert(/Strecken/.test(await cn.textContent()), "Regionen-Alarm ohne Streckenzahl");
     // Bestpreis auf der Karte (auch über der Grenze sichtbar), je Strecke aufklappbar
     const best = norm(await zrh.locator(".alert-best").textContent());
-    assert(/Bestpreis jetzt/.test(best) && /\d+\s€/.test(best) && /Stand /.test(best), `Bestpreis auf Karte fehlt: ${best}`);
+    assert(/Bestpreis jetzt/.test(best) && /\d+\s€/.test(best) && /(Stand|veröffentlicht) (gerade|vor)/.test(best), `Bestpreis auf Karte fehlt: ${best}`);
     const multi = alertsBefore.find((a) => a.cheapest && a.cheapest.route_count > 1);
     if (multi) {
       const card = await alertCard(page, multi.name);

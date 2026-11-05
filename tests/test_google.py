@@ -516,6 +516,39 @@ class BudgetTest(unittest.TestCase):
         src.fetch(alert(months_ahead=6))
         self.assertEqual(src.requests_made, 3)
 
+    def test_verifications_do_not_starve_later_alerts(self):
+        """Gegenprüfungen des ersten Alarms dürfen den späteren Alarmen ihren Scan-Anteil nicht
+        wegnehmen (vorher: China-Alarme bekamen 0 Google-Abfragen)."""
+        src = source(max_requests=40, verify_reserve=10)
+        first = alert(id="zrh-ham", months_ahead=6)                        # 12 Abfragen
+        china = alert(id="china", origins=["@DE"], destinations=["@CN_MAJOR"],
+                      months_ahead=6, max_price=500)
+        business = alert(id="biz", origins=["@DE_HUBS"], destinations=["@CN_MAJOR"],
+                         months_ahead=6, cabin="business", max_price=2000)
+        src.begin_run([first, china, business])
+        pending = sum(src._shares.values())
+        self.assertEqual(pending, 30)
+        # erster Alarm: viele Cache-Deals wollen gegengeprüft werden, bevor gescannt wird
+        done = [src.verify("ZRH", "HAM", date(2027, m, 3), date(2027, m, 9))
+                for m in range(1, 13) for _ in range(2)]
+        self.assertEqual(src.requests_made, 10, "nur die Reserve darf vorab gegengeprüft werden")
+        self.assertIn("reserviert", src.last_error)
+        self.assertTrue(any(done))
+        for a in (first, china, business):
+            src.fetch(a)
+            self.assertNotRegex((src.incomplete or {}).get("message", ""), r"(?<!\d)0 von", a.id)
+        self.assertEqual(src.scans_made, 30)
+        self.assertEqual(src.requests_made, 40)
+
+    def test_unused_share_frees_verifications(self):
+        src = source(max_requests=10, verify_reserve=2)
+        a = alert(id="a", months_ahead=1)                                  # 2 Abfragen
+        src.begin_run([a])
+        self.assertEqual(src._scan_pending, 2)
+        src.fetch(a)
+        self.assertEqual(src._scan_pending, 0)
+        self.assertIsNotNone(src.verify("ZRH", "HAM", date(2027, 3, 3), date(2027, 3, 9)))
+
 
 class MonitorIntegrationTest(unittest.TestCase):
     """Die Quelle im normalen Lauf: Deals, Historie, unvollständige Läufe."""

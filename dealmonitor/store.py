@@ -443,6 +443,8 @@ class Store:
         self.db.execute("INSERT INTO alerts (id, data, position, created_at, updated_at) "
                         "VALUES (?,?,?,?,?)",
                         (data["id"], json.dumps(data, ensure_ascii=False), pos, now, now))
+        # Reste eines früher gelöschten Alarms mit gleicher ID gehören nicht zum neuen
+        self.db.execute("DELETE FROM cheapest WHERE alert_id=?", (data["id"],))
         self.db.commit()
 
     def update_alert(self, data: dict) -> bool:
@@ -461,14 +463,20 @@ class Store:
 
     # -- Bestpreise (günstigstes Angebot je Alarm, auch ohne Deal) ----------
     def save_cheapest(self, alert_id: str, source: str, entries: dict[str, dict], *,
-                      replace: bool, now: datetime | None = None) -> None:
+                      replace: bool, keep_routes: set[str] | None = None,
+                      now: datetime | None = None) -> None:
         """Bestpreise einer Quelle für einen Alarm speichern (``entries``: Strecke -> Angaben
-        mit ``price``). ``replace``: Die Quelle hat vollständig geantwortet - ihre alten
-        Einträge fallen weg; sonst werden nur die neuen Strecken überschrieben."""
+        mit ``price``). ``replace``: Die Quelle hat geantwortet - ihre alten Einträge fallen
+        weg, außer für ``keep_routes`` ("ZRH-HAM", in diesem Lauf nicht abgefragt); ohne
+        ``replace`` werden nur die neuen Strecken überschrieben."""
         now_s = (now or datetime.now()).isoformat(timespec="seconds")
         if replace:
-            self.db.execute("DELETE FROM cheapest WHERE alert_id=? AND source=?",
-                            (alert_id, source))
+            rows = self.db.execute("SELECT route FROM cheapest WHERE alert_id=? AND source=?",
+                                   (alert_id, source)).fetchall()
+            for (route,) in rows:
+                if not (keep_routes and route.partition("|")[0] in keep_routes):
+                    self.db.execute("DELETE FROM cheapest WHERE alert_id=? AND source=? "
+                                    "AND route=?", (alert_id, source, route))
         for route, e in entries.items():
             self.db.execute(
                 "INSERT OR REPLACE INTO cheapest (alert_id, source, route, price, payload, seen_at) "
@@ -478,11 +486,14 @@ class Store:
         self.db.commit()
 
     def cheapest(self, alert_id: str | None = None, *, today: date | None = None,
-                 now: datetime | None = None) -> dict[str, list[dict]]:
+                 now: datetime | None = None,
+                 max_age: timedelta | None = None) -> dict[str, list[dict]]:
         """Aktuelle Bestpreise je Alarm (günstigste zuerst) - ohne veraltete Einträge
-        (``CHEAPEST_MAX_AGE``) und ohne Flüge, deren Abflug schon vorbei ist."""
+        (``max_age``, mindestens ``CHEAPEST_MAX_AGE``) und ohne Flüge, deren Abflug schon
+        vorbei ist."""
         today = today or date.today()
-        cutoff = ((now or datetime.now()) - CHEAPEST_MAX_AGE).isoformat(timespec="seconds")
+        age = max(max_age or CHEAPEST_MAX_AGE, CHEAPEST_MAX_AGE)
+        cutoff = ((now or datetime.now()) - age).isoformat(timespec="seconds")
         sql, args = "SELECT * FROM cheapest WHERE seen_at >= ?", [cutoff]
         if alert_id:
             sql += " AND alert_id=?"

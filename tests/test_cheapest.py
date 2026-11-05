@@ -85,8 +85,44 @@ class EntriesTest(unittest.TestCase):
     def test_rejected_cache_price_is_not_shown(self):
         a = alert()
         tp = offer(60)
-        out = cheapest_entries(a, [tp, offer(140, day=20)], [], {f"{a.id}:{tp.fingerprint}"}, TODAY)
+        feb = offer(140, departure=date(2027, 2, 10), return_date=date(2027, 2, 14))
+        rejected = {f"{a.id}:{tp.fingerprint}"}
+        out = cheapest_entries(a, [tp, offer(99, day=20), feb], [], rejected, TODAY)
+        # Google hat den Januar geprüft und verworfen -> der ungeprüfte 99-€-Nachbar zählt
+        # nicht; der Februar wurde nicht geprüft -> 140 € als Cache-Preis
         self.assertEqual(out["travelpayouts"]["ZRH-HAM"]["price"], 140)
+
+    def test_confirmed_higher_google_price_kept_next_to_cheaper_cache(self):
+        """Google bestätigt 89 € nur für 105 €: ungeprüfter 95-€-Nachbar desselben Monats fällt
+        weg; ein billigerer ungeprüfter Termin eines anderen Monats bleibt, der bestätigte Preis
+        steht zusätzlich da (best_live)."""
+        a = alert(max_price=120)
+        tp = offer(89, day=10)
+        d = evaluate(a, tp, [], today=TODAY)
+        tp.price = 105                                  # wie verify_deal (in place)
+        d.reasons.append("Google Flights bestätigt: 105 €")
+        mar = offer(92, departure=date(2027, 3, 1), return_date=date(2027, 3, 5))
+        out = cheapest_entries(a, [tp, offer(95, day=20), mar], [d], set(), TODAY)["travelpayouts"]
+        self.assertEqual((out["ZRH-HAM"]["price"], out["ZRH-HAM"]["confirmed"]), (92, False))
+        self.assertEqual((out["ZRH-HAM|bestätigt"]["price"], out["ZRH-HAM|bestätigt"]["confirmed"]),
+                         (105, True))
+        j = cheapest_json([dict(e, source="travelpayouts", route=k, seen_at="2026-11-04T10:00:00")
+                           for k, e in out.items()])
+        self.assertEqual((j["best"]["price"], j["best_live"]["price"]), (92, 105))
+        self.assertEqual(j["route_count"], 1)
+
+    def test_confirmed_flag_is_per_object_not_fingerprint(self):
+        """Zwei LX-Flüge am selben Tag haben denselben Fingerprint - bestätigt ist nur der
+        geprüfte (89 -> Google 110), der 95-€-Flug desselben Monats gilt nicht als bestätigt."""
+        a = alert(max_price=120)
+        tp, twin = offer(89, day=10), offer(95, day=10, stops=1)
+        self.assertEqual(tp.fingerprint, twin.fingerprint)
+        d = evaluate(a, tp, [], today=TODAY)
+        tp.price = 110
+        d.reasons.append("Google Flights bestätigt: 110 €")
+        out = cheapest_entries(a, [tp, twin], [d], set(), TODAY)["travelpayouts"]
+        self.assertEqual((out["ZRH-HAM"]["price"], out["ZRH-HAM"]["confirmed"]), (110, True))
+        self.assertNotIn("ZRH-HAM|bestätigt", out)
 
     def test_articles_and_unsafe_links(self):
         a = alert()
@@ -107,6 +143,9 @@ class StoreTest(unittest.TestCase):
     def setUp(self):
         self.store = Store(":memory:")
 
+    def tearDown(self):
+        self.store.close()
+
     def entry(self, price, dep="2027-01-15"):
         return {"price": price, "origin": "ZRH", "destination": "HAM", "departure": dep}
 
@@ -125,9 +164,25 @@ class StoreTest(unittest.TestCase):
         # unvollständig: nur neue Strecken überschreiben, andere bleiben
         s.save_cheapest("a", "google_flights", {"ZRH-BSL": self.entry(200)}, replace=False, now=now)
         self.assertEqual(len(s.cheapest(today=TODAY, now=now)["a"]), 2)
-        # veraltet
+        # veraltet - außer das Prüfintervall ist länger (max_age)
         later = now + CHEAPEST_MAX_AGE + timedelta(minutes=1)
         self.assertEqual(s.cheapest(today=TODAY, now=later), {})
+        self.assertEqual(len(s.cheapest(today=TODAY, now=later, max_age=timedelta(days=14))["a"]), 2)
+
+    def test_keep_routes(self):
+        s = self.store
+        s.save_cheapest("a", "google_flights", {"ZRH-HAM": self.entry(170), "BSL-HAM": self.entry(210),
+                                                "ZRH-HAM|bestätigt": self.entry(180)}, replace=True)
+        # BSL-HAM nicht abgefragt (Limit), ZRH-HAM abgefragt ohne passendes Angebot
+        s.save_cheapest("a", "google_flights", {}, replace=True, keep_routes={"BSL-HAM"})
+        self.assertEqual([e["route"] for e in s.cheapest(today=TODAY)["a"]], ["BSL-HAM"])
+
+    def test_new_alert_with_old_id_starts_empty(self):
+        s = self.store
+        s.save_cheapest("a", "travelpayouts", {"ZRH-HAM": self.entry(90)}, replace=True)
+        s.insert_alert({"id": "a", "name": "A", "origins": ["ZRH"], "destinations": ["HAM"],
+                        "max_price": 100})
+        self.assertEqual(s.cheapest(today=TODAY), {})
 
     def test_departed_hidden_and_alert_delete(self):
         s = self.store
@@ -145,6 +200,9 @@ class StoreTest(unittest.TestCase):
 class RunAlertTest(unittest.TestCase):
     def setUp(self):
         self.store = Store(":memory:")
+
+    def tearDown(self):
+        self.store.close()
 
     def best(self, a):
         return cheapest_json(self.store.cheapest(today=TODAY).get(a.id))
@@ -173,6 +231,32 @@ class RunAlertTest(unittest.TestCase):
         run_alert(a, [part], self.store, cfg([a]), today=TODAY)
         routes = {e["route"]: e["price"] for e in self.best(a)["routes"]}
         self.assertEqual(routes, {"ZRH-HAM": 180, "BSL-HAM": 210})
+        # ZRH-HAM vollständig abgefragt, aber ohne passendes Angebot -> alter Preis weg
+        part = ListSource("google_flights", [offer(150, source="google_flights", stops=3)],
+                          incomplete={"message": "Limit", "routes": {("BSL", "HAM")}})
+        run_alert(a, [part], self.store, cfg([a]), today=TODAY)
+        self.assertEqual([e["route"] for e in self.best(a)["routes"]], ["BSL-HAM"])
+
+    def test_alert_changed_or_deleted_during_run(self):
+        a = alert()
+        raw = {"id": a.id, "name": a.name, "origins": ["ZRH"], "destinations": ["HAM"],
+               "max_price": 110, "baseline_price": 190, "max_stops": 1}
+        self.store.insert_alert(raw)
+        src = ListSource("travelpayouts", [offer(183)])
+        # nur die Grenze geändert: Bestpreise bleiben gültig
+        self.store.update_alert(dict(raw, max_price=250))
+        run_alert(a, [src], self.store, cfg([a]), today=TODAY)
+        self.assertEqual(self.best(a)["best"]["price"], 183)
+        # Kabine geändert, während der Lauf noch die alten Regeln hat -> nichts speichern
+        self.store.delete_cheapest(a.id)
+        self.store.update_alert(dict(raw, cabin="business"))
+        run_alert(a, [src], self.store, cfg([a]), today=TODAY)
+        self.assertIsNone(self.best(a))
+        # gelöscht (andere Alarme existieren) -> keine verwaisten Zeilen
+        self.store.insert_alert(dict(raw, id="anderer"))
+        self.store.delete_alert(a.id)
+        run_alert(a, [src], self.store, cfg([a]), today=TODAY)
+        self.assertNotIn(a.id, self.store.cheapest(today=TODAY))
 
     def test_summary_live_price_when_best_is_cache(self):
         a = alert()
@@ -231,6 +315,9 @@ class WebTest(unittest.TestCase):
         self.assertEqual(a["cheapest"]["best"]["price"], 183)
         self.assertIsNone(a["cheapest"]["best_live"])
         a = self.call("PUT", "/api/alerts/zrh-ham", {"name": "Neu", "enabled": False})["alert"]
+        self.assertEqual(a["cheapest"]["best"]["price"], 183)
+        # Preisgrenze/Normalpreis ändern: Bestpreis bleibt (er hängt nicht an der Grenze)
+        a = self.call("PUT", "/api/alerts/zrh-ham", {"max_price": 190, "baseline_price": 250})["alert"]
         self.assertEqual(a["cheapest"]["best"]["price"], 183)
         a = self.call("PUT", "/api/alerts/zrh-ham", {"max_stops": 0})["alert"]
         self.assertIsNone(a["cheapest"])

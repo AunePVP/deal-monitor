@@ -349,7 +349,8 @@ main:focus-visible { outline: none; }   /* Fokus nach Seitenwechsel (Screenreade
 .alert-best-facts { font-size: 13.5px; font-weight: 600; overflow-wrap: anywhere; }
 .inline-link { font-weight: 600; white-space: nowrap; }
 .best-details summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 4px; }
-.best-routes { margin: 6px 0 0; padding-left: 18px; font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
+.best-routes { margin: 6px 0 0; padding-left: 18px; font-size: 13px; display: flex; flex-direction: column; gap: 3px;
+  max-height: 340px; overflow-y: auto; }
 
 /* ------------------------------------------------------------- Alarme */
 .alert-list { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); }

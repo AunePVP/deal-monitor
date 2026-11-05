@@ -17,6 +17,7 @@ import sqlite3
 import sys
 import threading
 import traceback
+from datetime import timedelta
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -26,7 +27,7 @@ from . import __version__, notify, radar, regions
 from .appsettings import SOURCE_LABELS, SOURCE_NAMES, Context
 from .config import normalize_alert, slugify
 from .models import Alert
-from .monitor import VERIFIED_PREFIX
+from .monitor import CHEAPEST_RULES, VERIFIED_PREFIX
 from .report import _gf_link, _merge_articles, is_article
 from .scheduler import MODES, Scheduler
 from .sources.feed import source_label
@@ -75,8 +76,8 @@ class ApiError(Exception):
 
 # -- JSON-Formen ----------------------------------------------------------------
 
-#: so viele Strecken zeigt die Bestpreis-Liste eines Alarms höchstens
-CHEAPEST_ROUTES = 8
+#: so viele Strecken zeigt die Bestpreis-Liste eines Alarms höchstens (Regionen-Alarme: alle)
+CHEAPEST_ROUTES = 500
 
 
 def cheapest_json(entries: list[dict] | None) -> dict | None:
@@ -441,8 +442,17 @@ class Handler(BaseHTTPRequestHandler):
         alert_id = query.get("alert_id", [None])[0] or None
         return 200, {"deals": deal_list(store, status, alert_id)}
 
+    def _cheapest(self, store, alert_id: str | None = None) -> dict:
+        """Bestpreise; älter als zwei Prüfintervalle (mind. 3 Tage) gelten als veraltet."""
+        try:
+            hours = float(self.scheduler.status()["interval_hours"])
+        except (KeyError, TypeError, ValueError):
+            hours = 0
+        return store.cheapest(alert_id, today=self.ctx.today,
+                              max_age=timedelta(hours=2 * hours) if hours > 0 else None)
+
     def api_alerts(self, store, **_):
-        stats, cheapest = store.deal_stats(), store.cheapest()
+        stats, cheapest = store.deal_stats(), self._cheapest(store)
         return 200, {"alerts": [alert_json(a, stats, cheapest) for a in store.alert_rows()]}
 
     def api_create_alert(self, store, body, **_):
@@ -479,12 +489,11 @@ class Handler(BaseHTTPRequestHandler):
         except (TypeError, ValueError) as e:
             raise ApiError(400, str(e)) from None
         store.update_alert(raw)
-        # Andere Regeln (Strecken, Kabine, Umstiege …) -> alte Bestpreise passen nicht mehr
-        cosmetic = ("name", "enabled")
-        if {k: v for k, v in raw.items() if k not in cosmetic} != \
-                {k: v for k, v in existing.items() if k not in cosmetic}:
+        # Andere Regeln (Strecken, Kabine, Umstiege …) -> alte Bestpreise passen nicht mehr;
+        # Preisgrenze/Normalpreis spielen für Bestpreise keine Rolle
+        if any(raw.get(k) != existing.get(k) for k in CHEAPEST_RULES):
             store.delete_cheapest(id)
-        return 200, {"alert": alert_json(raw, store.deal_stats(), store.cheapest(id))}
+        return 200, {"alert": alert_json(raw, store.deal_stats(), self._cheapest(store, id))}
 
     def api_delete_alert(self, store, id, **_):
         if not store.delete_alert(id):

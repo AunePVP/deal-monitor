@@ -202,24 +202,55 @@ def _verified_best(deals: list[Deal], verifier, today: date | None) -> tuple[lis
 
 
 ARTICLE_ROUTE = "artikel"
+#: Zusatz am Streckenschlüssel für den günstigsten *bei Google bestätigten* Cache-Preis
+CONFIRMED_SUFFIX = "|bestätigt"
+#: Felder eines Alarms, die die Bestpreise bestimmen (Preisgrenze/Normalpreis gehören nicht dazu)
+CHEAPEST_RULES = ("origins", "destinations", "trip", "cabin", "max_stops", "max_duration_hours",
+                  "min_nights", "max_nights", "exclude_airlines", "feed_keywords")
+
+
+def _entry(o: Offer, confirmed: bool) -> dict:
+    return {
+        "price": o.price,
+        "origin": o.origin or None, "destination": o.destination or None,
+        "departure": o.departure.isoformat() if o.departure else None,
+        "return_date": o.return_date.isoformat() if o.return_date else None,
+        "nights": o.nights, "airline": o.airline, "stops": o.stops,
+        "duration_min": o.duration_out_min, "cabin": o.cabin, "roundtrip": o.roundtrip,
+        "link": o.link if o.link and SAFE_LINK_RE.match(o.link) else None,
+        "title": o.title,
+        "published": o.found_at.isoformat(timespec="minutes") if o.title and o.found_at else None,
+        "kind": "article" if o.title else ("live" if o.source in LIVE_SOURCES else "cache"),
+        "confirmed": confirmed,
+    }
 
 
 def cheapest_entries(alert: Alert, offers: list[Offer], deals: list[Deal],
                      rejected_fps: set[str], today: date | None = None) -> dict[str, dict[str, dict]]:
     """Bestpreise: je Offer-Quelle und Strecke das günstigste Angebot, das zu den Regeln des
     Alarms passt (Kabine, Reiseart, Umstiege, Dauer, Nächte, Airlines) - *ohne* Preisgrenze.
-    Bei Google verworfene Cache-Preise zählen nicht (nicht buchbar). Artikel der Deal-Seiten
-    zählen je Seite als eine Strecke ``artikel``.
+    Artikel der Deal-Seiten zählen je Seite als eine Strecke ``artikel``.
+
+    Cache-Preise (Travelpayouts, Amadeus-Monatsscan) werden ehrlich behandelt: Hat Google in
+    einem Abflugmonat einer Strecke gegengeprüft, zählen dort nur die bestätigten Preise (mit
+    dem Google-Preis) - ungeprüfte Nachbartermine desselben Monats sind dann nicht glaubwürdig.
+    Zusätzlich wird je Strecke der günstigste bestätigte Preis gesondert gespeichert
+    (``<strecke>|bestätigt``), damit er neben einem billigeren ungeprüften sichtbar bleibt.
 
     Rückgabe: ``{offer.source: {strecke: angaben}}``.
     """
-    confirmed = {d.offer.fingerprint for d in deals if is_confirmed(d)}
+    confirmed = {id(d.offer) for d in deals if is_confirmed(d)}
+    rejected = {id(o) for o in offers if f"{alert.id}:{o.fingerprint}" in rejected_fps}
+    checked = {_slot(o) for o in offers if id(o) in confirmed or id(o) in rejected}
     out: dict[str, dict[str, dict]] = defaultdict(dict)
+
+    def put(source: str, route: str, o: Offer, ok: bool) -> None:
+        cur = out[source].get(route)
+        if cur is None or o.price < cur["price"]:
+            out[source][route] = _entry(o, ok)
+
     for o in offers:
-        if principles.quality_problems(alert, o, today):
-            continue
-        fp = o.fingerprint
-        if f"{alert.id}:{fp}" in rejected_fps:
+        if id(o) in rejected or principles.quality_problems(alert, o, today):
             continue
         if o.title:
             route = ARTICLE_ROUTE
@@ -227,34 +258,54 @@ def cheapest_entries(alert: Alert, offers: list[Offer], deals: list[Deal],
             route = f"{o.origin}-{o.destination}"
         else:
             continue
-        cur = out[o.source].get(route)
-        if cur is not None and cur["price"] <= o.price:
-            continue
-        out[o.source][route] = {
-            "price": o.price,
-            "origin": o.origin or None, "destination": o.destination or None,
-            "departure": o.departure.isoformat() if o.departure else None,
-            "return_date": o.return_date.isoformat() if o.return_date else None,
-            "nights": o.nights, "airline": o.airline, "stops": o.stops,
-            "duration_min": o.duration_out_min, "cabin": o.cabin, "roundtrip": o.roundtrip,
-            "link": o.link if o.link and SAFE_LINK_RE.match(o.link) else None,
-            "title": o.title,
-            "kind": "article" if o.title else ("live" if o.source in LIVE_SOURCES else "cache"),
-            "confirmed": o.source in LIVE_SOURCES or fp in confirmed,
-        }
+        ok = o.source in LIVE_SOURCES or id(o) in confirmed
+        if o.source in VERIFY_SOURCES and not ok and _slot(o) in checked:
+            continue        # Google hat diesen Monat geprüft und den Preis nicht bestätigt
+        put(o.source, route, o, ok)
+        if ok and o.source in VERIFY_SOURCES and not o.title:
+            put(o.source, route + CONFIRMED_SUFFIX, o, ok)
+    for routes in out.values():     # bestätigt = günstigster ohnehin -> nicht doppelt
+        for key in [k for k in routes if k.endswith(CONFIRMED_SUFFIX)]:
+            base = routes.get(key[: -len(CONFIRMED_SUFFIX)])
+            if base is not None and base["confirmed"]:
+                del routes[key]
     return out
+
+
+def _rules_changed(store: Store, alert: Alert) -> bool:
+    """Wurde der Alarm während des Laufs gelöscht oder in seinen Regeln geändert? Dann keine
+    Bestpreise nach den alten Regeln speichern (Alarme nur aus der Konfiguration: egal)."""
+    if not store.has_alert(alert.id):
+        return bool(store.alert_rows())
+    raw = store.get_alert(alert.id) or {}
+    try:
+        now = Alert(**raw)
+    except (TypeError, ValueError):
+        return True
+    return any(getattr(now, f) != getattr(alert, f) for f in CHEAPEST_RULES)
 
 
 def _save_cheapest(store: Store, alert: Alert, source, entries: dict[str, dict[str, dict]],
                    incomplete: dict | None) -> None:
-    """Bestpreise speichern: Hat die Quelle vollständig geantwortet, ersetzen sie die alten;
-    sonst (Limit, einzelne Fehler) werden nur die neu gesehenen Strecken überschrieben."""
+    """Bestpreise speichern: Hat die Quelle vollständig geantwortet, ersetzen sie die alten.
+    Fehlten nur einzelne Strecken (``incomplete["routes"]``), bleiben deren alte Einträge; die
+    übrigen Strecken gelten als vollständig abgefragt. Fehlten ganze Teilquellen
+    (``incomplete["sources"]``, Feeds), bleiben deren Einträge unverändert."""
+    if _rules_changed(store, alert):
+        log.info("[%s] Alarm während des Laufs geändert - Bestpreise nicht gespeichert", alert.id)
+        return
     partial = incomplete.get("sources") if incomplete else None
+    routes = incomplete.get("routes") if incomplete else None
     names = set(getattr(source, "offer_sources", None) or [source.name]) | set(entries)
     for name in sorted(names):
-        complete = incomplete is None or (partial is not None and name not in partial)
-        if complete or entries.get(name):
-            store.save_cheapest(alert.id, name, entries.get(name, {}), replace=complete)
+        new = entries.get(name, {})
+        if incomplete is None or (partial is not None and name not in partial):
+            store.save_cheapest(alert.id, name, new, replace=True)
+        elif routes and partial is None:
+            store.save_cheapest(alert.id, name, new, replace=True,
+                                keep_routes={f"{o}-{d}" for o, d in routes})
+        elif new:
+            store.save_cheapest(alert.id, name, new, replace=False)
 
 
 def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
