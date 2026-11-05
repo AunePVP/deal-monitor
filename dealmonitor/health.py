@@ -10,7 +10,9 @@ Nach jedem Lauf wird jede gelesene Quelle eingestuft:
 * **FEHLER** - Quelle nicht lesbar
 
 Google Flights gilt als LEER, wenn in einem Lauf mehr als die Hälfte der Abrufe leer blieb
-(``empty_fetches``), und als FEHLER, wenn der Schutzschalter ausgelöst hat (``down``). Die
+(``empty_fetches``), und als FEHLER, wenn der Schutzschalter ausgelöst hat (``down``). "Keine
+Flüge" laut Google (``no_results``) ist kein Problem, wird aber mit den Hinweisen der Quelle
+(``notes``, z. B. "mit 7 Nächten geprüft") für die Seite "Quellen" mitgeschrieben. Die
 Sofort-Prüfung (höchstens 5 Abfragen) stuft Google nur bei FEHLER neu ein - für "leer" sind
 das zu wenige Abrufe.
 
@@ -142,7 +144,11 @@ def google_stat(src) -> dict | None:
     retries = int(getattr(src, "retries", 0) or 0)       # zweite Abrufe zählen nicht doppelt
     queries = max(made - retries, 0)
     empty = int(getattr(src, "empty_fetches", 0) or 0)   # nur mit "Abruf leer"-Zähler
-    return {"items": queries, "empty": min(empty, queries), "error": down}
+    notes = getattr(src, "notes", None)
+    return {"items": queries, "empty": min(empty, queries), "error": down,
+            "no_results": int(getattr(src, "no_results", 0) or 0),
+            "rescued": int(getattr(src, "rescued", 0) or 0),
+            "notes": [str(n)[:ERROR_CHARS] for n in notes][:10] if isinstance(notes, list) else []}
 
 
 def classify_google(stat: dict) -> tuple[str, str | None]:
@@ -167,7 +173,8 @@ def collect(sources: list, now: datetime, *, quick: bool = False) -> dict[str, d
                 state, detail = classify_google(g)
                 out[GOOGLE] = {"state": state, "detail": detail, "items": g["items"],
                                "parsed": g["items"] - g["empty"], "newest": None,
-                               "error": g["error"]}
+                               "error": g["error"], "no_results": g["no_results"],
+                               "rescued": g["rescued"], "notes": g["notes"]}
         elif isinstance(stats, dict):
             for name, stat in stats.items():
                 if not isinstance(stat, dict):
@@ -280,8 +287,16 @@ def report(store, now: datetime | None = None) -> dict:
         st = e.get("state") if e.get("state") in LABELS else ERROR
         items, parsed = e.get("items"), e.get("parsed")
         share = None    # Google: Anteil der Abrufe ohne Ergebnis
+        google = {}
         if name == GOOGLE and isinstance(items, int) and isinstance(parsed, int) and items > 0:
             share = round(min(max(items - parsed, 0) / items, 1.0), 3)
+        if name == GOOGLE:
+            notes = e.get("notes")
+            google = {"no_results": e.get("no_results") if isinstance(e.get("no_results"), int)
+                      else None,
+                      "rescued": e.get("rescued") if isinstance(e.get("rescued"), int) else None,
+                      "notes": [n for n in notes if isinstance(n, str)]
+                      if isinstance(notes, list) else []}
         out.append({
             "id": name, "name": source_label(name), "state": st, "label": LABELS[st],
             "detail": e.get("detail"), "items": e.get("items"), "parsed": e.get("parsed"),
@@ -289,6 +304,7 @@ def report(store, now: datetime | None = None) -> dict:
             "age_hours": round((now - newest).total_seconds() / 3600, 1) if newest else None,
             "threshold_hours": rule.stale_hours, "error": e.get("error"),
             "since": e.get("since"), "checked": e.get("checked"), "empty_share": share,
+            **google,
         })
     order = {ERROR: 0, EMPTY: 1, STALE: 2, OK: 3}
     out.sort(key=lambda x: (order[x["state"]], x["name"].lower()))

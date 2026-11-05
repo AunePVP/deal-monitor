@@ -17,13 +17,37 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   Schnittstellen in `docs/handoff/RUNDE2-SCHNITTSTELLEN.md`. Lokal committet, **nicht gepusht, nicht auf `main`**.
   - Neue Quellen: Secret Flying (Bluesky), Travel-Dealz WP-REST (schnell, Ablaufdatum, Abflug/Ziel-Codes),
     reisetopia (Infobox), You have been upgraded, premium-flights China-Tags, ErrorFareAlerts (Standard aus).
-  - Google: Preisniveau (`ds:1`) je Angebot, zweiter Abruf bei leerer Seite, Datumsrotation ZRH⇄HAM (jeder Tag),
-    Kombi aus 2 One-way.
+  - Google: Preisniveau (`ds:1`) je Angebot, Datumsrotation ZRH⇄HAM (jeder Tag), Kombi aus 2 One-way.
+    Leere Seiten werden eingeordnet und gezielt nachgefragt (siehe „Google: leere Seiten“ unten).
   - Nachbar-Hubs mit Zubringer-Aufschlag (+80/+180 €), mehr China-Codes.
   - Takt: schnelle Quellen alle 10 min, Sofort-Prüfung bei schnellem Treffer, Quellen-Gesundheit mit Meldung bei Wechsel.
   - Bewertung: Google-Bezugspreis, Fehlerpreis-Verdacht, Erstmeldung über Quellen, Beinahe-Deals.
   - UI: Preisverlauf, Badges, Beinahe-Deals, Seite „Quellen“; Demo mit allen neuen Feldern.
-- Tests: `python3 -m unittest discover -s tests` → **627 grün**; `node tests/e2e/ui.mjs` → **43 Schritte grün**.
+- Tests: `python3 -m unittest discover -s tests` → **650 grün**; `node tests/e2e/ui.mjs` → **43 Schritte grün**.
+
+### Google: leere Seiten (Messung 05.11.2026, 42 Abrufe + Gegenprobe 8 Abrufe)
+Eine leere Seite ist kein Zufall, sondern einer von drei Fällen (`googleflights.empty_kind`):
+- **Suche nicht verstanden** (`unparsed`, kommt für denselben Text jedes Mal): Titel „Günstige Flüge weltweit
+  finden …“, `ds:0` ohne Strecke. Betraf „… business class“-Texte. → Business/Premium/First fragen jetzt per
+  **tfs-Link** an (`build_tfs_url`, Protobuf wie Googles eigene URLs), Economy per Suchtext; der andere Stil ist
+  der Rückfall.
+- **Hin/Rück ohne Verbindungen** (`no_itineraries`): gültige Antwort, Ergebnislisten leer. Seltene Paare mit
+  langem Aufenthalt (HAJ–HGH, HAJ–PEK, FRA–HGH bei 12/17 Nächten). → einmal mit 7 Nächten; sonst „keine Flüge“
+  (`no_results`), kein Fehler. Aufenthalt im Scan jetzt 7/12 Nächte begrenzt auf min/max (China: 12 statt 17).
+- **ErrorResponse 13** (`error`, vorübergehend) → dieselbe URL nach 4–6 s. Das alte Muster erkannte echte
+  Fehlerseiten nie (`errorHasStatus`, kein `hash`) – behoben.
+- Neu gesehen in der Gegenprobe: Seite mit allen Verbindungen in `ds:1`, aber **ohne Ergebniszeilen im HTML**
+  (FRA–PEK Business). → `ds1_results` liest sie (auf 20 echten Seiten deckungsgleich mit den HTML-Zeilen).
+- Seite „Quellen“: Zahl „ohne Flüge laut Google“, „erst beim zweiten Abruf mit Flügen“ und Hinweise je Lauf.
+
+Gegenprobe live (05.11.2026, 14:50–14:51 UTC, 8 Abrufe, 5 s Pause, alte Fehlfälle):
+| Abfrage | Ergebnis |
+|---|---|
+| HAJ–HGH 13.–30.11. (17 N.) | ohne Verbindungen, **auch mit 7 Nächten** (13.–20.11.) ohne → „keine Flüge“ |
+| FRA–SHA Business 13.–30.11. (17 N.) | tfs-Link: **9 Flüge ab 4.620 €** (per Suchtext vorher leer) |
+| FRA–BJS Business 15.–27.01. | tfs-Link mit Stadtcode BJS: **11 Flüge ab 2.806 €** |
+| HAJ–PEK 15.–27.01. (12 N.) | ohne Verbindungen; 7 Nächte → diesmal ErrorResponse 13 (vorher 8 Flüge ab 728 €) |
+| FRA–PEK Business 15.–27.01. | tfs-Link: Daten nur in `ds:1` (jetzt lesbar: 11 Flüge ab 3.210 €); zweiter Abruf → **HTTP 429** |
 
 ### Abnahme-Live-Lauf (05.11.2026, frisches Datenverzeichnis, alle 12 Presets an, Google max. 8 Abfragen)
 Ein voller Lauf, 57 s: 38 Angebote, 3 Alarm-Deals, 15 Radar-Treffer, keine Abstürze, keine Konsolenfehler in der UI.
@@ -58,7 +82,11 @@ Behoben dabei (mit Test): „von Westkanada“ galt als Abflug ohne Angabe → l
   (17.10.) und YHBU „Istanbul–Peking Business 900 €“ (27.09.); ob noch buchbar, ist unbekannt.
   YHBU zeigt deshalb oft „0 Artikel“ und gilt trotzdem als OK (kein „Veraltet“, weil alte Artikel vorher wegfallen).
 - Travel-Dealz-Suche max. 8 Suchen/Lauf: Hangzhou, Chongqing, Xiamen werden nie gesucht.
-- Google liefert manchmal nur die Suchmaske (auch beim zweiten Abruf; im Live-Lauf 2 von 5).
+- Google: **erstes HTTP 429** am 05.11. beim 8. Abruf der Gegenprobe (heute ~50 Abrufe in 35 min, 5–10 s
+  Abstand). Der Schutzschalter pausiert Google dann für den Lauf. Ob 40 Abrufe/Lauf (Standard) alle 6 h
+  dauerhaft gehen, ist **nicht** gemessen – im Container beobachten, ggf. `max_requests` senken.
+- HAJ–HGH Hin/Rück liefert bei Google weder mit 17 noch mit 7 Nächten Verbindungen (one-way einmal Fehler 13).
+  Andere seltene Paare können ebenso leer bleiben. Tageszeit nicht untersucht.
 - Derselbe Deal mit > 5 % Preisunterschied (Turkmenistan Bangkok 1.208 € TD / 1.288 € EFA) erscheint zweimal im Radar.
 - Radar Economy 40–300 € meldet auch Kurz-/Mittelstrecke und Blind Booking; Eurowings „Business“ zählt als Business.
 - Zubringer-Aufschläge 80/180 € und Gesundheits-Schwellen (reisetopia 36 h) sind Annahmen.

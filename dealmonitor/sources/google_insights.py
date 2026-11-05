@@ -1,6 +1,6 @@
 """Preisniveau einer Google-Flights-Ergebnisseite ("Die Preise sind derzeit niedrig").
 
-Die Seite bringt im Skriptblock ``AF_initDataCallback({key: 'ds:1', … data:[…], sideChannel…})``
+Die Seite bringt im Skriptblock ``AF_initDataCallback({key: 'ds:1', hash: '…', data:[…], sideChannel…})``
 ein JSON mit Googles Einschätzung der Suche mit - ohne zusätzlichen Abruf:
 
     [code, [None, tiefstpreis], [None, normalpreis], [None, differenz],
@@ -11,7 +11,11 @@ nur Code 1 = "niedrig"; 2, 3 und 4 erschienen als "normal". Deshalb wird ``level
 Spanne berechnet, nicht aus dem Code. Das Element wird über seine Form gesucht, nicht über einen
 festen Index. Ändert Google den Aufbau, liefert ``parse`` ``None`` - nie eine Ausnahme.
 
-``data:[13, …]`` ist eine ErrorResponse (vorübergehend, ein zweiter Abruf klappt meist).
+``data:[13, …]`` ist eine ErrorResponse (vorübergehend, ein zweiter Abruf derselben URL lohnt). Echte
+Fehlerseiten haben eine andere Form als Ergebnisseiten - kein ``hash``, zwei Leerzeichen und
+``errorHasStatus`` statt ``sideChannel`` (gemessen 05.11.2026):
+``AF_initDataCallback({key: 'ds:1',  data:[13,null,[["type.googleapis.com/…ErrorResponse",…]]],
+errorHasStatus: true,})``.
 Ohne ``ds:1`` bleibt als Rückfallebene der sichtbare Satz "Die Preise sind derzeit
 <span>normal</span>" (den Text für "hoch" hat noch niemand gesehen).
 """
@@ -25,8 +29,10 @@ from datetime import datetime, timedelta, timezone
 
 log = logging.getLogger(__name__)
 
-DS1_RE = re.compile(r"AF_initDataCallback\(\{key: 'ds:1',(?: hash: '\d+',)? data:(.*?), sideChannel",
-                    re.S)
+DS1_RE = re.compile(r"AF_initDataCallback\(\{key: 'ds:1',\s*(?:hash: '\d+',\s*)?data:(.*?),"
+                    r"\s*(?:sideChannel|errorHasStatus)", re.S)
+#: ``ds:0`` = die Suche, wie Google sie verstanden hat (Strecken, Daten, Kabine)
+DS0_RE = re.compile(DS1_RE.pattern.replace("'ds:1'", "'ds:0'"), re.S)
 #: ``data:[13, …]`` - Google konnte die Suche gerade nicht beantworten
 ERROR_CODE = 13
 TEXT_RE = re.compile(r"Die Preise sind (?:aktuell|derzeit)\s*(?:<[^>]*>\s*)*"
@@ -37,9 +43,18 @@ TEXT_LEVELS = {"niedrig": "niedrig", "normal": "typisch", "hoch": "hoch"}
 MAX_DEPTH = 6
 
 
+def ds0_data(html: str):
+    """Der ``ds:0``-Datenblock (Suchanfrage) als JSON (``None``, wenn nicht vorhanden/kaputt)."""
+    return _json_block(DS0_RE, html)
+
+
 def ds1_data(html: str):
     """Der ``ds:1``-Datenblock als JSON (``None``, wenn nicht vorhanden oder kaputt)."""
-    m = DS1_RE.search(html or "")
+    return _json_block(DS1_RE, html)
+
+
+def _json_block(pattern, html: str):
+    m = pattern.search(html or "")
     if not m:
         return None
     try:
@@ -49,7 +64,8 @@ def ds1_data(html: str):
 
 
 def is_error_response(html: str) -> bool:
-    """``ds:1`` ist eine ErrorResponse (``data:[13, …]``) - lohnt einen zweiten Abruf."""
+    """``ds:1`` ist eine ErrorResponse (``data:[13, …]``, auf echten Fehlerseiten mit
+    ``errorHasStatus`` und ohne ``hash``) - lohnt einen zweiten Abruf derselben URL."""
     data = ds1_data(html)
     return isinstance(data, list) and bool(data) and data[0] == ERROR_CODE
 

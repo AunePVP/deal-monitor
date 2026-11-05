@@ -177,7 +177,15 @@ Screenshots (Demo, Desktop 1280 / Mobil 390): `docs/handoff/screens/`.
   Rotations-Alarme und Hin/Rück-Alarme, deren Strecken ein aktiver Rotations-Alarm gleicher Kabine
   abdeckt (`days` = Abflugtage mit aktuellem Preis im Gedächtnis, `no_deal_sites` bei ZRH⇄HAM,
   `web.NO_DEAL_SITE_ROUTES`); `/api/sources/health` zusätzlich `sources[].empty_share` (nur Google:
-  Anteil leerer Abrufe) und `not_used` (`health.NOT_USED`: Name + Grund).
+  Anteil leerer Abrufe), bei Google außerdem `no_results` (gültige Antwort ohne Flüge), `rescued`
+  (zweiter Abruf brachte Flüge) und `notes[]` (Hinweise je Lauf, z. B. „… mit 7 Nächten geprüft“),
+  sowie `not_used` (`health.NOT_USED`: Name + Grund).
+- **Google leere Seiten** (`googleflights.empty_kind`): `error` (ErrorResponse 13 → dieselbe URL nach
+  4–6 s), `unparsed` (Suche nicht verstanden → anderer URL-Stil: Suchtext ⇄ `build_tfs_url`), `no_itineraries`
+  (Hin/Rück → einmal mit 7 Nächten, `short_stay`; one-way → „keine Flüge“), `empty` (Notbehelf über die
+  Seitengröße). Business/Premium/First fragen zuerst per tfs-Link an. Cache-/Insight-Schlüssel bleibt
+  `build_url`; geladene URL und echter Rückflug: `GoogleFlightsSource.loaded(url)`. Ohne HTML-Zeilen gelten
+  die Verbindungen aus `ds:1` (`ds1_results`). `stay_nights` = 7/12 Nächte, begrenzt auf min/max.
 - **Deal-Karte**: Verlauf (Inline-SVG, Band typisch von–bis, Marke = Angebotspreis, Hover-Wert,
   `aria-label`), Badges Google-Preisniveau, Spanne (ohne Verlauf), „läuft ab“, Nachbar-Hub (Preis-Box
   „inkl. 180 € Zubringer“), Erstmeldung mit Vorsprung, „n Quellen“ (Links in der Quellenzeile).

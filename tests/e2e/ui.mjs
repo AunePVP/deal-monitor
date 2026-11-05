@@ -463,7 +463,7 @@ async function desktopFlows(browser) {
     await page.waitForSelector(".deal-card");
   });
 
-  await step("Berliner Zeit: Ablauf mit Zeitzone, Veraltet-Text, Ladefehler der Quellen", async () => {
+  await step("Berliner Zeit: Ablauf mit Zeitzone, Veraltet-Text, Google-Hinweise, Ladefehler der Quellen", async () => {
     // eigener Kontext in Europe/Berlin (der Container läuft in UTC, da fiele der Fehler nicht auf)
     const bctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: "de-DE", timezoneId: "Europe/Berlin" });
     try {
@@ -485,6 +485,8 @@ async function desktopFlows(browser) {
           { id: "feed:a", name: "Seite A", state: "veraltet", label: "Veraltet", age_hours: 73, threshold_hours: 72, items: 3, parsed: 1 },
           { id: "feed:b", name: "Seite B", state: "veraltet", label: "Veraltet", age_hours: 100, threshold_hours: 72, items: 3, parsed: 1 },
           { id: "feed:c", name: "Seite C", state: "ok", label: "OK", age_hours: 0.4, threshold_hours: 72, items: 3, parsed: 1 },
+          { id: "google_flights", name: "Google Flights", state: "ok", label: "OK", items: 8, parsed: 7, empty_share: 0.125,
+            no_results: 2, rescued: 1, notes: ["HAJ–PEK 15.01.–27.01.2027: Google ohne Hin/Rück-Flüge für 12 Nächte, mit 7 Nächten geprüft – 8 Flüge ab 728 €", 7] },
         ], labels: {}, not_used: [{ name: "X", reason: "Y" }] } });
       });
       await p3.goto(base + "/#deals");
@@ -498,6 +500,10 @@ async function desktopFlows(browser) {
       assert(/^neuester Artikel vor 73 Std\. \(erwartet: höchstens 72 Std\.\)/.test(await text("feed:a")), `Veraltet knapp: ${await text("feed:a")}`);
       assert(/^neuester Artikel vor 4 Tagen \(erwartet: höchstens 3 Tage\)/.test(await text("feed:b")), `Veraltet Tage: ${await text("feed:b")}`);
       assert(/^neuester Artikel vor weniger als 1 Std\./.test(await text("feed:c")), `Unter 1 Std.: ${await text("feed:c")}`);
+      assert(await text("google_flights") === "8 Abrufe im letzten Lauf · 13 % leer · 2 ohne Flüge laut Google · 1 erst beim zweiten Abruf mit Flügen", `Google-Fakten: ${await text("google_flights")}`);
+      const notes = await p3.locator('.health-row[data-id="google_flights"] .health-notes li').allTextContents();
+      assert(notes.length === 1 && /mit 7 Nächten geprüft – 8 Flüge ab 728 €$/.test(notes[0]), `Google-Hinweise: ${JSON.stringify(notes)}`);
+      assert(await p3.locator('.health-row[data-id="feed:c"] .health-notes').count() === 0, "Hinweise bei Feed");
       assert(await p3.isVisible("#health-summary") && await p3.isVisible("#unused-panel"), "Zusammenfassung fehlt");
       // Ladefehler: keine alte Zusammenfassung neben der Fehlermeldung
       healthFails = true;

@@ -53,8 +53,10 @@ class FakeFeed:
 class FakeGoogle:
     name = "google_flights"
 
-    def __init__(self, made=10, empty=0, retries=0, down=None):
+    def __init__(self, made=10, empty=0, retries=0, down=None, no_results=0, rescued=0,
+                 notes=()):
         self.requests_made, self.empty_fetches, self.retries, self.down = made, empty, retries, down
+        self.no_results, self.rescued, self.notes = no_results, rescued, list(notes)
 
 
 class Recorder:
@@ -119,8 +121,21 @@ class ClassifyTest(unittest.TestCase):
         self.assertIsNone(one(made=0))                                     # nichts abgefragt
         # ohne "Abruf leer"-Zähler (ältere Google-Quelle): OK
         old = FakeGoogle()
-        del old.empty_fetches
+        del old.empty_fetches, old.no_results, old.rescued, old.notes
         self.assertEqual(health.collect([old], NOW)["google_flights"]["state"], health.OK)
+
+    def test_google_no_results_are_not_empty(self):
+        """"Keine Flüge" laut Google ist kein leerer Abruf; Hinweise gehen an die Seite Quellen."""
+        note = "HAJ–PEK 15.01.–27.01.2027: Google ohne Hin/Rück-Flüge für 12 Nächte, mit 7 Nächten …"
+        g = health.collect([FakeGoogle(made=10, retries=4, empty=1, no_results=5, rescued=3,
+                                       notes=[note])], NOW)["google_flights"]
+        self.assertEqual((g["state"], g["items"], g["parsed"]), (health.OK, 6, 5))
+        self.assertEqual((g["no_results"], g["rescued"], g["notes"]), (5, 3, [note]))
+        store = Store(":memory:")
+        health.update(store, [FakeGoogle(made=10, no_results=5, rescued=3, notes=[note])], now=NOW)
+        rep = {s["id"]: s for s in health.report(store, now=NOW)["sources"]}["google_flights"]
+        self.assertEqual((rep["no_results"], rep["rescued"], rep["notes"], rep["empty_share"]),
+                         (5, 3, [note], 0.0))
 
     def test_garbage_never_crashes(self):
         out = health.collect([FakeFeed({"feed:x": "kaputt", "feed:y": {"newest": "unsinn"}}),
@@ -231,6 +246,9 @@ class UpdateTest(unittest.TestCase):
         self.assertAlmostEqual(by_id["feed:travel-dealz-rest"]["age_hours"], 21, delta=0.1)
         self.assertEqual(by_id["google_flights"]["state"], "leer")
         self.assertEqual(rep["sources"][0]["id"], "google_flights")      # Probleme zuerst
+        self.assertEqual((by_id["google_flights"]["no_results"], by_id["google_flights"]["notes"]),
+                         (0, []))
+        self.assertNotIn("notes", by_id["feed:travel-dealz"])
         json.dumps(rep)                                                  # JSON-tauglich
 
 

@@ -434,11 +434,11 @@ class OffersTest(ApiCase):
         self.assertEqual(calls[0].url, "https://test.api.amadeus.com/v2/shopping/flight-offers")
         self.assertEqual(calls[0].params, {
             "originLocationCode": "FRA", "destinationLocationCode": "PEK",
-            "departureDate": "2026-11-13", "returnDate": "2026-11-24", "adults": 1,
+            "departureDate": "2026-11-13", "returnDate": "2026-11-25", "adults": 1,
             "travelClass": "BUSINESS", "nonStop": "false", "currencyCode": "EUR", "max": 10,
             "excludedAirlineCodes": None})
         self.assertEqual((calls[1].params["departureDate"], calls[1].params["returnDate"]),
-                         ("2026-11-17", "2026-11-28"))
+                         ("2026-11-17", "2026-11-29"))       # 12 Nächte Langstrecke
 
     def test_params_other_cabins_and_oneway(self):
         self.offers.fetch(business(cabin="first", trip="oneway", max_stops=0))

@@ -16,7 +16,7 @@ from dealmonitor import http
 from dealmonitor.models import Alert
 from dealmonitor.sources import google_insights as gi
 from dealmonitor.sources.googleflights import (
-    EmptyPage, GoogleFlightsSource, ParseError, build_url, parse_results, transient_problem,
+    EmptyPage, GoogleFlightsSource, ParseError, build_url, empty_kind, parse_results,
 )
 
 FIX = Path(__file__).parent / "fixtures"
@@ -28,9 +28,12 @@ OLD = (FIX / "google_flights_zrh_ham.html").read_text(encoding="utf-8")
 EMPTY_MASK = ("<html><head><title>Google Flüge</title></head><body><script>"
               "AF_initDataCallback({key: 'ds:0', hash: '1', data:[], sideChannel: {}});"
               "</script></body></html>")
+#: ErrorResponse in der echten Form: ohne ``hash``, zwei Leerzeichen, ``errorHasStatus``
 ERROR_PAGE = ("<html><head><title>Google Flüge</title></head><body><script>"
-              "AF_initDataCallback({key: 'ds:1', hash: '9', data:[13,null,\"x\"], sideChannel: {}});"
+              "AF_initDataCallback({key: 'ds:1',  data:[13,null,\"x\"], errorHasStatus: true,});"
               "</script></body></html>")
+#: echte Fehlerseite (gekürzt): HAJ→HGH one-way per tfs-Link, 05.11.2026
+ERROR13 = (FIX / "google_flights_error13.html").read_text(encoding="utf-8")
 
 
 def ds1_page(block, at=5, wrap=False):
@@ -125,6 +128,18 @@ class ParseTest(unittest.TestCase):
         self.assertIsNone(gi.parse(ERROR_PAGE))
         self.assertFalse(gi.is_error_response(OW))
 
+    def test_real_error_response_form(self):
+        """Echte Fehlerseite: ``{key: 'ds:1',  data:[13,…], errorHasStatus: true,}`` - ohne
+        ``hash`` und ohne ``sideChannel``; das alte Muster erkannte sie nie."""
+        self.assertIn("errorHasStatus", ERROR13)
+        self.assertNotRegex(ERROR13, r"key: 'ds:1', hash:")
+        self.assertTrue(gi.is_error_response(ERROR13))
+        self.assertEqual(gi.ds1_data(ERROR13)[0], 13)
+        self.assertIsNone(gi.parse(ERROR13))
+        # die übrigen echten Vorlagen sind keine Fehlerseiten
+        for name in ("google_flights_unparsed.html", "google_flights_rt_no_itineraries.html"):
+            self.assertFalse(gi.is_error_response((FIX / name).read_text(encoding="utf-8")), name)
+
     def test_broken_structures_give_none(self):
         pages = [
             None, "", "<html></html>",
@@ -200,16 +215,17 @@ class OfferInsightTest(unittest.TestCase):
 
 
 class RetryTest(unittest.TestCase):
-    def test_transient_detection(self):
-        self.assertEqual(transient_problem(EMPTY_MASK, []), "empty")
-        self.assertEqual(transient_problem(ERROR_PAGE, []), "error")
-        self.assertIsNone(transient_problem(OW, parse_results(OW)))
-        self.assertIsNone(transient_problem("<html><body>neues Layout</body></html>", []),
+    def test_empty_kind_fallbacks(self):
+        self.assertEqual(empty_kind(EMPTY_MASK, []), "empty", "Notbehelf: klein, ohne Merkmale")
+        self.assertEqual(empty_kind(ERROR_PAGE, []), "error")
+        self.assertEqual(empty_kind(ERROR13, []), "error")
+        self.assertIsNone(empty_kind(OW, parse_results(OW)))
+        self.assertIsNone(empty_kind("<html><body>neues Layout</body></html>", []),
                           "keine Google-Seite -> wie bisher Parser-Fehler")
-        self.assertIsNone(transient_problem(
+        self.assertIsNone(empty_kind(
             "<html><body>Google Flüge: keine Flüge gefunden</body></html>", []))
         big = EMPTY_MASK + " " * 2_200_000
-        self.assertIsNone(transient_problem(big, []), "groß und ohne Zeilen = Layout geändert")
+        self.assertIsNone(empty_kind(big, []), "groß und ohne Zeilen = Layout geändert")
 
     def test_empty_mask_then_results(self):
         src = source([EMPTY_MASK, OW])
@@ -225,13 +241,14 @@ class RetryTest(unittest.TestCase):
         self.assertEqual((src.requests_made, src.retries, src.empty_fetches), (2, 1, 0))
 
     def test_retry_waits(self):
-        for page, wait in ((EMPTY_MASK, 4.0), (ERROR_PAGE, 2.0)):
+        for page in (EMPTY_MASK, ERROR_PAGE, ERROR13):
             src = source([page, OW], delay=3.0)
             with mock.patch("dealmonitor.sources.googleflights.time.sleep") as sleep:
                 src.query("ZRH", "HAM", date(2027, 1, 4), None, "economy", False)
             waits = [c.args[0] for c in sleep.call_args_list]
             self.assertEqual(len(waits), 1)
-            self.assertTrue(wait - 0.2 <= waits[0] <= 4.0, waits)
+            self.assertTrue(3.8 <= waits[0] <= 6.0, waits)
+            self.assertEqual(src.calls[0], src.calls[1], "vorübergehend: dieselbe URL")
 
     def test_error_response_with_rows_keeps_rows(self):
         page = OW.replace("data:[[null,", "data:[13,[null,", 1)

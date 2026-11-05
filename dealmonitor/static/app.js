@@ -1251,6 +1251,8 @@
     if (google) {
       if (num(s.items)) facts.push(`${s.items.toLocaleString("de-DE")} ${s.items === 1 ? "Abruf" : "Abrufe"} im letzten Lauf`);
       if (num(s.empty_share)) facts.push(`${Math.round(s.empty_share * 100)} % leer`);
+      if (num(s.no_results) && s.no_results > 0) facts.push(`${s.no_results} ohne Flüge laut Google`);
+      if (num(s.rescued) && s.rescued > 0) facts.push(`${s.rescued} erst beim zweiten Abruf mit Flügen`);
     } else {
       if (num(s.age_hours) && s.state === "veraltet" && num(s.threshold_hours)) {
         const [age, limit] = staleText(s.age_hours, s.threshold_hours);
@@ -1265,7 +1267,9 @@
       el("div", { class: "health-main" },
         el("p", { class: "health-name" }, s.name || s.id, el("span", { class: `h-label ${st.cls}` }, s.label || st.text)),
         facts.length ? el("p", { class: "health-facts" }, facts.join(" · ")) : null,
-        s.detail && !["ok", "veraltet"].includes(s.state) ? el("p", { class: "health-detail" }, s.detail) : null),
+        s.detail && !["ok", "veraltet"].includes(s.state) ? el("p", { class: "health-detail" }, s.detail) : null,
+        google && Array.isArray(s.notes) && s.notes.length
+          ? el("ul", { class: "health-notes" }, ...s.notes.filter((n) => typeof n === "string").map((n) => el("li", null, n))) : null),
       when ? el("p", { class: "health-when" }, when) : null);
   }
 

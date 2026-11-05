@@ -6,10 +6,12 @@ Ergebnisse wie auf den 2,4-MB-Vollseiten.
 """
 
 import gzip
+import re
 import unittest
 from datetime import date
 from pathlib import Path
 from unittest import mock
+from urllib.parse import unquote
 
 from dealmonitor import config as config_mod
 from dealmonitor import http
@@ -18,8 +20,9 @@ from dealmonitor.monitor import run_alert
 from dealmonitor.sources import SourceError
 from dealmonitor.sources import googleflights as gf
 from dealmonitor.sources.googleflights import (
-    GoogleBlocked, GoogleFlightsSource, ParseError, blocked_reason, build_url, page_settings,
-    parse_label, parse_results, scan_dates, stay_nights,
+    EmptyPage, GoogleBlocked, GoogleFlightsSource, ParseError, blocked_reason, build_tfs_url,
+    build_url, empty_kind, page_settings, parse_label, parse_results, scan_dates, search_urls,
+    short_stay, stay_nights,
 )
 from dealmonitor.store import Store
 
@@ -31,6 +34,13 @@ FRA_BJS_BIZ = (FIX / "google_flights_fra_bjs_business.html").read_text(encoding=
 CONSENT = ('<html><head><title>Bevor du zu Google weitergehst</title></head><body>'
            '<form action="https://consent.google.com/save" method="POST"></form></body></html>')
 NO_FLIGHTS = '<html><body><div>Für diese Suche wurden keine Flüge gefunden.</div></body></html>'
+#: gekürzte echte Seiten ohne Ergebnisse (05.11.2026), siehe Kommentar in den Dateien
+UNPARSED = (FIX / "google_flights_unparsed.html").read_text(encoding="utf-8")
+NO_ITIN = (FIX / "google_flights_rt_no_itineraries.html").read_text(encoding="utf-8")
+ERROR13 = (FIX / "google_flights_error13.html").read_text(encoding="utf-8")
+FRA_PEK = (FIX / "google_flights_fra_pek_ds1.html").read_text(encoding="utf-8")
+#: Verbindungen nur in ds:1, keine Ergebniszeilen im HTML (FRA→PEK Business, live 05.11.2026)
+DS1_ONLY = (FIX / "google_flights_ds1_only.html").read_text(encoding="utf-8")
 
 
 def alert(**kw):
@@ -241,7 +251,12 @@ class PlanningTest(unittest.TestCase):
         self.assertEqual(scan_dates(2026, 11, date(2026, 11, 28)), [])
 
     def test_stay_nights(self):
-        self.assertEqual(stay_nights(alert(), "ZRH", "HAM"), 11)        # Mitte aus 1..21
+        # Standard (7 Europa / 12 Langstrecke), begrenzt auf min/max - nicht die Mitte
+        self.assertEqual(stay_nights(alert(), "ZRH", "HAM"), 7)         # 1..21
+        self.assertEqual(stay_nights(alert(min_nights=5, max_nights=30), "FRA", "SHA"), 12)
+        self.assertEqual(stay_nights(alert(min_nights=5, max_nights=30), "HAJ", "HGH"), 12)
+        self.assertEqual(stay_nights(alert(min_nights=14, max_nights=30), "FRA", "SHA"), 14)
+        self.assertEqual(stay_nights(alert(min_nights=2, max_nights=5), "ZRH", "HAM"), 5)
         self.assertEqual(stay_nights(alert(min_nights=None, max_nights=None), "ZRH", "HAM"), 7)
         self.assertEqual(stay_nights(alert(min_nights=None, max_nights=None), "FRA", "BJS"), 12)
         self.assertEqual(stay_nights(alert(min_nights=None, max_nights=None), "FRA", "LIS"), 7)
@@ -259,7 +274,7 @@ class PlanningTest(unittest.TestCase):
             route = plan[i:i + 4]
             self.assertEqual(len({r[0] for r in route}), 1, "Strecke für Strecke")
             self.assertEqual([r[2].month for r in route], [11, 11, 12, 12], "Monate nah -> fern")
-            self.assertEqual([r[3] - r[2] for r in route], [gf.timedelta(days=11)] * 4)
+            self.assertEqual([r[3] - r[2] for r in route], [gf.timedelta(days=7)] * 4)
         oneway = src.plan(alert(trip="oneway"))
         self.assertTrue(all(p[3] is None for p in oneway))
 
@@ -280,7 +295,7 @@ class SourceTest(unittest.TestCase):
         self.assertTrue(o.roundtrip)
         self.assertEqual(o.cabin, "economy")
         self.assertIn(o.departure, (date(2026, 11, 13), date(2026, 11, 17)))
-        self.assertEqual(o.nights, 11)
+        self.assertEqual(o.nights, 7)
         self.assertEqual(o.link, build_url("ZRH", "HAM", o.departure, o.return_date))
         self.assertIn(o.link, src.calls)
         self.assertTrue(GoogleFlightsSource.records_history)
@@ -548,6 +563,292 @@ class BudgetTest(unittest.TestCase):
         src.fetch(a)
         self.assertEqual(src._scan_pending, 0)
         self.assertIsNotNone(src.verify("ZRH", "HAM", date(2027, 3, 3), date(2027, 3, 9)))
+
+
+class TfsUrlTest(unittest.TestCase):
+    def test_fixed_value(self):
+        """Deckt sich mit Googles eigenen Such-URLs ("CBwQAh…"), live geprüft 05.11.2026."""
+        self.assertEqual(
+            build_tfs_url("FRA", "SHA", date(2027, 3, 12), date(2027, 3, 24)),
+            "https://www.google.com/travel/flights/search?tfs=CBwQAhoeEgoyMDI3LTAzLTEyagcIARIDRlJB"
+            "cgcIARIDU0hBGh4SCjIwMjctMDMtMjRqBwgBEgNTSEFyBwgBEgNGUkFAAUgBmAEB&hl=de&curr=EUR")
+        # Business (Feld 9 = 3) und one-way (Feld 19 = 2), Werte aus den Messabrufen
+        self.assertIn("tfs=CBwQAhoeEgoyMDI3LTAxLTE1agcIARIDRlJBcgcIARIDUEVLGh4SCjIwMjctMDEtMjdq"
+                      "BwgBEgNQRUtyBwgBEgNGUkFAAUgDmAEB&",
+                      build_tfs_url("fra", "pek", date(2027, 1, 15), date(2027, 1, 27), "business"))
+        self.assertIn("tfs=CBwQAhoeEgoyMDI2LTEyLTExagcIARIDSEFKcgcIARIDSEdIQAFIAZgBAg&",
+                      build_tfs_url("HAJ", "HGH", date(2026, 12, 11), None, "economy", False))
+        self.assertEqual(build_tfs_url("HAJ", "HGH", date(2026, 12, 11), date(2026, 12, 20),
+                                       roundtrip=False),
+                         build_tfs_url("HAJ", "HGH", date(2026, 12, 11), None, roundtrip=False))
+
+    def test_search_urls_order(self):
+        dep, ret = date(2027, 1, 15), date(2027, 1, 27)
+        q, tfs = build_url("FRA", "PEK", dep, ret), build_tfs_url("FRA", "PEK", dep, ret)
+        self.assertEqual(search_urls("FRA", "PEK", dep, ret), (q, tfs), "Economy: erst Suchtext")
+        biz = search_urls("FRA", "PEK", dep, ret, "business")
+        self.assertEqual(biz, (build_tfs_url("FRA", "PEK", dep, ret, "business"),
+                               build_url("FRA", "PEK", dep, ret, "business")),
+                         "Business: erst tfs-Link")
+
+
+class Ds1ResultsTest(unittest.TestCase):
+    def test_rows_from_ds1_only_page(self):
+        self.assertNotIn('aria-label="Ab ', DS1_ONLY)
+        rows = parse_results(DS1_ONLY)
+        self.assertEqual(len(rows), 11)
+        self.assertEqual({k: rows[0][k] for k in ("price", "airline", "airline_code", "stops",
+                                                   "duration_min", "departure_time",
+                                                   "departure_airport")},
+                         {"price": 3210.0, "airline": "Air Astana", "airline_code": "KC",
+                          "stops": 1, "duration_min": 2770, "departure_time": "17:05",
+                          "departure_airport": "Frankfurt"})
+        self.assertEqual(rows, sorted(rows, key=lambda r: r["price"]))
+        self.assertIsNone(empty_kind(DS1_ONLY, rows))
+        src = source(page=DS1_ONLY)
+        got = src.query("FRA", "PEK", date(2027, 1, 15), date(2027, 1, 27), "business")
+        self.assertEqual((got[0]["price"], src.requests_made), (3210.0, 1))
+        self.assertEqual(src.insight(build_url("FRA", "PEK", date(2027, 1, 15), date(2027, 1, 27),
+                                               "business"))["lowest"], 3210)
+
+    def test_ds1_matches_html_rows(self):
+        """Wo beides da ist, liefert ds:1 dieselben Zeilen wie die aria-labels."""
+        for page in (FRA_PEK, (FIX / "google_flights_zrh_ham_oneway_ds1.html").read_text("utf-8")):
+            key = lambda r: (r["price"], r["airline"], r["stops"], r["duration_min"],
+                             r["departure_time"])
+            html = {key(r) for r in parse_results(page)}
+            self.assertTrue(html and html <= {key(r) for r in gf.ds1_results(page)})
+        self.assertEqual(gf._names(["Lufthansa", "SWISS", "Air China"]),
+                         "Lufthansa, SWISS und Air China")
+
+    def test_ds1_garbage_is_ignored(self):
+        for data in ("[13,null,[]]", "[[1],[],null,null]", "[[1],[],[[[\"x\"]]],[[[[1]]]]]",
+                     "[[1],[],[[[[\"LH\",[\"Lufthansa\"],[]],[[null,\"x\"]]]]],null]"):
+            page = f"<script>AF_initDataCallback({{key: 'ds:1', hash: '1', data:{data}, sideChannel: {{}}}});</script>"
+            self.assertEqual(gf.ds1_results(page), [], data)
+        self.assertEqual(gf.ds1_results(NO_ITIN), [])
+
+
+class EmptyKindTest(unittest.TestCase):
+    def test_real_pages(self):
+        self.assertEqual(empty_kind(ERROR13, []), "error")
+        self.assertEqual(empty_kind(UNPARSED, []), "unparsed")
+        self.assertEqual(empty_kind(NO_ITIN, []), "no_itineraries")
+        # Suche verstanden (Strecke in ds:0), nur der Titel fehlt -> trotzdem unparsed über ds:0
+        self.assertEqual(empty_kind(UNPARSED.replace("Günstige Flüge weltweit finden", "X"), []),
+                         "unparsed")
+        self.assertEqual(empty_kind(UNPARSED.split('<script class="ds:0">')[0], []), "unparsed",
+                         "Titel der Startseite reicht")
+
+    def test_result_pages_are_none(self):
+        for name in ("google_flights_zrh_ham.html", "google_flights_fra_pek_ds1.html",
+                     "google_flights_zrh_ham_oneway_ds1.html", "google_flights_fra_sha_oneway.html",
+                     "google_flights_fra_bjs_business.html"):
+            page = (FIX / name).read_text(encoding="utf-8")
+            self.assertIsNone(empty_kind(page, parse_results(page)), name)
+        self.assertIsNone(empty_kind(NO_FLIGHTS, []))
+
+    def test_short_stay(self):
+        self.assertEqual(short_stay(12, 5, 30), 7)
+        self.assertEqual(short_stay(17, 10, 30), 10, "min_nights größer als 7")
+        self.assertIsNone(short_stay(6, 1, 6), "7 Nächte über max_nights")
+        self.assertIsNone(short_stay(7, 1, 21), "schon 7 Nächte")
+        self.assertIsNone(short_stay(12, 12, 30), "min_nights = aktueller Aufenthalt")
+        self.assertEqual(short_stay(12, None, None), 7)
+
+
+def by_nights(pages: dict, default: str):
+    """Fetcher-Ersatz: Seite je Aufenthalt (aus dem Suchtext "on … through …")."""
+    def page(url):
+        q = unquote(url.split("q=", 1)[-1])
+        m = re.search(r"on (\S+) through (\S+)", q)
+        if not m:
+            return default
+        nights = (date.fromisoformat(m.group(2)) - date.fromisoformat(m.group(1))).days
+        return pages.get(nights, default)
+    return page
+
+
+def by_url(**pages):
+    """Fetcher-Ersatz: erste Seite, deren Schlüssel in der URL steht (``default`` sonst)."""
+    def page(url):
+        for key, html in pages.items():
+            if key != "default" and key in url:
+                return html
+        return pages["default"]
+    return page
+
+
+class SecondFetchTest(unittest.TestCase):
+    """Je Fall höchstens ein gezielter zweiter Abruf statt blind dieselbe URL."""
+
+    DEP = date(2027, 1, 15)
+
+    def china(self, **kw):
+        base = dict(id="cn", origins=["FRA"], destinations=["PEK"], max_price=900,
+                    baseline_price=1000, min_nights=5, max_nights=30, max_stops=None,
+                    max_duration_hours=None)
+        base.update(kw)
+        return alert(**base)
+
+    def test_unparsed_text_then_tfs(self):
+        src = source(page=by_url(**{"tfs=": ZRH_HAM, "default": UNPARSED}))
+        dep, ret = date(2027, 1, 15), date(2027, 1, 22)
+        rows = src.query("ZRH", "HAM", dep, ret)
+        key, tfs = build_url("ZRH", "HAM", dep, ret), build_tfs_url("ZRH", "HAM", dep, ret)
+        self.assertEqual(src.calls, [key, tfs])
+        self.assertEqual((rows[0]["price"], src.requests_made, src.retries), (168, 2, 1))
+        self.assertEqual((src.empty_fetches, src.no_results, src.rescued), (0, 0, 1))
+        self.assertIn(key, src._cache, "Ergebnisse unter der ursprünglichen URL")
+        self.assertEqual(src.loaded(key), (tfs, ret))
+        self.assertEqual(src.notes, ["ZRH–HAM 15.01.–22.01.2027: Google verstand den Suchtext "
+                                     "nicht, per tfs-Link geprüft – 11 Flüge ab 168 €"])
+        # im Scan: Angebote mit dem tatsächlich geladenen Link
+        src = source(page=by_url(**{"tfs=": ZRH_HAM, "default": UNPARSED}))
+        offers = src.fetch(alert(min_nights=7, max_nights=7))
+        self.assertTrue(offers)
+        self.assertTrue(all(o.link.startswith(gf.TFS_BASE) for o in offers))
+        self.assertEqual(src.requests_made, 4)
+        self.assertIsNone(src.incomplete)
+
+    def test_business_asks_tfs_first_then_text(self):
+        a = alert(origins=["FRA"], destinations=["BJS"], cabin="business", max_price=3000,
+                  baseline_price=4000, months_ahead=1)
+        src = source(page=FRA_BJS_BIZ)
+        offers = src.fetch(a)
+        self.assertTrue(all(u.startswith(gf.TFS_BASE) for u in src.calls), src.calls)
+        self.assertEqual(src.requests_made, 2, "ein Abruf je Termin")
+        self.assertTrue(all(o.link.startswith(gf.TFS_BASE) for o in offers))
+        # tfs-Link nicht verstanden -> Suchtext
+        src = source(page=by_url(**{"tfs=": UNPARSED, "default": FRA_BJS_BIZ}))
+        rows = src.query("FRA", "BJS", self.DEP, date(2027, 1, 27), "business")
+        self.assertEqual((len(src.calls), rows[0]["price"]), (2, 2690))
+        self.assertFalse(src.calls[1].startswith(gf.TFS_BASE))
+        self.assertIn("verstand den tfs-Link nicht, per Suchtext geprüft", src.notes[0])
+
+    def test_unparsed_twice_is_empty_fetch(self):
+        src = source(page=UNPARSED)
+        with self.assertRaises(EmptyPage) as cm:
+            src.query("FRA", "SHA", self.DEP, date(2027, 1, 27), "business")
+        self.assertIn("nicht verstanden (weder als Suchtext noch als tfs-Link)", str(cm.exception))
+        self.assertEqual((src.requests_made, src.empty_fetches, src.no_results), (2, 1, 0))
+        self.assertNotEqual(src.calls[0], src.calls[1])
+
+    def test_unparsed_cabin_safety_net_stays(self):
+        # tfs-Link liefert Economy statt Business -> verwerfen wie bisher
+        src = source(page=by_url(**{"tfs=": UNPARSED, "default": ZRH_HAM}))
+        with self.assertRaises(ParseError) as cm:
+            src.query("ZRH", "HAM", self.DEP, date(2027, 1, 22), "business")
+        self.assertIn("economy statt business", str(cm.exception))
+
+    def test_no_itineraries_then_seven_nights(self):
+        src = source(page=by_nights({7: FRA_PEK}, NO_ITIN))
+        a = self.china()
+        plan = src.plan(a)
+        self.assertEqual({(r - d).days for _, _, d, r in plan}, {12}, "12 statt 17 Nächte")
+        offers = src.fetch(a)
+        self.assertEqual(len(src.calls), 4, "2 Termine x (12 Nächte + 7 Nächte)")
+        self.assertTrue(offers)
+        self.assertEqual({o.nights for o in offers}, {7}, "echter Rückflug-Termin")
+        dep = offers[0].departure
+        short = build_url("FRA", "PEK", dep, dep + gf.timedelta(days=7))
+        self.assertTrue(all(o.link == short for o in offers if o.departure == dep))
+        self.assertEqual((src.rescued, src.no_results, src.empty_fetches), (2, 0, 0))
+        key = build_url("FRA", "PEK", dep, dep + gf.timedelta(days=12))
+        self.assertEqual(src.insight(key)["lowest"], 720, "Preisniveau der geladenen Seite")
+        self.assertIsNone(src.incomplete)
+        self.assertRegex(src.notes[0], r"^FRA–PEK \d\d\.11\.–\d\d\.\d\d\.2026: Google ohne "
+                                       r"Hin/Rück-Flüge für 12 Nächte, mit 7 Nächten geprüft – "
+                                       r"8 Flüge ab 720 €$")
+
+    def test_no_itineraries_twice_is_no_result(self):
+        src = source(page=NO_ITIN)
+        offers = src.fetch(self.china())
+        self.assertEqual((offers, src.requests_made), ([], 4))
+        self.assertEqual((src.no_results, src.empty_fetches, src.rescued), (2, 0, 0))
+        self.assertIsNone(src.incomplete, "keine Flüge ist kein Fehler")
+        self.assertIn("Google ohne Hin/Rück-Flüge für 12 Nächte, auch mit 7 Nächten keine",
+                      src.notes[0])
+        self.assertFalse(src.down)
+
+    def test_no_itineraries_then_error(self):
+        # live 05.11.2026: HAJ–PEK 12 Nächte ohne Verbindungen, mit 7 Nächten ErrorResponse
+        src = source(page=by_nights({7: ERROR13}, NO_ITIN))
+        self.assertEqual(src.query("HAJ", "PEK", self.DEP, date(2027, 1, 27), nights=(5, 30)), [])
+        self.assertEqual((src.requests_made, src.no_results, src.empty_fetches), (2, 1, 0))
+        self.assertEqual(src.notes, ["HAJ–PEK 15.01.–27.01.2027: Google ohne Hin/Rück-Flüge für "
+                                     "12 Nächte, mit 7 Nächten meldete Google einen Fehler"])
+
+    def test_no_itineraries_without_short_stay(self):
+        # max_nights 6: 7 Nächte liegen nicht in der Spanne -> kein zweiter Abruf
+        src = source(page=NO_ITIN)
+        src.fetch(self.china(min_nights=3, max_nights=6))
+        self.assertEqual((src.requests_made, src.no_results, src.retries), (2, 2, 0))
+        self.assertTrue(src.notes[0].endswith(": Google ohne Hin/Rück-Flüge für 6 Nächte"),
+                        src.notes)
+        # Gegenprüfung genauer Daten: nie mit anderem Rückflug
+        src = source(page=by_url(**{"2027-01-22": FRA_PEK, "default": NO_ITIN}))
+        self.assertIsNone(src.verify("FRA", "PEK", self.DEP, date(2027, 1, 27)))
+        self.assertIn("keine Flüge", src.last_error)
+        self.assertEqual(src.requests_made, 1)
+
+    def test_no_itineraries_oneway(self):
+        src = source(page=NO_ITIN.replace("Hin- und Rückreise", "Nur Hinreise"))
+        offers = src.fetch(self.china(trip="oneway"))
+        self.assertEqual((offers, src.requests_made, src.retries), ([], 2, 0))
+        self.assertEqual((src.no_results, src.empty_fetches), (2, 0))
+        self.assertIsNone(src.incomplete)
+        self.assertEqual(src.notes, [], "one-way ohne Flüge: normal, kein Hinweis")
+
+    def test_error_retries_same_url(self):
+        src = source(page=lambda url: ERROR13 if len(src.calls) == 1 else ZRH_HAM)
+        rows = src.query("ZRH", "HAM", self.DEP, date(2027, 1, 22))
+        self.assertEqual(src.calls[0], src.calls[1])
+        self.assertEqual((len(rows), src.retries, src.rescued, src.empty_fetches), (11, 1, 0, 0))
+        src = source(page=ERROR13)
+        with self.assertRaises(EmptyPage) as cm:
+            src.query("ZRH", "HAM", self.DEP, date(2027, 1, 22))
+        self.assertIn("Fehler (ErrorResponse) auch beim zweiten Abruf", str(cm.exception))
+        self.assertEqual(src.empty_fetches, 1)
+
+    def test_retry_false_and_budget(self):
+        for page in (UNPARSED, ERROR13):
+            src = source(page=page)
+            with self.assertRaises(EmptyPage):
+                src.query("FRA", "PEK", self.DEP, date(2027, 1, 27), retry=False)
+            self.assertEqual((src.requests_made, src.retries, src.empty_fetches), (1, 0, 1))
+        src = source(page=NO_ITIN)
+        self.assertEqual(src.query("FRA", "PEK", self.DEP, date(2027, 1, 27), retry=False,
+                                   nights=(5, 30)), [])
+        self.assertEqual((src.requests_made, src.no_results), (1, 1))
+        src = source(page=NO_ITIN, max_requests=1)
+        src.query("FRA", "PEK", self.DEP, date(2027, 1, 27), nights=(5, 30))
+        self.assertEqual(src.requests_made, 1, "Budget erschöpft -> kein zweiter Abruf")
+
+    def test_second_fetch_only_from_own_share(self):
+        src = source(page=by_nights({7: FRA_PEK}, NO_ITIN), max_requests=6)
+        a, b = self.china(id="a"), self.china(id="b", origins=["MUC"])
+        src.begin_run([a, b])
+        self.assertEqual(src._shares, {"a": 2, "b": 2})
+        offers = src.fetch(a)
+        self.assertEqual((src.requests_made, src.scans_made), (2, 2), "Anteil von a verbraucht")
+        self.assertEqual({o.nights for o in offers}, {7})
+        self.assertIn("1 von 2 Abfragen (Limit)", src.incomplete["message"])
+        self.assertEqual(src._scan_pending, 2, "Anteil von b bleibt reserviert")
+        # letzte Abfrage des Anteils: kein zweiter Abruf in fremde Anteile
+        src.fetch(b)
+        self.assertEqual(src.requests_made, 4)
+        src = source(page=by_url(**{"2026-11-13": FRA_PEK, "default": NO_ITIN}), max_requests=2)
+        src.begin_run([a])
+        src.fetch(a)
+        self.assertEqual((src.requests_made, src.retries, src.no_results), (2, 0, 1))
+        self.assertIsNone(src.incomplete)
+
+    def test_reset_clears_new_counters(self):
+        src = source(page=NO_ITIN)
+        src.fetch(self.china())
+        src.reset()
+        self.assertEqual((src.no_results, src.rescued, src.notes, src._loaded), (0, 0, [], {}))
 
 
 class MonitorIntegrationTest(unittest.TestCase):

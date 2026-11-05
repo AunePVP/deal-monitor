@@ -421,6 +421,8 @@ main:focus-visible { outline: none; }   /* Fokus nach Seitenwechsel (Screenreade
 .h-label.h-bad { background: var(--danger-soft); color: var(--danger); }
 .health-facts { font-size: 13.5px; color: var(--text); margin-top: 2px !important; }
 .health-detail { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.health-notes { margin: 4px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.health-notes li + li { margin-top: 2px; }
 .health-when { font-size: 12.5px; color: var(--muted); text-align: right; white-space: nowrap; padding-top: 3px; }
 .unused-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
 .unused-list li {
