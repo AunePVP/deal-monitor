@@ -1,0 +1,304 @@
+[
+{
+"id": 486810,
+"date": "2026-11-05T11:18:05",
+"date_gmt": "2026-11-05T10:18:05",
+"modified": "2026-11-05T11:18:07",
+"modified_gmt": "2026-11-05T10:18:07",
+"link": "https://travel-dealz.de/ticker/486810/",
+"title": {
+"rendered": "Curacao: Nonstop von Düsseldorf ab 1.709€ in der Corendon Business Class (Angled-Flat)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+2239
+],
+"origins": [
+2939
+]
+},
+{
+"id": 486604,
+"date": "2026-11-04T11:37:46",
+"date_gmt": "2026-11-04T10:37:46",
+"modified": "2026-11-04T11:40:54",
+"modified_gmt": "2026-11-04T10:40:54",
+"link": "https://travel-dealz.de/ticker/486604/",
+"title": {
+"rendered": "China Eastern: Gabelflüge Amsterdam &#8211; Tokio &#8211; Frankfurt ab 426€ (Nov. / Dez. 2026)"
+},
+"meta": {
+"suspend_date": "2026-11-08 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+763
+],
+"destinations": [
+295
+],
+"origins": [
+2961
+]
+},
+{
+"id": 486560,
+"date": "2026-11-04T08:08:13",
+"date_gmt": "2026-11-04T07:08:13",
+"modified": "2026-11-04T08:08:15",
+"modified_gmt": "2026-11-04T07:08:15",
+"link": "https://travel-dealz.de/ticker/486560/",
+"title": {
+"rendered": "Last Minute: Bonaire ab 416€ mit Corendon von Amsterdam (Handgepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+3155
+],
+"origins": [
+2961
+]
+},
+{
+"id": 485957,
+"date": "2026-11-02T08:22:16",
+"date_gmt": "2026-11-02T07:22:16",
+"modified": "2026-11-02T08:23:31",
+"modified_gmt": "2026-11-02T07:23:31",
+"link": "https://travel-dealz.de/ticker/485957/",
+"title": {
+"rendered": "Meilenschnäppchen: LOT Premium Economy Warschau &#8211; Tokio für 57.000 Meilen + 163€ roundtrip"
+},
+"meta": {
+"suspend_date": "2026-11-30 23:59:00"
+},
+"categories": [
+12,
+3225
+],
+"tags": [
+40262
+],
+"destinations": [
+295
+],
+"origins": [
+2993
+]
+},
+{
+"id": 485791,
+"date": "2026-10-30T12:24:41",
+"date_gmt": "2026-10-30T11:24:41",
+"modified": "2026-10-30T12:24:43",
+"modified_gmt": "2026-10-30T11:24:43",
+"link": "https://travel-dealz.de/ticker/485791/",
+"title": {
+"rendered": "Condor: Oneway-Flüge nach San José del Cabo (Mexiko) ab 210€ inkl. Gepäck"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 485569,
+"date": "2026-10-29T10:19:30",
+"date_gmt": "2026-10-29T09:19:30",
+"modified": "2026-10-29T10:19:32",
+"modified_gmt": "2026-10-29T09:19:32",
+"link": "https://travel-dealz.de/ticker/485569/",
+"title": {
+"rendered": "Erbil, Irak ab 390€ in der Eurowings &#8222;Business Class&#8220; (inkl. 400 Miles&amp;More Statuspunkten)"
+},
+"meta": {
+"suspend_date": "2026-11-23 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+34757
+],
+"origins": [
+2945,
+2957,
+2938
+]
+},
+{
+"id": 485437,
+"date": "2026-10-28T13:03:42",
+"date_gmt": "2026-10-28T12:03:42",
+"modified": "2026-10-28T13:03:44",
+"modified_gmt": "2026-10-28T12:03:44",
+"link": "https://travel-dealz.de/ticker/485437/",
+"title": {
+"rendered": "Oneway: Vietnam → Amsterdam ab 194€ mit China Eastern (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [
+2799,
+2695
+],
+"origins": []
+},
+{
+"id": 485052,
+"date": "2026-10-26T12:58:50",
+"date_gmt": "2026-10-26T11:58:50",
+"modified": "2026-10-26T12:58:52",
+"modified_gmt": "2026-10-26T11:58:52",
+"link": "https://travel-dealz.de/ticker/485052/",
+"title": {
+"rendered": "Indonesien: Jakarta ab 462€ mit Air China von Frankfurt inkl. Gepäck (Abflug Nov. 2026)"
+},
+"meta": {
+"suspend_date": "2026-11-18 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+2149
+],
+"origins": [
+2940
+]
+},
+{
+"id": 428070,
+"date": "2026-09-28T11:16:47",
+"date_gmt": "2026-09-28T09:16:47",
+"modified": "2026-10-26T09:51:28",
+"modified_gmt": "2026-10-26T08:51:28",
+"link": "https://travel-dealz.de/ticker/428070/",
+"title": {
+"rendered": "Malediven: Air India Premium Economy von Frankfurt ab 821€"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+3225
+],
+"tags": [],
+"destinations": [
+2145
+],
+"origins": [
+2940
+]
+},
+{
+"id": 467216,
+"date": "2026-10-07T15:22:39",
+"date_gmt": "2026-10-07T13:22:39",
+"modified": "2026-10-26T09:51:17",
+"modified_gmt": "2026-10-26T08:51:17",
+"link": "https://travel-dealz.de/ticker/467216/",
+"title": {
+"rendered": "Reykjavik, Island: Ab 130€ mit Transavia von Brüssel (234€ inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-09T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+971,
+972
+],
+"origins": [
+2963
+]
+},
+{
+"id": 484120,
+"date": "2026-10-20T16:16:09",
+"date_gmt": "2026-10-20T14:16:09",
+"modified": "2026-10-24T09:10:21",
+"modified_gmt": "2026-10-24T07:10:21",
+"link": "https://travel-dealz.de/ticker/484120/",
+"title": {
+"rendered": "New York ab 248€ mit Avianca von Spanien inkl. Gepäck (8h Layover in Bogotá)"
+},
+"meta": {
+"suspend_date": "2026-11-09 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+189
+],
+"origins": [
+3174,
+3145
+]
+},
+{
+"id": 484486,
+"date": "2026-10-22T11:41:11",
+"date_gmt": "2026-10-22T09:41:11",
+"modified": "2026-10-22T11:41:13",
+"modified_gmt": "2026-10-22T09:41:13",
+"link": "https://travel-dealz.de/ticker/484486/",
+"title": {
+"rendered": "San José del Cabo: Condor &#8222;Premium Economy&#8220; ab 760€ roundtrip (660€ mit Amex Platinum)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+3225
+],
+"tags": [],
+"destinations": [
+3088
+],
+"origins": [
+2942,
+2940,
+2945,
+2941,
+2971
+]
+}
+]

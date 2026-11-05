@@ -1,0 +1,178 @@
+[
+{
+"id": 3329,
+"name": "Abu Dhabi [AUH]"
+},
+{
+"id": 1485,
+"name": "Ägypten [EG]"
+},
+{
+"id": 34757,
+"name": "Arbil [EBL]"
+},
+{
+"id": 2386,
+"name": "Auckland [AKL]"
+},
+{
+"id": 25,
+"name": "Bangkok [BKK,DMK]"
+},
+{
+"id": 3555,
+"name": "Belo Horizonte [CNF]"
+},
+{
+"id": 3155,
+"name": "Bonaire [BQ,BON]"
+},
+{
+"id": 2305,
+"name": "Boston [BOS]"
+},
+{
+"id": 1167,
+"name": "Brisbane [BNE]"
+},
+{
+"id": 650,
+"name": "Calgary [YYC]"
+},
+{
+"id": 3292,
+"name": "Canberra [CBR]"
+},
+{
+"id": 1304,
+"name": "Cancun [CUN]"
+},
+{
+"id": 39949,
+"name": "Ceuta [JCU]"
+},
+{
+"id": 2871,
+"name": "Chiang Mai [CNX]"
+},
+{
+"id": 2239,
+"name": "Curaçao [CW,CUR]"
+},
+{
+"id": 131,
+"name": "Dubai [DXB,DWC,SHJ]"
+},
+{
+"id": 666,
+"name": "Dublin [DUB]"
+},
+{
+"id": 983,
+"name": "Europa"
+},
+{
+"id": 2385,
+"name": "Frankfurt [FRA]"
+},
+{
+"id": 2799,
+"name": "Hanoi [HAN]"
+},
+{
+"id": 2695,
+"name": "Ho-Chi-Minh-Stadt [SGN]"
+},
+{
+"id": 971,
+"name": "Island [IS]"
+},
+{
+"id": 2149,
+"name": "Jakarta [JKT,CGK]"
+},
+{
+"id": 2916,
+"name": "Jeddah [JED]"
+},
+{
+"id": 1213,
+"name": "Johannesburg [JNB]"
+},
+{
+"id": 935,
+"name": "Kuala Lumpur [KUL,SZB]"
+},
+{
+"id": 2145,
+"name": "Malediven [MV,MLE]"
+},
+{
+"id": 472,
+"name": "Melbourne [MEL, AVV]"
+},
+{
+"id": 133,
+"name": "Miami [MIA]"
+},
+{
+"id": 189,
+"name": "New York [NYC,JFK,EWR,LGA,SWF]"
+},
+{
+"id": 384,
+"name": "Paris [PAR,CDG,ORY,BVA]"
+},
+{
+"id": 1168,
+"name": "Perth [PER]"
+},
+{
+"id": 978,
+"name": "Phuket [HKT]"
+},
+{
+"id": 972,
+"name": "Reykjavik [KEF,RKV]"
+},
+{
+"id": 2446,
+"name": "Saudi-Arabien [SA]"
+},
+{
+"id": 2276,
+"name": "Seattle [SEA]"
+},
+{
+"id": 895,
+"name": "Singapur [SIN]"
+},
+{
+"id": 997,
+"name": "Sydney [SYD]"
+},
+{
+"id": 2682,
+"name": "Taipeh [TPE,TSA]"
+},
+{
+"id": 295,
+"name": "Tokio [NRT,HND,TYO]"
+},
+{
+"id": 501,
+"name": "Vancouver [YVR]"
+},
+{
+"id": 3722,
+"name": "Victoria, Vancouver Island [YYJ]"
+},
+{
+"id": 883,
+"name": "Washington D.C. [WAS,IAD,DCA]"
+},
+{
+"id": 39934,
+"name": "Weltweit"
+}
+]
