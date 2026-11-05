@@ -1,0 +1,30 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+x-powered-by: PHP/8.4.27
+set-cookie: _fbp=fb.1.1793829046784.150503713.AQECAQIB; expires=Tue, 02 Feb 2027 21:50:46 GMT; Max-Age=7776000; path=/; domain=frankfurtflyer.de; secure; SameSite=Lax
+content-type: application/rss+xml; charset=UTF-8
+last-modified: Wed, 04 Nov 2026 12:00:30 GMT
+etag: "37942e0567a8bdf55cef2a6cd6447719"
+x-redirect-by: WordPress
+location: https://frankfurtflyer.de/feed/rss2/
+x-litespeed-cache: miss
+content-length: 0
+date: Wed, 04 Nov 2026 21:50:48 GMT
+server: LiteSpeed
+alt-svc: h3=":443"; ma=2592000, h3-29=":443"; ma=2592000
+
+HTTP/2 200 
+x-powered-by: PHP/8.4.27
+set-cookie: _fbp=fb.1.1793829048566.1503091823.AQECAQIB; expires=Tue, 02 Feb 2027 21:50:48 GMT; Max-Age=7776000; path=/; domain=frankfurtflyer.de; secure; SameSite=Lax
+last-modified: Wed, 04 Nov 2026 12:00:30 GMT
+etag: "37942e0567a8bdf55cef2a6cd6447719"
+link: <https://frankfurtflyer.de/wp-json/>; rel="https://api.w.org/"
+link: <https://frankfurtflyer.de/>; rel="canonical"
+content-type: application/rss+xml; charset=UTF-8
+x-litespeed-cache-control: public,max-age=604800
+x-litespeed-tag: 306_default,306_URL.aa04d3110d65519f0b564450c449ea9a,306_FD,306_
+x-litespeed-cache: miss
+date: Wed, 04 Nov 2026 21:50:50 GMT
+server: LiteSpeed
+

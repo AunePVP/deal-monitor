@@ -13,11 +13,13 @@ from dataclasses import dataclass, fields
 from datetime import date
 from pathlib import Path
 from typing import Callable
+from urllib.parse import urlsplit
 
 from . import config as config_mod
-from . import notify
+from . import http, notify, radar
 from .config import Config, Settings
 from .models import Alert
+from .sources.feed import FEED_PRESETS, default_preset_ids
 from .store import Store
 
 log = logging.getLogger(__name__)
@@ -25,11 +27,21 @@ log = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ROOT / "config" / "alerts.toml"
 DEFAULT_DATA = ROOT / "data"
-SOURCE_NAMES = ("travelpayouts", "feed")
+#: Reihenfolge = Reihenfolge im Lauf: gecachte Quellen zuerst (ihre Deals werden bei Google
+#: gegengeprüft, solange das Google-Budget reicht), dann Google selbst, zuletzt die Deal-Seiten
+SOURCE_NAMES = ("travelpayouts", "amadeus", "google_flights", "feeds")
+SOURCE_ALIASES = {"feed": "feeds"}            # alter Name aus früheren Versionen
+DEFAULT_SOURCES = ["travelpayouts", "google_flights", "feeds"]
+#: Anteil des Google-Budgets, den der Scan für die Gegenprüfung übrig lässt (1/4)
+VERIFY_RESERVE_DIVISOR = 4
+SOURCE_LABELS = {"travelpayouts": "Travelpayouts (Preis-API)", "google_flights": "Google Flights",
+                 "amadeus": "Amadeus", "feeds": "Deal-Seiten (Feeds)"}
 
 #: Geheimnisse -> Umgebungsvariable. Werden nie im Klartext ausgeliefert.
 SECRETS: dict[str, str] = {
     "travelpayouts_token": "TRAVELPAYOUTS_TOKEN",
+    "amadeus_api_key": "AMADEUS_API_KEY",
+    "amadeus_api_secret": "AMADEUS_API_SECRET",
     "telegram_bot_token": "TELEGRAM_BOT_TOKEN",
     "webhook_token": "WEBHOOK_TOKEN",
 }
@@ -37,18 +49,19 @@ SECRETS: dict[str, str] = {
 
 @dataclass(frozen=True)
 class Spec:
-    kind: str                      # str | int | float | list
+    kind: str                      # str | int | float | bool | list
     default: object
     label: str
     minimum: float | None = None
     maximum: float | None = None
     url: bool = False              # str/list: nur http(s)-Adressen
-    choices: tuple | None = None   # list: erlaubte Einträge
+    choices: tuple | None = None   # str/list: erlaubte Einträge
     required: bool = False         # str: darf nicht leer sein
     percent: bool = False          # float: Anteil, Fehlermeldungen in Prozent
 
 
 _D = Settings()
+_R = radar.DEFAULTS
 VALUES: dict[str, Spec] = {
     "travelpayouts_marker": Spec("str", "", "Travelpayouts-Marker"),
     "webhook_url": Spec("str", "", "Webhook-URL", url=True),
@@ -56,7 +69,8 @@ VALUES: dict[str, Spec] = {
     "ntfy_server": Spec("str", "https://ntfy.sh", "ntfy-Server", url=True, required=True),
     "telegram_chat_id": Spec("str", "", "Telegram-Chat-ID"),
     "interval_hours": Spec("float", 3.0, "Prüfintervall (Stunden)", 0.5, 168),
-    "sources": Spec("list", list(SOURCE_NAMES), "Quellen", choices=SOURCE_NAMES),
+    "feed_interval_minutes": Spec("int", 30, "Feed-Intervall (Minuten)", 10, 1440),
+    "sources": Spec("list", list(DEFAULT_SOURCES), "Quellen", choices=SOURCE_NAMES),
     "currency": Spec("str", _D.currency, "Währung", required=True),
     "scan_months": Spec("int", _D.scan_months, "Monate voraus", 1, 12),
     "history_days": Spec("int", _D.history_days, "Preis-Historie (Tage)", 1, 3650),
@@ -67,12 +81,39 @@ VALUES: dict[str, Spec] = {
     "max_deals_per_alert": Spec("int", _D.max_deals_per_alert, "Meldungen pro Alarm und Lauf",
                                 1, 100),
     "request_delay": Spec("float", _D.request_delay, "Pause zwischen Anfragen (Sekunden)", 0, 10),
-    "feeds": Spec("list", list(_D.feeds), "Feeds", url=True),
+    # Deal-Seiten (Feeds)
+    "feed_presets": Spec("list", default_preset_ids(), "Deal-Seiten",
+                         choices=tuple(p.id for p in FEED_PRESETS)),
+    "feeds": Spec("list", list(_D.feeds), "Eigene Feeds", url=True),
     "feed_max_age_days": Spec("int", _D.feed_max_age_days, "Max. Alter von Feed-Artikeln (Tage)",
                               1, 365),
+    # Google Flights (inoffiziell)
+    "google_max_requests": Spec("int", 40, "Google Flights: Abfragen pro Lauf", 2, 500),
+    "google_verify": Spec("bool", True, "Google Flights: Deals gegenprüfen"),
+    # Amadeus Self-Service
+    "amadeus_env": Spec("str", "test", "Amadeus-Umgebung", choices=("test", "production"),
+                        required=True),
+    "amadeus_max_requests": Spec("int", 100, "Amadeus: Abfragen pro Lauf", 1, 2000),
+    # Radar
+    "radar_enabled": Spec("bool", _R["radar_enabled"], radar.LABELS["radar_enabled"]),
+    "radar_economy_max": Spec("float", _R["radar_economy_max"], radar.LABELS["radar_economy_max"],
+                              0, 100000),
+    "radar_economy_min": Spec("float", _R["radar_economy_min"], radar.LABELS["radar_economy_min"],
+                              0, 100000),
+    "radar_premium_max": Spec("float", _R["radar_premium_max"], radar.LABELS["radar_premium_max"],
+                              0, 100000),
+    "radar_business_max": Spec("float", _R["radar_business_max"],
+                               radar.LABELS["radar_business_max"], 0, 100000),
+    "radar_first_max": Spec("float", _R["radar_first_max"], radar.LABELS["radar_first_max"],
+                            0, 100000),
+    "radar_home_only": Spec("bool", _R["radar_home_only"], radar.LABELS["radar_home_only"]),
 }
 SETTINGS_FIELDS = [f.name for f in fields(Settings) if f.name not in ("database", "report")]
 URL_RE = re.compile(r"^https?://[^\s/$.?#][^\s]*$", re.I)
+#: Zahl mit Tausenderpunkten ("1.300", "12.500"); "0.35" oder "1.5" sind Dezimalzahlen
+THOUSANDS_RE = re.compile(r"-?[1-9]\d{0,2}(?:\.\d{3})+")
+TRUE_WORDS = {"1", "true", "ja", "yes", "on", "an", "wahr"}
+FALSE_WORDS = {"0", "false", "nein", "no", "off", "aus", "falsch", ""}
 
 
 def env_name(name: str) -> str:
@@ -89,9 +130,25 @@ def coerce(name: str, value):
     if spec is None:
         raise ValueError(f"Unbekannte Einstellung '{name}'")
     label = spec.label
+    if spec.kind == "bool":
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)) and value in (0, 1):
+            return bool(value)
+        if isinstance(value, str):
+            v = value.strip().lower()
+            if v in TRUE_WORDS:
+                return True
+            if v in FALSE_WORDS:
+                return False
+        raise ValueError(f"{label}: bitte an oder aus (true/false) angeben")
     if spec.kind in ("int", "float"):
         if isinstance(value, str):
-            value = value.strip().replace(",", ".")
+            value = value.strip()
+            if "," in value:                       # deutsch: "1.299,50" / "1,5"
+                value = value.replace(".", "").replace(",", ".")
+            elif THOUSANDS_RE.fullmatch(value):     # "1.300" = 1300 € (nicht 1,3)
+                value = value.replace(".", "")
             try:
                 value = float(value)
             except ValueError:
@@ -129,6 +186,11 @@ def coerce(name: str, value):
             if not re.fullmatch(r"[A-Za-z]{3}", value):
                 raise ValueError(f"{label}: dreistelliger Währungscode, z. B. eur")
             value = value.lower()
+        if spec.choices:
+            value = value.lower()
+            if value not in spec.choices:
+                raise ValueError(f"{label}: unbekannter Wert '{value}' "
+                                 f"(erlaubt: {', '.join(spec.choices)})")
         return value
     # Liste
     if value is None:
@@ -139,6 +201,8 @@ def coerce(name: str, value):
         raise ValueError(f"{label}: bitte eine Liste angeben")
     out = []
     for v in (v.strip() for v in value):
+        if name == "sources":
+            v = SOURCE_ALIASES.get(v, v)
         if not v or v in out:
             continue
         if spec.choices and v not in spec.choices:
@@ -146,6 +210,15 @@ def coerce(name: str, value):
                              f"(erlaubt: {', '.join(spec.choices)})")
         if spec.url and not URL_RE.match(v):
             raise ValueError(f"{label}: '{v}' ist keine http(s)-Adresse")
+        if name == "feeds":
+            # Eigene Feeds lädt der Server selbst - nicht ins eigene Netz (localhost, NAS, Router)
+            try:
+                reason = http.internal_host(urlsplit(v).hostname)
+            except ValueError:
+                reason = "ungültige Adresse"
+            if reason:
+                raise ValueError(f"{label}: '{v}' ist nicht erlaubt ({reason}) - nur öffentliche "
+                                 "Feeds aus dem Internet")
         out.append(v)
     return out
 
@@ -209,7 +282,12 @@ class AppSettings:
         for n in SECRETS:
             v = self.get(n)
             secrets[n] = {"set": bool(v), "hint": hint(v)}
-        return {"values": self.values(), "secrets": secrets, "env_locked": self.env_locked()}
+        return {"values": self.values(), "secrets": secrets, "env_locked": self.env_locked(),
+                "presets": [{"id": p.id, "name": p.name, "homepage": p.homepage,
+                             "description": p.description, "language": p.language,
+                             "default": p.enabled, "search": p.search} for p in FEED_PRESETS],
+                "source_names": list(SOURCE_NAMES),
+                "env_names": {n: env_name(n) for n in [*VALUES, *SECRETS]}}
 
     def update(self, values: dict | None = None, secrets: dict | None = None) -> None:
         """Teil-Update. Erst alles prüfen, dann speichern. Gesperrte Felder werden ignoriert."""
@@ -249,14 +327,27 @@ class AppSettings:
         self._db = self.store.kv_all()
 
     def configured(self, demo: bool = False) -> dict:
-        src = self.get("sources")
+        """Welche Quellen/Kanäle alles haben, was sie brauchen (Token, Key, Feed-Auswahl).
+
+        Ob eine Quelle *eingeschaltet* ist, steht in ``sources``; die Oberfläche zeigt beides.
+        """
+        feeds_ready = bool(self.get("feed_presets") or self.get("feeds"))
         return {
             "travelpayouts": demo or bool(self.get("travelpayouts_token")),
-            "feed": "feed" in src and bool(self.get("feeds")),
+            "google_flights": True,       # braucht keinen Key (inoffiziell, kann blockiert sein)
+            "amadeus": bool(self.get("amadeus_api_key") and self.get("amadeus_api_secret")),
+            "feeds": feeds_ready,
+            "feed": feeds_ready,          # alter Name (Alias)
+            # Radar braucht aktive Deal-Seiten (es prüft deren Artikel)
+            "radar": feeds_ready and bool(self.get("radar_enabled"))
+                     and "feeds" in (self.get("sources") or []),
             "webhook": bool(self.get("webhook_url")),
             "ntfy": bool(self.get("ntfy_topic")),
             "telegram": bool(self.get("telegram_bot_token") and self.get("telegram_chat_id")),
         }
+
+    def radar_settings(self) -> radar.RadarSettings:
+        return radar.RadarSettings.from_values({n: self.get(n) for n in radar.DEFAULTS})
 
 
 # -- Seeding aus der TOML-Datei ------------------------------------------------
@@ -299,9 +390,58 @@ def ensure_seeded(store: Store, path: str | Path) -> bool:
     return True
 
 
+#: Stand der gespeicherten Einstellungen; ältere Datenbanken werden einmal angepasst
+SETTINGS_VERSION = 2
+
+
+def migrate_settings(store: Store) -> list[str]:
+    """Gespeicherte Einstellungen älterer Versionen einmalig anpassen. Rückgabe: Änderungen.
+
+    Version 1 (bis 0.1, nur Travelpayouts + Travel-Dealz-Feed): Die alte Oberfläche speicherte
+    ``sources = ["travelpayouts", "feed"]`` (= alles, was es gab) und die TOML
+    ``feeds = ["https://travel-dealz.de/feed/"]``. Ohne Anpassung bliebe Google Flights aus
+    (keine Gegenprüfung) und der Travel-Dealz-Hauptfeed würde neben dem Preset doppelt geladen.
+    """
+    from .sources.feed import PRESETS_BY_ID, normalize_link
+    if (store.kv_get("settings_version") or 1) >= SETTINGS_VERSION:
+        return []
+    changes = []
+    raw = store.kv_get("sources")
+    if isinstance(raw, list) and {SOURCE_ALIASES.get(x, x) for x in raw} == {"travelpayouts", "feeds"}:
+        store.kv_set("sources", list(DEFAULT_SOURCES))
+        changes.append("sources")
+    feeds = store.kv_get("feeds")
+    if isinstance(feeds, list) and feeds:
+        presets = store.kv_get("feed_presets")
+        if not isinstance(presets, list):
+            presets = default_preset_ids()
+        known = {normalize_link(u) for pid in presets if pid in PRESETS_BY_ID
+                 for u in PRESETS_BY_ID[pid].urls}
+        kept = [u for u in feeds if not (isinstance(u, str) and normalize_link(u) in known)]
+        if kept != feeds:
+            store.kv_set("feeds", kept)
+            changes.append("feeds")
+    store.kv_set("settings_version", SETTINGS_VERSION)
+    if changes:
+        log.info("Einstellungen aus älterer Version übernommen: %s", ", ".join(changes))
+    return changes
+
+
 # -- Laufzeit-Kontext -------------------------------------------------------------
 
 SourceFactory = Callable[[Config, list[str]], list]
+
+
+def order_sources(names: list[str]) -> list[str]:
+    """Quellen in Lauf-Reihenfolge (``SOURCE_NAMES``), Aliasse aufgelöst, Doppelte entfernt."""
+    wanted = []
+    for n in names:
+        n = SOURCE_ALIASES.get(n, n)
+        if n not in SOURCE_NAMES:
+            raise ValueError(f"Unbekannte Quelle '{n}' ({', '.join(SOURCE_NAMES)})")
+        if n not in wanted:
+            wanted.append(n)
+    return [n for n in SOURCE_NAMES if n in wanted]
 
 
 class Context:
@@ -342,7 +482,9 @@ class Context:
 
     def seed(self) -> bool:
         with self.store() as store:
-            return ensure_seeded(store, self.config_path)
+            seeded = ensure_seeded(store, self.config_path)
+            migrate_settings(store)
+            return seeded
 
     def build_config(self, store: Store, app: AppSettings | None = None) -> Config:
         app = app or self.settings(store)
@@ -369,14 +511,14 @@ class Context:
 
     def sources(self, cfg: Config, store: Store, names: list[str] | None = None,
                 app: AppSettings | None = None) -> list:
+        """Quellen für einen Lauf bauen (frische Objekte: Zähler/Schutzschalter pro Lauf)."""
         app = app or self.settings(store)
-        names = list(names) if names is not None else app.get("sources")
-        for n in names:
-            if n not in SOURCE_NAMES:
-                raise ValueError(f"Unbekannte Quelle '{n}' (travelpayouts, feed)")
+        names = order_sources(list(names) if names is not None else app.get("sources"))
         if self.source_factory:
             return self.source_factory(cfg, names)
+        from .sources import amadeus as amadeus_mod
         from .sources.feed import FeedSource
+        from .sources.googleflights import GoogleFlightsSource
         from .sources.travelpayouts import TravelpayoutsSource
         s = cfg.settings
         out = []
@@ -386,6 +528,29 @@ class Context:
                     token=app.get("travelpayouts_token"), currency=s.currency,
                     scan_months=s.scan_months, request_delay=s.request_delay,
                     marker=app.get("travelpayouts_marker") or None, today=self.today))
-            elif s.feeds:  # leere Liste hieße sonst "Standard-Feed"
-                out.append(FeedSource(s.feeds, max_age_days=s.feed_max_age_days))
+            elif n == "amadeus":
+                out += amadeus_mod.build_sources(
+                    app.get("amadeus_api_key"), app.get("amadeus_api_secret"),
+                    env=app.get("amadeus_env"), max_requests=app.get("amadeus_max_requests"),
+                    scan_months=s.scan_months, request_delay=s.request_delay, today=self.today)
+            elif n == "google_flights":
+                max_requests = app.get("google_max_requests")
+                # Ein Teil des Budgets bleibt der Gegenprüfung gecachter Preise vorbehalten
+                verifies = app.get("google_verify") and bool({"travelpayouts", "amadeus"} & set(names))
+                out.append(GoogleFlightsSource(
+                    max_requests=max_requests, delay=3.0, scan_months=s.scan_months,
+                    today=self.today,
+                    verify_reserve=max_requests // VERIFY_RESERVE_DIVISOR if verifies else 0))
+            elif n == "feeds":
+                presets = app.get("feed_presets")
+                if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen
+                    out.append(FeedSource(presets=presets, extra_feeds=s.feeds,
+                                          max_age_days=s.feed_max_age_days))
         return out
+
+    def verifier(self, sources: list, app: AppSettings):
+        """Die Google-Quelle des Laufs, wenn Deals gecachter Quellen gegengeprüft werden sollen."""
+        if not app.get("google_verify"):
+            return None
+        return next((s for s in sources if getattr(s, "name", "") == "google_flights"
+                     and hasattr(s, "verify")), None)

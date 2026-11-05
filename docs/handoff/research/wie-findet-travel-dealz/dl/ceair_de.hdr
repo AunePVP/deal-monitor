@@ -1,0 +1,35 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 302 Moved Temporarily
+Server: nginx
+Date: Wed, 04 Nov 2026 22:02:49 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Location: https://de.ceair.com/de/
+x-via: 1.1 PS-ORD-04VO6176:11 (Cdn Cache Server V2.0)
+x-ws-request-id: 6aebab89_PS-ORD-04VO6176_29305-42805
+Set-Cookie: FECW=d87aac2c61f198ba71e04b9db77b93c5e1cc4c831b4f409488b023552b80ed2273b8c4074d56bc326bbf804d563ca5d95142d8c2200c27b63905364af420c57a76c791ede1f03ec5bbcdc36431404dd4f2; Expires=Sat, 01-Nov-36 22:02:49 GMT; Path=/; Secure
+Set-Cookie: FECWS=d87aac2c61f198ba71e04b9db77b93c5e1cc4c831b4f409488b023552b80ed2273b8c4074d56bc326bbf804d563ca5d95142d8c2200c27b63905364af420c57a76c791ede1f03ec5bbcdc36431404dd4f2; Expires=Sat, 01-Nov-36 22:02:49 GMT; Path=/; Secure; SameSite=None
+
+HTTP/1.1 200 OK
+Date: Wed, 04 Nov 2026 22:02:50 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Set-Cookie: acw_tc=781bad6517938297699604425e0081cd03142302ae5d5a3b3e0fcf1275317c;path=/;HttpOnly;Max-Age=1800
+server: istio-envoy
+last-modified: Wed, 04 Feb 2026 07:24:00 GMT
+etag: W/"6982f410-1f4a"
+req-cost-time: 4
+req-arrive-time: 1793829769997
+resp-start-time: 1793829770002
+x-envoy-upstream-service-time: 4
+Strict-Transport-Security: max-age=31536000
+x-via: 1.1 PSrbJP1rb10:3 (Cdn Cache Server V2.0), 1.1 PS-ORD-04VO6176:11 (Cdn Cache Server V2.0)
+x-ws-request-id: 6aebab89_PS-ORD-04VO6176_29305-42806
+Set-Cookie: FECW=d87aac2c61f198ba71e04b9db77b93c5e1cc4c831b4f409488b023552b80ed22edfe51aa5fb15338d55f627f7ca1dbb5a471553f4f0dc5496d18b8727002d9997308788d89befedd6705b819526c210863; Expires=Sat, 01-Nov-36 22:02:49 GMT; Path=/; Secure
+Set-Cookie: FECWS=d87aac2c61f198ba71e04b9db77b93c5e1cc4c831b4f409488b023552b80ed22edfe51aa5fb15338d55f627f7ca1dbb5a471553f4f0dc5496d18b8727002d9997308788d89befedd6705b819526c210863; Expires=Sat, 01-Nov-36 22:02:49 GMT; Path=/; Secure; SameSite=None
+Content-Encoding: gzip
+Vary: Accept-Encoding
+

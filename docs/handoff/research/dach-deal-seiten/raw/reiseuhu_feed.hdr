@@ -1,0 +1,19 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 403 
+date: Wed, 04 Nov 2026 21:44:30 GMT
+content-type: application/json; charset=UTF-8
+vary: Accept-Encoding,Cookie,User-Agent
+cf-edge-cache: cache,platform=wordpress
+link: <https://www.reiseuhu.de/wp-json/>; rel="https://api.w.org/"
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0
+server: cloudflare
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server-timing: cfCacheStatus;desc="DYNAMIC"
+server-timing: cfEdge;dur=55,cfOrigin;dur=770
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=XLMNVZ7HbAFXAT%2Flw%2BQ%2BoZq%2BTxX8LZqDoDH0yFjMZLbEjt1OEOYDrv5oaVf3lpm2eRZLY3nxhmBhI96%2FsjVhCySH0kSH4NfIH4LUoOsrWeU0KnGks1Q5KofHMTA%2F9Q7K1g%3D%3D"}]}
+cf-ray: a556cce428ec6cf9-IAD
+alt-svc: h3=":443"; ma=86400
+

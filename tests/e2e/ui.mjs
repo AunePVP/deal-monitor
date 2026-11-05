@@ -241,10 +241,31 @@ async function desktopFlows(browser) {
     await shot(page, "desktop-deals");
   });
 
+  await step("Deals: Radar-Badge, Google-bestätigt, Quelle im Klartext", async () => {
+    const radarCards = page.locator(".deal-card.is-radar");
+    const apiRadar = (await api("GET", "/api/deals?alert_id=radar")).deals;
+    assert(apiRadar.length >= 2, `Demo ohne Radar-Beispiele (${apiRadar.length})`);
+    assert(await radarCards.count() === apiRadar.length, `Radar-Karten ${await radarCards.count()} ≠ ${apiRadar.length}`);
+    const badge = radarCards.first().locator(".badge.r-radar");
+    assert(norm(await badge.textContent()) === "Radar", "Radar-Badge fehlt");
+    const bg = await badge.evaluate((e) => getComputedStyle(e).backgroundColor);
+    assert(bg === "rgb(180, 83, 9)", `Radar-Badge nicht amber: ${bg}`);
+    assert(/Error Fare/.test(await page.locator("#deal-list").textContent()), "Error-Fare-Beispiel fehlt");
+    const verified = page.locator(".deal-card.is-verified");
+    assert(await verified.count() >= 1, "Keine Google-bestätigte Karte in der Demo");
+    assert(norm(await verified.first().locator(".badge-verified").textContent()) === "✓ Google Flights bestätigt", "Bestätigt-Badge falsch");
+    assert(/Google Flights bestätigt: \d+\s€/.test(await verified.first().locator(".reasons").textContent()), "Bestätigt-Grund fehlt");
+    assert(/nicht gegengeprüft/.test(await page.locator("#deal-list").textContent()), "Hinweis „nicht gegengeprüft“ fehlt");
+    const metas = (await page.$$eval(".deal-card .deal-meta", (els) => els.map((e) => e.textContent))).join("\n");
+    assert(/Quelle: Travel-Dealz-Artikel/.test(metas) && /Quelle: Travelpayouts \(Preis-API\)/.test(metas), `Quellen-Klartext fehlt: ${metas}`);
+    assert(!/feed:|travel-dealz-feed|google_flights/.test(metas), `Interne Quellen-Namen sichtbar: ${metas}`);
+  });
+
   await step("Filter-Chip pro Alarm", async () => {
     const chips = page.locator("#deal-filters .chip");
-    assert(await chips.count() === alertsBefore.length + 1, `Chips ${await chips.count()} ≠ ${alertsBefore.length + 1}`);
+    assert(await chips.count() === alertsBefore.length + 2, `Chips ${await chips.count()} ≠ ${alertsBefore.length + 2} (Alle + Alarme + Radar)`);
     assert(norm(await chips.first().textContent()) === "Alle", "Erster Chip ist nicht „Alle“");
+    assert(/^Radar/.test(norm(await chips.last().textContent())), "Letzter Chip ist nicht „Radar“");
     let checked = 0;
     for (const a of alertsBefore) {
       const chip = chips.filter({ hasText: a.name });
@@ -271,6 +292,41 @@ async function desktopFlows(browser) {
     await waitFor(async () => (await page.locator(".deal-card").count()) === all, { msg: "„Alle“ zeigt nicht alle Deals" });
   });
 
+  await step("Radar-Chip filtert und zählt", async () => {
+    const st = await api("GET", "/api/status");
+    const chip = page.locator('#deal-filters .chip[data-id="radar"]');
+    assert(Number(norm(await chip.locator(".chip-count").textContent())) === st.counts.radar_deals, "Radar-Zähler ≠ status.counts.radar_deals");
+    await chip.click();
+    await page.waitForFunction(() => document.querySelector('#deal-filters .chip[data-id="radar"]').getAttribute("aria-pressed") === "true");
+    const expected = (await api("GET", "/api/deals?alert_id=radar")).deals.length;
+    await waitFor(async () => (await page.locator(".deal-card").count()) === expected && (await page.locator(".deal-card.is-radar").count()) === expected,
+      { timeout: 5000, msg: `Radar-Filter: erwartet ${expected} Radar-Karten` });
+    const metas = await page.$$eval(".deal-card .deal-meta", (els) => els.map((e) => e.textContent));
+    assert(metas.every((m) => m.startsWith("Radar: Hammer-Deals")), `Radar-Filter zeigt fremde Deals: ${metas}`);
+    await shot(page, "desktop-deals-radar");
+    await page.locator('#deal-filters .chip[data-id=""]').click();
+    await waitFor(async () => (await page.locator(".deal-card").count()) === (await api("GET", "/api/deals")).deals.length, { msg: "„Alle“ nach Radar" });
+  });
+
+  await step("Status: „nächster Feed-Check in …“", async () => {
+    // Die Demo läuft ohne Zeitplan - Status-Antwort einmal mit einem Feed-Termin anreichern
+    const local = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
+    const p2 = await page.context().newPage();
+    watchConsole(p2, "desktop-status");
+    await p2.route("**/api/status", async (route) => {
+      const res = await route.fetch();
+      const json = await res.json();
+      json.next_run = local(new Date(Date.now() + 150 * 60000));
+      json.next_feed_run = local(new Date(Date.now() + 12.5 * 60000));
+      await route.fulfill({ response: res, json });
+    });
+    await p2.goto(base + "/#deals");
+    await p2.waitForFunction(() => /nächster Feed-Check/.test(document.querySelector("#status-line").textContent));
+    const line = norm(await p2.textContent("#status-line"));
+    assert(/nächster Feed-Check in 1[23] Min\./.test(line), `Statuszeile: ${line}`);
+    await p2.close();
+  });
+
   await step("Abgelaufene-Umschalter (ohne abgelaufene Deals)", async () => {
     const before = await page.locator(".deal-card").count();
     const wait = page.waitForResponse((r) => r.url().includes("/api/deals?status=all"));
@@ -279,8 +335,9 @@ async function desktopFlows(browser) {
     assert(await page.isChecked("#show-expired"), "Umschalter nicht aktiv");
     await page.waitForTimeout(200);
     assert(await page.locator(".deal-card").count() === before, "Anzahl ändert sich ohne abgelaufene Deals");
+    const back = page.waitForResponse((r) => r.url().includes("/api/deals?status=active"));
     await page.click("#view-deals .view-head .switch");
-    await page.waitForResponse((r) => r.url().includes("/api/deals?status=active"));
+    await back;
   });
 
   await step("Tastatur: Sprunglink und Filter-Chips behalten Ansicht und Fokus", async () => {
@@ -533,6 +590,9 @@ async function desktopFlows(browser) {
     const c2 = await alertCard(page, "Zürich → Hamburg (und zurück)");
     await c2.locator("button:has-text('Nur diesen prüfen')").click();
     await waitToast(page, /für diesen Alarm gestartet/);
+    // nicht auf den Toast verlassen: der des vorigen Laufs kann noch sichtbar sein
+    await waitFor(async () => { const r = (await api("GET", "/api/runs")).runs[0]; return r.alert_id === "zrh-ham" && r.finished_at; },
+      { timeout: 30000, msg: "Einzelprüfung endet nicht" });
     await waitToast(page, /Prüfung fertig/, 30000);
     const runs = (await api("GET", "/api/runs")).runs;
     assert(runs[0].alert_id === "zrh-ham" && runs[0].expired > 0, `Lauf: ${JSON.stringify(runs[0])}`);
@@ -550,8 +610,9 @@ async function desktopFlows(browser) {
     const apiExp = (await api("GET", "/api/deals?status=expired")).deals.length;
     assert(await page.locator(".deal-card.expired").count() === apiExp, "Anzahl abgelaufener Karten ≠ API");
     await shot(page, "desktop-deals-abgelaufen");
+    const back = page.waitForResponse((r) => r.url().includes("/api/deals?status=active"));
     await page.click("#view-deals .view-head .switch");
-    await page.waitForResponse((r) => r.url().includes("/api/deals?status=active"));
+    await back;
   });
 
   await step("Meldungen mit Badge, „Alle als gelesen“ → Badge weg", async () => {
@@ -576,7 +637,7 @@ async function desktopFlows(browser) {
     assert(await page.isDisabled("#mark-all-read-btn"), "Button nicht deaktiviert");
   });
 
-  const TOKEN = "tp-e2e-geheim-9f3a";
+  const TOKEN = "test-dummy-token";
   await step("Einstellungen: ungültiges Intervall → Fehlermeldung", async () => {
     await go(page, "einstellungen");
     await page.waitForSelector("#s-interval_hours");
@@ -591,14 +652,14 @@ async function desktopFlows(browser) {
   await step("Einstellungen: Token setzen → maskierter Hinweis, Webhook-URL speichern", async () => {
     await page.fill("#s-travelpayouts_token", TOKEN);
     await page.fill("#s-webhook_url", hookUrl);
-    await page.fill("#s-webhook_token", "hook-geheim-1234");
+    await page.fill("#s-webhook_token", "test-dummy-hook-1234");
     await page.click("#advanced-panel summary");
     await page.fill("#s-renotify_drop", "10");
     await page.fill("#s-request_delay", "0,35");
     await page.click("#settings-save");
     await waitToast(page, /Einstellungen gespeichert/);
     const s = await api("GET", "/api/settings");
-    assert(s.secrets.travelpayouts_token.set && s.secrets.travelpayouts_token.hint === "…9f3a", `Hinweis: ${JSON.stringify(s.secrets.travelpayouts_token)}`);
+    assert(s.secrets.travelpayouts_token.set && s.secrets.travelpayouts_token.hint === "…oken", `Hinweis: ${JSON.stringify(s.secrets.travelpayouts_token)}`);
     assert(!JSON.stringify(s).includes(TOKEN), "Token im Klartext ausgeliefert");
     assert(s.values.webhook_url === hookUrl, "Webhook-URL nicht gespeichert");
     assert(s.values.interval_hours === 6, `Intervall ${s.values.interval_hours}`);
@@ -607,7 +668,7 @@ async function desktopFlows(browser) {
     assert(await page.inputValue("#s-request_delay") === "0,35", "Dezimalkomma nicht angezeigt");
     assert(await page.inputValue("#s-travelpayouts_token") === "", "Passwortfeld nach Speichern nicht leer");
     const tokenField = page.locator(".field", { has: page.locator("#s-travelpayouts_token") });
-    assert(/gesetzt …9f3a/.test(await tokenField.textContent()), "Maskierter Hinweis nicht sichtbar");
+    assert(/gesetzt …oken/.test(await tokenField.textContent()), "Maskierter Hinweis nicht sichtbar");
     assert(!(await page.content()).includes(TOKEN), "Token steht im HTML");
     assert(await page.inputValue("#s-webhook_url") === hookUrl, "Webhook-Feld leer");
     assert(await page.inputValue("#s-renotify_drop") === "10", "Prozentwert falsch angezeigt");
@@ -626,7 +687,7 @@ async function desktopFlows(browser) {
     assert(names.some((t) => /Meldungen/.test(t)) && names.some((t) => /Webhook/.test(t)), `Kanäle: ${names}`);
     assert(items.every((i) => i.cls === "ok"), `Fehlgeschlagen: ${names.join(" | ")}`);
     await waitFor(async () => hooks.length > 0, { timeout: 5000, msg: "Webhook hat nichts empfangen" });
-    assert(hooks[0].method === "POST" && hooks[0].auth === "Bearer hook-geheim-1234", `Webhook: ${JSON.stringify(hooks[0])}`);
+    assert(hooks[0].method === "POST" && hooks[0].auth === "Bearer test-dummy-hook-1234", `Webhook: ${JSON.stringify(hooks[0])}`);
     assert(hooks[0].json && typeof hooks[0].json.text === "string", "Webhook-JSON ohne text");
     await page.waitForSelector("#unread-badge:not([hidden])", { timeout: 20000 });
     await shot(page, "desktop-testmeldung", false);
@@ -637,7 +698,7 @@ async function desktopFlows(browser) {
     await page.waitForSelector("#s-webhook_url");
     await page.waitForFunction((u) => document.querySelector("#s-webhook_url").value === u, hookUrl);
     const tokenField = page.locator(".field", { has: page.locator("#s-travelpayouts_token") });
-    assert(/gesetzt …9f3a/.test(await tokenField.textContent()), "Token-Hinweis nach Reload weg");
+    assert(/gesetzt …oken/.test(await tokenField.textContent()), "Token-Hinweis nach Reload weg");
     assert(await page.inputValue("#s-interval_hours") === "6", "Intervall nach Reload weg");
     await go(page, "alarme");
     await page.waitForSelector(".alert-card");
@@ -666,6 +727,152 @@ async function desktopFlows(browser) {
     assert(/nicht gesetzt/.test(await page.locator(".field", { has: page.locator("#s-travelpayouts_token") }).textContent()), "UI zeigt Token noch");
   });
 
+  const srcSwitch = (id) => page.locator(`.source-card[data-source="${id}"] .source-head .switch`);
+  const srcInput = (id) => `#sources-group input[name=src][value="${id}"]`;
+  const presetBox = (id) => `#feed-presets input[name=preset][value="${id}"]`;
+
+  await step("Quellen-Karten: Zustand, Google-Schalter aus/an", async () => {
+    await go(page, "einstellungen");
+    await page.waitForSelector("#s-google_max_requests");
+    const ids = await page.$$eval(".source-card", (els) => els.map((e) => e.dataset.source));
+    assert(JSON.stringify(ids) === '["travelpayouts","google_flights","amadeus","feeds"]', `Karten: ${ids}`);
+    for (const id of ["travelpayouts", "google_flights", "feeds"]) assert(await page.isChecked(srcInput(id)), `${id} nicht an`);
+    assert(!(await page.isChecked(srcInput("amadeus"))), "Amadeus sollte aus sein");
+    assert((await page.getAttribute('.source-card[data-source="amadeus"]', "class")).includes("is-off"), "Amadeus-Karte nicht als aus markiert");
+    assert(/inoffiziell/.test(await page.textContent('.source-card[data-source="google_flights"]')), "Google-Hinweis „inoffiziell“ fehlt");
+    assert(/nicht live getestet/.test(await page.textContent('.source-card[data-source="amadeus"]')), "Amadeus-Hinweis „ungetestet“ fehlt");
+    await page.waitForFunction(() => document.querySelector('[data-state="google_flights"]').textContent.length > 0);
+    assert(/Kein Key nötig/.test(await page.textContent('[data-state="google_flights"]')), "Google-Zustand fehlt");
+    // Google aus -> speichern -> Reload -> bleibt aus
+    await srcSwitch("google_flights").click();
+    assert(!(await page.isChecked(srcInput("google_flights"))), "Google-Schalter reagiert nicht");
+    assert(norm(await page.textContent('.source-card[data-source="google_flights"] .switch-text')) === "aus", "Schaltertext nicht „aus“");
+    await page.fill("#s-google_max_requests", "12");
+    await page.click('label.switch:has(#s-google_verify)');
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    let s = await api("GET", "/api/settings");
+    assert(JSON.stringify(s.values.sources) === '["travelpayouts","feeds"]', `sources: ${s.values.sources}`);
+    assert(s.values.google_max_requests === 12 && s.values.google_verify === false, `Google-Werte: ${s.values.google_max_requests}/${s.values.google_verify}`);
+    await page.reload();
+    await page.waitForSelector("#s-google_max_requests");
+    assert(!(await page.isChecked(srcInput("google_flights"))), "Google nach Reload wieder an");
+    assert(!(await page.isChecked("#s-google_verify")) && await page.inputValue("#s-google_max_requests") === "12", "Google-Felder nach Reload falsch");
+    // wieder an (Standard für die weiteren Schritte)
+    await srcSwitch("google_flights").click();
+    await page.click('label.switch:has(#s-google_verify)');
+    await page.fill("#s-google_max_requests", "40");
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    s = await api("GET", "/api/settings");
+    assert(s.values.sources.includes("google_flights") && s.values.google_verify === true, "Google nicht wieder an");
+  });
+
+  await step("Deal-Seiten: Preset abwählen, eigener Feed, Intervall → Reload", async () => {
+    await page.fill("#s-feed_interval_minutes", "5");
+    await page.click("#settings-save");
+    await page.waitForSelector("#settings-error:not([hidden])");
+    assert(/mindestens 10/.test(await page.textContent("#settings-error")), `Fehler Feed-Intervall: ${await page.textContent("#settings-error")}`);
+    await page.fill("#s-feed_interval_minutes", "20");
+    await page.fill("#s-feeds", "ftp://example.org/feed");
+    allowedHttpErrors.push(400);
+    const resp = page.waitForResponse((r) => r.url().endsWith("/api/settings") && r.request().method() === "PUT");
+    await page.click("#settings-save");
+    assert((await resp).status() === 400, "Server hätte die ftp-Adresse ablehnen sollen");
+    await page.waitForFunction(() => /http\(s\)-Adresse/.test(document.querySelector("#settings-error").textContent));
+    await page.fill("#s-feeds", "https://example.org/feed/");
+    assert(await page.isChecked(presetBox("mydealz-fluege")), "mydealz sollte vorausgewählt sein");
+    assert(!(await page.isChecked(presetBox("urlaubspiraten"))), "Urlaubspiraten sollte aus sein");
+    await page.uncheck(presetBox("mydealz-fluege"));
+    await page.check(presetBox("urlaubspiraten"));
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    const s = await api("GET", "/api/settings");
+    assert(!s.values.feed_presets.includes("mydealz-fluege") && s.values.feed_presets.includes("urlaubspiraten"), `Presets: ${s.values.feed_presets}`);
+    assert(s.values.feed_interval_minutes === 20 && JSON.stringify(s.values.feeds) === '["https://example.org/feed/"]', `Feeds: ${s.values.feed_interval_minutes} / ${s.values.feeds}`);
+    await page.reload();
+    await page.waitForSelector(presetBox("mydealz-fluege"));
+    assert(!(await page.isChecked(presetBox("mydealz-fluege"))) && await page.isChecked(presetBox("urlaubspiraten")), "Presets nach Reload falsch");
+    assert(await page.inputValue("#s-feed_interval_minutes") === "20" && await page.inputValue("#s-feeds") === "https://example.org/feed/", "Feed-Felder nach Reload falsch");
+    const links = await page.$$eval("#feed-presets a", (as) => as.map((a) => [a.getAttribute("href"), a.getAttribute("rel")]));
+    assert(links.length === s.presets.length && links.every(([h, r]) => /^https:\/\//.test(h) && /noopener/.test(r)), `Preset-Links: ${JSON.stringify(links)}`);
+    await shot(page, "desktop-quellen");
+  });
+
+  const AMADEUS_KEY = "test-dummy-key-abcd";
+  const AMADEUS_SECRET = "test-dummy-secret-wxyz";
+  await step("Amadeus: Key/Secret maskiert, Umgebung, Schalter", async () => {
+    await srcSwitch("amadeus").click();
+    await page.fill("#s-amadeus_api_key", AMADEUS_KEY);
+    await page.fill("#s-amadeus_api_secret", AMADEUS_SECRET);
+    await page.selectOption("#s-amadeus_env", "production");
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    const s = await api("GET", "/api/settings");
+    assert(s.secrets.amadeus_api_key.set && s.secrets.amadeus_api_key.hint === "…abcd", `Key: ${JSON.stringify(s.secrets.amadeus_api_key)}`);
+    assert(s.secrets.amadeus_api_secret.set && s.secrets.amadeus_api_secret.hint === "…wxyz", `Secret: ${JSON.stringify(s.secrets.amadeus_api_secret)}`);
+    assert(s.values.amadeus_env === "production" && s.values.sources.includes("amadeus"), "Amadeus-Werte nicht gespeichert");
+    const raw = JSON.stringify(s) + JSON.stringify(await api("GET", "/api/status"));
+    assert(!raw.includes(AMADEUS_KEY) && !raw.includes(AMADEUS_SECRET), "Amadeus-Secret im Klartext ausgeliefert");
+    assert(await page.inputValue("#s-amadeus_api_key") === "" && await page.inputValue("#s-amadeus_api_secret") === "", "Passwortfelder nach Speichern nicht leer");
+    assert(await page.getAttribute("#s-amadeus_api_secret", "type") === "password", "Secret-Feld ist kein Passwortfeld");
+    assert(/gesetzt …wxyz/.test(await page.locator(".field", { has: page.locator("#s-amadeus_api_secret") }).textContent()), "Maskierter Hinweis fehlt");
+    const html = await page.content();
+    assert(!html.includes(AMADEUS_KEY) && !html.includes(AMADEUS_SECRET), "Amadeus-Secret steht im HTML");
+    // aufräumen: Secrets löschen, Quelle aus
+    await page.check("[data-delete=amadeus_api_key]");
+    await page.check("[data-delete=amadeus_api_secret]");
+    await srcSwitch("amadeus").click();
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    const s2 = await api("GET", "/api/settings");
+    assert(!s2.secrets.amadeus_api_key.set && !s2.secrets.amadeus_api_secret.set && !s2.values.sources.includes("amadeus"), "Amadeus nicht aufgeräumt");
+  });
+
+  await step("Radar-Einstellungen speichern → Reload → Feed-Check wirkt", async () => {
+    assert(await page.isChecked("#s-radar_enabled") && await page.isChecked("#s-radar_home_only"), "Radar-Schalter nicht an");
+    assert(await page.inputValue("#s-radar_business_max") === "1300", `Business-Grenze: ${await page.inputValue("#s-radar_business_max")}`);
+    await page.fill("#s-radar_business_max", "1.100");
+    await page.fill("#s-radar_economy_max", "250,5");
+    await page.click('label.switch:has(#s-radar_home_only)');
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    let s = await api("GET", "/api/settings");
+    assert(s.values.radar_business_max === 1100 && s.values.radar_economy_max === 250.5 && s.values.radar_home_only === false,
+      `Radar-Werte: ${s.values.radar_business_max} / ${s.values.radar_economy_max} / ${s.values.radar_home_only}`);
+    await page.reload();
+    await page.waitForSelector("#s-radar_business_max");
+    assert(await page.inputValue("#s-radar_business_max") === "1100" && await page.inputValue("#s-radar_economy_max") === "250,5", "Radar-Grenzen nach Reload falsch");
+    assert(!(await page.isChecked("#s-radar_home_only")), "„Nur DACH“ nach Reload wieder an");
+    await shot(page, "desktop-radar-einstellungen");
+    // Nur Deal-Seiten prüfen: Bangkok Business 1.199 € liegt jetzt über der Grenze -> läuft ab
+    const before = (await api("GET", "/api/status")).counts.radar_deals;
+    await page.click("#run-feeds-btn");
+    await waitToast(page, /Deal-Seiten werden geprüft/);
+    await waitFor(async () => { const r = (await api("GET", "/api/runs")).runs[0]; return r.trigger === "manual-feeds" && r.finished_at; },
+      { timeout: 30000, msg: "Feed-Lauf endet nicht" });
+    await waitToast(page, /Prüfung fertig/, 30000);
+    const run = (await api("GET", "/api/runs")).runs[0];
+    assert(run.trigger === "manual-feeds" && run.errors.length === 0, `Feed-Lauf: ${JSON.stringify(run)}`);
+    await waitFor(async () => /manuell \(nur Feeds\)/.test(norm(await page.locator("#runs-table tbody tr").first().textContent())),
+      { timeout: 5000, msg: "Laufhistorie zeigt Feed-Lauf nicht" });
+    const after = (await api("GET", "/api/status")).counts.radar_deals;
+    assert(after === before - 1, `Radar-Deals ${before} → ${after}`);
+    await go(page, "deals");
+    await waitFor(async () => Number(norm(await page.locator('#deal-filters .chip[data-id="radar"] .chip-count').textContent())) === after,
+      { msg: "Radar-Zähler nicht aktualisiert" });
+    // zurück auf Standard
+    await go(page, "einstellungen");
+    await page.waitForSelector("#s-radar_business_max");
+    await page.fill("#s-radar_business_max", "1300");
+    await page.fill("#s-radar_economy_max", "300");
+    await page.click('label.switch:has(#s-radar_home_only)');
+    await page.click("#settings-save");
+    await waitToast(page, /Einstellungen gespeichert/);
+    s = await api("GET", "/api/settings");
+    assert(s.values.radar_business_max === 1300 && s.values.radar_home_only === true, "Radar nicht zurückgesetzt");
+  });
+
   await ctx.close();
 }
 
@@ -692,6 +899,30 @@ async function mobileFlows(browser) {
     }
     await page.click("#advanced-panel summary");
     await noHScroll(page, "Einstellungen erweitert (mobil)");
+  });
+
+  await step("Mobil: Quellen-Karten, Radar-Einstellungen und Radar-Filter passen (390 px)", async () => {
+    await go(page, "einstellungen");
+    await page.waitForSelector("#feed-presets input[name=preset]");
+    for (const sel of [".source-card", "#feed-presets .preset", "#radar-panel .field"]) {
+      const boxes = await page.$$eval(sel, (els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.left, r.right]; }));
+      assert(boxes.length > 0, `${sel} fehlt`);
+      assert(boxes.every(([l, r]) => l >= 0 && r <= 390), `${sel} ragt aus dem Bild: ${JSON.stringify(boxes)}`);
+    }
+    // Schalter jeder Quellen-Karte steht neben dem Titel (nicht abgeschnitten)
+    const sw = await page.$$eval(".source-card .source-head > .switch", (els) => els.map((e) => e.getBoundingClientRect().right));
+    assert(sw.length === 4 && sw.every((r) => r <= 390), `Quellen-Schalter: ${sw}`);
+    await noHScroll(page, "Einstellungen Quellen (mobil)");
+    await page.locator("#radar-panel").scrollIntoViewIfNeeded();
+    await shot(page, "mobile-radar-einstellungen", false);
+    await go(page, "deals");
+    await page.waitForSelector('#deal-filters .chip[data-id="radar"]');
+    await page.locator('#deal-filters .chip[data-id="radar"]').click();
+    await waitFor(async () => (await page.locator(".deal-card").count()) > 0
+      && (await page.locator(".deal-card").count()) === (await page.locator(".deal-card.is-radar").count()), { msg: "Radar-Filter mobil" });
+    await noHScroll(page, "Deals Radar (mobil)");
+    await shot(page, "mobile-deals-radar", false);
+    await page.locator('#deal-filters .chip[data-id=""]').click();
   });
 
   await step("Mobil: Speichern-Button nicht von der Tab-Leiste verdeckt", async () => {

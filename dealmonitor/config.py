@@ -22,7 +22,8 @@ class Settings:
     request_delay: float = 0.35       # Pause zwischen API-Anfragen (Sekunden)
     database: str = "data/deals.sqlite"
     report: str = "data/report.html"
-    feeds: list[str] = field(default_factory=lambda: ["https://travel-dealz.de/feed/"])
+    #: eigene Feed-URLs zusätzlich zu den Deal-Seiten-Presets (``feed_presets``)
+    feeds: list[str] = field(default_factory=list)
     feed_max_age_days: int = 14
 
 

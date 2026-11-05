@@ -1,0 +1,39 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+report-to: { "group": "csp-log", "max_age": 43200, "endpoints": [ { "url": "https://www.kayak.com/s/run/cspreport/reportHttp" } ] }
+x-content-type-options: nosniff
+content-security-policy-report-only: upgrade-insecure-requests; object-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' 'report-sample' *.r9cdn.net https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://fundingchoicesmessages.google.com https://accounts.google.com https://*.fullstory.com https://appleid.cdn-apple.com https://connect.facebook.net *.affirm.com *.affirm.ca https://www.googletagmanager.com https://talkdeskchatsdk.talkdeskapp.com https://*.map.naver.com https://nrbe.pstatic.net https://widget.trustpilot.com https://static.criteo.net chrome-extension: https://www.google-analytics.com moz-extension: safari-extension: safari-web-extension: https://asset.trueengage.com https://evt2.klarna.app https://apis.google.com https://*.g.doubleclick.net https://*.cdn4.forter.com https://*.gstatic.com https://translate.google.com https://translate.googleapis.com *.forter.com https://*.cloudfront.net https://*.usabilla.com https://*.googleapis.com https://www.googletagservices.com https://content.r9cdn.net; worker-src blob: chrome-extension: moz-extension: safari-extension: safari-web-extension:; form-action 'self'; base-uri 'self' *.cloudfront.net; report-uri /s/run/cspreport/omni
+set-cookie: p1.med.token=; Expires=Thu, 01 Jan 1970 00:00:10 GMT; Path=/
+set-cookie: Apache=oE9qhA-AAABoaiUXXs-c4-XkUclA; Max-Age=86400000; Expires=Tue, 31 Jul 2029 22:00:57 GMT; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: cluster=4; Max-Age=2700; Expires=Wed, 04 Nov 2026 22:45:57 GMT; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: p1.med.sid=R-4BS3wrZMdWJk3H8wewxu0-93J5hKoxCss54v_I_swWvbX9zuA0bFUvKk9ZSjSd3; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: kayak.t=YTi_DgvTy90kHTvlRM09; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: kayak.mc=AegK-V5C1ve5Lte3XAZzjhwfghwA-aHHwhIwFij3O9uwGdNYlJJRQy551Am3HBf2OrS5qmk41y2woaCHiv9wXaPZjzA04OxiAfJBef1RXMfnHONKRvEzDHLguoNKipcFMy1S-WvnwFD9WtDpCwgC7RnRT8P5T0FmTJkqww1WQX2W8LYtBAHCnIkfFRKYiJwkKE0-oUKohrqr23lFjwSBOtZKjX6g810eNAgx88FDSF4eYwIoDq3pnM4oOzh_KuGymg; Path=/; Secure; HTTPOnly; SameSite=None
+set-cookie: mst_iBfK2g=TySymIuOGH-MSYEugk9xW1suZ0F_eyLJTBBQTjU6L5vwSJTEE-YNY3gBTSFOBSxkdAgVwVFGGxv0s_0JneA1AA; Expires=Wed, 04 Nov 2026 22:15:58 GMT; Max-Age=900; Path=/; HttpOnly
+set-cookie: mst_client=AdRkonGHNrxmtV7o24ohc3BfYyQiwaMNsf7JcRW3J2w75V6IWaO4FDcqbT3OOxJ3jNGJjZrz2i7GWrsAaUjhsK8; Path=/; HttpOnly
+set-cookie: mst_ADIrkw=XDRz-a1jssD19UYTtpJFUlsuZ0F_eyLJTBBQTjU6L5vIYNBdIyXJ4Raw3WazJ_4McK1C4X-Igic_1qhRgM__4g; Expires=Wed, 04 Nov 2026 22:15:58 GMT; Max-Age=900; Path=/; HttpOnly
+server: KAYAK/1.0
+content-security-policy: upgrade-insecure-requests; frame-ancestors 'self'; object-src 'none'; base-uri 'self' *.cloudfront.net
+content-language: de-DE
+referrer-policy: origin-when-cross-origin
+content-encoding: br
+x-r9-mst-target: sparkle
+x-sn-waf-code: 
+x-render-time: 0.117
+x-xss-protection: 1; mode=block
+x-r9-mst-req: DUxw9FhFa7FYt
+permissions-policy: camera=(), microphone=(self), midi=(), geolocation=(self), usb=()
+strict-transport-security: max-age=10886400; preload
+content-type: text/html;charset=UTF-8
+accept-ranges: bytes
+date: Wed, 04 Nov 2026 22:00:58 GMT
+via: 1.1 varnish
+x-served-by: r9, cache-lga-kjfk8660041-LGA, cache-lga-kjfk8660041-LGA
+x-cache: MISS, MISS
+x-cache-hits: 0, 0
+x-timer: S1793829658.956203,VS0,VE169
+vary: Accept-Encoding
+set-cookie: csid=35cec634-4339-4186-bb50-8f043dbb6b04; path=/; Secure; SameSite=Strict;
+cache-control: private, no-store
+

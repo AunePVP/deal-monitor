@@ -1,0 +1,28 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 22:07:33 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+last-modified: Wed, 04 Nov 2026 15:59:42 GMT
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=B%2BDtG40UofoepeTR4eI8SizCykI5MAYSmrJn3LK0%2Fk0tbc0JPriT3q2xTIJEz0QAWNfqtru6VCLeU%2B%2FdhpEqGiLBETANUbaiAzWTvxCBsH1ILJ%2BFxf%2B%2BS5FIIZsM9CuCRuM%3D"}]}
+strict-transport-security: max-age=0; preload
+content-security-policy: frame-ancestors 'self' travel-dealz.de travel-dealz.com forum.travel-dealz.de kreuzfahrten.travel-dealz.de cruises.travel-dealz.com;
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+access-control-allow-origin: https://travel-dealz.com
+access-control-allow-origin: https://cruises.travel-dealz.com
+access-control-allow-origin: https://travel-dealz.de
+access-control-allow-origin: https://kreuzfahrten.travel-dealz.de
+access-control-allow-origin: https://data.travel-dealz.net
+access-control-allow-origin: https://farecollection.travel-dealz.com
+permissions-policy: interest-cohort=()
+vary: Accept-Encoding, Cookie
+cache-control: no-cache, no-store, must-revalidate
+x-rocket-nginx-bypass: Yes
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-cache-status: DYNAMIC
+content-encoding: zstd
+cf-ray: a556eeaa4af01c6f-EWR
+alt-svc: h3=":443"; ma=86400
+

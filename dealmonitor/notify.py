@@ -18,10 +18,16 @@ import os
 from . import http
 from .principles import euro
 from .models import Deal
+from .sources.feed import SAFE_LINK_RE, source_label
 
 log = logging.getLogger(__name__)
 
 STATUS_LABEL = {"new": "NEU", "cheaper": "BILLIGER", "revived": "WIEDER DA", "test": "TEST"}
+
+
+def safe_link(url: str | None) -> str | None:
+    """Nur http(s)-Links weitergeben (ein "javascript:"-Link aus einem Feed wäre klickbarer Code)."""
+    return url if url and SAFE_LINK_RE.match(url.strip()) else None
 
 
 def compare_link(deal: Deal) -> str | None:
@@ -40,18 +46,33 @@ def compare_link(deal: Deal) -> str | None:
     return "https://www.google.com/travel/flights?hl=de&curr=EUR&q=" + quote(q)
 
 
+def price_text(price: float) -> str:
+    """Preis für Meldungen - Radar-Treffer ohne €-Preis in der Überschrift haben 0."""
+    return euro(price) if price and price > 0 else "Preis im Artikel"
+
+
+def article_price(deal: Deal) -> str | None:
+    """Preiszeile für Artikel-Deals - die Überschrift nennt den Preis nicht immer (mydealz)."""
+    o = deal.offer
+    if not o.title:
+        return None
+    return f"Preis: ab {euro(o.price)}" if o.price and o.price > 0 else "Preis: siehe Artikel"
+
+
 def format_text(deal: Deal, status: str) -> str:
     o = deal.offer
     lines = [f"[{STATUS_LABEL.get(status, status)}] {deal.rating}: {deal.headline}"]
+    if (line := article_price(deal)):
+        lines.append(line)
     if o.departure:
         when = o.departure.strftime("%d.%m.%Y")
         if o.return_date:
             when += " – " + o.return_date.strftime("%d.%m.%Y")
         lines.append(f"Reisedaten: {when}")
     lines += [f"• {r}" for r in deal.reasons]
-    lines.append(f"Quelle: {o.source}")
-    if o.link:
-        lines.append(f"Buchen/Artikel: {o.link}")
+    lines.append(f"Quelle: {source_label(o.source)}")
+    if (link := safe_link(o.link)):
+        lines.append(f"Buchen/Artikel: {link}")
     cmp = compare_link(deal)
     if cmp:
         lines.append(f"Gegenprüfen: {cmp}")
@@ -102,6 +123,8 @@ class Telegram:
             o = deal.offer
             parts = [f"<b>✈️ {html.escape(alert_name)} – {STATUS_LABEL.get(status, status)}</b>",
                      f"<b>{html.escape(deal.rating)}:</b> {html.escape(deal.headline)}"]
+            if (line := article_price(deal)):
+                parts.append(html.escape(line))
             if o.departure:
                 when = o.departure.strftime("%d.%m.%Y")
                 if o.return_date:
@@ -109,13 +132,13 @@ class Telegram:
                 parts.append(f"📅 {when}")
             parts += [f"• {html.escape(r)}" for r in deal.reasons]
             links = []
-            if o.link:
-                links.append(f'<a href="{html.escape(o.link)}">Zum Angebot</a>')
+            if (link := safe_link(o.link)):
+                links.append(f'<a href="{html.escape(link)}">Zum Angebot</a>')
             if (cmp := compare_link(deal)):
                 links.append(f'<a href="{html.escape(cmp)}">Gegenprüfen</a>')
             if links:
                 parts.append(" · ".join(links))
-            parts.append(f"<i>Quelle: {html.escape(o.source)}</i>")
+            parts.append(f"<i>Quelle: {html.escape(source_label(o.source))}</i>")
             try:
                 http.request(
                     f"https://api.telegram.org/bot{self.token}/sendMessage",
@@ -143,13 +166,13 @@ class Ntfy:
             # JSON-Publish: UTF-8 (Umlaute, €) ohne Header-Kodierungsprobleme
             msg = {
                 "topic": self.topic,
-                "title": f"{alert_name}: {euro(deal.offer.price)} ({deal.rating})",
+                "title": f"{alert_name}: {price_text(deal.offer.price)} ({deal.rating})",
                 "message": format_text(deal, status),
                 "tags": ["airplane"],
                 "priority": 4 if deal.rating == "Top-Deal" else 3,
             }
-            if deal.offer.link:
-                msg["click"] = deal.offer.link
+            if (link := safe_link(deal.offer.link)):
+                msg["click"] = link
             http.request(self.server, data=json.dumps(msg).encode(),
                          headers={"Content-Type": "application/json"}, method="POST")
 
@@ -172,7 +195,8 @@ class Webhook:
                 "origin": d.offer.origin, "destination": d.offer.destination,
                 "departure": d.offer.departure and d.offer.departure.isoformat(),
                 "return": d.offer.return_date and d.offer.return_date.isoformat(),
-                "link": d.offer.link, "compare": compare_link(d), "source": d.offer.source,
+                "link": safe_link(d.offer.link), "compare": compare_link(d), "source": d.offer.source,
+                "source_label": source_label(d.offer.source), "reasons": list(d.reasons),
             } for d, s in items],
         }
         headers = {"Content-Type": "application/json"}

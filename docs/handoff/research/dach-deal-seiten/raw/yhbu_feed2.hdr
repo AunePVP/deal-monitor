@@ -1,0 +1,20 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:50:52 GMT
+content-type: application/rss+xml; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+cf-cache-status: HIT
+last-modified: Wed, 04 Nov 2026 20:57:26 GMT
+link: <https://youhavebeenupgraded.boardingarea.com/wp-json/>; rel="https://api.w.org/"
+link: <https://youhavebeenupgraded.boardingarea.com/>; rel="canonical"
+x-powered-by: WP Engine
+x-cacheable: CacheAlways: feed
+cache-control: max-age=600, must-revalidate
+x-cache: MISS
+set-cookie: __cf_bm=wYiImfo49iMk0W.EFgveYT2xHnaBArFLBHtSthtn9_Q-1793829052.7362664-1.0.1.1-.xknzOgI_KJ85s6XBvEemckY4dzRt3Tz.eexw1GOBl20q9aSuj2TAhEEHXLsItaln8CZ342YlZ0c6Lec6OycGXhILTfIfQVjZsNF1vhncIe8gD8jwdpWVtLmipku55d7; HttpOnly; SameSite=None; Secure; Path=/; Domain=youhavebeenupgraded.boardingarea.com; Expires=Wed, 04 Nov 2026 22:20:52 GMT
+etag: W/"2ffaa46207c8d9c84928171ad2dda79a"
+cf-ray: a556d63b9f62d6d0-IAD
+alt-svc: h3=":443"; ma=86400
+

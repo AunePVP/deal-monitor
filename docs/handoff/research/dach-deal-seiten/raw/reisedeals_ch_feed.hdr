@@ -1,0 +1,13 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+server: nginx
+date: Wed, 04 Nov 2026 21:51:23 GMT
+content-type: application/rss+xml; charset=UTF-8
+permissions-policy: private-state-token-redemption=(self "https://www.google.com" "https://www.gstatic.com" "https://recaptcha.net" "https://challenges.cloudflare.com" "https://hcaptcha.com"), private-state-token-issuance=(self "https://www.google.com" "https://www.gstatic.com" "https://recaptcha.net" "https://challenges.cloudflare.com" "https://hcaptcha.com")
+x-robots-tag: noindex
+link: <https://alessandrobinder.com/wp-json/>; rel="https://api.w.org/"
+last-modified: Mon, 19 Oct 2026 18:22:50 GMT
+etag: "49bc135a61422da2c99a6a5616eac7cd"
+vary: Accept-Encoding
+

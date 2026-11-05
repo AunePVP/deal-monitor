@@ -1,0 +1,22 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: application/xml; charset=utf-8
+content-length: 55849
+server: Ring Publishing - Accelerator
+date: Wed, 04 Nov 2026 21:53:19 GMT
+vary: user-agent
+cache-control: max-age=60,stale-if-error=0,s-maxage=0
+etag: "55849-73a5694b35dbb5c2"
+x-powered-by: Express
+accept-ch: ect
+permissions-policy: ch-ect=(self "https://assets.aerotelegraph.com")
+x-content-type-options: nosniff
+set-cookie: acc_segment=52; Path=/; Max-Age=31536000; SameSite=None; Secure
+set-cookie: acc_segment_ts=1793829199; Path=/; Max-Age=31536000; SameSite=None; Secure
+x-cache: Miss from cloudfront
+via: 1.1 1b160ce06f83528aa1421cebfe4ac2ca.cloudfront.net (CloudFront)
+x-amz-cf-pop: IAD61-P15
+alt-svc: h3=":443"; ma=86400
+x-amz-cf-id: Pt5aburGPX0EXugM28dvxMrPco8hKT2WDzsOO2WRsf7G7dGghnfdVA==
+

@@ -1,0 +1,41 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 302 
+content-type: text/html; charset=UTF-8
+content-length: 0
+location: https://go.billigfluege.de/?user-id=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIzMTViYjA2Ni0xZTQwLTQ2OTEtYjM2Ny01Zjc2ZThkM2NlMmEiLCJpc3MiOiJ3ZWItYXBwIiwidiI6MywiaXAiOiI6OmZmZmY6MTAwLjEyMi4xMTAuMjIzIiwidXNlckFnZW50IjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEzMC4wLjAuMCBTYWZhcmkvNTM3LjM2IiwiaWF0IjoxNzkzODI5MDcxfQ.81zD4EM8IiQv1kP16F3d1sbMN21vS49YBf-53SnuSdI
+date: Wed, 04 Nov 2026 21:51:11 GMT
+vary: Accept-Encoding
+server: Apache
+p3p: CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"
+referrer-policy: strict-origin-when-cross-origin, no-referrer-when-downgrade
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+content-security-policy: default-src https: blob: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; frame-ancestors 'self'; img-src https: data:
+provided-host: slave05-a
+set-cookie: BILLIGFLUEGSID=OJx8qxtMSpzUzVD0r2vhp3; path=/; secure; HttpOnly; SameSite=Lax
+set-cookie: md9e311bf1674=cEtXenJUcXZMaj09; Expires=Thu, 05-Nov-2026 21:51:11 GMT; Path=/; Secure; HttpOnly
+set-cookie: fstc=cipcmxXQ0UwNHZCYWZ2bko1NW5VVnZCd05mVnpxMnJhVnZCd1IzQkdaNFp3eGpBbVJmVno1ek1hTTBMS2NsTEpwdkJ2V3lvelNrVmEwZlZ5V25EeHFGVndjN1Z6eWhySnVsVndia1lQV2FxYWNsVndia0FteG1CUVY1WlFwa1lQV2hNek0ycVRTNnB6U2FWd2J2TUo1dXBGVzlZUFdCSkhwdkJhZnZuSjU1blVWdkJ3UmZWenEycmFWdkJ3UjNCR1o0Wnd4akFtUmZWejV6TWFNMExLY2xMSnB2QnZXeW96U2tWYTBmVnlJVURJeHZCYWZ2bko1NW5VVnZCd1JmVnpxMnJhVnZCd1IzQkdaNFp3eGpBbVJmVno1ek1hTTBMS2NsTEpwdkJ2V3lvelNrVmEwZlZ4TUJHMFNVWkdEdkJhZnZuSjU1blVWdkJ3UmZWenEycmFWdkJ3UjNCR1o0Wnd4akFtUmZWejV6TWFNMExLY2xMSnB2QnZXeW96U2tWYTBmVnlPREpINHZCYWZ2bko1NW5VVnZCd1JmVnpxMnJhVnZCd1IzQkdaNFp3eGpBbVJmVno1ek1hTTBMS2NsTEpwdkJ2V3lvelNrVmExOQ%3D%3D; Expires=Fri, 04-Dec-2026 21:51:11 GMT; Path=/; Secure; SameSite=Lax
+x-cache: Miss from cloudfront
+via: 1.1 21baf3773089b90a16ce8df9145450bc.cloudfront.net (CloudFront)
+x-amz-cf-pop: ORD56-P7
+alt-svc: h3=":443"; ma=86400
+x-amz-cf-id: pZUToIZvCTFoQ8Jp2YzzNe-OIIx6J0y_oKOj8swMU4dZqYPF_dV1vQ==
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+content-length: 29909
+cache-control: no-cache
+date: Wed, 04 Nov 2026 21:51:11 GMT
+etag: W/"74d5-H5lHbEj11cyJ3NRCHi9RAGts610"
+vary: Cookie, Accept-Encoding
+x-powered-by: Express
+x-cache: Miss from cloudfront
+via: 1.1 31a8c4d4c1743052a7d08def9c600f98.cloudfront.net (CloudFront)
+x-amz-cf-pop: ORD58-P17
+alt-svc: h3=":443"; ma=86400
+x-amz-cf-id: dWxNS-LZB6a37FWKsEEVMcuxn823ur59d69DvC2v-RMNR0K3ZiWt7A==
+

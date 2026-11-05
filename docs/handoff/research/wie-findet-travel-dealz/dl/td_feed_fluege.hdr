@@ -1,0 +1,20 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 404 
+date: Wed, 04 Nov 2026 22:04:47 GMT
+content-type: application/rss+xml; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+expires: Wed, 11 Jan 1984 05:00:00 GMT
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+last-modified: Wed, 04 Nov 2026 21:47:01 GMT
+etag: W/"0c13e2db70108e9cc75e3449894fc159"
+link: <https://travel-dealz.de/wp-json/>; rel="https://api.w.org/"
+content-encoding: gzip
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+strict-transport-security: max-age=0; preload
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=nvFxPOAUbMe5kyMN8%2B8f%2BfL3iybEHdtbqXC%2Fq8lb2QoFgR9ZVBhMjHn1ogAdH778CI9Ydso6x6soLeLqdRghxsELqAzTp6n83MeeuRwsCwyR%2FBwsdemeH3sjwAFvuU1TD1A%3D"}]}
+cf-ray: a556ea987d9b5791-EWR
+alt-svc: h3=":443"; ma=86400
+

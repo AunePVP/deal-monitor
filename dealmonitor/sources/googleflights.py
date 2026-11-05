@@ -1,0 +1,647 @@
+"""Preisquelle: Google Flights (inoffiziell - serverseitig gerenderte Ergebnisseite).
+
+Google Flights hat keine freie API. Die Ergebnisseite
+
+    https://www.google.com/travel/flights?hl=de&curr=EUR&q=Flights%20from%20ZRH%20to%20HAM
+        %20on%202027-01-15%20through%202027-01-19
+
+enthält die Ergebniszeilen aber bereits im HTML (kein JavaScript nötig): pro Flug ein
+``aria-label`` wie
+
+    "Ab 183 Euro für Hin- und Rückflug. Nonstop-Flug mit SWISS. Abflug von Flughafen Zürich
+     am Freitag, Januar 15, 07:00 und Ankunft an Flughafen Hamburg am Freitag, Januar 15, 08:35.
+     Gesamtdauer: 1 Std. 35 Min.."
+
+sowie Preis-Spans ``<span aria-label="183 Euro" role="text">183 €</span>``. Ein schlichter
+HTTP-GET mit Browser-User-Agent und ``Accept-Language: de-DE`` genügt.
+
+Das ist **inoffiziell**: Google kann die Seite jederzeit umbauen oder mit einer Consent-/
+Captcha-Seite bzw. HTTP 429/403 antworten. Deshalb wird defensiv geparst, zwischen Anfragen
+2-4 s (zufällig) gewartet, pro Lauf höchstens ``max_requests`` Mal angefragt und bei einer
+Blockade sofort mit ``SourceError`` abgebrochen (Schutzschalter ``_down`` für den Lauf).
+
+Weil die Preise echte Live-Preise sind, fließen sie in die Preis-Historie ein
+(``records_history = True``) und dienen zur Gegenprüfung gecachter Quellen (``verify``).
+"""
+
+from __future__ import annotations
+
+import gzip
+import html as html_mod
+import logging
+import random
+import re
+import time
+import zlib
+from datetime import date, timedelta
+from urllib.parse import quote, urlsplit
+
+from .. import http, regions
+from ..models import Alert, Offer
+from . import SourceError
+
+log = logging.getLogger(__name__)
+
+BASE = "https://www.google.com/travel/flights"
+USER_AGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
+HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "de-DE,de;q=0.9",
+    "Accept-Encoding": "gzip",
+}
+TIMEOUT = 30
+BLOCKED_MESSAGE = "Google Flights blockiert gerade – später erneut"
+#: Obergrenze für eine Ergebnisseite (komprimiert; normal ~0,3 MB gzip / 2,4 MB entpackt)
+MAX_PAGE_BYTES = 8_000_000
+#: günstigste Ergebnisse je Abfrage, die als Offers weitergegeben werden
+MAX_RESULTS_PER_QUERY = 10
+CABIN_QUERY = {"economy": "", "premium": " premium economy class",
+               "business": " business class", "first": " first class"}
+
+#: Ziele innerhalb Europas -> Kurzstrecke (7 Nächte Standardaufenthalt), sonst 12 Nächte
+EUROPE_CODES: frozenset[str] = frozenset(
+    code for key in ("DE", "CH", "AT", "DACH") for code in regions.REGIONS[key]
+) | frozenset("""
+    LON LHR LGW STN LTN LCY MAN EDI GLA BHX BRS DUB ORK PAR CDG ORY NCE LYS MRS TLS BOD
+    AMS RTM EIN BRU CRL LUX MAD BCN AGP PMI IBZ VLC SVQ ALC BIO LIS OPO FAO ROM FCO CIA
+    MIL MXP LIN BGY VCE NAP FLO BLQ PSA CTA PMO CAG OLB ATH SKG HER RHO JTR CFU CPH AAR
+    BLL OSL BGO TRD SVG STO ARN BMA GOT MMX HEL TKU TLL RIX VNO WAW KRK GDN WRO POZ KTW
+    PRG BRQ BUD BTS LJU ZAG SPU DBV BEG SOF VAR BOJ OTP CLJ TIA SKP TGD PRN IST SAW ADB
+    AYT DLM BJV ESB KEF REK TIV LCA PFO MLA EFL ZTH KGS CHQ GRO REU SDR XRY MAH LPA TFS
+    TFN ACE FUE SPC EMA LPL NCL LBA ABZ BFS BHD SNN NOC KIR CWL SOU EXT INV JER GCI
+""".split())
+
+#: Kennzeichen von Consent-/Captcha-/Sperrseiten (Titel bzw. Formular/Text im Seitenkopf)
+BLOCK_TITLE_RE = re.compile(
+    r"<title>[^<]*(?:Bevor (?:du|Sie) zu Google weiterge|Before you continue to Google|"
+    r"sorry/index|Zugriff verweigert|Access denied)[^<]*</title>", re.I)
+BLOCK_BODY_RE = re.compile(
+    r"<form[^>]+consent\.google\.com|ungewöhnlichen Datenverkehr|unusual traffic|"
+    r"www\.google\.com/sorry/|id=\"recaptcha\"|class=\"g-recaptcha\"", re.I)
+NO_FLIGHTS_RE = re.compile(r"keine (?:Flüge|Ergebnisse|passenden Flüge)|no flights found", re.I)
+
+# -- Parser-Regexe ----------------------------------------------------------------------
+LABEL_RE = re.compile(r"""aria-label=(["'])(Ab\s+\d[\d.]*(?:,\d+)?\s+Euro\b.*?)\1""", re.S)
+PRICE_SPAN_RE = re.compile(r"""<span[^>]*aria-label=(["'])(\d[\d.]*(?:,\d+)?)\s+Euro\1[^>]*>""")
+PRICE_RE = re.compile(r"Ab\s+(\d[\d.]*)(?:,(\d+))?\s+Euro")
+AIRLINE_RE = re.compile(
+    r"(?:Nonstop-)?Flug mit (.+?)"
+    r"(?: mit (?:einer|zwei|drei|\d+) Zwischenlandung(?:en)?)?\.(?:\s|$)")
+STOPS_WORDS = {"einer": 1, "eine": 1, "zwei": 2, "drei": 3}
+STOPS_RE = re.compile(r"mit (einer|zwei|drei|\d+) Zwischenlandung")
+STOPS_OF_RE = re.compile(r"Zwischenstopp \(\d+ von (\d+)\)")
+STOPS_N_RE = re.compile(r"(\d+) Zwischenstopps?")
+DURATION_RE = re.compile(r"Gesamtdauer:\s*(?:(\d+)\s*Std\.?)?\s*(?:(\d+)\s*Min\.?)?")
+DEPARTURE_RE = re.compile(
+    r"Abflug von (?:Flughafen )?(.+?) am ([^,]+), ([^\s,]+) (\d{1,2}), (\d{1,2}:\d{2})")
+LOGO_RE = re.compile(r"airline_logos/\d+px/(?:dark/)?([A-Z0-9]{2})\.png")
+#: Preisphrase: "Ab 183 Euro für Hin- und Rückflug." (Hin/Rück) bzw. "Ab 697 Euro." (one-way)
+TRIP_PHRASE_RE = re.compile(r"Ab\s+\d[\d.]*(?:,\d+)?\s+Euro(\s+für Hin- und Rückflug)?\s*\.")
+#: Ausgewählte Optionen der Suchmaske (Reiseart, Kabine) - Attributname ist eine Zufalls-ID
+SELECTED_OPTION_RE = re.compile(
+    r"""role=["']option["'][^>]*aria-selected=["']true["'][^>]*=["']"""
+    r"""(Economy Class|Premium Economy|Business Class|First Class|"""
+    r"""Hin- und Rückreise|Nur Hinreise|Mehrere Städte)["']""")
+OPTION_VALUES = {"Economy Class": ("cabin", "economy"), "Premium Economy": ("cabin", "premium"),
+                 "Business Class": ("cabin", "business"), "First Class": ("cabin", "first"),
+                 "Hin- und Rückreise": ("trip", "roundtrip"), "Nur Hinreise": ("trip", "oneway"),
+                 "Mehrere Städte": ("trip", "multi")}
+
+
+class GoogleBlocked(SourceError):
+    """Google antwortet mit Consent-/Captcha-Seite oder HTTP 429/403."""
+
+
+class ParseError(RuntimeError):
+    """Seite geladen, aber keine Ergebnisse erkennbar (Seitenaufbau geändert?)."""
+
+
+# -- URL und Abruf ----------------------------------------------------------------------
+def build_url(origin: str, dest: str, departure: date, return_date: date | None = None,
+              cabin: str = "economy", roundtrip: bool = True) -> str:
+    """Google-Flights-Suche als URL (dient auch als Buchen-/Gegenprüfen-Link)."""
+    q = f"Flights from {origin.upper()} to {dest.upper()} on {departure.isoformat()}"
+    if roundtrip and return_date:
+        q += f" through {return_date.isoformat()}"
+    else:
+        q += " one way"
+    q += CABIN_QUERY.get(cabin, "")
+    return f"{BASE}?hl=de&curr=EUR&q={quote(q)}"
+
+
+def blocked_reason(url: str, html: str) -> str | None:
+    """Erkennt Consent-/Captcha-/Sperrseiten (None = normale Ergebnisseite)."""
+    try:
+        parts = urlsplit(url)
+    except ValueError:
+        parts = None
+    if parts is not None:
+        host = parts.netloc.lower()
+        if host.startswith("consent.") or "/sorry" in parts.path:
+            return f"Weiterleitung auf {host}{parts.path}"
+    head = html[:200_000]
+    if BLOCK_TITLE_RE.search(head):
+        return "Consent-/Sperrseite statt Ergebnissen"
+    if BLOCK_BODY_RE.search(head):
+        return "Captcha-/Consent-Formular statt Ergebnissen"
+    return None
+
+
+def fetch_html(url: str, timeout: float = TIMEOUT) -> str:
+    """Lädt eine Google-Flights-Seite. ``GoogleBlocked`` bei Sperre, ``HttpError`` sonst."""
+    try:
+        resp = http.request(url, headers=HEADERS, timeout=timeout, retries=0, full=True,
+                            max_bytes=MAX_PAGE_BYTES)
+    except http.HttpError as e:
+        if e.status in (403, 429):
+            raise GoogleBlocked(f"HTTP {e.status}") from e
+        raise
+    body = resp.body
+    encoding = resp.header("Content-Encoding").lower()
+    try:
+        if "gzip" in encoding:
+            body = gzip.decompress(body)
+        elif "deflate" in encoding:
+            body = zlib.decompress(body)
+    except (OSError, zlib.error, EOFError) as e:
+        log.warning("Google Flights: %s-Antwort nicht dekodierbar (%s), nutze Rohdaten",
+                    encoding, e)
+    text = body.decode("utf-8", errors="replace")
+    reason = blocked_reason(resp.url, text)
+    if reason:
+        raise GoogleBlocked(reason)
+    return text
+
+
+# -- Parser -----------------------------------------------------------------------------
+def _int(value: str) -> int:
+    return int(value.replace(".", ""))
+
+
+def parse_label(label: str) -> dict | None:
+    """Zerlegt einen Ergebnis-``aria-label``-Text ("Ab 183 Euro für Hin- und Rückflug. ...")."""
+    text = html_mod.unescape(label).replace("\xa0", " ")
+    text = re.sub(r"\s+", " ", text).strip()
+    m = PRICE_RE.search(text)
+    if not m:
+        return None
+    price = float(_int(m.group(1)))
+    if m.group(2):
+        price += float("0." + m.group(2))
+    roundtrip: bool | None = None
+    if (t := TRIP_PHRASE_RE.search(text)):
+        roundtrip = bool(t.group(1))
+    elif "Hin- und Rückflug" in text:
+        roundtrip = True
+    stops: int | None = None
+    if re.search(r"\bNonstop\b", text):
+        stops = 0
+    elif (m := STOPS_RE.search(text)):
+        word = m.group(1)
+        stops = STOPS_WORDS.get(word) or int(word)
+    elif (m := STOPS_OF_RE.search(text)):
+        stops = int(m.group(1))
+    elif (m := STOPS_N_RE.search(text)):
+        stops = int(m.group(1))
+    airline = None
+    if (m := AIRLINE_RE.search(text)):
+        airline = m.group(1).strip()
+    duration = None
+    if (m := DURATION_RE.search(text)) and (m.group(1) or m.group(2)):
+        duration = int(m.group(1) or 0) * 60 + int(m.group(2) or 0)
+    departure_airport = departure_time = None
+    if (m := DEPARTURE_RE.search(text)):
+        departure_airport, departure_time = m.group(1), m.group(5)
+    return {
+        "price": price,
+        "airline": airline,
+        "airline_code": None,
+        "stops": stops,
+        "duration_min": duration,
+        "departure_time": departure_time,
+        "departure_airport": departure_airport,
+        "roundtrip": roundtrip,
+        "label": text,
+    }
+
+
+def parse_results(html: str) -> list[dict]:
+    """Alle Flugergebnisse einer Google-Flights-Seite, dedupliziert und nach Preis sortiert.
+
+    Jedes Ergebnis: ``price`` (EUR), ``airline`` (Name, z. B. "SWISS"), ``airline_code``
+    (IATA aus dem Logo, falls eindeutig), ``stops``, ``duration_min``, ``departure_time``
+    ("07:00"), ``roundtrip`` (True/False/None), ``label`` (Originaltext).
+    Findet der Parser keine ``aria-label``-Zeilen, bleibt als Rückfallebene der Preis aus
+    den ``<span aria-label="183 Euro">``-Elementen (ohne Airline/Umstiege).
+    """
+    matches = list(LABEL_RE.finditer(html))
+    results: list[dict] = []
+    seen: set[tuple] = set()
+    for i, m in enumerate(matches):
+        row = parse_label(m.group(2))
+        if not row:
+            continue
+        # Der Rest des Listeneintrags enthält Logo (IATA-Code) und Preis-Span
+        end = matches[i + 1].start() if i + 1 < len(matches) else min(len(html), m.end() + 40_000)
+        li_end = html.find("</li>", m.end(), end)
+        segment = html[m.end():li_end if li_end != -1 else end]
+        codes = {c for c in LOGO_RE.findall(segment)}
+        if len(codes) == 1:
+            row["airline_code"] = codes.pop()
+        key = (row["price"], row["airline"], row["stops"], row["departure_time"],
+               row["duration_min"])
+        if key in seen:
+            continue
+        seen.add(key)
+        results.append(row)
+    if not results:
+        prices: list[float] = []
+        for m in PRICE_SPAN_RE.finditer(html):
+            value = float(_int(m.group(2).split(",")[0]))
+            if value not in prices:
+                prices.append(value)
+        results = [{"price": p, "airline": None, "airline_code": None, "stops": None,
+                    "duration_min": None, "departure_time": None, "departure_airport": None,
+                    "roundtrip": None, "label": f"{p:g} Euro"} for p in prices]
+    results.sort(key=lambda r: (r["price"], r["stops"] if r["stops"] is not None else 9,
+                                r["duration_min"] or 0))
+    return results
+
+
+def page_settings(html: str) -> dict[str, str | None]:
+    """Reiseart und Kabine, die Google tatsächlich angewendet hat (aus der Suchmaske).
+
+    ``{"trip": "roundtrip"|"oneway"|"multi"|None, "cabin": "economy"|...|None}`` - None,
+    wenn die Angabe nicht gefunden wurde (Seitenaufbau geändert).
+    """
+    out: dict[str, str | None] = {"trip": None, "cabin": None}
+    for m in SELECTED_OPTION_RE.finditer(html):
+        key, value = OPTION_VALUES[m.group(1)]
+        if out[key] is None:
+            out[key] = value
+    return out
+
+
+def row_problem(row: dict, *, max_stops: int | None = None, max_minutes: float | None = None,
+                exclude_airlines=()) -> str | None:
+    """Warum eine Ergebniszeile nicht zu den Alarm-Regeln passt (None = passt)."""
+    stops, minutes = row.get("stops"), row.get("duration_min")
+    if max_stops is not None and stops is not None and stops > max_stops:
+        return f"{stops} Umstiege"
+    if max_minutes is not None and minutes is not None and minutes > max_minutes:
+        return f"{minutes / 60:.1f} h"
+    excluded = {a.upper() for a in exclude_airlines or ()}
+    if excluded:
+        code = (row.get("airline_code") or "").upper()
+        name = (row.get("airline") or "").upper()
+        if code in excluded or name in excluded:
+            return f"Airline {row.get('airline') or code} ausgeschlossen"
+    return None
+
+
+def alert_criteria(alert: Alert) -> dict:
+    """Umstiege, Dauer und ausgeschlossene Airlines eines Alarms (für ``row_problem``)."""
+    return {"max_stops": alert.max_stops,
+            "max_minutes": alert.max_duration_hours * 60 if alert.max_duration_hours else None,
+            "exclude_airlines": alert.exclude_airlines}
+
+
+# -- Datumsplanung ----------------------------------------------------------------------
+def _months(start: date, count: int) -> list[tuple[int, int]]:
+    out, y, m = [], start.year, start.month
+    for _ in range(max(count, 0)):
+        out.append((y, m))
+        m += 1
+        if m > 12:
+            y, m = y + 1, 1
+    return out
+
+
+def is_longhaul(origin: str, dest: str) -> bool:
+    return origin.upper() not in EUROPE_CODES or dest.upper() not in EUROPE_CODES
+
+
+def stay_nights(alert: Alert, origin: str, dest: str) -> int:
+    """Aufenthalt für den Scan: Mitte aus min/max_nights, sonst 7 (Europa) bzw. 12 Nächte."""
+    default = 12 if is_longhaul(origin, dest) else 7
+    lo, hi = alert.min_nights, alert.max_nights
+    if lo is not None and hi is not None:
+        nights = (lo + hi) // 2
+    elif lo is not None:
+        nights = max(lo, default)
+    elif hi is not None:
+        nights = min(hi, default)
+    else:
+        nights = default
+    return max(nights, 1)
+
+
+def scan_dates(year: int, month: int, today: date, *, min_lead_days: int = 2) -> list[date]:
+    """Zwei Abflugtage je Monat: der Freitag und der Dienstag um die Monatsmitte (12.-18.).
+
+    Liegt der Tag schon (fast) in der Vergangenheit, wird um eine Woche verschoben, solange
+    der Monat reicht - sonst entfällt der Termin.
+    """
+    out: list[date] = []
+    anchor = date(year, month, 12)
+    for weekday in (4, 1):   # Freitag, Dienstag
+        day = anchor + timedelta(days=(weekday - anchor.weekday()) % 7)
+        while day.month == month and day < today + timedelta(days=min_lead_days):
+            day += timedelta(days=7)
+        if day.month == month and day.year == year:
+            out.append(day)
+    return out
+
+
+# -- Quelle -----------------------------------------------------------------------------
+class GoogleFlightsSource:
+    name = "google_flights"
+    records_history = True
+
+    #: so viele nicht auswertbare Seiten hintereinander -> Lauf abbrechen (Seitenaufbau geändert?)
+    MAX_CONSECUTIVE_FAILURES = 3
+
+    def __init__(
+        self,
+        max_requests: int = 40,
+        delay: float = 3.0,
+        verify_only: bool = False,
+        *,
+        scan_months: int = 6,
+        today: date | None = None,
+        timeout: float = TIMEOUT,
+        fetcher=None,
+        seed: int | None = None,
+        verify_reserve: int = 0,
+    ) -> None:
+        self.max_requests = max(int(max_requests), 0)
+        #: so viele Abfragen lässt der Scan für die Gegenprüfung übrig
+        self.verify_reserve = min(max(int(verify_reserve), 0), self.max_requests)
+        self.delay = max(float(delay), 0.0)
+        self.verify_only = verify_only
+        self.scan_months = scan_months
+        self.today = today
+        self.timeout = timeout
+        #: ``fetcher(url) -> html`` - für Tests/Demo austauschbar (Standard: ``fetch_html``)
+        self.fetcher = fetcher
+        self.rng = random.Random(seed)
+        #: nach ``fetch``: None = alles abgefragt, sonst {"message": str, "routes": {(o, d), ...}}
+        self.incomplete: dict | None = None
+        #: Grund des letzten gescheiterten ``verify`` (None = ok)
+        self.last_error: str | None = None
+        self.reset()
+
+    # -- Zustand pro Lauf ----------------------------------------------------
+    def reset(self) -> None:
+        """Zähler, Cache und Schutzschalter für einen neuen Lauf zurücksetzen."""
+        self.requests_made = 0
+        self.verifications = 0
+        self.incomplete = None
+        self.last_error = None
+        self._down: str | None = None
+        self._cache: dict[str, list[dict]] = {}
+        self._last_request_at: float | None = None
+        self._consecutive_failures = 0
+        #: Scan-Budget je Alarm (``begin_run``); ohne Eintrag gilt das ganze Scan-Budget
+        self._shares: dict[str, int] = {}
+
+    @property
+    def scan_budget(self) -> int:
+        """Abfragen, die der Scan insgesamt verbrauchen darf (Rest bleibt der Gegenprüfung)."""
+        return max(self.max_requests - self.verify_reserve, 0)
+
+    def begin_run(self, alerts: list[Alert]) -> None:
+        """Scan-Budget fair auf die Alarme des Laufs verteilen: jeder bekommt gleich viel,
+        wer weniger braucht, gibt den Rest an die anderen weiter. Sonst verbrauchen die ersten
+        Alarme alles und die letzten (z. B. China mit hunderten Strecken) bekommen nie Google."""
+        self._shares = {}
+        if self.verify_only:
+            return
+        needs = sorted((len(self.plan(a)), a.id) for a in alerts)
+        budget = self.scan_budget
+        for k, (need, alert_id) in enumerate(needs):
+            given = min(need, budget // (len(needs) - k))   # kleinster Bedarf zuerst
+            self._shares[alert_id] = given
+            budget -= given
+
+    @property
+    def remaining(self) -> int:
+        return max(self.max_requests - self.requests_made, 0)
+
+    @property
+    def verify_limit(self) -> int:
+        """Höchstens die Hälfte des Budgets geht in Gegenprüfungen."""
+        return self.max_requests // 2
+
+    @property
+    def down(self) -> str | None:
+        return self._down
+
+    # -- Abruf ----------------------------------------------------------------
+    def _pause(self) -> None:
+        if self._last_request_at is None or self.delay <= 0:
+            return
+        wanted = self.rng.uniform(max(self.delay - 1.0, 0.0), self.delay + 1.0)
+        wait = wanted - (time.monotonic() - self._last_request_at)
+        if wait > 0:
+            time.sleep(wait)
+
+    def query(self, origin: str, dest: str, departure: date, return_date: date | None,
+              cabin: str = "economy", roundtrip: bool = True) -> list[dict]:
+        """Eine Google-Abfrage (gecacht pro Lauf, zählt auf ``max_requests``).
+
+        Wirft ``GoogleBlocked`` (und setzt den Schutzschalter), ``http.HttpError`` bei
+        Netzwerkfehlern, ``ParseError`` wenn keine Ergebnisse erkennbar sind und
+        ``SourceError`` wenn das Budget erschöpft ist.
+        """
+        url = build_url(origin, dest, departure, return_date, cabin, roundtrip)
+        if url in self._cache:
+            return self._cache[url]
+        if self._down:
+            raise GoogleBlocked(self._down)
+        if self.requests_made >= self.max_requests:
+            raise SourceError(f"Google Flights: Limit von {self.max_requests} Abfragen erreicht")
+        self._pause()
+        self.requests_made += 1
+        try:
+            page = self.fetcher(url) if self.fetcher else fetch_html(url, self.timeout)
+        except GoogleBlocked as e:
+            self._down = f"{BLOCKED_MESSAGE} ({e})"
+            raise
+        except http.HttpError as e:
+            if e.network:   # Netz weg/Zeitüberschreitung: nicht alle Abfragen durchprobieren
+                self._consecutive_failures += 1
+                if self._consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
+                    self._down = ("Google Flights nicht erreichbar "
+                                  f"({self._consecutive_failures} Abfragen hintereinander) – "
+                                  "pausiert bis zum nächsten Lauf")
+                    raise GoogleBlocked(self._down) from None
+            raise
+        finally:
+            self._last_request_at = time.monotonic()
+        results = parse_results(page)
+        if not results:
+            if NO_FLIGHTS_RE.search(page):
+                log.info("Google Flights: keine Flüge für %s", url)
+            else:
+                self._consecutive_failures += 1
+                if self._consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
+                    self._down = ("Google Flights liefert keine auswertbaren Ergebnisse "
+                                  f"({self._consecutive_failures} Seiten hintereinander) – "
+                                  "Seitenaufbau geändert oder Sperre?")
+                    raise GoogleBlocked(self._down)
+                raise ParseError("keine Ergebnisse auf der Seite erkannt")
+        self._consecutive_failures = 0
+        # Sicherheitsnetz: nie Economy-Preise als Business melden oder One-way als Hin/Rück -
+        # falls Google die Angaben aus der Suchanfrage ignoriert hat
+        applied = page_settings(page)
+        if applied["cabin"] and applied["cabin"] != cabin:
+            raise ParseError(f"Google zeigt {applied['cabin']} statt {cabin}")
+        wanted_trip = "roundtrip" if roundtrip else "oneway"
+        if applied["trip"] and applied["trip"] != wanted_trip:
+            raise ParseError(f"Google zeigt {applied['trip']} statt {wanted_trip}")
+        results = [r for r in results if r["roundtrip"] is None or r["roundtrip"] == roundtrip]
+        self._cache[url] = results
+        return results
+
+    # -- Scan (Source-Protokoll) --------------------------------------------
+    def plan(self, alert: Alert) -> list[tuple[str, str, date, date | None]]:
+        """Abfragen für einen Alarm: Strecken zufällig, Monate nah -> fern, 2 Termine je Monat."""
+        today = self.today or date.today()
+        pairs = list(alert.pairs)
+        self.rng.shuffle(pairs)
+        months = _months(today, alert.months_ahead or self.scan_months)
+        out = []
+        for origin, dest in pairs:
+            nights = stay_nights(alert, origin, dest)
+            for y, m in months:
+                for dep in scan_dates(y, m, today):
+                    ret = dep + timedelta(days=nights) if alert.roundtrip else None
+                    out.append((origin, dest, dep, ret))
+        return out
+
+    def fetch(self, alert: Alert) -> list[Offer]:
+        self.incomplete = None
+        if self.verify_only:
+            return []
+        if self._down:
+            raise SourceError(self._down)
+        plan = self.plan(alert)
+        total = len(plan)
+        offers: list[Offer] = []
+        errors = 0
+        skipped = 0
+        affected: set[tuple[str, str]] = set()
+        share = self._shares.get(alert.id)
+        used = 0
+        for origin, dest, dep, ret in plan:
+            url = build_url(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
+            cached = url in self._cache
+            if not cached and (self.requests_made >= self.scan_budget
+                               or (share is not None and used >= share)):
+                skipped += 1
+                affected.add((origin, dest))
+                continue
+            if not cached:
+                used += 1
+            try:
+                results = self.query(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
+            except GoogleBlocked:
+                raise SourceError(self._down or BLOCKED_MESSAGE) from None
+            except (http.HttpError, ParseError) as e:
+                errors += 1
+                affected.add((origin, dest))
+                log.warning("Google Flights %s-%s %s: %s", origin, dest, dep, e)
+                continue
+            offers += self.to_offers(results, alert, origin, dest, dep, ret, url)
+        if total and errors == total:
+            raise SourceError(f"Alle {total} Google-Flights-Abfragen fehlgeschlagen")
+        if skipped or errors:
+            parts = []
+            if skipped:
+                parts.append(f"Google Flights: {total - skipped} von {total} Abfragen (Limit)")
+            if errors:
+                parts.append(f"{errors} von {total} Abfragen fehlgeschlagen")
+            self.incomplete = {"message": "; ".join(parts), "routes": affected}
+        return offers
+
+    def to_offers(self, results: list[dict], alert: Alert, origin: str, dest: str,
+                  departure: date, return_date: date | None, link: str) -> list[Offer]:
+        offers: list[Offer] = []
+        # erst nach den Alarm-Regeln filtern, dann kürzen - sonst verdrängen 10 billigere
+        # Umsteigeflüge einen passenden Nonstop-Flug
+        criteria = alert_criteria(alert)
+        fitting = [r for r in results if row_problem(r, **criteria) is None]
+        for row in fitting[:MAX_RESULTS_PER_QUERY]:
+            code = row.get("airline_code")
+            offers.append(Offer(
+                source=self.name,
+                origin=origin.upper(),
+                destination=dest.upper(),
+                price=float(row["price"]),
+                currency="EUR",
+                roundtrip=alert.roundtrip,
+                cabin=alert.cabin,
+                departure=departure,
+                return_date=return_date if alert.roundtrip else None,
+                airline=row.get("airline") or code,
+                stops=row.get("stops"),
+                duration_out_min=row.get("duration_min"),
+                duration_back_min=None,
+                link=link,
+            ))
+        return offers
+
+    # -- Gegenprüfung ---------------------------------------------------------
+    def verify(self, origin: str, dest: str, departure: date, return_date: date | None,
+               cabin: str = "economy", roundtrip: bool = True, *, max_stops: int | None = None,
+               max_minutes: float | None = None, exclude_airlines=()) -> dict | None:
+        """Günstigster *passender* Google-Flug für genau diese Daten:
+        ``{price, airline, airline_code, stops, duration_min, link}``.
+
+        Passend heißt: höchstens ``max_stops`` Umstiege, Hinflug höchstens ``max_minutes``,
+        keine Airline aus ``exclude_airlines`` (die Regeln des Alarms). Zeigt Google Flüge,
+        aber keiner passt, kommt ``{"price": None, "cheapest": …, "reason": …}`` zurück.
+        ``None`` heißt "nicht gegenprüfbar" (Sperre, Netzwerk, Budget erschöpft, keine
+        Ergebnisse) - der Grund steht danach in ``last_error``. Zählt auf ``max_requests``;
+        pro Lauf höchstens ``verify_limit`` echte Gegenprüfungen.
+        """
+        self.last_error = None
+        url = build_url(origin, dest, departure, return_date, cabin, roundtrip)
+        cached = url in self._cache
+        if not cached:
+            if self._down:
+                self.last_error = self._down
+                return None
+            if self.verifications >= self.verify_limit:
+                self.last_error = (f"Google Flights: Gegenprüf-Limit ({self.verify_limit}) "
+                                   "für diesen Lauf erreicht")
+                return None
+            if self.requests_made >= self.max_requests:
+                self.last_error = f"Google Flights: Limit von {self.max_requests} Abfragen erreicht"
+                return None
+        try:
+            results = self.query(origin, dest, departure, return_date, cabin, roundtrip)
+        except (SourceError, http.HttpError, ParseError) as e:
+            self.last_error = self._down or f"Google Flights nicht erreichbar: {e}"
+            log.warning("Google Flights Gegenprüfung %s-%s %s: %s", origin, dest, departure, e)
+            return None
+        finally:
+            if not cached:
+                self.verifications += 1
+        if not results:
+            self.last_error = "Google Flights: keine Flüge für diese Daten gefunden"
+            return None
+        criteria = {"max_stops": max_stops, "max_minutes": max_minutes,
+                    "exclude_airlines": exclude_airlines}
+        best = next((r for r in results if row_problem(r, **criteria) is None), None)
+        if best is None:
+            first = results[0]
+            return {"price": None, "cheapest": float(first["price"]), "link": url,
+                    "reason": f"kein passender Flug (günstigster: {row_problem(first, **criteria)})"}
+        return {"price": float(best["price"]),
+                "airline": best.get("airline") or best.get("airline_code"),
+                "airline_code": best.get("airline_code"), "stops": best.get("stops"),
+                "duration_min": best.get("duration_min"), "link": url}

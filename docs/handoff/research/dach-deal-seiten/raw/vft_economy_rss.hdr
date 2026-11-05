@@ -1,0 +1,14 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 200 OK
+Date: Wed, 04 Nov 2026 21:53:17 GMT
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Last-Modified: Wed, 04 Nov 2026 21:53:17 GMT
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: private, no-cache, max-age=0
+Content-Length: 42738
+Vary: Accept-Encoding
+Content-Type: application/rss+xml; charset=utf-8
+

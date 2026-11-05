@@ -1,0 +1,1 @@
+{"errors":[{"documentation_url":"https://duffel.com/docs/api/overview/response-handling","title":"Missing authorization header","type":"authentication_error","message":"The 'Authorization' header needs to be set and contain a valid API token.","code":"missing_authorization_header"}],"meta":{"request_id":"GOT2Etf29xsMe8sAFwQM","status":401}}

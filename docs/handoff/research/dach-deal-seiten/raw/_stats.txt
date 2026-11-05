@@ -1,0 +1,37 @@
+td_cat_economy.body                      items=20   flightish=15  price_in_title=19  newest=Wed, 04 Nov 2026 12:41:23  oldest=Tue, 20 Oct 2026 14:16:09
+td_cat_business.body                     items=20   flightish=14  price_in_title=17  newest=Thu, 29 Oct 2026 16:15:36  oldest=Sun, 07 Jun 2026 08:59:00
+td_cat_premeco.body                      items=20   flightish=11  price_in_title=8   newest=Wed, 04 Nov 2026 10:00:46  oldest=Thu, 11 Jan 2018 10:08:26
+td_cat_first.body                        items=15   flightish=7   price_in_title=0   newest=Sun, 14 Dec 2025 16:45:00  oldest=Sun, 22 Apr 2018 15:40:53
+td_cat_fluge.body                        items=20   flightish=14  price_in_title=18  newest=Wed, 04 Nov 2026 17:30:42  oldest=Wed, 28 Oct 2026 09:14:01
+td_cat_miles.body                        items=20   flightish=5   price_in_title=10  newest=Tue, 03 Nov 2026 10:06:41  oldest=Fri, 16 Oct 2026 06:30:35
+td_thema_oneway.body                     items=10   flightish=9   price_in_title=10  newest=Fri, 30 Oct 2026 11:24:41  oldest=Sun, 12 Oct 2025 11:53:00
+td_thema_gabelflug.body                  items=4    flightish=4   price_in_title=4   newest=Wed, 04 Nov 2026 12:41:23  oldest=Mon, 07 Sep 2026 10:56:42
+td_abflug_ham.body                       items=20   flightish=3   price_in_title=20  newest=Wed, 04 Nov 2026 07:10:20  oldest=Wed, 21 Oct 2026 05:32:52
+td_abflug_zrh.body                       items=11   flightish=5   price_in_title=8   newest=Wed, 04 Nov 2026 09:03:00  oldest=Sun, 10 Dec 2017 12:56:20
+td_reiseziel_china.body                  items=15   flightish=9   price_in_title=8   newest=Tue, 03 Nov 2026 06:42:12  oldest=Sat, 19 Mar 2016 15:47:43
+td_region_schweiz.body                   items=20   flightish=4   price_in_title=18  newest=Wed, 04 Nov 2026 13:41:11  oldest=Mon, 02 Nov 2026 12:35:52
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/8771aaf7-3b29-551f-a287-c88013dcf7a7/scratchpad/research/dach-deal-seiten/tools/stats.py", line 8, in <module>
+    data=open(path,'rb').read()
+         ~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'raw/td_visibility_hot.body'
+td_visibility_hot_feed.body              items=20   flightish=4   price_in_title=17  newest=Wed, 04 Nov 2026 17:43:00  oldest=Tue, 03 Nov 2026 10:39:30
+td_feed_posttype_deal.body               items=100  flightish=24  price_in_title=93  newest=Wed, 04 Nov 2026 17:43:00  oldest=Thu, 22 Oct 2026 15:56:18
+td_cat_economy_p2.body                   items=20   flightish=13  price_in_title=17  newest=Tue, 20 Oct 2026 13:00:00  oldest=Sun, 07 Jun 2026 08:59:00
+yhbu_premium_feed.body                   items=50   flightish=48  price_in_title=48  newest=Sun, 18 Oct 2026 18:22:44  oldest=Sun, 11 Jan 2026 18:25:00
+yhbu_feed2.body                          items=50   flightish=8   price_in_title=13  newest=Wed, 04 Nov 2026 20:51:00  oldest=Sat, 19 Sep 2026 07:14:42
+frankfurtflyer_feed2.body                items=18   flightish=6   price_in_title=1   newest=Wed, 04 Nov 2026 12:00:30  oldest=Sat, 31 Oct 2026 14:15:41
+frankfurtflyer_deal_rss2.body            items=18   flightish=3   price_in_title=3   newest=Wed, 04 Nov 2026 08:00:17  oldest=Mon, 12 Oct 2026 04:15:57
+meilenoptimieren_feed.body               items=15   flightish=4   price_in_title=4   newest=Wed, 04 Nov 2026 09:30:57  oldest=Mon, 02 Nov 2026 12:25:58
+meilenoptimieren_flugangebote_feed.body  items=15   flightish=14  price_in_title=10  newest=Sat, 11 Jul 2026 03:45:44  oldest=Sat, 27 May 2023 05:00:26
+vft_firstbusiness_rss.body               items=25   flightish=19  price_in_title=18  newest=Wed, 04 Nov 2026 09:57:58  oldest=Sun, 22 Feb 2026 20:37:18
+vft_economy_rss.body                     items=25   flightish=14  price_in_title=9   newest=Tue, 03 Nov 2026 22:04:36  oldest=Mon, 30 Mar 2026 13:27:59
+vft_mileageruns_rss.body                 items=25   flightish=4   price_in_title=1   newest=Wed, 04 Nov 2026 17:47:56  oldest=Thu, 15 Feb 2024 08:01:46
+travelzoo_de_feed.body                   items=135  flightish=40  price_in_title=116 newest=2026-11-04T08:34:00-08:00  oldest=2026-10-21T12:36:40-07:00
+preisjaeger_fluege.body                  items=30   flightish=22  price_in_title=20  newest=Wed, 04 Nov 2026 15:40:06  oldest=Fri, 30 Jan 2026 09:05:46
+travelfree_feed.body                     items=50   flightish=8   price_in_title=0   newest=Wed, 04 Nov 2026 20:07:01  oldest=Sun, 01 Nov 2026 18:36:19
+urlaubstracker_feed.body                 items=16   flightish=2   price_in_title=13  newest=Wed, 04 Nov 2026 21:30:02  oldest=Wed, 04 Nov 2026 10:05:03
+ferienpiraten_feed.body                  items=7    flightish=3   price_in_title=0   newest=Wed, 04 Nov 2026 15:00:00  oldest=Tue, 03 Nov 2026 11:10:13
+urlaubspiraten_at_feed.body              items=10   flightish=2   price_in_title=2   newest=Wed, 04 Nov 2026 15:00:00  oldest=Tue, 03 Nov 2026 11:08:58
+insideflyer_feed.body                    items=10   flightish=2   price_in_title=0   newest=Wed, 04 Nov 2026 11:00:21  oldest=Tue, 27 Oct 2026 14:54:11
+aerotelegraph_feed.body                  items=20   flightish=15  price_in_title=0   newest=Wed, 04 Nov 2026 20:14:15  oldest=Wed, 04 Nov 2026 12:01:50

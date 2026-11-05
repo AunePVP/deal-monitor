@@ -1,0 +1,520 @@
+{
+  "meta": {
+    "count": 3,
+    "links": {
+      "self": "https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=FRA&destinationLocationCode=PEK&departureDate=2027-03-12&returnDate=2027-03-24&adults=1&travelClass=BUSINESS&nonStop=false&currencyCode=EUR&max=10"
+    }
+  },
+  "data": [
+    {
+      "type": "flight-offer",
+      "id": "1",
+      "source": "GDS",
+      "instantTicketingRequired": false,
+      "nonHomogeneous": false,
+      "oneWay": false,
+      "lastTicketingDate": "2027-03-10",
+      "numberOfBookableSeats": 4,
+      "itineraries": [
+        {
+          "duration": "PT10H20M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "FRA",
+                "terminal": "2",
+                "at": "2027-03-12T11:50:00"
+              },
+              "arrival": {
+                "iataCode": "PEK",
+                "terminal": "3",
+                "at": "2027-03-13T05:10:00"
+              },
+              "carrierCode": "CA",
+              "number": "966",
+              "aircraft": {
+                "code": "359"
+              },
+              "operating": {
+                "carrierCode": "CA"
+              },
+              "duration": "PT10H20M",
+              "id": "1",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        },
+        {
+          "duration": "PT11H10M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "PEK",
+                "terminal": "3",
+                "at": "2027-03-24T02:10:00"
+              },
+              "arrival": {
+                "iataCode": "FRA",
+                "terminal": "2",
+                "at": "2027-03-24T06:20:00"
+              },
+              "carrierCode": "CA",
+              "number": "965",
+              "aircraft": {
+                "code": "359"
+              },
+              "operating": {
+                "carrierCode": "CA"
+              },
+              "duration": "PT11H10M",
+              "id": "2",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "EUR",
+        "total": "1289.46",
+        "base": "980.00",
+        "fees": [
+          {
+            "amount": "0.00",
+            "type": "SUPPLIER"
+          },
+          {
+            "amount": "0.00",
+            "type": "TICKETING"
+          }
+        ],
+        "grandTotal": "1289.46"
+      },
+      "pricingOptions": {
+        "fareType": [
+          "PUBLISHED"
+        ],
+        "includedCheckedBagsOnly": true
+      },
+      "validatingAirlineCodes": [
+        "CA"
+      ],
+      "travelerPricings": [
+        {
+          "travelerId": "1",
+          "fareOption": "STANDARD",
+          "travelerType": "ADULT",
+          "price": {
+            "currency": "EUR",
+            "total": "1289.46",
+            "base": "980.00"
+          },
+          "fareDetailsBySegment": [
+            {
+              "segmentId": "1",
+              "cabin": "BUSINESS",
+              "fareBasis": "DEE6",
+              "class": "D",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            },
+            {
+              "segmentId": "2",
+              "cabin": "BUSINESS",
+              "fareBasis": "DEE6",
+              "class": "D",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "flight-offer",
+      "id": "2",
+      "source": "GDS",
+      "instantTicketingRequired": false,
+      "nonHomogeneous": false,
+      "oneWay": false,
+      "lastTicketingDate": "2027-03-10",
+      "numberOfBookableSeats": 9,
+      "itineraries": [
+        {
+          "duration": "PT13H30M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "FRA",
+                "terminal": "1",
+                "at": "2027-03-12T09:00:00"
+              },
+              "arrival": {
+                "iataCode": "MUC",
+                "terminal": "2",
+                "at": "2027-03-12T10:00:00"
+              },
+              "carrierCode": "LH",
+              "number": "98",
+              "aircraft": {
+                "code": "32N"
+              },
+              "operating": {
+                "carrierCode": "LH"
+              },
+              "duration": "PT1H",
+              "id": "3",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            },
+            {
+              "departure": {
+                "iataCode": "MUC",
+                "terminal": "2",
+                "at": "2027-03-12T12:45:00"
+              },
+              "arrival": {
+                "iataCode": "PEK",
+                "terminal": "2",
+                "at": "2027-03-13T05:30:00"
+              },
+              "carrierCode": "LH",
+              "number": "722",
+              "aircraft": {
+                "code": "359"
+              },
+              "operating": {
+                "carrierCode": "LH"
+              },
+              "duration": "PT9H45M",
+              "id": "4",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        },
+        {
+          "duration": "PT11H25M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "PEK",
+                "terminal": "2",
+                "at": "2027-03-24T13:05:00"
+              },
+              "arrival": {
+                "iataCode": "FRA",
+                "terminal": "1",
+                "at": "2027-03-24T17:30:00"
+              },
+              "carrierCode": "LH",
+              "number": "721",
+              "aircraft": {
+                "code": "359"
+              },
+              "operating": {
+                "carrierCode": "LH"
+              },
+              "duration": "PT11H25M",
+              "id": "5",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "EUR",
+        "total": "1489.00",
+        "base": "1120.00",
+        "fees": [
+          {
+            "amount": "0.00",
+            "type": "SUPPLIER"
+          },
+          {
+            "amount": "0.00",
+            "type": "TICKETING"
+          }
+        ],
+        "grandTotal": "1489.00"
+      },
+      "pricingOptions": {
+        "fareType": [
+          "PUBLISHED"
+        ],
+        "includedCheckedBagsOnly": true
+      },
+      "validatingAirlineCodes": [
+        "LH"
+      ],
+      "travelerPricings": [
+        {
+          "travelerId": "1",
+          "fareOption": "STANDARD",
+          "travelerType": "ADULT",
+          "price": {
+            "currency": "EUR",
+            "total": "1489.00",
+            "base": "1120.00"
+          },
+          "fareDetailsBySegment": [
+            {
+              "segmentId": "3",
+              "cabin": "BUSINESS",
+              "fareBasis": "PNCEUZ",
+              "class": "P",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            },
+            {
+              "segmentId": "4",
+              "cabin": "BUSINESS",
+              "fareBasis": "PNCEUZ",
+              "class": "P",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            },
+            {
+              "segmentId": "5",
+              "cabin": "BUSINESS",
+              "fareBasis": "PNCEUZ",
+              "class": "P",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "flight-offer",
+      "id": "3",
+      "source": "GDS",
+      "instantTicketingRequired": false,
+      "nonHomogeneous": false,
+      "oneWay": false,
+      "lastTicketingDate": "2027-03-10",
+      "numberOfBookableSeats": 7,
+      "itineraries": [
+        {
+          "duration": "PT15H5M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "FRA",
+                "terminal": "1",
+                "at": "2027-03-12T18:40:00"
+              },
+              "arrival": {
+                "iataCode": "IST",
+                "at": "2027-03-12T23:05:00"
+              },
+              "carrierCode": "TK",
+              "number": "1592",
+              "aircraft": {
+                "code": "321"
+              },
+              "operating": {
+                "carrierCode": "TK"
+              },
+              "duration": "PT3H25M",
+              "id": "6",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            },
+            {
+              "departure": {
+                "iataCode": "IST",
+                "at": "2027-03-13T01:30:00"
+              },
+              "arrival": {
+                "iataCode": "PEK",
+                "terminal": "3",
+                "at": "2027-03-13T15:45:00"
+              },
+              "carrierCode": "TK",
+              "number": "20",
+              "aircraft": {
+                "code": "77W"
+              },
+              "operating": {
+                "carrierCode": "TK"
+              },
+              "duration": "PT9H15M",
+              "id": "7",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        },
+        {
+          "duration": "PT16H50M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "PEK",
+                "terminal": "3",
+                "at": "2027-03-24T22:50:00"
+              },
+              "arrival": {
+                "iataCode": "IST",
+                "at": "2027-03-25T05:10:00"
+              },
+              "carrierCode": "TK",
+              "number": "21",
+              "aircraft": {
+                "code": "77W"
+              },
+              "operating": {
+                "carrierCode": "TK"
+              },
+              "duration": "PT11H20M",
+              "id": "8",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            },
+            {
+              "departure": {
+                "iataCode": "IST",
+                "at": "2027-03-25T07:50:00"
+              },
+              "arrival": {
+                "iataCode": "FRA",
+                "terminal": "1",
+                "at": "2027-03-25T10:40:00"
+              },
+              "carrierCode": "TK",
+              "number": "1591",
+              "aircraft": {
+                "code": "321"
+              },
+              "operating": {
+                "carrierCode": "TK"
+              },
+              "duration": "PT3H50M",
+              "id": "9",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "EUR",
+        "total": "1099.00",
+        "base": "790.00",
+        "fees": [
+          {
+            "amount": "0.00",
+            "type": "SUPPLIER"
+          },
+          {
+            "amount": "0.00",
+            "type": "TICKETING"
+          }
+        ],
+        "grandTotal": "1099.00"
+      },
+      "pricingOptions": {
+        "fareType": [
+          "PUBLISHED"
+        ],
+        "includedCheckedBagsOnly": true
+      },
+      "validatingAirlineCodes": [
+        "TK"
+      ],
+      "travelerPricings": [
+        {
+          "travelerId": "1",
+          "fareOption": "STANDARD",
+          "travelerType": "ADULT",
+          "price": {
+            "currency": "EUR",
+            "total": "1099.00",
+            "base": "790.00"
+          },
+          "fareDetailsBySegment": [
+            {
+              "segmentId": "6",
+              "cabin": "BUSINESS",
+              "fareBasis": "IN2XPB",
+              "class": "I",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            },
+            {
+              "segmentId": "7",
+              "cabin": "BUSINESS",
+              "fareBasis": "IN2XPB",
+              "class": "I",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            },
+            {
+              "segmentId": "8",
+              "cabin": "BUSINESS",
+              "fareBasis": "IN2XPB",
+              "class": "I",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            },
+            {
+              "segmentId": "9",
+              "cabin": "BUSINESS",
+              "fareBasis": "IN2XPB",
+              "class": "I",
+              "includedCheckedBags": {
+                "quantity": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dictionaries": {
+    "locations": {
+      "FRA": {
+        "cityCode": "FRA",
+        "countryCode": "DE"
+      },
+      "MUC": {
+        "cityCode": "MUC",
+        "countryCode": "DE"
+      },
+      "IST": {
+        "cityCode": "IST",
+        "countryCode": "TR"
+      },
+      "PEK": {
+        "cityCode": "BJS",
+        "countryCode": "CN"
+      }
+    },
+    "aircraft": {
+      "321": "AIRBUS A321",
+      "32N": "AIRBUS A320NEO",
+      "359": "AIRBUS A350-900",
+      "77W": "BOEING 777-300ER"
+    },
+    "currencies": {
+      "EUR": "EURO"
+    },
+    "carriers": {
+      "CA": "AIR CHINA",
+      "LH": "LUFTHANSA",
+      "TK": "TURKISH AIRLINES"
+    }
+  }
+}

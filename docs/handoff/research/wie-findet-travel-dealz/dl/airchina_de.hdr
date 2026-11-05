@@ -1,0 +1,30 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/1.1 200 OK
+Date: Wed, 04 Nov 2026 22:02:45 GMT
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: wswaf
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+strict-transport-security: max-age=63072000; includeSubDomains
+x-frame-options: SAMEORIGIN
+content-language: de-DE
+Set-Cookie: BIGipServer~etv_aere_prd~Shared~az_xdcr_cosa-prd_443_pool=2406628106.47873.0000; path=/; Httponly; Secure                           ; SameSite=None
+Cache-Control: no-store
+X-CDN: Imperva
+X-Iinfo: 51-84693552-84682914 pNNy RT(1793829756237 8621) q(0 2 2 162) r(7 7) U24
+x-via: 1.1 PS-JFK-04AJ1232:13 (Cdn Cache Server V2.0), 1.1 PS-MIA-043pY173:3 (Cdn Cache Server V2.0)
+x-ws-request-id: 6aebab84_PS-MIA-043pY173_3255-47294
+Set-Cookie: DWM_XSITECODE=B000CA00; path=/; secure; HttpOnly
+Set-Cookie: FRIENDLY_URL_LANGUAGE=DE
+Set-Cookie: JSESSIONID=OuPlpI4XdrFw-d3u5899IOyoffAi1pKIQ9SRkMep!1793829765125.dljdmx; path=/; secure; HttpOnly
+Set-Cookie: 56671db9f9a36ca3aa92a5b906d3c6ab=bff1c2a1861b5aa5cf4538ff1aa64bed; path=/; HttpOnly; Secure; SameSite=None
+Set-Cookie: nlbi_2467799=l+RODMjskkmrcl/y7tJNrQAAAAAQv0rSzfwUi38KV8O5ncZE; HttpOnly; path=/; Domain=.airchina.de; Secure; SameSite=None
+Set-Cookie: visid_incap_2467799=tSqb1H2oSHGSFtqQcbnhhYSr62oAAAAAQUIPAAAAAADV4wEd+FVeZrmoRO72HeXO; expires=Thu, 04 Nov 2027 06:12:36 GMT; HttpOnly; path=/; Domain=.airchina.de; Secure; SameSite=None
+Set-Cookie: incap_ses_468_2467799=O/31a+cnPUydVjuPnKt+BoWr62oAAAAAykWKfPRvhDbGoJ7EvmYTbw==; path=/; Domain=.airchina.de; Secure; SameSite=None
+Set-Cookie: HMF_CI=688c0a588d3eafcc041e10f4fda0414cc5ff8a415b29c7468c9a899a03d10a38a405f4c3c9d3b0798370c9076bbbcf901fe0692929eb5a4fb60439ff26c8ca8d51; Expires=Fri, 04-Dec-26 22:02:45 GMT; Path=/
+Content-Encoding: gzip
+Vary: Accept-Encoding
+

@@ -1,0 +1,22 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:54:14 GMT
+content-type: application/rss+xml; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+cf-cache-status: HIT
+last-modified: Wed, 04 Nov 2026 20:57:26 GMT
+link: <https://youhavebeenupgraded.boardingarea.com/wp-json/>; rel="https://api.w.org/"
+link: <https://youhavebeenupgraded.boardingarea.com/wp-json/wp/v2/categories/62>; rel="alternate"; title="JSON"; type="application/json"
+link: <https://youhavebeenupgraded.boardingarea.com/category/billige-premium-tickets/>; rel="canonical"
+x-powered-by: WP Engine
+x-cacheable: CacheAlways: feed
+cache-control: max-age=600, must-revalidate
+x-cache: MISS
+age: 245
+etag: W/"2ffaa46207c8d9c84928171ad2dda79a"
+set-cookie: __cf_bm=rfWc6JbvXG2wRTKzptgU7J6IHZmbcWVERh0ky0w5VuM-1793829254.8617435-1.0.1.1-mO042bnUKpfOi2eWuYHqxeqd6LdvqNNc_ULluc..j0L_44iOPVV0mLYAgqA4IECEOJqKp.tCUnvFtnCjV2D004aXDg75kj4IKXYphxIsdUfhW2dqt1m0wsV5l.Ftidon; HttpOnly; SameSite=None; Secure; Path=/; Domain=youhavebeenupgraded.boardingarea.com; Expires=Wed, 04 Nov 2026 22:24:14 GMT
+cf-ray: a556db2adfe6f012-IAD
+alt-svc: h3=":443"; ma=86400
+

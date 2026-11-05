@@ -1,0 +1,57 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+x-xss-protection: 1; mode=block
+location: https://www.momondo.de/errors/404
+x-frame-options: SAMEORIGIN
+content-type: text/html;charset=UTF-8
+x-redirect: r9-new
+x-r9-mst-req: Nje6IJnzZDR1f
+strict-transport-security: max-age=604800; includeSubdomains;
+x-r9-mst-target: wordpress-frr.som.kayak.com
+x-sn-waf-code: 
+x-content-type-options: nosniff
+server: KAYAK/1.0
+via: 1.1 varnish, 1.1 varnish
+accept-ranges: bytes
+age: 0
+date: Wed, 04 Nov 2026 22:01:09 GMT
+x-served-by: r9cms, cache-bos-kbos510057-BOS, cache-bos-kbos510057-BOS, cache-iad-kcgs7200086-IAD
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+x-timer: S1793829670.576748,VS0,VE186
+vary: Accept-Encoding
+set-cookie: csid=de603dbe-9202-4cb5-bc04-d63ee4cffca9; path=/; Secure; SameSite=Strict;
+cache-control: private, no-store
+content-length: 0
+
+HTTP/2 404 
+content-security-policy: upgrade-insecure-requests; object-src 'none'; base-uri 'self' *.cloudfront.net
+x-r9-mst-target: sparkle
+content-type: text/html;charset=UTF-8
+referrer-policy: origin-when-cross-origin
+content-security-policy-report-only: default-src https: blob:; connect-src https: https://signalling.trueengage.com https://fileupload.mypurecloud.com https://api.mypurecloud.com wss://webmessaging.mypurecloud.com https://api-downloads.mypurecloud.com https://asset.trueengage.com blob: wss://visitorjourneyapi.trueengage.com https://visitorjourneyapi.trueengage.com https://geoip.trueengage.com https://statistics.trueengage.com https://api.trueengage.com https://billingapi.trueengage.com https://headsupai.trueengage.com; font-src https: data:; frame-src https:; img-src https: data: blob:; media-src https: data: blob:; object-src https: data: blob:; script-src 'unsafe-inline' 'unsafe-eval' https:; style-src 'unsafe-inline' https: data:; worker-src 'self' blob:; report-uri /s/run/cspreport/reportHttp; report-to csp-log
+x-sn-waf-code: 
+content-language: de-DE
+x-render-time: 0.013
+server: KAYAK/1.0
+strict-transport-security: max-age=10886400; preload
+x-content-type-options: nosniff
+report-to: { "group": "csp-log", "max_age": 43200, "endpoints": [ { "url": "https://www.kayak.com/s/run/cspreport/reportHttp" } ] }
+permissions-policy: camera=(), microphone=(self), midi=(), geolocation=(self), usb=()
+x-xss-protection: 1; mode=block
+content-encoding: br
+x-r9-mst-req: uuoNgiDD2y7iK
+via: 1.1 varnish, 1.1 varnish
+accept-ranges: bytes
+age: 0
+date: Wed, 04 Nov 2026 22:01:09 GMT
+x-served-by: r9, cache-bos-kbos510034-BOS, cache-bos-kbos510034-BOS, cache-iad-kcgs7200086-IAD
+x-cache: MISS, MISS, MISS
+x-cache-hits: 0, 0, 0
+x-timer: S1793829670.793542,VS0,VE82
+vary: Fastly-SSL,SSL, Accept-Encoding
+set-cookie: csid=7b6d86ed-ae20-458e-b2e5-ca4de021ee1b; path=/; Secure; SameSite=Strict;
+cache-control: private, no-store
+content-length: 92345
+

@@ -1,0 +1,20 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 401 
+content-type: text/html
+content-length: 590
+date: Wed, 04 Nov 2026 21:44:44 GMT
+www-authenticate: Basic realm="Rss Feed Login"
+server: nginx/1.28.3 (Ubuntu)
+x-cache: Error from cloudfront
+via: 1.1 b39e6d7c3a0b7ad08db4db7d030c76b6.cloudfront.net (CloudFront)
+x-amz-cf-pop: CMH68-P2
+alt-svc: h3=":443"; ma=86400
+x-amz-cf-id: 8WrGFQt9-xQRcu087dnqkvtw0QnHkgV-S0X2Sj9sJyCBAqx-7729rA==
+x-xss-protection: 1; mode=block
+x-frame-options: SAMEORIGIN
+referrer-policy: strict-origin-when-cross-origin
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000
+vary: Origin
+

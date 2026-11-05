@@ -1,0 +1,27 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:53:16 GMT
+content-type: application/json; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+vary: Accept-Encoding,Cookie
+access-control-allow-headers: Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type
+access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link
+allow: GET
+link: <https://youhavebeenupgraded.boardingarea.com/wp-json/wp/v2/categories?per_page=100&orderby=count&order=desc&page=2>; rel="next"
+x-content-type-options: nosniff
+x-powered-by: WP Engine
+x-robots-tag: noindex
+x-wp-total: 210
+x-wp-totalpages: 3
+x-cacheable: SHORT
+cache-control: max-age=600, must-revalidate
+x-cache: MISS
+x-cache-group: normal
+last-modified: Wed, 04 Nov 2026 21:53:16 GMT
+cf-cache-status: MISS
+set-cookie: __cf_bm=Xy2frnjKCaDdmFQ8D8VkhknNNF0xh_i8jiseeYDhbuo-1793829195.3946073-1.0.1.1-iP3vwfR8h5m4P0L9R.CLFkhW6KLwMcPf0BZpjbnqVD56m1f3ekwEzEyhPjON7CWnjB9_NhAn05KKTgPMKiYgHkXBT7FTsXNyx2LFBDJYKFd0JQ0KdgFPNe6Fg05qugLf; HttpOnly; SameSite=None; Secure; Path=/; Domain=youhavebeenupgraded.boardingarea.com; Expires=Wed, 04 Nov 2026 22:23:16 GMT
+cf-ray: a556d9b73a61d6c5-IAD
+alt-svc: h3=":443"; ma=86400
+

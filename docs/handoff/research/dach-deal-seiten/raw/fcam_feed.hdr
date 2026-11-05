@@ -1,0 +1,33 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 302 
+date: Wed, 04 Nov 2026 21:44:14 GMT
+location: https://app.rebrandly.com/broken-links
+content-length: 0
+engine: Rebrandly.redirect, version 2.1
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: text/html
+content-length: 8052
+server: AmazonS3
+date: Wed, 04 Nov 2026 21:44:16 GMT
+last-modified: Mon, 02 Nov 2026 21:11:58 GMT
+x-amz-server-side-encryption: AES256
+cache-control: no-cache
+x-amz-version-id: M_SfVMzFPbSV2JZdGnkwoBRPL9cWkioE
+accept-ranges: bytes
+etag: "b17758c6fb3796af18f146c61d01a99b"
+x-cache: Miss from cloudfront
+via: 1.1 49384a7612e1efdaeedf0101f28b66a4.cloudfront.net (CloudFront)
+x-amz-cf-pop: JFK50-P9
+x-amz-cf-id: pC2gcMrukvqVII8DEixTVXGgXVz-ULLERk7BW5wy5u1BYZvxoNnyWw==
+x-xss-protection: 1; mode=block
+x-frame-options: DENY
+referrer-policy: no-referrer
+content-security-policy: frame-ancestors 'none'; block-all-mixed-content; worker-src 'self' blob:; script-src 'self' blob: 'report-sample' 'unsafe-inline' 'unsafe-eval' *.clarity.ms c.bing.com ws-assets.zoominfo.com app.rebrandly.com s3.amazonaws.com js.zi-scripts.com tracking.g2crowd.com *.zapier.com *.gstatic.com *.zendesk.com *.revenuehero.io *.hsforms.net *.hsforms.com *.intercom.io *.zdassets.com *.googleapis.com *.smartlook.com *.youtube.com *.doubleclick.net cdn.goentri.com *.pendo.io *.storage.googleapis.com *.google.com *.googleadservices.com *.googlesyndication.com *.googletagservices.com *.sentry.io *.sentry-cdn.com *.facebook.net *.statuspage.io *.rebrandly.com *.stream-io-api.com *.facebook.com *.googletagmanager.com *.intercomcdn.com *.stripe.com *.linkedin.com *.gravatar.com *.licdn.com *.s3.amazonaws.com *.typekit.net *.google-analytics.com www.dwin1.com cdn.logrocket.io cdn.lr-ingest.io cdn.lr-in.com cdn.lr-in-prod.com cdn.lr-ingest.com cdn.ingest-lr.com cdn.lr-intake.com cdn.intake-lr.com cdn.logr-ingest.com cdn.lrkt-in.com; style-src 'self' 'report-sample' 'unsafe-inline' *.typekit.net *.licdn.com *.pendo.io *.storage.googleapis.com *.stripe.com *.gravatar.com *.googletagmanager.com;
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+permissions-policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+

@@ -1,0 +1,27 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 302 
+date: Wed, 04 Nov 2026 21:50:42 GMT
+location: https://www.first-class-and-more.de/
+content-length: 0
+engine: Rebrandly.redirect, version 2.1
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 301 
+server: awselb/2.0
+date: Wed, 04 Nov 2026 21:50:43 GMT
+content-type: text/html
+content-length: 134
+location: https://first-class-and-more.de:443/
+
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:50:45 GMT
+content-type: text/html; charset=UTF-8
+server: Apache/2.4.69 (Amazon Linux) OpenSSL/3.5.8
+cache-control: no-cache, private
+set-cookie: XSRF-TOKEN=eyJpdiI6IlFlRGd1eFZCWDJSQ3VYVVViUkk4SVE9PSIsInZhbHVlIjoicGp1SzhCVVdqUjFWdHFKN21GUzBCbXpZYVNsUjI1Q2F3aHpZSm82cy8vV3FIZGFxZW83Q3FubTg1YzVOeW5vOE9RZERxT2tlRkhnTm9iUWhGSmFqeVFYM3E1ZktGeS9EaisrSG5sNE9ySHpXZXM3M0J1cEdBMDJwdjFXdHNXWjMiLCJtYWMiOiIyMDcyYjRlNGI5ZjQ4MGQyMWI1NDllNTQ5MTVkNzViMmQ4Yjk0MjRiMDM4N2UzNWU0M2ZlMzJmOTI0ZjJkOTMyIiwidGFnIjoiIn0%3D; expires=Wed, 04-Nov-2026 23:50:45 GMT; Max-Age=7200; path=/; samesite=lax
+set-cookie: frontend_production=eyJpdiI6Ik9IWElBSFoyMjA5ZTNqaUQ2d3ZUclE9PSIsInZhbHVlIjoiSlZkMStHNlp5QmJsaWJQWVNndHJnNWt0Mk80T1phT0F0OUFkUnJ2NGRteVZwbGdhbGFCK1ZaVklDVDk1S3JoczlENThKSHRnWWUzTU9QTEsyZXNkanVINHFOTkp5MVVibHZzVWNUekNGVkczYkE3N3lXNjViR1BtRWV6cXprOFYiLCJtYWMiOiJhZWJjZTdiOTkxMmE2NWYzZDJkM2RjNjI1NjRhYmNiNTZjNzY3NzQxMDliZmVhNTUyZGNhNTMxMTQwMmZmZWNmIiwidGFnIjoiIn0%3D; expires=Wed, 04-Nov-2026 23:50:45 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+

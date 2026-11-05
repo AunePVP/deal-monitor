@@ -1,0 +1,30 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Wed, 04 Nov 2026 21:51:21 GMT
+content-type: application/json; charset=UTF-8
+server: cloudflare
+vary: Accept-Encoding
+vary: Origin
+x-powered-by: PHP/8.5.12
+x-powered-by: PleskLin
+x-robots-tag: noindex
+x-content-type-options: nosniff
+access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link
+access-control-allow-headers: Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type
+x-wp-total: 360
+x-wp-totalpages: 36
+link: <https://airguru.de/wp-json/wp/v2/posts?per_page=10&_fields=id%2Cdate%2Ctitle%2Clink%2Ccategories&page=2>; rel="next"
+allow: GET
+cache-control: max-age=1209600
+expires: Wed, 18 Nov 2026 21:51:19 GMT
+x-cache-status: MISS
+strict-transport-security: max-age=15768000; includeSubDomains
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=FNYlLOGJCzHQ1AGJ2i%2F4BTTu3Q7YSFSyesF47sCw%2BBic3fDSC2xzhO2A0lap9our6PF0w5vtkqRvoqfU44LHZr2pGngWAHZU9dzfglDZd0z2YYD9e%2FwXb8Evu60z"}]}
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server-timing: cfCacheStatus;desc="DYNAMIC"
+server-timing: cfEdge;dur=45,cfOrigin;dur=1945
+cf-ray: a556d6e25c75ad56-IAD
+alt-svc: h3=":443"; ma=86400
+

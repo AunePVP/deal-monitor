@@ -1,0 +1,13 @@
+td_visibility_hot_feed | 200 https://travel-dealz.de/visibility/hot/feed/ application/rss+xml; charset=UTF-8 544293
+td_json_deal_hot | 200 https://travel-dealz.de/wp-json/wp/v2/deal?per_page=10&visibility=39997&_fields=id,date,title,link,categories,origins,visibility,meta.suspend_date application/json; charset=UTF-8 3141
+td_cat_economy_p2 | 200 https://travel-dealz.de/kategorie/fluge/economy-class/feed/?paged=2 application/rss+xml; charset=UTF-8 414515
+meilenoptimieren_flugangebote_feed | 200 https://meilenoptimieren.com/category/flugangebote/feed/ application/rss+xml; charset=UTF-8 25680
+frankfurtflyer_cats | 200 https://frankfurtflyer.de/wp-json/wp/v2/categories?per_page=100&orderby=count&order=desc application/json; charset=UTF-8 102491
+yhbu_cats | 200 https://youhavebeenupgraded.boardingarea.com/wp-json/wp/v2/categories?per_page=100&orderby=count&order=desc application/json; charset=UTF-8 500525
+vft_firstbusiness_rss | 200 https://www.vielfliegertreff.de/forum/forums/first-business-class-tarife.53/index.rss application/rss+xml; charset=utf-8 42320
+vft_economy_rss | 200 https://www.vielfliegertreff.de/forum/forums/economy-class-tarife.54/index.rss application/rss+xml; charset=utf-8 42738
+vft_bestpreis_rss | 200 https://www.vielfliegertreff.de/forum/forums/fliegen-zum-besten-preis.4/index.rss application/rss+xml; charset=utf-8 805
+reisetopia_deals_feed | 403 https://reisetopia.de/deals/feed/ text/html; charset=UTF-8 4909
+fcam_feed2 | curl: (6) Could not resolve host: first-class-and-more.de
+301 http://first-class-and-more.de/feed text/html; charset=iso-8859-1 0
+aerotelegraph_feed | 200 https://www.aerotelegraph.com/feed application/xml; charset=utf-8 55849

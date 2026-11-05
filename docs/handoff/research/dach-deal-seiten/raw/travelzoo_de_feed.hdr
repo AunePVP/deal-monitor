@@ -1,0 +1,18 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: application/atom+xml; charset=utf-8
+content-security-policy: frame-ancestors 'self' https://*.travelzoo.com;
+x-ip: tzprodwww
+x-azid: 8c
+expires: Wed, 04 Nov 2026 21:50:42 GMT
+cache-control: max-age=0, no-cache, no-store
+pragma: no-cache
+date: Wed, 04 Nov 2026 21:50:42 GMT
+server-timing: cdn-cache; desc=MISS
+server-timing: edge; dur=13
+server-timing: origin; dur=21
+set-cookie: _abck=FCB48BD419AC914B5846DE982C4523CD~-1~YAAQHFPRF/91n5+hAQAA6/eKqBDTL/dK4ouCs+EpGaRfbpXWKSGwCTqH2aVflnutSM1wS6tfn2D3xlX5ABpkbDDUR2dDXYspo42J5CWR3qUB7xQKVP/oO3EN99W7ErHZ90Dgg5urUSWd/SLObJzhSsa+U1e+v9wTrU1/KapURzhgkUDDEWstJcB9sPItz8YuIJZLJS0v2ylUisHojsOCrsHt+rzFS6y4ez7gTWZu7dWzX7JRByVhUdmMlXvz1YmpnQuKXyvtkaMY8+D4Rt/j7UdrR1b/XFsBYmo0gcPyylGwsuKwkqSNzPNPSMzAwjPn2vVkNlqSZd7HiqbO528nm+qJ8IbyFOKNf7JH4s9RCnm3dpF5DA4fnoQo2h/Un4z7dI6zYNDCnPm4ZleMDM2LYZO2s9+Mt7nGddJxByAsHilp/THV2Ydk+DF2Y+3caLQor8DXlfUFYAuW15o=~-1~-1~-1~-1~-1; Domain=.travelzoo.com; Path=/; Expires=Thu, 04 Nov 2027 21:50:42 GMT; Max-Age=31536000; Secure
+set-cookie: bm_sz=504F382E9A58189A44F6C230BA3E640E~YAAQHFPRFwB2n5+hAQAA6/eKqAGk5GtMKPe68rueBR5Rhg7GiqH1ExGBJLfmHUyi4z4laQbDAU6RFHvW9CwjhxBR0fhYu9teIDQ+2+uEYfEkWsJvFRmmjWr9Sl1alcawOp/oxPi3tEYLjkjSe/hyGOxXcSM+1+ezpP6q3Ux4nDHPVocDvRnZS31T6ZQS0KeHqwtKzrfK4aDKjz49zys4UM3HDMl1C/woXstsH6qLwwXPyybADbdJj6zooosMdrtHl7/Xo5d8ZY47lnynp77CToSw41JdEebAzEcbg+aHrx0WKjokzPEwJUJaKSI87MrMz0kTKcKdGwS5WQNmdW23exm4trIt5b0Ua+o5yeFy3M49Us4wMIXwMci2qtxijedDhVk27iWW8sxb2ZNHzGhKGg==~3490114~3354949; Domain=.travelzoo.com; Path=/; Expires=Thu, 05 Nov 2026 01:50:42 GMT; Max-Age=14400
+server-timing: ak_p; desc="1793829042009_399594268_1126006273_3405_8950_18_82_15";dur=1
+

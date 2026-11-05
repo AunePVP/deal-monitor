@@ -1,0 +1,41 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+content-length: 269596
+x-travix-feserver: r100062193-91502706-cz98n
+x-travix-handler: origami-gateway
+x-travix-feserver-started-at: 1793618173949
+x-powered-by: NFES
+rootmessageid: 100063494-0a0e2e89-498285-78539
+reporting-endpoints: default="https://crash.trip.com/mcd_crash_server/spring/web/collect?cid=09033148418059577328&vid=unknown&page=unknown&appid=100063494&env=pro&version=2.3.5"
+access-control-allow-origin: *
+cache-control: private, no-cache, no-store, max-age=0, must-revalidate
+vary: Accept-Encoding
+x-backend-latency: 0.160
+x-backend-latency: 0.172
+date: Wed, 04 Nov 2026 21:51:10 GMT
+set-cookie: GUID=09033148418059577328; Path=/; Expires=Sat, 03 Nov 2029 21:51:09 GMT
+set-cookie: ibusite=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: ibugroup=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: ibulanguage=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: ibulocale=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: cookiePricesDisplayed=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: ibusite=EN; Max-Age=2592000; Path=/; Expires=Fri, 04 Dec 2026 21:51:09 GMT
+set-cookie: ibugroup=trip; Max-Age=2592000; Path=/; Expires=Fri, 04 Dec 2026 21:51:09 GMT
+set-cookie: ibulanguage=EN; Max-Age=2592000; Domain=trip.com; Path=/; Expires=Fri, 04 Dec 2026 21:51:09 GMT
+set-cookie: ibulocale=en_us; Max-Age=2592000; Domain=trip.com; Path=/; Expires=Fri, 04 Dec 2026 21:51:09 GMT
+set-cookie: cookiePricesDisplayed=PLN; Max-Age=2592000; Domain=trip.com; Path=/; Expires=Fri, 04 Dec 2026 21:51:09 GMT
+set-cookie: ibu_country=US; Max-Age=2592000; Path=/; Expires=Fri, 04 Dec 2026 21:51:09 GMT
+set-cookie: UBT_VID=1793829069836.746fCduModHM;domain=.tripws.com;expires=Thu, 09 Dec 2027 21:51:09 GMT
+set-cookie: UBT_SERVER_SID=1;domain=.tripws.com;expires=Thu, 09 Dec 2027 21:51:09 GMT
+set-cookie: UBT_SERVER_PVID=1;domain=.tripws.com;expires=Thu, 09 Dec 2027 21:51:09 GMT
+set-cookie: euid=k3YHb6O7kMDqp0wa7E5ZI; Max-Age=63072000; Path=/; Expires=Fri, 03 Nov 2028 21:51:09 GMT
+set-cookie: _resDomain=https%3A%2F%2Faw-s-assets.travix.com; Max-Age=900; Path=/; Expires=Wed, 04 Nov 2026 22:06:09 GMT; HttpOnly
+set-cookie: _pd=%7B%22_o%22%3A95%2C%22s%22%3A161%2C%22_s%22%3A0%7D; Path=/
+alt-svc: h3=":443"; ma=93600
+x-cdn-pop: US
+c-via: akamai
+x-cdn-cache: MISS
+unique-request-id: 7522eb00
+

@@ -74,6 +74,15 @@
     if (tomorrow) return `morgen ${hm}`;
     return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. ${hm}`;
   }
+  // Zeitpunkt in der Zukunft: "in 12 Min." (unter einer Stunde), sonst wie fmtTime
+  function untilTime(s) {
+    const d = parseIso(s);
+    if (!d) return "";
+    const min = Math.round((d.getTime() - Date.now()) / 60000);
+    if (min <= 0) return "gleich";
+    if (min < 60) return `in ${min} Min.`;
+    return fmtTime(s);
+  }
   function relTime(s) {
     const d = parseIso(s);
     if (!d) return "";
@@ -108,19 +117,32 @@
   }
 
   const CABIN = { economy: "Economy", premium: "Premium Economy", business: "Business Class", first: "First Class" };
-  const SOURCE = { "travelpayouts": "Travelpayouts (Preis-API)", "travel-dealz-feed": "Travel-Dealz-Artikel" };
+  // Anzeigenamen der Quellen (der Server liefert bei Deals zusätzlich source_label)
+  const SOURCE = {
+    "travelpayouts": "Travelpayouts (Preis-API)", "travel-dealz-feed": "Travel-Dealz-Artikel",
+    "feed:travel-dealz": "Travel-Dealz-Artikel", "feed:travel-dealz-suche": "Travel-Dealz-Suche",
+    "feed:mydealz-fluege": "mydealz", "feed:fly4free": "fly4free", "feed:premium-flights": "premium-flights",
+    "feed:urlaubspiraten": "Urlaubspiraten", "feed:reisetopia": "reisetopia", "feed:custom": "Eigener Feed",
+    "google_flights": "Google Flights", "amadeus-dates": "Amadeus (Monatsscan)", "amadeus-offers": "Amadeus (Angebote)",
+  };
+  const sourceLabel = (d) => d.source_label || SOURCE[d.source] || d.source || "unbekannt";
+  const RADAR_ID = "radar";
+  const RADAR_NAME = "Radar: Hammer-Deals";
+  const VERIFIED_RE = /^Google Flights bestätigt/;
   const REGION_LABEL = {
     DE: "Deutschland", DE_HUBS: "Deutschland (Hubs)", CH: "Schweiz", AT: "Österreich", DACH: "DACH",
     CN: "China", CN_MAJOR: "China (große Städte)", CN_HK: "China inkl. HK/Macau",
   };
   const NOTE_STATUS = { new: "Neu", cheaper: "Billiger", revived: "Wieder da", test: "Test" };
-  const TRIGGER = { manual: "manuell", schedule: "Zeitplan", scheduler: "Zeitplan", startup: "Start", demo: "Demo", cli: "CLI" };
+  const TRIGGER = { manual: "manuell", schedule: "Zeitplan", scheduler: "Zeitplan", startup: "Start", demo: "Demo", cli: "CLI",
+    feeds: "Feed-Check", "manual-feeds": "manuell (nur Feeds)" };
   const CHANNEL = { inbox: "Meldungen (hier)", console: "Konsole", telegram: "Telegram", ntfy: "ntfy", webhook: "Webhook" };
 
   const stopsLabel = (n) => (n === 0 ? "direkt" : typeof n === "number" ? plural(n, "Umstieg", "Umstiege") : null);
   function ratingClass(r) {
     if (r === "Top-Deal") return "r-top";
     if (r === "Sehr gut") return "r-good";
+    if (r === "Radar") return "r-radar";
     return "r-deal";
   }
 
@@ -229,16 +251,22 @@
     } else if (!running) {
       parts.push("Noch keine Prüfung");
     }
+    // Nach einem reinen Feed-Check: Fehler der letzten vollen Prüfung (Preis-APIs, Google) nicht verstecken
+    const lf = s.last_full_run;
+    const fullErrs = lf && s.last_run && lf.id !== s.last_run.id && Array.isArray(lf.errors) ? lf.errors.length : 0;
+    if (fullErrs) parts.push(`volle Prüfung ${relTime(lf.finished_at || lf.started_at)}: ${plural(fullErrs, "Fehler", "Fehler")}`);
     if (s.next_run) parts.push(`nächste ${fmtTime(s.next_run)}`);
     else if (!running) parts.push("kein automatischer Zeitplan aktiv");
+    if (s.next_feed_run) parts.push(`nächster Feed-Check ${untilTime(s.next_feed_run)}`);
     const line = $("#status-line");
     line.textContent = parts.join(" · ");
-    if (s.last_run && s.last_run.errors && s.last_run.errors.length) {
+    if ((s.last_run && s.last_run.errors && s.last_run.errors.length) || fullErrs) {
       line.append(" ", el("a", { href: "#einstellungen" }, "Details"));
     }
 
     $("#demo-banner").hidden = !s.demo;
-    $("#onboarding-banner").hidden = !(s.configured && s.configured.travelpayouts === false);
+    const srcs = Array.isArray(s.sources) ? s.sources : [];
+    $("#onboarding-banner").hidden = !(s.configured && s.configured.travelpayouts === false && srcs.includes("travelpayouts"));
 
     const unread = (s.counts && s.counts.unread) || 0;
     const badge = $("#unread-badge");
@@ -246,6 +274,9 @@
     badge.textContent = unread > 99 ? "99+" : String(unread);
     badge.setAttribute("aria-label", `${unread} ungelesen`);
     $("#mark-all-read-btn").disabled = unread === 0;
+    // Radar-Chip und Zähler hängen am Status (counts.radar_deals, configured.radar)
+    if (state.route === "deals" && state.alerts.length) renderDealFilters();
+    renderSourceStates();
   }
 
   async function pollStatus() {
@@ -280,7 +311,8 @@
     if (lr) {
       const errs = Array.isArray(lr.errors) ? lr.errors.length : 0;
       const msg = `Prüfung fertig: ${plural(lr.offers || 0, "Angebot", "Angebote")}, ` +
-        `${plural(lr.deals || 0, "Deal", "Deals")}, ${lr.notified || 0} neu gemeldet` +
+        `${plural(lr.deals || 0, "Deal", "Deals")}` + (lr.radar ? `, ${lr.radar} Radar` : "") +
+        `, ${lr.notified || 0} neu gemeldet` + (lr.rejected ? `, ${lr.rejected} bei Google verworfen` : "") +
         (errs ? ` – ${plural(errs, "Fehler", "Fehler")}, siehe Einstellungen → Letzte Läufe` : "");
       toast(msg, errs ? "error" : "ok");
     }
@@ -292,10 +324,14 @@
     if (state.route === "einstellungen") loadRuns();
   }
 
-  async function startRun(alertId) {
+  async function startRun(alertId, mode) {
     try {
-      await api("POST", "/api/run", alertId ? { alert_id: alertId } : {});
-      toast(alertId ? "Prüfung für diesen Alarm gestartet." : "Prüfung gestartet – das kann einen Moment dauern.");
+      const body = alertId ? { alert_id: alertId } : {};
+      if (mode) body.mode = mode;
+      await api("POST", "/api/run", body);
+      toast(alertId ? "Prüfung für diesen Alarm gestartet."
+        : mode === "feeds" ? "Deal-Seiten werden geprüft (nur Feeds + Radar)."
+        : "Prüfung gestartet – das kann einen Moment dauern.");
       if (state.status) { state.status.running = true; renderStatus(); }
       clearTimeout(state.pollTimer);
       state.pollTimer = setTimeout(pollStatus, 1500);
@@ -352,7 +388,7 @@
   async function loadDeals() {
     const req = ++dealsReq;
     if (!state.alerts.length) await loadAlertsData();
-    if (state.dealFilter && !state.alerts.some((a) => a.id === state.dealFilter)) state.dealFilter = null;
+    if (state.dealFilter && state.dealFilter !== RADAR_ID && !state.alerts.some((a) => a.id === state.dealFilter)) state.dealFilter = null;
     renderDealFilters();
     $("#show-expired").checked = state.showExpired;
     const q = new URLSearchParams({ status: state.showExpired ? "all" : "active" });
@@ -375,8 +411,11 @@
       type: "button", class: "chip", "aria-pressed": String(state.dealFilter === id), dataset: { id: id ?? "" },
       onclick: () => { state.dealFilter = id; loadDeals(); },
     }, el("span", { class: "chip-text" }, label), typeof count === "number" ? el("span", { class: "chip-count" }, String(count)) : null);
-    box.hidden = !state.alerts.length;
+    const radarCount = state.status && state.status.counts ? state.status.counts.radar_deals || 0 : 0;
+    const radarOn = !!(state.status && state.status.configured && state.status.configured.radar);
+    box.hidden = !state.alerts.length && !radarCount && !radarOn;
     const wanted = [[null, "Alle", null], ...state.alerts.map((a) => [a.id, a.name || a.id, a.active_deals || 0])];
+    if (radarOn || radarCount || state.dealFilter === RADAR_ID) wanted.push([RADAR_ID, "Radar", radarCount]);
     const existing = $$("button.chip", box);
     const same = existing.length === wanted.length && existing.every((b, i) => b.dataset.id === (wanted[i][0] ?? ""));
     if (!same) { box.replaceChildren(...wanted.map(([id, label, count]) => chip(id, label, count))); return; }
@@ -408,12 +447,13 @@
         el("button", { type: "button", class: "btn btn-primary", onclick: () => { location.hash = "#alarme"; openAlertForm(null); } }, "Ersten Alarm anlegen"));
       return box;
     }
-    box.append(el("p", { class: "empty-title" }, state.dealFilter ? "Für diesen Alarm gibt es gerade keinen Deal" : "Gerade kein Deal, der deine Kriterien erfüllt"));
+    box.append(el("p", { class: "empty-title" }, state.dealFilter === RADAR_ID ? "Das Radar hat gerade keinen Hammer-Deal gefunden"
+      : state.dealFilter ? "Für diesen Alarm gibt es gerade keinen Deal" : "Gerade kein Deal, der deine Kriterien erfüllt"));
     const hint = s.next_run ? `Der Monitor prüft automatisch wieder ${fmtTime(s.next_run)}.` : "Starte eine Prüfung, um nach neuen Deals zu suchen.";
     box.append(el("p", null, "Das ist normal – gute Deals sind selten. " + hint));
-    if (s.configured && s.configured.travelpayouts === false) {
-      box.append(el("p", null, "Tipp: Ohne Travelpayouts-Token kommen Deals nur aus Travel-Dealz-Artikeln. ",
-        el("a", { href: "#einstellungen" }, "Token eintragen")));
+    if (s.configured && s.configured.travelpayouts === false && (s.sources || []).includes("travelpayouts")) {
+      box.append(el("p", null, "Tipp: Travelpayouts ist eingeschaltet, hat aber keinen Token – ",
+        el("a", { href: "#einstellungen" }, "Token eintragen"), " oder die Quelle abschalten."));
     }
     if (!state.showExpired) box.append(el("button", { type: "button", class: "btn", onclick: () => setShowExpired(true) }, "Abgelaufene Deals anzeigen"));
     return box;
@@ -421,15 +461,18 @@
 
   function dealCard(d) {
     const expired = d.status === "expired";
+    const verified = d.verified === true || (Array.isArray(d.reasons) && d.reasons.some((r) => VERIFIED_RE.test(String(r))));
     const badges = el("div", { class: "badges" },
       expired ? el("span", { class: "badge r-exp" }, "Abgelaufen") : null,
       el("span", { class: `badge ${expired ? "r-exp-soft" : ratingClass(d.rating)}` }, d.rating || "Deal"),
       d.cabin && d.cabin !== "economy" ? el("span", { class: "badge badge-outline" }, CABIN[d.cabin] || d.cabin) : null,
-      d.roundtrip === false ? el("span", { class: "badge badge-outline" }, "one-way") : null);
+      d.roundtrip === false ? el("span", { class: "badge badge-outline" }, "one-way") : null,
+      verified && !expired ? el("span", { class: "badge badge-verified", title: "Preis bei Google Flights gegengeprüft" }, "✓ Google Flights bestätigt") : null);
 
     const route = d.origin && d.destination ? `${d.origin} → ${d.destination}` : null;
     const priceBox = el("div", { class: "price-box" },
-      el("div", { class: "price" }, euro(d.price)),
+      // Radar: als Error Fare angekündigt, aber ohne €-Preis in der Überschrift -> Preis 0
+      d.price > 0 ? el("div", { class: "price" }, euro(d.price)) : el("div", { class: "price price-none" }, "Preis im Artikel"),
       el("div", { class: "price-sub" }, d.roundtrip === false ? "p. P. one-way" : "p. P. hin & zurück"),
       typeof d.discount === "number" && d.discount > 0 && typeof d.reference_price === "number"
         ? el("div", { class: "price-ref" }, el("span", { class: "discount" }, `−${Math.round(d.discount * 100)} %`), " statt ", el("s", null, euro(d.reference_price)))
@@ -446,7 +489,7 @@
       ? el("ul", { class: "reasons", "aria-label": "Warum ein Deal?" }, ...d.reasons.map((r) => el("li", null, r))) : null;
 
     const meta = el("p", { class: "deal-meta" },
-      d.alert_name || d.alert_id || "", " · Quelle: ", SOURCE[d.source] || d.source || "unbekannt",
+      d.alert_name || d.alert_id || "", " · Quelle: ", sourceLabel(d),
       d.first_seen ? ` · gefunden am ${fmtDateTime(d.first_seen)}` : "",
       expired && d.expired_at ? ` · abgelaufen am ${fmtDateTime(d.expired_at)}` : "");
 
@@ -454,7 +497,8 @@
       extLink(d.link, "Zum Angebot", "btn btn-primary"),
       extLink(d.compare, "Bei Google Flights gegenprüfen", "btn"));
 
-    return el("article", { class: `deal-card${expired ? " expired" : ""}` },
+    const isRadar = d.alert_id === RADAR_ID || (Array.isArray(d.alert_ids) && d.alert_ids.includes(RADAR_ID));
+    return el("article", { class: `deal-card${expired ? " expired" : ""}${isRadar ? " is-radar" : ""}${verified && !expired ? " is-verified" : ""}` },
       el("div", { class: "deal-top" }, el("div", { class: "deal-top-left" }, badges, route ? el("p", { class: "route" }, route) : null), priceBox),
       el("h2", { class: "deal-title" }, d.headline || "Deal"),
       factsEl, reasons, meta, actions.childElementCount ? actions : null);
@@ -941,11 +985,27 @@
   }
 
   // ------------------------------------------------------------------ Einstellungen
-  // type: text | url | secret | int | float | percent | lines
+  // type: text | url | secret | int | float | percent | lines | bool | select
   const SETTINGS = [
-    { key: "travelpayouts_token", group: "source", type: "secret", label: "Travelpayouts-Token", help: "Kostenlos – ohne Token gibt es keine Preise aus der API." },
-    { key: "travelpayouts_marker", group: "source", type: "text", label: "Travelpayouts-Marker (optional)", help: "Deine Partner-ID für Buchungslinks. Nicht nötig." },
-    { key: "interval_hours", group: "schedule", type: "float", label: "Prüfintervall (Stunden)", min: 0.5, step: 0.5, help: "Mindestens 0,5. Zu häufiges Prüfen bringt kaum mehr Deals." },
+    { key: "travelpayouts_token", group: "travelpayouts", type: "secret", label: "Travelpayouts-Token", help: "Kostenlos – ohne Token gibt es keine Preise aus der API." },
+    { key: "travelpayouts_marker", group: "travelpayouts", type: "text", label: "Travelpayouts-Marker (optional)", help: "Deine Partner-ID für Buchungslinks. Nicht nötig." },
+    { key: "google_max_requests", group: "google", type: "int", label: "Max. Abfragen pro Lauf", min: 2, max: 500, help: "Gilt für alle Alarme zusammen, inkl. Gegenprüfungen (höchstens die Hälfte). Zwischen Abfragen wird 2–4 s gewartet." },
+    { key: "google_verify", group: "google", type: "bool", label: "Deals aus Preis-APIs bei Google gegenprüfen", help: "Gecachte Preise (Travelpayouts, Amadeus-Monatsscan) werden mit genau diesen Daten bei Google geprüft: Ein Flug, der zu den Regeln des Alarms passt, höchstens 25 % teurer und unter der Grenze = bestätigt (gemeldet mit Google-Preis), sonst verworfen. Ist Google nicht erreichbar, wird der Deal mit Hinweis „nicht gegengeprüft“ gemeldet." },
+    { key: "amadeus_api_key", group: "amadeus", type: "secret", label: "Amadeus API Key" },
+    { key: "amadeus_api_secret", group: "amadeus", type: "secret", label: "Amadeus API Secret" },
+    { key: "amadeus_env", group: "amadeus", type: "select", label: "Umgebung", options: [["test", "Test (wenig Daten)"], ["production", "Produktion"]] },
+    { key: "amadeus_max_requests", group: "amadeus", type: "int", label: "Max. Abfragen pro Lauf", min: 1, max: 2000 },
+    { key: "feed_interval_minutes", group: "feeds", type: "int", label: "Feed-Intervall (Minuten)", min: 10, max: 1440, help: "So oft werden nur die Deal-Seiten + Radar geprüft (zusätzlich zum vollen Lauf). Mindestens 10." },
+    { key: "feed_max_age_days", group: "feeds", type: "int", label: "Artikel max. Alter (Tage)", min: 1 },
+    { key: "feeds", group: "feeds", type: "lines", label: "Eigene Feed-URLs (eine pro Zeile)", wide: true, help: "Weitere RSS-Feeds, z. B. die Kategorie-Feeds einer Deal-Seite." },
+    { key: "radar_enabled", group: "radar", type: "bool", label: "Radar aktiv" },
+    { key: "radar_home_only", group: "radar", type: "bool", label: "Nur Abflug aus Deutschland, Österreich, Schweiz", help: "Aus = auch Abflüge ab Amsterdam, Mailand, Prag … melden." },
+    { key: "radar_economy_max", group: "radar", type: "float", label: "Economy bis (€)", min: 0, help: "Bewusst niedrig – ob Kurz- oder Langstrecke, steht nicht im Artikel." },
+    { key: "radar_economy_min", group: "radar", type: "float", label: "Economy ab (€)", min: 0, help: "Darunter sind es meist Kurzstrecken-Promos („Ryanair ab 14,99 €“)." },
+    { key: "radar_premium_max", group: "radar", type: "float", label: "Premium Economy bis (€)", min: 0 },
+    { key: "radar_business_max", group: "radar", type: "float", label: "Business Class bis (€)", min: 0 },
+    { key: "radar_first_max", group: "radar", type: "float", label: "First Class bis (€)", min: 0 },
+    { key: "interval_hours", group: "schedule", type: "float", label: "Prüfintervall (Stunden)", min: 0.5, step: 0.5, help: "Voller Lauf über alle Quellen. Mindestens 0,5. Zu häufiges Prüfen bringt kaum mehr Deals." },
     { key: "scan_months", group: "schedule", type: "int", label: "Monate voraus", min: 1, max: 12, help: "So viele Abflugmonate werden abgesucht." },
     { key: "webhook_url", group: "notify", type: "url", label: "Webhook-URL", placeholder: "https://…", help: "Für deinen späteren Benachrichtigungsserver (JSON per POST)." },
     { key: "webhook_token", group: "notify", type: "secret", label: "Webhook-Token", help: "Wird als „Authorization: Bearer …“ mitgeschickt." },
@@ -957,10 +1017,18 @@
     { key: "min_history_samples", group: "advanced", type: "int", label: "Mindestanzahl Beobachtungen", min: 1, help: "Ab so vielen Preisen gilt der Median statt des Normalpreises." },
     { key: "renotify_drop", group: "advanced", type: "percent", label: "Erneut melden ab (% billiger)", min: 0, max: 90, step: 1, help: "Ein bekannter Deal wird nur erneut gemeldet, wenn er so viel billiger wird." },
     { key: "max_deals_per_alert", group: "advanced", type: "int", label: "Max. Meldungen pro Alarm und Lauf", min: 1 },
-    { key: "feed_max_age_days", group: "advanced", type: "int", label: "Feed-Artikel max. Alter (Tage)", min: 1 },
     { key: "request_delay", group: "advanced", type: "float", label: "Pause zwischen API-Anfragen (s)", min: 0, step: 0.05 },
-    { key: "feeds", group: "advanced", type: "lines", label: "RSS-Feeds (einer pro Zeile)", wide: true },
   ];
+  const SOURCE_STATE = {
+    // Demo: "configured" ist dort immer true (Beispielpreise) - nicht "Token gesetzt" behaupten,
+    // während das Token-Feld darunter "nicht gesetzt" zeigt
+    travelpayouts: (c, demo) => (demo ? ["ok", "Demo: Beispielpreise, kein Token nötig"]
+      : c ? ["ok", "Token gesetzt"] : ["warn", "Token fehlt – ohne Token keine Preise"]),
+    google_flights: () => ["ok", "Kein Key nötig · inoffiziell, kann zeitweise blockiert sein"],
+    amadeus: (c, demo) => (demo ? ["warn", "In der Demo nicht abgefragt"]
+      : c ? ["ok", "Key und Secret gesetzt · ungetestet"] : ["warn", "Kein Key – Self-Service eingestellt, nur mit altem/Enterprise-Key nutzbar"]),
+    feeds: (c) => (c ? ["ok", "Deal-Seiten ausgewählt"] : ["warn", "Keine Deal-Seite ausgewählt"]),
+  };
 
   async function loadSettings() {
     try {
@@ -971,6 +1039,11 @@
     } catch (e) {
       showSettingsError(`Einstellungen konnten nicht geladen werden: ${e.message}`);
     }
+  }
+
+  function envName(key) {
+    const names = state.settings && state.settings.env_names;
+    return names && names[key] ? ` (${names[key]})` : "";
   }
 
   function isLocked(key) {
@@ -989,12 +1062,56 @@
       const box = $(`#settings-form .field-grid[data-group="${f.group}"]`);
       box.append(settingField(f, values[f.key], secrets[f.key]));
     }
-    // Quellen
+    // Quellen: Schalter je Karte + Zustand
     const srcLocked = isLocked("sources");
     const srcs = Array.isArray(values.sources) ? values.sources : [];
-    for (const cb of $$("#sources-group input")) { cb.checked = srcs.includes(cb.value); cb.disabled = srcLocked; }
+    for (const cb of $$("#sources-group input[name=src]")) {
+      cb.checked = srcs.includes(cb.value);
+      cb.disabled = srcLocked;
+      setSourceCard(cb);
+    }
     $("#sources-locked").hidden = !srcLocked;
-    $("#sources-group").closest(".field").hidden = !("sources" in values);
+    $("#sources-locked").textContent = `Quellen-Auswahl per Umgebungsvariable gesetzt${envName("sources")}`;
+    renderSourceStates();
+    renderPresets(values, s.presets);
+  }
+
+  // Zustand je Quelle (Token/Key gesetzt?) - kommt aus /api/status, das evtl. erst nach den
+  // Einstellungen geladen ist -> auch aus renderStatus aufgerufen
+  function renderSourceStates() {
+    if (!state.status || !state.status.configured) return;
+    const configured = state.status.configured;
+    for (const p of $$("#sources-group .source-state")) {
+      const id = p.dataset.state;
+      const fn = SOURCE_STATE[id];
+      const [cls, text] = fn ? fn(configured[id] === true, !!state.status.demo) : ["", ""];
+      p.className = `source-state ${cls}`;
+      p.textContent = text;
+    }
+  }
+
+  function setSourceCard(cb) {
+    const card = cb.closest(".source-card");
+    if (!card) return;
+    card.classList.toggle("is-off", !cb.checked);
+    const txt = $(".switch-text", card);
+    if (txt) txt.textContent = cb.checked ? "an" : "aus";
+  }
+
+  function renderPresets(values, presets) {
+    const box = $("#feed-presets");
+    const list = Array.isArray(presets) ? presets : [];
+    const chosen = Array.isArray(values.feed_presets) ? values.feed_presets : [];
+    const locked = isLocked("feed_presets");
+    box.replaceChildren(...list.map((p) => {
+      const cb = el("input", { type: "checkbox", name: "preset", value: p.id, checked: chosen.includes(p.id), disabled: locked });
+      const link = safeUrl(p.homepage) ? el("a", { href: p.homepage, target: "_blank", rel: "noopener noreferrer" }, p.name) : el("strong", null, p.name);
+      return el("label", { class: "check preset" }, cb, link,
+        p.description ? el("span", { class: "help-inline" }, ` – ${p.description}`) : null);
+    }));
+    $("#presets-locked").hidden = !locked;
+    $("#presets-locked").textContent = `per Umgebungsvariable gesetzt${envName("feed_presets")}`;
+    box.closest(".field").hidden = !("feed_presets" in values);
   }
 
   function settingField(f, value, secret) {
@@ -1006,6 +1123,12 @@
     if (f.type === "lines") {
       input = el("textarea", { id, rows: "3", spellcheck: "false" });
       input.value = Array.isArray(value) ? value.join("\n") : (value || "");
+    } else if (f.type === "bool") {
+      input = el("input", { id, type: "checkbox", role: "switch" });
+      input.checked = value === true;
+    } else if (f.type === "select") {
+      input = el("select", { id }, ...(f.options || []).map(([v, label]) => el("option", { value: v }, label)));
+      input.value = value === null || value === undefined ? "" : String(value);
     } else if (f.type === "secret") {
       const isSet = !!(secret && secret.set);
       input = el("input", { id, type: "password", autocomplete: "new-password", spellcheck: "false",
@@ -1024,10 +1147,15 @@
     input.dataset.type = f.type;
     if (locked) input.disabled = true;
     const helps = [];
-    if (locked) helps.push(el("p", { class: "help locked-hint" }, "per Umgebungsvariable gesetzt"));
+    if (locked) helps.push(el("p", { class: "help locked-hint" }, `per Umgebungsvariable gesetzt${envName(f.key)}`));
     if (f.help) helps.push(el("p", { class: "help", id: helpId }, f.help));
     if (f.help) input.setAttribute("aria-describedby", helpId);
-    wrap.append(el("label", { for: id }, f.label), input);
+    if (f.type === "bool") {
+      wrap.classList.add("field-bool");
+      wrap.append(el("label", { class: "switch" }, input, el("span", { class: "switch-track", "aria-hidden": "true" }), el("span", null, f.label)));
+    } else {
+      wrap.append(el("label", { for: id }, f.label), input);
+    }
     if (f.type === "secret") {
       const isSet = !!(secret && secret.set);
       wrap.append(el("p", { class: `secret-state${isSet ? " is-set" : ""}` }, isSet ? `✓ gesetzt ${secret.hint || ""} – leer lassen = unverändert` : "– nicht gesetzt"));
@@ -1060,6 +1188,8 @@
         continue;
       }
       if (type === "lines") { values[key] = inp.value.split(/\n+/).map((x) => x.trim()).filter(Boolean); continue; }
+      if (type === "bool") { values[key] = !!inp.checked; continue; }
+      if (type === "select") { values[key] = inp.value; continue; }
       if (type === "int" || type === "float" || type === "percent") {
         let n;
         try {
@@ -1076,7 +1206,10 @@
       values[key] = v;
     }
     if ("sources" in (s.values || {}) && !isLocked("sources")) {
-      values.sources = $$("#sources-group input").filter((cb) => cb.checked).map((cb) => cb.value);
+      values.sources = $$("#sources-group input[name=src]").filter((cb) => cb.checked).map((cb) => cb.value);
+    }
+    if ("feed_presets" in (s.values || {}) && !isLocked("feed_presets")) {
+      values.feed_presets = $$("#feed-presets input[name=preset]").filter((cb) => cb.checked).map((cb) => cb.value);
     }
     return { values, secrets };
   }
@@ -1138,7 +1271,7 @@
     const box = $("#runs-table");
     if (!runs.length) { box.replaceChildren(el("p", { class: "help" }, "Noch keine Prüfung gelaufen.")); return; }
     const alertName = (id) => { const a = state.alerts.find((x) => x.id === id); return a ? a.name : id; };
-    const cols = ["Start", "Auslöser", "Alarm", "Dauer", "Angebote", "Deals", "Gemeldet", "Abgelaufen", "Fehler"];
+    const cols = ["Start", "Auslöser", "Alarm", "Dauer", "Angebote", "Deals", "Radar", "Gemeldet", "Abgelaufen", "Fehler"];
     const dur = (r) => {
       const a = parseIso(r.started_at), b = parseIso(r.finished_at);
       if (!a) return "";
@@ -1155,7 +1288,8 @@
         td("Alarm", r.alert_id ? alertName(r.alert_id) : "alle"),
         td("Dauer", dur(r)),
         td("Angebote", String(r.offers ?? "")),
-        td("Deals", String(r.deals ?? "")),
+        td("Deals", String(r.deals ?? ""), r.rejected ? el("span", { class: "muted" }, ` (${r.rejected} verworfen)`) : null),
+        td("Radar", String(r.radar ?? 0)),
         td("Gemeldet", String(r.notified ?? "")),
         td("Abgelaufen", String(r.expired ?? "")),
         td("Fehler", errs.length ? el("ul", { class: "err-list" }, ...errs.map((x) => el("li", null, x))) : el("span", { class: "muted" }, "keine")));
@@ -1171,6 +1305,8 @@
     chipTo = createChipInput($("#f-destinations"), "destinations");
 
     $("#run-btn").addEventListener("click", () => startRun(null));
+    $("#run-feeds-btn").addEventListener("click", () => startRun(null, "feeds"));
+    for (const cb of $$("#sources-group input[name=src]")) cb.addEventListener("change", () => setSourceCard(cb));
     // Sprunglink: nur fokussieren – "#main" als Hash würde sonst auf die Deals-Seite wechseln
     $(".skip-link").addEventListener("click", (e) => { e.preventDefault(); $("#main").focus(); });
     $("#show-expired").addEventListener("change", (e) => setShowExpired(e.target.checked));

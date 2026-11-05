@@ -1,0 +1,19 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 403 
+date: Wed, 04 Nov 2026 22:02:27 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+server-timing: cfEdge;dur=8,cfOrigin;dur=0
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=15768000
+set-cookie: __cf_bm=uzskq8i2TioSRap0a7w398JVXnqmugYpZg.duLa2esQ-1793829747.6845746-1.0.1.1-PQgpDDdbdjI3XRTHRkfGFjpZHtmJKKfSzBennFHmgi6Uq0svlyrWEtkU5Sl.2MVgiHJc_PCRAdipblAng_SE.ejW4sMM3KdWPYTuxacXZyPleixYSLX.jPdyghbxuDx6; HttpOnly; SameSite=None; Secure; Path=/; Domain=www.lufthansa.com; Expires=Wed, 04 Nov 2026 22:32:27 GMT
+access-control-max-age: 600
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+content-encoding: gzip
+server: cloudflare
+cf-ray: a556e7330c070bfe-IAD
+

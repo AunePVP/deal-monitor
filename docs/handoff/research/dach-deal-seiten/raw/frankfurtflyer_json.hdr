@@ -1,0 +1,21 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+x-powered-by: PHP/8.4.27
+set-cookie: _fbp=fb.1.1793829050958.663441712.AQECAQIB; expires=Tue, 02 Feb 2027 21:50:50 GMT; Max-Age=7776000; path=/; domain=frankfurtflyer.de; secure; SameSite=Lax
+content-type: application/json; charset=UTF-8
+x-robots-tag: noindex
+x-content-type-options: nosniff
+access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link
+access-control-allow-headers: Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type
+x-wp-total: 12878
+x-wp-totalpages: 1288
+link: <https://frankfurtflyer.de/wp-json/wp/v2/posts?per_page=10&_fields=id%2Cdate%2Ctitle%2Clink%2Ccategories&page=2>; rel="next"
+allow: GET
+vary: Origin
+x-litespeed-cache-control: no-cache
+cache-control: no-cache, must-revalidate, max-age=0, no-store, private
+date: Wed, 04 Nov 2026 21:50:52 GMT
+server: LiteSpeed
+alt-svc: h3=":443"; ma=2592000, h3-29=":443"; ma=2592000
+

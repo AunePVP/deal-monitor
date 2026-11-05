@@ -50,7 +50,7 @@
     <strong>DEMO</strong> – Beispieldaten, keine echten Preise
   </div>
   <div class="banner banner-info" id="onboarding-banner" hidden>
-    Für Preise brauchst du einen kostenlosen Travelpayouts-Token → <a href="#einstellungen">Einstellungen</a>
+    Travelpayouts ist eingeschaltet, aber ohne Token – kostenlosen Token eintragen oder die Quelle abschalten → <a href="#einstellungen">Einstellungen</a>
   </div>
   <div class="banner banner-error" id="conn-banner" hidden role="alert">
     Keine Verbindung zum Deal-Monitor-Server. Läuft er noch? Neuer Versuch in wenigen Sekunden …
@@ -72,7 +72,7 @@
         <span>Abgelaufene zeigen</span>
       </label>
     </div>
-    <div class="chips" id="deal-filters" role="group" aria-label="Nach Alarm filtern"></div>
+    <div class="chips" id="deal-filters" role="group" aria-label="Nach Alarm oder Radar filtern"></div>
     <div class="deal-grid" id="deal-list" aria-live="polite"></div>
   </section>
 
@@ -113,20 +113,94 @@
     </div>
 
     <form id="settings-form" class="settings-form" novalidate>
-      <fieldset class="panel">
-        <legend>Preisquelle</legend>
-        <p class="help">Die Preise kommen aus der kostenlosen Travelpayouts-Daten-API.
-          Anleitung: auf <a href="https://www.travelpayouts.com/" target="_blank" rel="noopener noreferrer">travelpayouts.com</a>
-          ein Konto anlegen → „Tools“ → „API“ → Token kopieren und hier einfügen.</p>
-        <div class="field-grid" data-group="source"></div>
-        <div class="field">
-          <span class="field-label" id="sources-label">Quellen</span>
-          <div class="check-row" role="group" aria-labelledby="sources-label" id="sources-group">
-            <label class="check"><input type="checkbox" name="src" value="travelpayouts"> Travelpayouts (Preis-API)</label>
-            <label class="check"><input type="checkbox" name="src" value="feed"> Travel-Dealz-Artikel (RSS-Feed)</label>
-          </div>
-          <p class="help locked-hint" id="sources-locked" hidden>per Umgebungsvariable gesetzt</p>
+      <fieldset class="panel" id="sources-panel">
+        <legend>Quellen</legend>
+        <p class="help">Jede Quelle lässt sich einzeln ein- und ausschalten. Preis-APIs und Google Flights
+          suchen deine Alarm-Strecken ab, die Deal-Seiten liefern Artikel – und das Radar prüft alle Artikel auf Hammer-Deals.</p>
+        <p class="help locked-hint" id="sources-locked" hidden>Quellen-Auswahl per Umgebungsvariable gesetzt</p>
+        <div class="source-cards" id="sources-group" role="group" aria-label="Quellen">
+
+          <section class="source-card" data-source="travelpayouts" aria-labelledby="src-h-travelpayouts">
+            <div class="source-head">
+              <div class="source-title">
+                <h3 id="src-h-travelpayouts">Travelpayouts (Preis-API)</h3>
+                <p class="help">Gecachte Preise aus Suchen der letzten Tage – kostenlos mit Token:
+                  <a href="https://www.travelpayouts.com/" target="_blank" rel="noopener noreferrer">travelpayouts.com</a>
+                  → „Tools“ → „API“.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" name="src" value="travelpayouts" role="switch" aria-label="Travelpayouts nutzen">
+                <span class="switch-track" aria-hidden="true"></span><span class="switch-text">aus</span>
+              </label>
+            </div>
+            <p class="source-state" data-state="travelpayouts"></p>
+            <div class="field-grid" data-group="travelpayouts"></div>
+          </section>
+
+          <section class="source-card" data-source="google_flights" aria-labelledby="src-h-google">
+            <div class="source-head">
+              <div class="source-title">
+                <h3 id="src-h-google">Google Flights</h3>
+                <p class="help">Echte Live-Preise direkt von der Google-Flights-Ergebnisseite – kein Key nötig.
+                  <strong>Inoffiziell:</strong> Google kann die Seite ändern oder zeitweise blockieren; dann pausiert die Quelle bis zum nächsten Lauf.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" name="src" value="google_flights" role="switch" aria-label="Google Flights nutzen">
+                <span class="switch-track" aria-hidden="true"></span><span class="switch-text">aus</span>
+              </label>
+            </div>
+            <p class="source-state" data-state="google_flights"></p>
+            <div class="field-grid" data-group="google"></div>
+          </section>
+
+          <section class="source-card" data-source="amadeus" aria-labelledby="src-h-amadeus">
+            <div class="source-head">
+              <div class="source-title">
+                <h3 id="src-h-amadeus">Amadeus Self-Service</h3>
+                <p class="help">Offizielle Flug-API. <strong>Self-Service laut Anbieter am 17.07.2026 eingestellt</strong>
+                  (neue Keys nur noch für Enterprise-Kunden). Nur sinnvoll mit einem noch gültigen Key.
+                  Code nach Doku umgesetzt, <strong>hier nicht live getestet</strong>.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" name="src" value="amadeus" role="switch" aria-label="Amadeus nutzen">
+                <span class="switch-track" aria-hidden="true"></span><span class="switch-text">aus</span>
+              </label>
+            </div>
+            <p class="source-state" data-state="amadeus"></p>
+            <div class="field-grid" data-group="amadeus"></div>
+          </section>
+
+          <section class="source-card" data-source="feeds" aria-labelledby="src-h-feeds">
+            <div class="source-head">
+              <div class="source-title">
+                <h3 id="src-h-feeds">Deal-Seiten (Feeds)</h3>
+                <p class="help">Artikel der Deal-Seiten werden per Stichwort deinen Alarmen zugeordnet und vom Radar auf Hammer-Deals geprüft.
+                  Werden häufiger gelesen als die Preis-APIs (Feed-Intervall).</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" name="src" value="feeds" role="switch" aria-label="Deal-Seiten nutzen">
+                <span class="switch-track" aria-hidden="true"></span><span class="switch-text">aus</span>
+              </label>
+            </div>
+            <p class="source-state" data-state="feeds"></p>
+            <div class="field">
+              <span class="field-label" id="presets-label">Deal-Seiten</span>
+              <div class="preset-list" id="feed-presets" role="group" aria-labelledby="presets-label"></div>
+              <p class="help locked-hint" id="presets-locked" hidden>per Umgebungsvariable gesetzt</p>
+            </div>
+            <div class="field-grid" data-group="feeds"></div>
+            <div class="btn-row">
+              <button type="button" class="btn btn-small" id="run-feeds-btn">Nur Deal-Seiten jetzt prüfen</button>
+            </div>
+          </section>
         </div>
+      </fieldset>
+
+      <fieldset class="panel" id="radar-panel">
+        <legend>Radar – keinen Hammer-Deal verpassen</legend>
+        <p class="help">Unabhängig von deinen Alarmen prüft das Radar <em>alle</em> Flug-Artikel der aktiven Deal-Seiten:
+          Error Fares/Fehlerpreise immer, sonst alles unter diesen Preisgrenzen. Treffer erscheinen unter Deals als „Radar“.</p>
+        <div class="field-grid" data-group="radar"></div>
       </fieldset>
 
       <fieldset class="panel">
@@ -265,9 +339,9 @@
       </div>
 
       <div class="field">
-        <label for="f-keywords">Stichwörter für den Travel-Dealz-Feed</label>
+        <label for="f-keywords">Stichwörter für die Deal-Seiten (Feeds)</label>
         <textarea id="f-keywords" name="feed_keywords" rows="3" placeholder="Zürich, Hamburg&#10;China, Business"></textarea>
-        <p class="help">Pro Zeile eine Gruppe. Innerhalb einer Zeile müssen alle Wörter (kommagetrennt) im Artikel vorkommen, von den Zeilen reicht eine. Leer = Feed für diesen Alarm ignorieren.</p>
+        <p class="help">Pro Zeile eine Gruppe. Innerhalb einer Zeile müssen alle Wörter (kommagetrennt) im Artikel vorkommen, von den Zeilen reicht eine. Leer = automatisch aus Von/Nach (Städte-, Länder- und Regionsnamen, auch englisch).</p>
       </div>
 
       <label class="check">

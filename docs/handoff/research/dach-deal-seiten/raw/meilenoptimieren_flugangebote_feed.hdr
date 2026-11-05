@@ -1,0 +1,13 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+vary: Accept-Encoding,Cookie,User-Agent
+link: <https://meilenoptimieren.com/wp-json/>; rel="https://api.w.org/", <https://meilenoptimieren.com/wp-json/wp/v2/categories/93>; rel="alternate"; title="JSON"; type="application/json", <https://meilenoptimieren.com/category/flugangebote/>; rel="canonical"
+last-modified: Wed, 04 Nov 2026 10:34:47 GMT
+etag: "528f96682150531db634edaef8038ecc"
+cache-control: max-age=86400
+expires: Thu, 05 Nov 2026 21:53:11 GMT
+content-type: application/rss+xml; charset=UTF-8
+date: Wed, 04 Nov 2026 21:53:11 GMT
+server: Apache
+

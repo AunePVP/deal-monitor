@@ -1,0 +1,9 @@
+td_origins | 200 https://travel-dealz.de/wp-json/wp/v2/origins?per_page=100&orderby=count&order=desc application/json; charset=UTF-8 134452
+td_dest_china | 200 https://travel-dealz.de/wp-json/wp/v2/destinations?search=china application/json; charset=UTF-8 4915
+td_dest_hamburg | 200 https://travel-dealz.de/wp-json/wp/v2/destinations?search=hamburg application/json; charset=UTF-8 2155
+td_dest_zuerich | 200 https://travel-dealz.de/wp-json/wp/v2/destinations?search=z%C3%BCrich application/json; charset=UTF-8 1319
+td_json_deal | 200 https://travel-dealz.de/wp-json/wp/v2/deal?per_page=5 application/json; charset=UTF-8 126143
+td_json_ticker | 200 https://travel-dealz.de/wp-json/wp/v2/ticker?per_page=5 application/json; charset=UTF-8 29338
+td_region_schweiz | 200 https://travel-dealz.de/region/schweiz/feed/ application/rss+xml; charset=UTF-8 583496
+td_region_de | 200 https://travel-dealz.de/region/deutschland/feed/ application/rss+xml; charset=UTF-8 554050
+td_feed_posttype_deal | 200 https://travel-dealz.de/feed/?post_type=deal application/rss+xml; charset=UTF-8 3562105

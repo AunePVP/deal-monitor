@@ -1,0 +1,100 @@
+##### td_cat_economy
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [2] Wed, 04 Nov 2026 10:37:46 +0000 | China Eastern: Gabelflüge Amsterdam – Tokio – Frankfurt ab 426€ (Nov. / Dez. 2026) | https://travel-dealz.de/ticker/486604/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [3] Wed, 04 Nov 2026 07:08:13 +0000 | Last Minute: Bonaire ab 416€ mit Corendon von Amsterdam (Handgepäck) | https://travel-dealz.de/ticker/486560/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [4] Tue, 03 Nov 2026 14:47:24 +0000 | Round the World: Vancouver, Seattle, Singapur, Kuala Lumpur + Hanoi ab 898€ inkl. Gepäck (getrennte Tickets) | https://travel-dealz.de/deal/round-the-world-nov26/?utm_source=feed&utm_medium=rss&utm_cam
+  [5] Tue, 03 Nov 2026 08:13:02 +0000 | New York ab 306€ mit Icelandair von Berlin, München & Frankfurt (441€ mit Gepäck) | https://travel-dealz.de/deal/new-york-icelandair-angebot/?utm_source=feed&utm_medium=rss&u
+  [6] Sun, 01 Nov 2026 06:00:00 +0000 | SAS Youth Fares: Rabatte auf Flüge sichern (für alle unter 26) | https://travel-dealz.de/deal/sas-youth-fares/?utm_source=feed&utm_medium=rss&utm_campaign=
+  [7] Sat, 31 Oct 2026 12:08:00 +0000 | Island ab 156€ mit Discover Airlines & Bus von Innsbruck (nur Personal Item; 236€ mit Gepäck) | https://travel-dealz.de/deal/lufthansa-island/?utm_source=feed&utm_medium=rss&utm_campaign
+  [8] Sat, 31 Oct 2026 08:00:00 +0000 | Luxair: Bis zu 40€ Rabatt für Jugendliche von 12 bis 24 Jahren (nicht im Light-Tarif) | https://travel-dealz.de/deal/luxair-jugendtarif-rabatt/?utm_source=feed&utm_medium=rss&utm
+  [9] Fri, 30 Oct 2026 11:24:41 +0000 | Condor: Oneway-Flüge nach San José del Cabo (Mexiko) ab 210€ inkl. Gepäck | https://travel-dealz.de/ticker/485791/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [10] Fri, 30 Oct 2026 10:47:58 +0000 | China Eastern: Gabelflüge nach Down Under ab 528€, z.B. Stockholm – Auckland – Frankfurt (inkl. Gepäck) | https://travel-dealz.de/deal/china-eastern-gabelfluege-down-under/?utm_source=feed&utm_med
+##### td_cat_business
+FORMAT=RSS ITEMS=20
+  [1] Thu, 29 Oct 2026 16:15:36 +0000 | Belo Horizonte ab 1.427€ in der GOL / Wamos Air Business Class ab Lissabon inkl. 2x 23 kg Gepäck | https://travel-dealz.de/deal/gol-business-lissabon-belo-horizonte/?utm_source=feed&utm_med
+  [2] Thu, 29 Oct 2026 09:19:30 +0000 | Erbil, Irak ab 390€ in der Eurowings „Business Class“ (inkl. 400 Miles&More Statuspunkten) | https://travel-dealz.de/ticker/485569/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [3] Wed, 28 Oct 2026 09:14:01 +0000 | Bangkok: Business Class von Frankfurt ab 1.208€ mit Turkmenistan Airlines | https://travel-dealz.de/deal/turkmenistan-airlines-frankfurt-bangkok-business/?utm_source=
+  [4] Mon, 26 Oct 2026 12:28:45 +0000 | Bangkok ab 1.274€ in der Royal Jordanian Business Class von Athen (Langer Layover) | https://travel-dealz.de/deal/royal-jordanian-athen-bangkok/?utm_source=feed&utm_medium=rss
+  [5] Sat, 24 Oct 2026 16:00:00 +0000 | Bewertung: SAS Business Class im A321LR (Kopenhagen – Toronto) | https://travel-dealz.de/blog/bewertung-sas-business-a321lr/?utm_source=feed&utm_medium=rss
+  [6] Sat, 24 Oct 2026 11:00:00 +0000 | Bangkok in der Gulf Air Business Class ab 1.551€ von Mailand | https://travel-dealz.de/deal/gulf-air-mailand-bangkok-business/?utm_source=feed&utm_medium
+  [7] Fri, 23 Oct 2026 08:21:25 +0000 | China ab 1.440€ in der China Southern Business Class von Budapest | https://travel-dealz.de/deal/china-southern-business-budapest-china/?utm_source=feed&utm_m
+  [8] Fri, 23 Oct 2026 07:18:06 +0000 | Singapur ab 1.368€ in der Gulf Air Business Class von Mailand & Rom | https://travel-dealz.de/deal/gulf-air-business-singapur/?utm_source=feed&utm_medium=rss&ut
+  [9] Tue, 20 Oct 2026 08:04:07 +0000 | Bangkok ab 1.694€ in der Royal Jordanian Business Class von Hamburg | https://travel-dealz.de/deal/royal-jordanian-business-class-bangkok/?utm_source=feed&utm_m
+  [10] Sat, 17 Oct 2026 13:52:46 +0000 | Shanghai ab 1.486€ in der China Southern Business Class von Luxemburg (langer Stopover in Zhengzhou) | https://travel-dealz.de/deal/china-southern-business-ab-luxemburg/?utm_source=feed&utm_med
+##### td_cat_premeco
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 10:00:46 +0000 | New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum) | https://travel-dealz.de/deal/new-york-condor-premium-class/?utm_source=feed&utm_medium=rss
+  [2] Mon, 02 Nov 2026 07:22:16 +0000 | Meilenschnäppchen: LOT Premium Economy Warschau – Tokio für 57.000 Meilen + 163€ roundtrip | https://travel-dealz.de/ticker/485957/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [3] Thu, 22 Oct 2026 09:41:11 +0000 | San José del Cabo: Condor „Premium Economy“ ab 760€ roundtrip (660€ mit Amex Platinum) | https://travel-dealz.de/ticker/484486/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [4] Fri, 16 Oct 2026 13:17:12 +0000 | Oneway: SAS Business Class Thailand → Frankfurt ab 806€ (Economy ab 233€) | https://travel-dealz.de/deal/sas-bangkok-kopenhagen-oneway/?utm_source=feed&utm_medium=rss
+  [5] Fri, 09 Oct 2026 08:00:00 +0000 | Shanghai ab 716€ in der China Southern Premium Economy von Amsterdam | https://travel-dealz.de/deal/amsterdam-shanghai-china-southern/?utm_source=feed&utm_medium
+  [6] Mon, 28 Sep 2026 09:16:47 +0000 | Malediven: Air India Premium Economy von Frankfurt ab 821€ | https://travel-dealz.de/ticker/428070/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [7] Sun, 29 Mar 2026 13:16:00 +0000 | Längster Flug der Welt: Singapore Airlines Premium Economy New York → Singapur ab 476€ oneway | https://travel-dealz.de/deal/singapore-airlines-new-york-singapur/?utm_source=feed&utm_med
+  [8] Sat, 28 Sep 2024 07:00:00 +0000 | Kilimandscharo, Tansania ab 687€ in der KLM Premium Economy von Dänemark | https://travel-dealz.de/deal/kilimandscharo-klm-premium-economy/?utm_source=feed&utm_mediu
+  [9] Sun, 30 Jun 2024 15:40:00 +0000 | Schlimmer als die Economy? Bewertung der Air France Premium Economy in der Boeing 777 | https://travel-dealz.de/blog/bewertung-air-france-premium-eco/?utm_source=feed&utm_medium=
+  [10] Sun, 07 May 2023 11:40:00 +0000 | Studentenrabatte bei Singapore Airlines: Reduzierte Oneway-Flüge, zusätzliches Freigepäck & mehr | https://travel-dealz.de/deal/studentenvorteile-singapore-airlines/?utm_source=feed&utm_med
+##### td_cat_first
+FORMAT=RSS ITEMS=15
+  [1] Sun, 14 Dec 2025 16:45:00 +0000 | Bewertung: Swiss Senses FIRST CLASS in der Grand Suite von Zürich nach Boston | https://travel-dealz.de/blog/swiss-senses-first-class-grand-suite/?utm_source=feed&utm_med
+  [2] Sat, 13 Dec 2025 16:22:00 +0000 | Bewertung Swiss First Lounge Zürich E-Gates | https://travel-dealz.de/blog/bewertung-swiss-first-lounge-e-gates/?utm_source=feed&utm_med
+  [3] Sun, 07 Dec 2025 16:36:00 +0000 | Miles&More: Die günstigsten Prämienflüge in der Lufthansa First Class | https://travel-dealz.de/blog/miles-more-sweet-spots-first-class/?utm_source=feed&utm_mediu
+  [4] Fri, 28 Nov 2025 10:26:17 +0000 | Folgt uns in die Swiss Senses First Class nach Boston! | https://travel-dealz.de/news/folgt-uns-swiss-senses-first/?utm_source=feed&utm_medium=rss&
+  [5] Wed, 12 Nov 2025 09:01:14 +0000 | Lufthansa Allegris und Swiss Senses: First Class als Meilenticket buchbar | https://travel-dealz.de/news/allegris-und-senses-first-meilenticket/?utm_source=feed&utm_m
+  [6] Mon, 03 Nov 2025 12:03:53 +0000 | Sweet Spots in der First Class für Membership Rewards Punkte | https://travel-dealz.de/blog/membership-rewards-sweet-spots-first-class/?utm_source=feed&u
+  [7] Sun, 02 Feb 2025 17:43:56 +0000 | Bewertung der Mittelsuite in der Lufthansa Allegris FIRST CLASS von New York (JFK) nach München | https://travel-dealz.de/blog/bewertung-allegris-first-class-suite-plus/?utm_source=feed&ut
+  [8] Thu, 23 Jan 2025 17:51:53 +0000 | Bewertung der Lufthansa Allegris FIRST CLASS von München nach New York (JFK) | https://travel-dealz.de/blog/bewertung-lufthansa-allegris-first-class/?utm_source=feed&utm
+  [9] Thu, 31 Oct 2024 14:08:43 +0000 | Lufthansa setzt Allegris FIRST Class am 9. November erstmals nach Indien ein | https://travel-dealz.de/news/lufthansa-allegris-first-erstflug/?utm_source=feed&utm_medium
+  [10] Tue, 28 Feb 2023 12:49:12 +0000 | Allegris: Lufthansa gibt weitere Details zur neuen First & Business Class bekannt | https://travel-dealz.de/news/neue-lufthansa-business-first-details/?utm_source=feed&utm_me
+##### td_cat_fluge
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 17:30:42 +0000 | Lufthansa Gutschein: 40€ Rabatt auf Langstrecken im Nov. 2026 (z.B. Seattle ab 529€ inkl. Gepäck) | https://travel-dealz.de/gutschein/lufthansa/?utm_source=feed&utm_medium=rss&utm_campaign=r
+  [2] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [3] Wed, 04 Nov 2026 10:37:46 +0000 | China Eastern: Gabelflüge Amsterdam – Tokio – Frankfurt ab 426€ (Nov. / Dez. 2026) | https://travel-dealz.de/ticker/486604/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [4] Wed, 04 Nov 2026 10:00:46 +0000 | New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum) | https://travel-dealz.de/deal/new-york-condor-premium-class/?utm_source=feed&utm_medium=rss
+  [5] Wed, 04 Nov 2026 07:08:13 +0000 | Last Minute: Bonaire ab 416€ mit Corendon von Amsterdam (Handgepäck) | https://travel-dealz.de/ticker/486560/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [6] Tue, 03 Nov 2026 14:47:24 +0000 | Round the World: Vancouver, Seattle, Singapur, Kuala Lumpur + Hanoi ab 898€ inkl. Gepäck (getrennte Tickets) | https://travel-dealz.de/deal/round-the-world-nov26/?utm_source=feed&utm_medium=rss&utm_cam
+  [7] Tue, 03 Nov 2026 08:13:02 +0000 | New York ab 306€ mit Icelandair von Berlin, München & Frankfurt (441€ mit Gepäck) | https://travel-dealz.de/deal/new-york-icelandair-angebot/?utm_source=feed&utm_medium=rss&u
+  [8] Mon, 02 Nov 2026 12:00:00 +0000 | Lufthansa: 5% Rabatt auf Geschenkkarten | https://travel-dealz.de/deal/lufthansa-geschenkkarten/?utm_source=feed&utm_medium=rss&utm_
+  [9] Mon, 02 Nov 2026 07:22:16 +0000 | Meilenschnäppchen: LOT Premium Economy Warschau – Tokio für 57.000 Meilen + 163€ roundtrip | https://travel-dealz.de/ticker/485957/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [10] Sun, 01 Nov 2026 06:00:00 +0000 | SAS Youth Fares: Rabatte auf Flüge sichern (für alle unter 26) | https://travel-dealz.de/deal/sas-youth-fares/?utm_source=feed&utm_medium=rss&utm_campaign=
+##### td_cat_miles
+FORMAT=RSS ITEMS=20
+  [1] Tue, 03 Nov 2026 10:06:41 +0000 | Burda: Verschiedene Abos mit Payback-Punkten (= Miles&More Meilen) ab 1,01 Cent pro Meile | https://travel-dealz.de/deal/burdadirect-zeitschriften-punkte-meilen/?utm_source=feed&utm_
+  [2] Tue, 03 Nov 2026 06:42:12 +0000 | Flying Blue Promo Awards: Business Class nach New York ab 45.000 Meilen + 317€ pro Richtung (ohne Lounge) | https://travel-dealz.de/deal/flying-blue-promo-awards/?utm_source=feed&utm_medium=rss&utm_
+  [3] Mon, 02 Nov 2026 12:35:52 +0000 | Finnair Plus: Avios ab 0,97 Cent kaufen (und bis zu 20.000 Statuspunkte on top) | https://travel-dealz.de/deal/finnair-avios-kaufen/?utm_source=feed&utm_medium=rss&utm_camp
+  [4] Mon, 02 Nov 2026 09:12:45 +0000 | Royal Jordanian: Oneworld Sapphire Status für jedermann zum Preis von 222€ (134€ mit Hotel-Status) | https://travel-dealz.de/deal/royal-jordanian-status-match/?utm_source=feed&utm_medium=rss&
+  [5] Mon, 02 Nov 2026 07:22:16 +0000 | Meilenschnäppchen: LOT Premium Economy Warschau – Tokio für 57.000 Meilen + 163€ roundtrip | https://travel-dealz.de/ticker/485957/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [6] Sun, 01 Nov 2026 14:32:00 +0000 | Eurowings-Flüge mit Miles&More-Meilen buchen (ab 9.000 Meilen + 12€ pro Flug) | https://travel-dealz.de/blog/milesandmore-eurowings/?utm_source=feed&utm_medium=rss&utm_ca
+  [7] Thu, 29 Oct 2026 14:13:37 +0000 | Marriott Bonvoy Status Challenge: Ohne Status zu Gold ab 8 oder Platinum ab 16 Nächten | https://travel-dealz.de/deal/marriott-bonvoy-status-challenge/?utm_source=feed&utm_medium=
+  [8] Thu, 29 Oct 2026 09:02:18 +0000 | Starlux und Etihad Airways ermöglichen gegenseitiges Meilensammeln | https://travel-dealz.de/ticker/485559/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [9] Thu, 29 Oct 2026 07:51:22 +0000 | Für Neukunden: 50% Bonus beim Kauf von Miles&More-Meilen über Bundle&Go (ab 1,18 cpm + Statuspunkte on top) | https://travel-dealz.de/deal/bundle-go-meilenkauf-okt26/?utm_source=feed&utm_medium=rss&ut
+  [10] Wed, 28 Oct 2026 13:24:03 +0000 | Hilton-Kreditkarte: Was ihr mit 50.000 Punkten Willkommensbonus anstellen könnt | https://travel-dealz.de/deal/hilton-punkte-sweetspots/?utm_source=feed&utm_medium=rss&utm_
+##### td_thema_errorfares
+FORMAT=RSS ITEMS=3
+  [1] Fri, 31 Dec 2021 17:30:00 +0000 | Anleitung: Wie man einen ERROR FARE richtig bucht! | https://travel-dealz.de/blog/anleitung-errorfare-buchen/?utm_source=feed&utm_medium=rss&ut
+  [2] Tue, 26 Sep 2017 14:31:10 +0000 | Wie man einen ERROR FARE richtig bucht – Travel-Dealz Podcast #2 | https://travel-dealz.de/podcast/errorfare-richtig-buchen/?utm_source=feed&utm_medium=rss&u
+  [3] Fri, 13 Jan 2017 17:39:58 +0000 | Anleitung: Wie man einen FUEL DUMP findet & bucht | https://travel-dealz.de/blog/howto-fuel-dump/?utm_source=feed&utm_medium=rss&utm_campaign=
+##### td_thema_gabelflug
+FORMAT=RSS ITEMS=4
+  [1] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [2] Wed, 04 Nov 2026 10:37:46 +0000 | China Eastern: Gabelflüge Amsterdam – Tokio – Frankfurt ab 426€ (Nov. / Dez. 2026) | https://travel-dealz.de/ticker/486604/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [3] Fri, 30 Oct 2026 10:47:58 +0000 | China Eastern: Gabelflüge nach Down Under ab 528€, z.B. Stockholm – Auckland – Frankfurt (inkl. Gepäck) | https://travel-dealz.de/deal/china-eastern-gabelfluege-down-under/?utm_source=feed&utm_med
+  [4] Mon, 07 Sep 2026 10:56:42 +0000 | Aer Lingus: Gabelflüge Brüssel – Cancún – Deutschland ab 374€ (inkl. Gepäck) | https://travel-dealz.de/deal/aer-lingus-gabelfluege-cancun/?utm_source=feed&utm_medium=rss
+##### td_thema_oneway
+FORMAT=RSS ITEMS=10
+  [1] Fri, 30 Oct 2026 11:24:41 +0000 | Condor: Oneway-Flüge nach San José del Cabo (Mexiko) ab 210€ inkl. Gepäck | https://travel-dealz.de/ticker/485791/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [2] Thu, 29 Oct 2026 06:43:50 +0000 | Oman Air: Oneway-Tickets von Kuala Lumpur nach Frankfurt ab 183€ (209€ inkl. Gepäck) | https://travel-dealz.de/deal/oman-air-kuala-lumpur-frankfurt/?utm_source=feed&utm_medium=r
+  [3] Wed, 28 Oct 2026 13:18:00 +0000 | Oneway: Hanoi → Deutschland ab 172€ mit Air China (inkl. Gepäck) | https://travel-dealz.de/deal/air-china-oneway-vietnam/?utm_source=feed&utm_medium=rss&utm_
+  [4] Wed, 28 Oct 2026 12:03:42 +0000 | Oneway: Vietnam → Amsterdam ab 194€ mit China Eastern (inkl. Gepäck) | https://travel-dealz.de/ticker/485437/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [5] Tue, 27 Oct 2026 11:01:41 +0000 | Westjet: Oneway von Westkanada nach London oder Paris ab 155€ (219€ mit Gepäck) | https://travel-dealz.de/deal/westjet-oneway-europa-kanada/?utm_source=feed&utm_medium=rss&
+  [6] Mon, 26 Oct 2026 16:04:04 +0000 | Oneway: Von Australien nach D‑A‑CH ab 246€ mit Air China & Shenzhen Airlines (inkl. Gepäck) | https://travel-dealz.de/deal/air-china-oneway-australien/?utm_source=feed&utm_medium=rss&u
+  [7] Fri, 16 Oct 2026 13:17:12 +0000 | Oneway: SAS Business Class Thailand → Frankfurt ab 806€ (Economy ab 233€) | https://travel-dealz.de/deal/sas-bangkok-kopenhagen-oneway/?utm_source=feed&utm_medium=rss
+  [8] Fri, 02 Oct 2026 07:13:07 +0000 | Weltreisebausteine von Turkmenistan Airlines: Business Class Frankfurt ↔︎ Asien ab 612€ oneway | https://travel-dealz.de/deal/turkmenistan-airlines-business-oneways/?utm_source=feed&utm_m
+  [9] Sun, 29 Mar 2026 13:16:00 +0000 | Längster Flug der Welt: Singapore Airlines Premium Economy New York → Singapur ab 476€ oneway | https://travel-dealz.de/deal/singapore-airlines-new-york-singapur/?utm_source=feed&utm_med
+  [10] Sun, 12 Oct 2025 11:53:00 +0000 | Oneway-Flüge von Kanada nach Grönland ab 193€ mit Air Greenland (Iqaluit → Nuuk) | https://travel-dealz.de/deal/air-greenland-iqaluit/?utm_source=feed&utm_medium=rss&utm_cam
+##### td_thema_eilmeldungen
+FORMAT=RSS ITEMS=0
+##### td_thema_mileagerun
+FORMAT=RSS ITEMS=1
+  [1] Thu, 05 Dec 2019 03:42:07 +0000 | United MileagePlus PlusPoints: Künftig 8 Langstrecken-Upgrades für 1K-Vielflieger *jetzt aktiv* | https://travel-dealz.de/news/mileageplus-pluspoints/?utm_source=feed&utm_medium=rss&utm_ca

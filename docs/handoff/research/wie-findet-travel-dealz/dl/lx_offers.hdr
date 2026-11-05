@@ -1,0 +1,15 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 403 
+date: Wed, 04 Nov 2026 22:02:30 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=15768000
+set-cookie: __cf_bm=pUkr.cZWyYudT1h_hIsnZBzO4CVbGA723hsn2zGIOU0-1793829750.9472525-1.0.1.1-B4mfKtqaZpiVdPnEOF5xZKcCCBp7EIFRxdC7hJIk3voQsDo7wb8vTyiYc0nQeoJcCDNAyKaXW4kFXeQaFZyQT29DgIGJ5smcBdwUR4rWnmQ1qbaDnT2UDjM3Aw.miMLt; HttpOnly; SameSite=None; Secure; Path=/; Domain=www.swiss.com; Expires=Wed, 04 Nov 2026 22:32:30 GMT
+content-encoding: gzip
+server: cloudflare
+cf-ray: a556e7476c7ef272-IAD
+

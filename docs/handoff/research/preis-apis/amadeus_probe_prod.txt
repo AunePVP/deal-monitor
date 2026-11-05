@@ -1,0 +1,1 @@
+{"errors":[{"code":38191,"title":"Invalid HTTP header","status":401,"detail":"Missing mandatory authentication header"}]}

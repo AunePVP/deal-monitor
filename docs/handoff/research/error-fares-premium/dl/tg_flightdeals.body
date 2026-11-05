@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>FlightDeals – Telegram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible"
+     content="IE=edge" />
+    <meta name="MobileOptimized" content="176" />
+    <meta name="HandheldFriendly" content="True" />
+    
+<meta property="og:title" content="FlightDeals">
+<meta property="og:image" content="">
+<meta property="og:site_name" content="Telegram">
+<meta property="og:description" content="Chicago flight deals.">
+
+<meta property="twitter:title" content="FlightDeals">
+<meta property="twitter:image" content="">
+<meta property="twitter:site" content="@Telegram">
+
+<meta property="al:ios:app_store_id" content="686449807">
+<meta property="al:ios:app_name" content="Telegram Messenger">
+<meta property="al:ios:url" content="tg://resolve?domain=flightdeals">
+
+<meta property="al:android:url" content="tg://resolve?domain=flightdeals">
+<meta property="al:android:app_name" content="Telegram">
+<meta property="al:android:package" content="org.telegram.messenger">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@Telegram">
+<meta name="twitter:description" content="Chicago flight deals.
+">
+
+    <link rel="prev" href="/s/flightdeals?before=8895">
+<link rel="canonical" href="/s/flightdeals?before=8915">
+
+    <script>window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches&&document.documentElement&&document.documentElement.classList&&document.documentElement.classList.add('theme_dark');</script>
+    <link rel="icon" type="image/svg+xml" href="//telegram.org/img/website_icon.svg?4">
+<link rel="apple-touch-icon" sizes="180x180" href="//telegram.org/img/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//telegram.org/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="//telegram.org/img/favicon-16x16.png">
+<link rel="alternate icon" href="//telegram.org/img/favicon.ico" type="image/x-icon" />
+    <link href="//telegram.org/css/font-roboto.css?1" rel="stylesheet" type="text/css">
+    <link href="//telegram.org/css/widget-frame.css?75" rel="stylesheet" media="screen">
+    <link href="//telegram.org/css/telegram-web.css?39" rel="stylesheet" media="screen">
+    <script>TBaseUrl='/';</script>
+    <style>        .user-color-12 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #3391d4 0px, #3391d4 5px, #7dd3f0 5px, #7dd3f0 10px);
+          --user-accent-color: #3391d4;
+          --user-background: #3391d41f;
+        }        .user-color-10 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #27a910 0px, #27a910 5px, #a7dc57 5px, #a7dc57 10px);
+          --user-accent-color: #27a910;
+          --user-background: #27a9101f;
+        }        .user-color-8 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #e0802b 0px, #e0802b 5px, #fac534 5px, #fac534 10px);
+          --user-accent-color: #e0802b;
+          --user-background: #e0802b1f;
+        }        .user-color-7 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #e15052 0px, #e15052 5px, #f9ae63 5px, #f9ae63 10px);
+          --user-accent-color: #e15052;
+          --user-background: #e150521f;
+        }        .user-color-9 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #a05ff3 0px, #a05ff3 5px, #f48fff 5px, #f48fff 10px);
+          --user-accent-color: #a05ff3;
+          --user-background: #a05ff31f;
+        }        .user-color-11 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #27acce 0px, #27acce 5px, #82e8d6 5px, #82e8d6 10px);
+          --user-accent-color: #27acce;
+          --user-background: #27acce1f;
+        }        .user-color-13 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #dd4371 0px, #dd4371 5px, #ffbe9f 5px, #ffbe9f 10px);
+          --user-accent-color: #dd4371;
+          --user-background: #dd43711f;
+        }        .user-color-14 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #247bed 0px, #247bed 5px, #f04856 5px, #f04856 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #247bed;
+          --user-background: #247bed1f;
+        }        .user-color-15 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #d67722 0px, #d67722 5px, #1ea011 5px, #1ea011 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #d67722;
+          --user-background: #d677221f;
+        }        .user-color-16 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #179e42 0px, #179e42 5px, #e84a3f 5px, #e84a3f 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #179e42;
+          --user-background: #179e421f;
+        }        .user-color-17 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #2894af 0px, #2894af 5px, #6fc456 5px, #6fc456 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #2894af;
+          --user-background: #2894af1f;
+        }        .user-color-18 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #0c9ab3 0px, #0c9ab3 5px, #ffad95 5px, #ffad95 10px, #ffe6b5 10px, #ffe6b5 15px);
+          --user-accent-color: #0c9ab3;
+          --user-background: #0c9ab31f;
+        }        .user-color-19 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #7757d6 0px, #7757d6 5px, #f79610 5px, #f79610 10px, #ffde8e 10px, #ffde8e 15px);
+          --user-accent-color: #7757d6;
+          --user-background: #7757d61f;
+        }        .user-color-20 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #1585cf 0px, #1585cf 5px, #f2ab1d 5px, #f2ab1d 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #1585cf;
+          --user-background: #1585cf1f;
+        }        body.dark .user-color-12, html.theme_dark .user-color-12 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #52bfff 0px, #52bfff 5px, #0b5494 5px, #0b5494 10px);
+          --user-accent-color: #52bfff;
+          --user-background: #52bfff1f;
+        }        body.dark .user-color-10, html.theme_dark .user-color-10 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #a7eb6e 0px, #a7eb6e 5px, #167e2d 5px, #167e2d 10px);
+          --user-accent-color: #a7eb6e;
+          --user-background: #a7eb6e1f;
+        }        body.dark .user-color-8, html.theme_dark .user-color-8 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #ecb04e 0px, #ecb04e 5px, #c35714 5px, #c35714 10px);
+          --user-accent-color: #ecb04e;
+          --user-background: #ecb04e1f;
+        }        body.dark .user-color-7, html.theme_dark .user-color-7 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #ff9380 0px, #ff9380 5px, #992f37 5px, #992f37 10px);
+          --user-accent-color: #ff9380;
+          --user-background: #ff93801f;
+        }        body.dark .user-color-9, html.theme_dark .user-color-9 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #c697ff 0px, #c697ff 5px, #5e31c8 5px, #5e31c8 10px);
+          --user-accent-color: #c697ff;
+          --user-background: #c697ff1f;
+        }        body.dark .user-color-11, html.theme_dark .user-color-11 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #40d8d0 0px, #40d8d0 5px, #045c7f 5px, #045c7f 10px);
+          --user-accent-color: #40d8d0;
+          --user-background: #40d8d01f;
+        }        body.dark .user-color-13, html.theme_dark .user-color-13 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #ff86a6 0px, #ff86a6 5px, #8e366e 5px, #8e366e 10px);
+          --user-accent-color: #ff86a6;
+          --user-background: #ff86a61f;
+        }        body.dark .user-color-14, html.theme_dark .user-color-14 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #3fa2fe 0px, #3fa2fe 5px, #e5424f 5px, #e5424f 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #3fa2fe;
+          --user-background: #3fa2fe1f;
+        }        body.dark .user-color-15, html.theme_dark .user-color-15 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #ff905e 0px, #ff905e 5px, #32a527 5px, #32a527 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #ff905e;
+          --user-background: #ff905e1f;
+        }        body.dark .user-color-16, html.theme_dark .user-color-16 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #66d364 0px, #66d364 5px, #d5444f 5px, #d5444f 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #66d364;
+          --user-background: #66d3641f;
+        }        body.dark .user-color-17, html.theme_dark .user-color-17 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #22bce2 0px, #22bce2 5px, #3da240 5px, #3da240 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #22bce2;
+          --user-background: #22bce21f;
+        }        body.dark .user-color-18, html.theme_dark .user-color-18 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #22bce2 0px, #22bce2 5px, #ff9778 5px, #ff9778 10px, #ffda6b 10px, #ffda6b 15px);
+          --user-accent-color: #22bce2;
+          --user-background: #22bce21f;
+        }        body.dark .user-color-19, html.theme_dark .user-color-19 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #9791ff 0px, #9791ff 5px, #f2731d 5px, #f2731d 10px, #ffdb59 10px, #ffdb59 15px);
+          --user-accent-color: #9791ff;
+          --user-background: #9791ff1f;
+        }        body.dark .user-color-20, html.theme_dark .user-color-20 {
+          --user-line-gradient: repeating-linear-gradient(-45deg, #3da6eb 0px, #3da6eb 5px, #eea51d 5px, #eea51d 10px, #ffffff 10px, #ffffff 15px);
+          --user-accent-color: #3da6eb;
+          --user-background: #3da6eb1f;
+        }.user-color-6, .user-color-4, .user-color-2, .user-color-0, .user-color-1, .user-color-3, .user-color-5,   .user-color-default {
+    --user-accent-color: var(--accent-color);
+    --user-accent-background: var(--accent-background);
+    --user-line-gradient: linear-gradient(45deg, var(--accent-color), var(--accent-color));
+  }</style>
+  </head>
+  <body class="widget_frame_base tgme_webpreview emoji_image thin_box_shadow tme_mode no_transitions">
+    <div class="tgme_background_wrap">
+      <canvas id="tgme_background" class="tgme_background" width="50" height="50" data-colors="dbddbb,6ba587,d5d88d,88b884"></canvas>
+      <div class="tgme_background_pattern"></div>
+    </div>
+    <header class="tgme_header search_collapsed">
+  <div class="tgme_container">
+    <div class="tgme_header_search">
+      <form class="tgme_header_search_form" action="/s/flightdeals">
+        <svg class="tgme_header_search_form_icon" width="20" height="20" viewBox="0 0 20 20"><g fill="none" stroke="#7D7F81" stroke-width="1.4"><circle cx="9" cy="9" r="6"></circle><path d="M13.5,13.5 L17,17" stroke-linecap="round"></path></g></svg>
+        <input class="tgme_header_search_form_input js-header_search" placeholder="Search" name="q" autocomplete="off" value="" />
+        <a href="/s/flightdeals" class="tgme_header_search_form_clear"><svg class="tgme_action_button_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20"><g class="icon_body" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#000000" stroke-width="1.5"><path d="M6 14l8-8m0 8L6 6" stroke-dasharray="0,11.314" stroke-dashoffset="5.657"/><path d="M26 14l8-8m0 8l-8-8" stroke-dasharray="0.371,10.943" stroke-dashoffset="5.842"/><path d="M46 14l8-8m0 8l-8-8" stroke-dasharray="1.982,9.332" stroke-dashoffset="6.647756"/><path d="M66 14l8-8m0 8l-8-8" stroke-dasharray="5.173,6.14" stroke-dashoffset="8.243"/><path d="M86 14l8-8m0 8l-8-8" stroke-dasharray="7.866,3.448" stroke-dashoffset="9.59"/><path d="M106 14l8-8m0 8l-8-8" stroke-dasharray="9.471,1.843" stroke-dashoffset="10.392"/><path d="M126 14l8-8m0 8l-8-8" stroke-dasharray="10.417,0.896" stroke-dashoffset="10.866"/><path d="M146 14l8-8m0 8l-8-8" stroke-dasharray="10.961,0.353" stroke-dashoffset="11.137"/><path d="M166 14l8-8m0 8l-8-8" stroke-dasharray="11.234,0.08" stroke-dashoffset="11.274"/><path d="M186 14l8-8m0 8l-8-8"/></g></svg></a>
+      </form>
+    </div>
+    <div class="tgme_header_right_column">
+      <section class="tgme_right_column">
+        <div class="tgme_channel_info">
+          <div class="tgme_channel_info_header">
+            <i class="tgme_page_photo_image bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i>
+            <div class="tgme_channel_info_header_title_wrap">
+              <div class="tgme_channel_info_header_title"><span dir="auto">FlightDeals</span></div>
+              <div class="tgme_channel_info_header_labels"></div>
+            </div>
+            <div class="tgme_channel_info_header_username"><a href="https://t.me/flightdeals">@flightdeals</a></div>
+          </div>
+          <div class="tgme_channel_info_counters"><div class="tgme_channel_info_counter"><span class="counter_value">83</span> <span class="counter_type">subscribers</span></div><div class="tgme_channel_info_counter"><span class="counter_value">805</span> <span class="counter_type">photos</span></div><div class="tgme_channel_info_counter"><span class="counter_value">8.03K</span> <span class="counter_type">links</span></div></div>
+          <div class="tgme_channel_info_description">Chicago flight deals.</div>
+          <a class="tgme_channel_download_telegram" href="//telegram.org/dl?tme=0cd1aaab8af985d5f5_987207557779519916">
+            <svg class="tgme_channel_download_telegram_icon" width="21px" height="18px" viewBox="0 0 21 18"><g fill="none"><path fill="#ffffff" d="M0.554,7.092 L19.117,0.078 C19.737,-0.156 20.429,0.156 20.663,0.776 C20.745,0.994 20.763,1.23 20.713,1.457 L17.513,16.059 C17.351,16.799 16.62,17.268 15.88,17.105 C15.696,17.065 15.523,16.987 15.37,16.877 L8.997,12.271 C8.614,11.994 8.527,11.458 8.805,11.074 C8.835,11.033 8.869,10.994 8.905,10.958 L15.458,4.661 C15.594,4.53 15.598,4.313 15.467,4.176 C15.354,4.059 15.174,4.037 15.036,4.125 L6.104,9.795 C5.575,10.131 4.922,10.207 4.329,10.002 L0.577,8.704 C0.13,8.55 -0.107,8.061 0.047,7.614 C0.131,7.374 0.316,7.182 0.554,7.092 Z"></path></g></svg>Download Telegram
+          </a>
+          <div class="tgme_footer">
+            <div class="tgme_footer_column">
+              <h5><a href="//telegram.org/faq">About</a></h5>
+            </div>
+            <div class="tgme_footer_column">
+              <h5><a href="//telegram.org/blog">Blog</a></h5>
+            </div>
+            <div class="tgme_footer_column">
+              <h5><a href="//telegram.org/apps">Apps</a></h5>
+            </div>
+            <div class="tgme_footer_column">
+              <h5><a href="//core.telegram.org/">Platform</a></h5>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="tgme_header_info">
+      <a class="tgme_channel_join_telegram" href="//telegram.org/dl?tme=0cd1aaab8af985d5f5_987207557779519916">
+        <svg class="tgme_channel_join_telegram_icon" width="19px" height="16px" viewBox="0 0 19 16"><g fill="none"><path fill="#ffffff" d="M0.465,6.638 L17.511,0.073 C18.078,-0.145 18.714,0.137 18.932,0.704 C19.009,0.903 19.026,1.121 18.981,1.33 L16.042,15.001 C15.896,15.679 15.228,16.111 14.549,15.965 C14.375,15.928 14.211,15.854 14.068,15.748 L8.223,11.443 C7.874,11.185 7.799,10.694 8.057,10.345 C8.082,10.311 8.109,10.279 8.139,10.249 L14.191,4.322 C14.315,4.201 14.317,4.002 14.195,3.878 C14.091,3.771 13.926,3.753 13.8,3.834 L5.602,9.138 C5.112,9.456 4.502,9.528 3.952,9.333 L0.486,8.112 C0.077,7.967 -0.138,7.519 0.007,7.11 C0.083,6.893 0.25,6.721 0.465,6.638 Z"></path></g></svg>Join
+      </a>
+      <a class="tgme_header_link" href="https://t.me/flightdeals">
+        <i class="tgme_page_photo_image bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i>
+        <div class="tgme_header_title_wrap">
+          <div class="tgme_header_title"><span dir="auto">FlightDeals</span></div>
+          <div class="tgme_header_labels"></div>
+        </div>
+        <div class="tgme_header_counter">83 subscribers</div>
+      </a>
+    </div>
+  </div>
+</header>
+<main class="tgme_main" data-url="/flightdeals">
+  <div class="tgme_container">
+    <section class="tgme_channel_history js-message_history">
+      <div class="tgme_widget_message_centered js-messages_more_wrap"><a href="/s/flightdeals?before=8895" class="tme_messages_more js-messages_more" data-before="8895"></a></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8895" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODg5NSwidCI6MTc5MzgyOTg5MCwiaCI6IjA5YTdlNzc2M2E3YjM1MDQ1NiJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Finnair: Chicago – Warsaw, Poland. &#036;505 (Basic Economy) / &#036;675 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/05/finnair-chicago-warsaw-poland-505-basic-economy-675-regular-economy-roundtrip-including-all-taxes-2/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/05/finnair-chicago-warsaw-poland-505-basic-economy-675-regular-economy-roundtrip-including-all-taxes-2/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/05/finnair-chicago-warsaw-poland-505-basic-economy-675-regular-economy-roundtrip-including-all-taxes-2">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/tB5o7JCLBXcmdNl78FDPfBU9Z3mXgFuZhgMBoltxyxW9xAaS0JUGboy6EXm4UtBMLw6HXKVC7iI8IZQRF__4BqpTowakYVy0C2TzHssVAWQOF1iVa9xXBAWkER2Yk5aHVCJA5pMHKaT1TU-K1O5_pwMpiDiiexMRYtx2L1YhiRbD38DtaO2as_7iExf7qRbCuvPe8x3bP5rdDrbOt9ezDqr80tKl3cDdCNi-xpfYjEH_v-rLF6HcUOJ6pmdQC6olJ36ez7-KRn0OZalDr84DTGlT3ggUiLa10COzMGYxE6nJjDsQXutDOJ0VtG_cZRlKx9PNb7dSR3CSJxouL8iv9g.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Finnair: Chicago – Warsaw, Poland. &#036;505 (Basic Economy) / &#036;675 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to WarsawAmerican / British Airways / Finnair / Iberia&#39;s &#036;675 fare is a regular economy fare with ONE check luggage and normal size carry-on includedAmerican / British Airways</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">51</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8895"><time datetime="2023-05-05T16:53:45+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8896" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODg5NiwidCI6MTc5MzgyOTg5MCwiaCI6ImM4YWFjNzczMzI5MDZiZjU3MyJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">United: Chicago – Dublin, Ireland. &#036;505 (Basic Economy) / &#036;675 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/06/united-chicago-dublin-ireland-505-basic-economy-675-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/06/united-chicago-dublin-ireland-505-basic-economy-675-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/06/united-chicago-dublin-ireland-505-basic-economy-675-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/oFO7N5v0HcxvlC0RltVBm1GhKhSIZJ2oXepG8UyPZTfBqUp28ICF24vhjCIMp7sjcspi7-nYcY_WRDL0bH3Zaxd8X8dOhVGMQrwc-UB1i-9XKH0WF5-qoHliK-Hxgozmxgm9d226l0Xvxhh7IQLmDsQKiiZjasajEtdN3R50R9HANJjyAocTTHDM5PjdUbOHqr_tLKajk8dfD1bKSQYZ5UgtEYrssOlozdrzZQM0gBPIBsi2pMo-1CRpjwjM6ZJqDP5rKOrYRsztci2oSLDuGQhkRU8YU91fTVKaRRRUVPJexfU4W7oafbcVPt6Zm7ms2XeFAnbb9qy8G1gXRs4hyw.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">United: Chicago – Dublin, Ireland. &#036;505 (Basic Economy) / &#036;675 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to Dublin. Pricing will vary slightly depending on routingUnited and its partners Air Canada, Austrian, Lufthansa and Swiss Air&#39;s &#036;675 fare is a regular economy fare with ONE check</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">29</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8896"><time datetime="2023-05-06T16:53:43+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8897" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODg5NywidCI6MTc5MzgyOTg5MCwiaCI6ImJmYmRlYjY2YWEwNWU5MDk1YiJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Lufthansa: Chicago – Gdansk, Poland. &#036;520 (Basic Economy) / &#036;690 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/07/lufthansa-chicago-gdansk-poland-520-basic-economy-690-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/07/lufthansa-chicago-gdansk-poland-520-basic-economy-690-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/07/lufthansa-chicago-gdansk-poland-520-basic-economy-690-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/fiOkrAPfAwE2HOpXVwG6QEjmMEaqe7yskEntUaOXxvarIKL_PkI-RlTilbQ6iaLfNgub_vrxf9QrS1zukmWYEO2cFU3pmW1_bg2MKeGYDDKH4te0cv5X5BZKBzfLBP2O6tf4sJMwh2PwPxohfJNxIHS4bP8gerF50YONBMMnDVxrNkB3ZVs5uu4NfHxSYa_853JH2xHdjIpXgdw-WhGgD0VTbQt48r9auB-YlW9w_h_5oPGowWcWiQsu7IWElBt8JypJkTiqtLbqtd-EftmW4QXqaVqCHrMSNW2V07opkZnQyvNAQevgX2EGEumn96Rd9LcEgYhhudhOH_q4d4ttYA.jpg');padding-top:42.553191489362%"></i>
+  <div class="link_preview_title" dir="auto">Lufthansa: Chicago – Gdansk, Poland. &#036;520 (Basic Economy) / &#036;690 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to Gdansk, Poland. Pricing will vary slightly depending on routing.Matrix Airfare Search by ITA Software will price this &#036;538 (Basic Economy). Use those dates on Lufthansa will rep</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">28</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8897"><time datetime="2023-05-07T16:53:37+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8898" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODg5OCwidCI6MTc5MzgyOTg5MCwiaCI6IjI3ZGZiYzlhOTYzMjBlZWRlNyJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Qatar Airways: Chicago – Dubai, United Arab Emirates. &#036;827. Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/08/qatar-airways-chicago-dubai-united-arab-emirates-827-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/08/qatar-airways-chicago-dubai-united-arab-emirates-827-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/08/qatar-airways-chicago-dubai-united-arab-emirates-827-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/E02hddesC6OyeJWbO8oBJi2h5Aqds2XHCfouw_9C_DsE8PP4XPgk1FZkA_pGh3joolcF3GYeUvJjreZUvY4NuHMsyxXW6SwWueqFFFhG0X5FEsuKOcycIWpVsoJtcpYj51d080HkVqWcqIYu8Lhj2N_-fM7wozKLCewXXzwYz4zV01culVTPvgZfMQs763vfwZ2pS-B-tFuEQG2e5jEuAMZVlZXqb5qhXUnRvACQMQh3qivS-YwaZ-AxRcw_7Mdzyy_ph8xfOjNMAq-U619YKBrAv0SrU6hSei-CD8gapXgffbK9tipidC34UkpAK5AxeQaaTXp98_fj7t-NvwqKzg.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Qatar Airways: Chicago – Dubai, United Arab Emirates. &#036;827. Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to Dubai.Here are some practical travel tips to Dubai and Abu DhabiSample Travel Date:October 11th - 18thThis is just ONE SAMPLE travel date, for more a</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">32</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8898"><time datetime="2023-05-08T16:53:51+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8899" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODg5OSwidCI6MTc5MzgyOTg5MCwiaCI6IjlmODE3ZDExYjY0MGNiMWU4ZCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Scandinavian Airlines: Chicago – Stockholm, Sweden. &#036;498 (Basic Economy) / &#036;568 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/09/scandinavian-airlines-chicago-stockholm-sweden-498-basic-economy-568-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/09/scandinavian-airlines-chicago-stockholm-sweden-498-basic-economy-568-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/09/scandinavian-airlines-chicago-stockholm-sweden-498-basic-economy-568-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/rIraTjbeq8T7wDRZuaV-XJxlSiiAh9ygvrwvOb16iJRGFZ9AM-2s1eYuwBVmym3vyygLtP0VAK4YuOXH83rOmIJHhpf9WKZCccpSDdtLZlkxsLzWXipTXsUnyDW6Pba_w2ZXx-Am5yfJzDawztIg9u4f2vsBWxy95XWJfZxdBPDV50962yXvI7vh22PdI7ul1BYBsqsOa5tDzZcu7I0VQSwRA8krrHKbaFLUyhlS9hERYWHFFKSdSgMDskBeo_msmmc0WIg9j03RoWWmCGOlDq3vUUFKNU4q_YxarPhqmnbvtkpuwkB0DJhahV4O_XcffKHbOKlOpXt82ZKr_DZ64w.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Scandinavian Airlines: Chicago – Stockholm, Sweden. &#036;498 (Basic Economy) / &#036;568 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale for nonstop service to StockholmThe &#036;568 fare includes one checked bag each way.The &#036;498 fare is a Basic Economy fare / Economy Light fare with restrictions. Scandinavian Airli</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">75</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8899"><time datetime="2023-05-09T16:54:47+00:00" class="time">16:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8900" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwMCwidCI6MTc5MzgyOTg5MCwiaCI6ImI0ZTkzZGFkOWUyODAxNjgyZiJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Southwest: Chicago – Maui, Hawaii (and vice versa). &#036;427. Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/10/southwest-chicago-maui-hawaii-and-vice-versa-427-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/10/southwest-chicago-maui-hawaii-and-vice-versa-427-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/10/southwest-chicago-maui-hawaii-and-vice-versa-427-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/QfYt9y-mb8LMm0HyBOrL59fdwVMSFe4GsVuM-Bxu_mq9N6DvcaL2klIrc3E-0LDKLoiwmQXNECMbyJGR8VO5GAp5wThTGjzVh4ngs5CQJHBMgioWHKA_u8fMbM7Jdr3fGQb88jjYAjBj7-KE6OSaoOHQLoaMvhpdPdNs867Caq6j9jaHGrMDyD_acSQV3qum1Mgp-xPke3fbOS0akJU6KYsESY8f7JRHP6gDvzXKtd3j-cs3ni3xR_Y8o34F3nRhZotdNrzWRpgLNZisL1MUuNJD8VY-flUybv67MxiEMyKeV_tMFji21a9y0qzCXEOgMUlMRn5ZERz7n4V8DZwuBg.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Southwest: Chicago – Maui, Hawaii (and vice versa). &#036;427. Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to/from Maui. Pricing will vary slightly depending on routingSample Travel Date:August 15th - 22ndThis is just ONE SAMPLE travel date, for more availability</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">68</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8900"><time datetime="2023-05-10T16:53:53+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8901" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwMSwidCI6MTc5MzgyOTg5MCwiaCI6IjVhZjNhNGQ4ZDcxODQwYWNiZCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Southwest: Chicago – Honolulu, Hawaii (and vice versa) &#036;503. Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/11/southwest-chicago-honolulu-hawaii-and-vice-versa-503-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/11/southwest-chicago-honolulu-hawaii-and-vice-versa-503-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/11/southwest-chicago-honolulu-hawaii-and-vice-versa-503-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/BXJ3Y2w6jn-cTtjtNCJPk1IQjIJMU0Q5gr22J4Ke6lOHIqLx70_2YeeZZ2f3XSDrVtSQGcBdP8DrICoYJqcyJGWkUdLxOAejlYpJHpD4eT4CcpK4dX7MnskK7Anw7ITNi3I6oKm5-s0p2u8wraubMEWerQSzDmWw2hXNsA25lQKqZfh_GKpRVDh9aglXD18PDEkCZdDbuRWn2vIhPPjtIdPTeMDi2wRkeJruUXZN5giuBlPdNg7whooV9jVoiXF2c-KZQsxCo3o6KCnpKH8FcvEgZitlmF_uIsbilv1m2KkH0MhKgZSLciKQRfYO_8RBPll4t-VDO61GpX7k52wEcQ.jpg');padding-top:56.25%"></i>
+  <div class="link_preview_title" dir="auto">Southwest: Chicago – Honolulu, Hawaii (and vice versa) &#036;503. Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to/from Honolulu. Pricing will vary slightly depending on routingSample Travel Date:September 14th - 20thThis is just ONE SAMPLE travel date, for more avail</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">51</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8901"><time datetime="2023-05-11T16:53:25+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8902" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwMiwidCI6MTc5MzgyOTg5MCwiaCI6ImI5Mzk2MTg3YWQ5MDE2NjcwOCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">American: Chicago – Santiago, Chile. &#036;577 (Basic Economy) / &#036;717 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/12/american-chicago-santiago-chile-577-basic-economy-717-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/12/american-chicago-santiago-chile-577-basic-economy-717-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/12/american-chicago-santiago-chile-577-basic-economy-717-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/On5wcoUDxIICF3JV1UCCcVOiPUFJAp6ztAx4D20GMjMaGg2iH-cNcRHYG28csUhGjJm6jVCizGNaQHqBXyqlpls96GN77XTbzApwb-G7MTSQ94gdUjS_8CGZqEck10yZLm42hrjmj0T4JBOYC7BNMR7_eP0cYcpShk90MdIDEAZo_BxIq45TLhDEbxLsl-sGsgaNBxy2b0I7x2o5j6lVpw-h8hMnFCRzwfabCyPC2qJmleBZWemOO85Of32I_ESiMkiyYzrY3hDeW0I9znWd9D_ms4YS6_DvncTTVocwikvzHQsYMh84oegNG9AXnn2RSgfxG1eiKclRA6qaK1ZKhw.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">American: Chicago – Santiago, Chile. &#036;577 (Basic Economy) / &#036;717 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to SantiagoAmerican&#39;s &#036;717 fare is a regular economy fare with ONE check luggage and normal size carry-on includedAmerican also have a &#036;577 fare, but it is a Basic Economy fare</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">57</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8902"><time datetime="2023-05-12T16:54:46+00:00" class="time">16:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8903" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwMywidCI6MTc5MzgyOTg5MCwiaCI6ImE0NTkzZTE5MmEwMDM2ODFiMyJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Scandinavian Airlines: Chicago – Oslo, Norway. &#036;436 (Basic Economy) / &#036;506 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/13/scandinavian-airlines-chicago-oslo-norway-436-basic-economy-506-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/13/scandinavian-airlines-chicago-oslo-norway-436-basic-economy-506-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/13/scandinavian-airlines-chicago-oslo-norway-436-basic-economy-506-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/gzbkWlEtJWWIhonFQZeTdoEhYSK9nZduwl3w6vcsYU9_djyWTHIX3nDW1rqzUm61YePy1pfw0iVFa8comAwJAn-5BDMDCs_2sPGTH4iuk8Bkgd-eJPZeaLzUHoNqRfXJMvjKSlAYVFnwQctxmESBr-AeH-pTtMd3T9xjojzAXPT81qJIzPS4gpx9HfJdTBgzLEd42hcMFQBPt6X0IcSQ2kL3R_IRiDbscvOfDt6os5I3WM79cqhk5sO6auTbXnpXlk_XNMYmdX0qrAQwvHuz50KIXkGe75Qzg3-kEcdP19dfqb3H5TSqnDL6KzqJvE9txRpYyiTNmw8FFotQlZpgcw.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Scandinavian Airlines: Chicago – Oslo, Norway. &#036;436 (Basic Economy) / &#036;506 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to Oslo.The &#036;506 fare includes one checked bag each way.The &#036;436 fare is a Basic Economy / Economy Light fare with restrictions. Scandinavian Airlines Basic Economy / Economy L</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">62</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8903"><time datetime="2023-05-13T16:54:24+00:00" class="time">16:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8904" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwNCwidCI6MTc5MzgyOTg5MCwiaCI6ImUzNzAzYzExZDFjODlkMjE1ZCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">American: Chicago – Cartagena, Colombia. &#036;328 (Basic Economy) / &#036;448 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/14/american-chicago-cartagena-colombia-328-basic-economy-448-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/14/american-chicago-cartagena-colombia-328-basic-economy-448-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/14/american-chicago-cartagena-colombia-328-basic-economy-448-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/j1co1m-bfQwfftM9SnYIkfTUIg-iSGFQkazkn1mdHIlnu5BaRs7uwujM3qOrLorPckQ7YhhF0FLMej61p3X6OAVzZPkFlh2qkQOnRgKHwGeMl2i9uCHtjX47y_-f5FmVQxn5vqQG2u35V3j1pvgVVhkgw40Eetv7emmSHty3uIXzsCiDgedOny_4cJH8xwyumNcIOP-aIEHoKcOm9flKpz84gGFZEzSETp7MsIvqDAcy5QP2PaKX2n5-ntc89WErOJ1vNhwzwiBM6TMJVsAOyhtOnd5UoGC7EfrutcCubcxl1a54NzVRb49NeaTcBTn4usS0bvqtfHtNtIOX8PKd5w.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">American: Chicago – Cartagena, Colombia. &#036;328 (Basic Economy) / &#036;448 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to Cartagena. Pricing will vary slightly depending on routing.American&#39;s &#036;448 fare is a regular economy fare with ONE check luggage and normal size carry-on includedAmerican al</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">71</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8904"><time datetime="2023-05-14T16:53:59+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8905" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwNSwidCI6MTc5MzgyOTg5MCwiaCI6IjFmOWVlZmYzNzFmODJhYTQ4YyJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Scandinavian Airlines: Chicago – Copenhagen, Denmark. &#036;547 (Basic Economy) / &#036;617 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/15/scandinavian-airlines-chicago-copenhagen-denmark-547-basic-economy-617-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/15/scandinavian-airlines-chicago-copenhagen-denmark-547-basic-economy-617-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/15/scandinavian-airlines-chicago-copenhagen-denmark-547-basic-economy-617-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/H9a0BQAcPif1bxQ2HJDNfvWMypD2MqsSEbJo6rTUHAt6BnH74mKUkDNy_uO1-RAem1iZIE4Jevo71NW546vC8SuRCXd3t5JRhuKjhoJRFMzOLKqkD5JLTEXD_HsdzYJxnJ_zo2N9xK6m_rhkdJtFB5Mxhn8P1KKKES3vbEHfz9oYEbp3jnBLjF8FBV4bDBrQWgtnvETTn_gQ7jEQ5WARZ4tCM9Auz9iplzxcGP0mnbnHZOA43hWkU6C3jIG09HwUgEsSfuWSbRYTQHBrsdqCP3ryh_EdiIwg6a3_qIZdO18Wgfs_pahQZSQUbC1mD0a3ZkyytajwMcV93m0Zr1kyuA.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Scandinavian Airlines: Chicago – Copenhagen, Denmark. &#036;547 (Basic Economy) / &#036;617 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale for nonstop service to CopenhagenThe &#036;617 fare includes one checked bag each way.The &#036;547 fare is a Basic Economy / Economy Light fare with restrictions. Scandinavian Airlines</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">79</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8905"><time datetime="2023-05-15T16:54:00+00:00" class="time">16:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8906" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwNiwidCI6MTc5MzgyOTg5MCwiaCI6Ijg1YzE2NDdlMWMzMzEwMmZkMCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Lufthansa: Chicago – Tallinn, Estonia. &#036;519 (Basic Economy) / &#036;689 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/16/lufthansa-chicago-tallinn-estonia-519-basic-economy-689-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/16/lufthansa-chicago-tallinn-estonia-519-basic-economy-689-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/16/lufthansa-chicago-tallinn-estonia-519-basic-economy-689-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/JgJBndJI76vlPPO-1v521Bz6_esJbEtiZvjBykW1EX5LxE5r0yERfeTMzku1s7OmbGHpQzXPtEU0_SZeteRTvWBGOxB3JMX-H9YXPy9J70_HEQv-wmDKj-UTknjhg4td5Ib2QJfIEreXFuzcd-1YC8FjYc3bGOuCO2cfWMG3dU8HebKMi6P43LBdOI8TI2yi1h3Az6SKt5flevXPbSgGHbAF5gkOuXxJLfscacFaDt9mhQPF89Uy-kCdTfoxNbOtilOUATpuvI36-J7fA3d91al6UTnrXchUo1EqA5keXuDKjGJdvp7u8BMQtMEby4jlEeNdE03huaqwFiNTL3ZEUw.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Lufthansa: Chicago – Tallinn, Estonia. &#036;519 (Basic Economy) / &#036;689 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to Tallinn. Pricing will vary slightly depending on routingMatrix Airfare Search by ITA Software will price this at &#036;537 (Basic Economy). Use those dates on Lufthansa should repric</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">86</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8906"><time datetime="2023-05-16T16:53:51+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8907" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwNywidCI6MTc5MzgyOTg5MCwiaCI6IjYzNjZhOWI3MDM0ZWQwZGM0ZiJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Southwest: Chicago – Kauai, Hawaii (and vice versa). &#036;476. Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/18/southwest-chicago-kauai-hawaii-and-vice-versa-476-roundtrip-including-all-taxes-3/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/18/southwest-chicago-kauai-hawaii-and-vice-versa-476-roundtrip-including-all-taxes-3/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/18/southwest-chicago-kauai-hawaii-and-vice-versa-476-roundtrip-including-all-taxes-3">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/kQSn_XnJ5fnn8KopEur9pUEWyW1AfaQJahGDE6F014KLGaNCvVF0qgIwWudg9bpX-jJSF145--74f-P5I9kJ7b_mqEaZfh3hyyi4V9KcqRMJ37XBhjjwkpuQThXWyPbovCGaJI3BsYBoNFYrbUNgFwQVJ4oFUqfFJpSJGpdR_Pk1EAWVb1TQXELiQVb6d1DvRu-xy6rohFDJgVtg4Xk6_gRuXPmhn1k9FXHX0mjmoSyo8UARLUeg4R-3E8WfWR1Gfz2PxKvl0-OLY5GMBcBay6wubHihoN_BKq9U9FN_1HCDX35yGXgxJ8akNzlrv6J21Yvxlw079oSd4lkeCbtP7A.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Southwest: Chicago – Kauai, Hawaii (and vice versa). &#036;476. Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to/from KauaiSample Travel Date:August 16th - 23rdThis is just ONE SAMPLE travel date, for more availability, please follow the &quot;Fare Availability&quot; and &quot;How</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">105</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8907"><time datetime="2023-05-18T16:54:19+00:00" class="time">16:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8908" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwOCwidCI6MTc5MzgyOTg5MCwiaCI6ImQ4YWQzNWEwZGQ0ZDIyNmJlYSJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">United: Chicago – San Juan, Puerto Rico. &#036;191 (Basic Economy) / &#036;281 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/19/united-chicago-san-juan-puerto-rico-191-basic-economy-281-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/19/united-chicago-san-juan-puerto-rico-191-basic-economy-281-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/19/united-chicago-san-juan-puerto-rico-191-basic-economy-281-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/UnNlR-zsBtc5yvWrD0spbrLvyM_rLdKe3iwyckkqN1tShlAtao0H2p6RFfSWS1RLDXlirKrMehhCyHJOqy-vMGNEHb6be2sYzAmupKadaqbGJOxnp9JDoXjGKID3KUWsr9I1ptQ7HVwy36_krFeymqHF8rWb3A83iWjnrvk17rVfu4j0Z82y-5jn9PQ_6Yd_ibNGJrkBH_xdvbi5zVKGLGBoHCADLOlg-aEY5G8fQbRmmNTey-LB-toqACWtPr5HZhvaLiWhgyjSx8SD1mvmXvbno21DtVnXTKxVg6W7mg8tw-Byqexkoc5jtlZs3XZYH_oBcsXsXtuRj5N0naE8VQ.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">United: Chicago – San Juan, Puerto Rico. &#036;191 (Basic Economy) / &#036;281 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to San Juan.The &#036;281 fare is the regular fare which allows for normal size carry-on and personal item in addition to advance seat assignment.United also have a &#036;191 fare but th</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">130</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8908"><time datetime="2023-05-19T16:55:32+00:00" class="time">16:55</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8909" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkwOSwidCI6MTc5MzgyOTg5MCwiaCI6IjBhM2U1ZTI2MjM1YjA2OTYxYSJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">The Shorthaul – Delta: New York – Chicago (and vice versa). &#036;106 (Basic Economy) / &#036;166 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/19/the-shorthaul-delta-new-york-chicago-and-vice-versa-106-basic-economy-166-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/19/the-shorthaul-delta-new-york-chicago-and-vice-versa-106-basic-economy-166-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/19/the-shorthaul-delta-new-york-chicago-and-vice-versa-106-basic-economy-166-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/PKMEFGUC3H24IdymgqQWAcz844PUjZXVh4a0OE9ZTbx0J78g7EWoQEqVcdaYlkM4WD03ihWvZLTMFZTJv3TXLOkT9PmaBvnOq4Al1rEgMA_VPhLd9B2TX5ISMu7-yaLzJDMrJbi-CdpKZSbTkAzp97o5VxBFDvhzzr3VbklB5Ec14JV7z_M5ZwBzMRrMc1AVG75Yug2zZ04H7SgRguZPnNKVGmdaRUjUNwJu0Wqr3qkrXGW0BI5MpL-oAY2Af-qhhyt2D09ZoXHgAV9UC0rsk1qwoQlCITnEEQxvzLHxr45ZH6ELqiINhPzxWWk0Aw19WzRv7WssI8YIGK9ZeL3kSA.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">The Shorthaul – Delta: New York – Chicago (and vice versa). &#036;106 (Basic Economy) / &#036;166 (Regular Economy). Roundtrip, including…</div>
+  <div class="link_preview_description" dir="auto">A good sale for nonstop service to/from ChicagoThe &#036;166 fare is the regular fare includes advance seat assignment and normal size carry-onDelta also have a &#036;106 fare but that is a Basic Ec</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">159</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8909"><time datetime="2023-05-19T18:54:21+00:00" class="time">18:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8910" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkxMCwidCI6MTc5MzgyOTg5MCwiaCI6IjY1NmFiODU1ZjllZTc2MDM1MyJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">American: Chicago – Barranquilla, Colombia. &#036;330 (Basic Economy) / &#036;450 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/20/american-chicago-barranquilla-colombia-330-basic-economy-450-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/20/american-chicago-barranquilla-colombia-330-basic-economy-450-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/20/american-chicago-barranquilla-colombia-330-basic-economy-450-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/WozXmmHSqKPpbSNW5Cmita-KtyDsTe7zMjRUaR1tR9TGmkZwWvPIqu_gdE7MI_FPAxA89RkDKFGRC8aPm8r6xFBdzKErnw0Znxqd3M0YXxyICvWB3KJmv7ErwceafK64TQeRCXTgVM54EtE-uJIhtIesPUpRNfy232rCO-gT5NELRIksbGBPjhICLXOu1-xlZq64SeyoNZ_bh3Ak1PWbvZFatoI4ieUTU6RnA8i2cqJGOucq7COUp9t3l3yFuYhcWcq27cl6_PhSmAnfCL0DxkkcKsar7n1yANg3u8dE-FXCzclvQ_WJtmTVbiPbSS4rxPH706ZBJZIM0iKY4-nR5A.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">American: Chicago – Barranquilla, Colombia. &#036;330 (Basic Economy) / &#036;450 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to BarranquillaAmerican&#39;s &#036;450 fare is a regular economy fare with ONE check luggage and normal size carry-on includedAmerican also have a &#036;330 fare, but it is a Basic Economy</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">219</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8910"><time datetime="2023-05-20T15:53:50+00:00" class="time">15:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8911" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkxMSwidCI6MTc5MzgyOTg5MCwiaCI6IjVjNTdlNmRlNzJkZWFjYjJjZCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">Iberia: Chicago – Tenerife (Canary Islands), Spain. &#036;593 (Basic Economy) / &#036;763 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/21/iberia-chicago-tenerife-canary-islands-spain-593-basic-economy-763-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/21/iberia-chicago-tenerife-canary-islands-spain-593-basic-economy-763-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/21/iberia-chicago-tenerife-canary-islands-spain-593-basic-economy-763-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/ajg_SXtYOrxIowcWcmYQ4_sjX5O14Pr7ExntB65UII3VcxcpvPE96slofG0G0b7M6Oi_Pqa_GaYa2lPfxgs-xa8K1tfmSq347c7N_OElUDmrYAkcZzmrD-A7fs3ENQSbG6hU_tU1-KFLqvTbvkRodOEpcd_lsaeSwBUR4I444lKHDUNffJL0tOfy-M4UbMWzmNwIgIWLztdnKYhbAbjqOWV08q3L1XxkqT7W0KhYW5oCjM800sBzM-9suLVs9orzXqSWDVQ3oqB1sj17yo9aXPl2f6dEL01zQGJlIzS94ffO1L2_AKemRl82Fub6VRZheT2Z_gEKpTaxB-YCydk0VQ.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">Iberia: Chicago – Tenerife (Canary Islands), Spain. &#036;593 (Basic Economy) / &#036;763 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale to TenerifeMatrix Airfare Search by ITA Software will price this at &#036;621 (Basic Economy). Use those dates on Iberia should reprice to &#036;593 (Basic Economy) and &#036;763 (Regular Economy</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">307</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8911"><time datetime="2023-05-21T15:53:53+00:00" class="time">15:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8912" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkxMiwidCI6MTc5MzgyOTg5MCwiaCI6ImM1MWEzMThlNTAxZTVmYWY2ZCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">United: Chicago – Paris, France. &#036;545 (Basic Economy) / &#036;715 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/22/united-chicago-paris-france-545-basic-economy-715-regular-economy-roundtrip-including-all-taxes-2/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/22/united-chicago-paris-france-545-basic-economy-715-regular-economy-roundtrip-including-all-taxes-2/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/22/united-chicago-paris-france-545-basic-economy-715-regular-economy-roundtrip-including-all-taxes-2">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/dkrGPCPvf445b69LHznGS6G-iIc5NJAb3nd7tS7m3IkoE32biCTjy0MuDStmRfeNQWncdwbpaSVy7q2oXUWMsdmbIcmkuio90Ly2_oCQgVKbBCRTKKPIB2axrlFEYf-oeKIKBQ1GqKUpYGzUZxC_sQeW2wzdgq8oUtpwqwm9wdSM7w3oY90cg5YVGoezRdp2X9sm8pz2tZKXiR2o2UaAySmdOwmRviH3gdgv0vFvn4m5AM6UASAFQMu9JZ4P4avpz22o7-NpKmwANagkaeD77dIeRWtmT5GwWKtIK5oVAgtLk2u-xm4Y_OQ7Egk2-5Uwc5UPldZ5JuCGSY8LgDeQVQ.jpg');padding-top:41.5%"></i>
+  <div class="link_preview_title" dir="auto">United: Chicago – Paris, France. &#036;545 (Basic Economy) / &#036;715 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale for nonstop service to ParisUnited and its partners Air Canada, Austrian, Lufthansa and Swiss Air&#39;s &#036;715 fare is a regular economy fare with ONE checked luggage and normal size car</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">384</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8912"><time datetime="2023-05-22T15:55:21+00:00" class="time">15:55</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8913" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkxMywidCI6MTc5MzgyOTg5MCwiaCI6ImIxOGFhMjFhZGY5NmMxOTgxNCJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">The Shorthaul – Southwest: Philadelphia – Chicago (and vice versa). &#036;158. Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/22/the-shorthaul-southwest-philadelphia-chicago-and-vice-versa-158-roundtrip-including-all-taxes-4/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/22/the-shorthaul-southwest-philadelphia-chicago-and-vice-versa-158-roundtrip-including-all-taxes-4/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/22/the-shorthaul-southwest-philadelphia-chicago-and-vice-versa-158-roundtrip-including-all-taxes-4">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/PKkVjkhRlT-NM9WYu4oz31gC2W3RUOwm93Nfneqo1EM1EUEDoueIOTTih39Z-soEz3cAL_dwlum-t3klbq0F2f17fdi5AVjBLpIhWkg39BDLIA7HiYoGv8FAOpELfkup_6PzsgN-WoQpKTvgDcAh3fs_sjdLMpVCtQnbBQXcGWx4CqdhjsKuVal66lJQHxsIzB5zMYJYndRF1BcQsV8NZcdoYXOd0r489mJ1v7jDL9WRpPHXWOtnK0EZ20c9XrdJMYAtTAtOgpKJSNvf6eXT3LWL-tEBaF2yh_lpdL5g86wrae4K9QUj3xsrbiT2XHAyX4kdqp_jzCBoEtcOU0Zblw.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">The Shorthaul – Southwest: Philadelphia – Chicago (and vice versa). &#036;158. Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">A good sale for nonstop service to/from ChicagoWhat is The Shorthaul? It is our irregular feature of deals under &#036;200 and 3,000 miles roundtrip.Sample Travel Date:September</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">531</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8913"><time datetime="2023-05-22T17:54:03+00:00" class="time">17:54</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div><div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message text_not_supported_wrap js-widget_message" data-post="flightdeals/8914" data-view="eyJjIjotMTAzMTE0NzM5MiwicCI6ODkxNCwidCI6MTc5MzgyOTg5MCwiaCI6IjAyNWYyMjU0N2JkOTU2MWJjNSJ9">
+  <div class="tgme_widget_message_user"><a href="https://t.me/flightdeals"><i class="tgme_widget_message_user_photo bgcolor2" data-content="F"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPGRlZnM%2BPGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHgyPSIwJSIgeTE9IjAlIiB5Mj0iMTAwJSI%2BPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzgyYjFmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY2NWZmZiIvPjwvbGluZWFyR3JhZGllbnQ%2BPC9kZWZzPjxzdHlsZT50ZXh0e2ZvbnQ6NjAwIDQ0cHggLWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsJ1NlZ29lIFVJJyxSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYsJ0FwcGxlIENvbG9yIEVtb2ppJywnU2Vnb2UgVUkgRW1vamknLCdTZWdvZSBVSSBTeW1ib2wnOy13ZWJraXQtdXNlci1zZWxlY3Q6bm9uZTt1c2VyLXNlbGVjdDpub25lfTwvc3R5bGU%2BPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InVybCgjZykiLz48dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MCIgeT0iNjYiIGZpbGw9IiNmZmYiPkY8L3RleHQ%2BPC9zdmc%2B"></i></a></div>
+  <div class="tgme_widget_message_bubble">
+    
+        <i class="tgme_widget_message_bubble_tail">
+      <svg class="bubble_icon" width="9px" height="20px" viewBox="0 0 9 20">
+        <g fill="none">
+          <path class="background" fill="#ffffff" d="M8,1 L9,1 L9,20 L8,20 L8,18 C7.807,15.161 7.124,12.233 5.950,9.218 C5.046,6.893 3.504,4.733 1.325,2.738 L1.325,2.738 C0.917,2.365 0.89,1.732 1.263,1.325 C1.452,1.118 1.72,1 2,1 L8,1 Z"></path>
+          <path class="border_1x" fill="#d7e3ec" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0 L9,0 L9,20 L7,20 L7,20 L7.002,18.068 C6.816,15.333 6.156,12.504 5.018,9.58 C4.172,7.406 2.72,5.371 0.649,3.475 C-0.165,2.729 -0.221,1.464 0.525,0.649 C0.904,0.236 1.439,0 2,0 Z"></path>
+          <path class="border_2x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.5 L9,0.5 L9,20 L7.5,20 L7.5,20 L7.501,18.034 C7.312,15.247 6.64,12.369 5.484,9.399 C4.609,7.15 3.112,5.052 0.987,3.106 C0.376,2.547 0.334,1.598 0.894,0.987 C1.178,0.677 1.579,0.5 2,0.5 Z"></path>
+          <path class="border_3x" d="M9,1 L2,1 C1.72,1 1.452,1.118 1.263,1.325 C0.89,1.732 0.917,2.365 1.325,2.738 C3.504,4.733 5.046,6.893 5.95,9.218 C7.124,12.233 7.807,15.161 8,18 L8,20 L9,20 L9,1 Z M2,0.667 L9,0.667 L9,20 L7.667,20 L7.667,20 L7.668,18.023 C7.477,15.218 6.802,12.324 5.64,9.338 C4.755,7.064 3.243,4.946 1.1,2.983 C0.557,2.486 0.52,1.643 1.017,1.1 C1.269,0.824 1.626,0.667 2,0.667 Z"></path>
+        </g>
+      </svg>
+    </i>
+    <div class="tgme_widget_message_author accent_color"><a class="tgme_widget_message_owner_name" href="https://t.me/flightdeals"><span dir="auto">FlightDeals</span></a></div>
+
+
+<div class="tgme_widget_message_text js-message_text" dir="auto">United: Chicago – Seattle (and vice versa). &#036;148 (Basic Economy) / &#036;228 (Regular Economy). Roundtrip, including all Taxes - <a href="https://www.theflightdeal.com/2023/05/23/united-chicago-seattle-and-vice-versa-148-basic-economy-228-regular-economy-roundtrip-including-all-taxes/" target="_blank" rel="noopener">https://www.theflightdeal.com/2023/05/23/united-chicago-seattle-and-vice-versa-148-basic-economy-228-regular-economy-roundtrip-including-all-taxes/</a></div><a class="tgme_widget_message_link_preview" href="https://theflightdeal.com/2023/05/23/united-chicago-seattle-and-vice-versa-148-basic-economy-228-regular-economy-roundtrip-including-all-taxes">
+  
+  <div class="link_preview_site_name accent_color" dir="auto">Theflightdeal</div>
+  <i class="link_preview_image" style="background-image:url('https://cdn4.telesco.pe/file/qsQ4wc2OEAmlPeq1a9mKORtQFdwOo7sH-LQwofUR1H_YPP-bQ3BOAEsqUYL5MGFCEjsqmHsY3-1V6TtN08pScBzsHSy17AHkhsywM27LW0Yssu5SBni-9T2C-6-yqclt-Bsxsh5b_IAcLNIF4rer6GJ5RR_TNbpza08SJNnWTilbfHaNQ1YEiAkVmmphvdey-WpsbgdtAUfzDAMrwZjcgwN92Lfw5-HrbKGsANdqPg8A5NjKtwVMU6r35X9ad3BGKyO2ZQ0hBFE-J1lJpvk0Dx9HusrYDDJ56VKaHjf1V-cqMDivjJ9ubysfBEEVCeN2fPpiEh7SsTZ74M8jX9OCUw.jpg');padding-top:60.9375%"></i>
+  <div class="link_preview_title" dir="auto">United: Chicago – Seattle (and vice versa). &#036;148 (Basic Economy) / &#036;228 (Regular Economy). Roundtrip, including all Taxes</div>
+  <div class="link_preview_description" dir="auto">[disclose]A good sale for nonstop service to/from SeattleThe &#036;228 fare is the regular fare which allows for normal size carry-on and personal item in addition to advance seat assignment.Un</div>
+</a>
+<div class="tgme_widget_message_footer compact js-message_footer">
+  
+  <div class="tgme_widget_message_info short js-message_info">
+    <span class="tgme_widget_message_views">554</span><span class="copyonly"> views</span><span class="tgme_widget_message_meta"><a class="tgme_widget_message_date" href="https://t.me/flightdeals/8914"><time datetime="2023-05-23T16:53:13+00:00" class="time">16:53</time></a></span>
+  </div>
+</div>
+  </div>
+  
+</div></div>
+    </section>
+  </div>
+</main>
+    <script src="//telegram.org/js/jquery.min.js"></script>
+    <script src="//telegram.org/js/jquery-ui.min.js"></script>
+    <script src="//telegram.org/js/tgwallpaper.min.js?3"></script>
+<script src="//telegram.org/js/tgsticker.js?32"></script>
+
+    <script src="//telegram.org/js/widget-frame.js?68"></script>
+    <script src="//telegram.org/js/telegram-web.js?14"></script>
+    <script>TWeb.init();
+</script>
+    
+  </body>
+</html>
+<!-- page generated in 83.51ms -->

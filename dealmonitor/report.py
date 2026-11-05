@@ -10,6 +10,7 @@ from urllib.parse import quote
 from . import regions
 from .config import Config
 from .principles import CABIN_LABEL, euro
+from .sources.feed import SAFE_LINK_RE, source_label
 from .store import Store
 
 CSS = """
@@ -29,6 +30,7 @@ h1{font-size:24px;margin:0 0 4px}h2{font-size:18px;margin:32px 0 12px}
 .meta{color:var(--muted);font-size:13px;margin-top:4px}
 .badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;color:#fff;margin-right:6px}
 .b-Top-Deal{background:var(--top)}.b-Sehr{background:var(--good)}.b-Deal{background:var(--deal)}
+.b-Radar{background:#b45309}
 .b-exp{background:var(--exp)}
 ul{margin:6px 0 0 18px;padding:0}li{font-size:13px}
 a{color:var(--accent)}.links a{margin-right:14px;font-size:14px}
@@ -38,6 +40,12 @@ th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-
 th{color:var(--muted);font-weight:600}
 .empty{color:var(--muted);font-style:italic}
 """
+
+
+def is_article(d: dict) -> bool:
+    """Deal aus einem Feed-Artikel (Deal-Seiten) - erkennbar an der Quelle."""
+    src = d.get("source") or ""
+    return src.startswith("feed:") or src.endswith("-feed")
 
 
 def _gf_link(d: dict) -> str | None:
@@ -65,19 +73,19 @@ def _card(d: dict) -> str:
     meta = [e(d.get("alert_name") or d["alert_id"])]
     if when:
         meta.append(e(when))
-    meta.append("Quelle: " + e(d["source"]))
+    meta.append("Quelle: " + e(source_label(d["source"])))
     meta.append("gefunden " + e(d["first_seen"][:16].replace("T", " ")))
     if expired and d.get("expired_at"):
         meta.append("abgelaufen " + e(d["expired_at"][:16].replace("T", " ")))
     links = []
-    if d.get("link"):
+    if d.get("link") and SAFE_LINK_RE.match(d["link"]):   # nur http(s), kein "javascript:"
         links.append(f'<a href="{e(d["link"])}" rel="noopener" target="_blank">Zum Angebot</a>')
     if (gf := _gf_link(d)):
         links.append(f'<a href="{e(gf)}" rel="noopener" target="_blank">Bei Google Flights gegenprüfen</a>')
     reasons = "".join(f"<li>{e(r)}</li>" for r in d.get("reasons") or [])
     return f"""<div class="card{' expired' if expired else ''}">
 <div class="row"><div><div>{badge}</div><div class="title">{e(d['headline'])}</div>
-<div class="meta">{' · '.join(meta)}</div></div><div class="price">{euro(d['price'])}</div></div>
+<div class="meta">{' · '.join(meta)}</div></div><div class="price">{euro(d['price']) if d['price'] else 'Preis im Artikel'}</div></div>
 {f'<ul>{reasons}</ul>' if reasons else ''}
 {f'<div class="links">{"".join(links)}</div>' if links else ''}</div>"""
 
@@ -104,7 +112,7 @@ def _merge_articles(rows: list[dict]) -> list[dict]:
     """Derselbe Feed-Artikel unter mehreren Alarmen -> eine Karte."""
     out, by_link = [], {}
     for d in rows:
-        key = d.get("link") if d["source"].endswith("-feed") else None
+        key = d.get("link") if is_article(d) else None
         if key and key in by_link:
             first = by_link[key]
             first["alert_name"] = f"{first.get('alert_name') or first['alert_id']} · " \
@@ -123,7 +131,7 @@ def _merge_articles(rows: list[dict]) -> list[dict]:
 def render(cfg: Config, store: Store, *, demo: bool = False) -> str:
     active = _merge_articles(store.deals(status="active"))
     expired = _merge_articles(store.deals(status="expired", limit=50))
-    rank = {"Top-Deal": 0, "Sehr gut": 1, "Deal": 2}
+    rank = {"Top-Deal": 0, "Sehr gut": 1, "Deal": 2, "Radar": 3}
     active.sort(key=lambda d: (rank.get(d["rating"], 3), d["price"]))
     now = datetime.now().strftime("%d.%m.%Y %H:%M")
     banner = ('<div class="banner"><b>DEMO:</b> Diese Seite zeigt erfundene Beispieldaten '

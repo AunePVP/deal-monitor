@@ -22,12 +22,14 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from . import __version__, notify, regions
-from .appsettings import Context
+from . import __version__, notify, radar, regions
+from .appsettings import SOURCE_LABELS, SOURCE_NAMES, Context
 from .config import normalize_alert, slugify
 from .models import Alert
-from .report import _gf_link, _merge_articles
-from .scheduler import Scheduler
+from .monitor import VERIFIED_PREFIX
+from .report import _gf_link, _merge_articles, is_article
+from .scheduler import MODES, Scheduler
+from .sources.feed import source_label
 
 log = logging.getLogger(__name__)
 
@@ -55,7 +57,7 @@ REGION_NAMES = {
     "AT": "Österreich", "DACH": "Deutschland, Österreich, Schweiz", "CN": "China",
     "CN_MAJOR": "China (große Städte)", "CN_HK": "China inkl. Hongkong & Macau",
 }
-RATING_RANK = {"Top-Deal": 0, "Sehr gut": 1, "Deal": 2}
+RATING_RANK = {"Top-Deal": 0, "Sehr gut": 1, "Deal": 2, radar.RATING: 3}
 PLACEHOLDER = """<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Deal-Monitor</title>
 <style>body{font:16px/1.5 system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px}</style>
@@ -91,6 +93,8 @@ def deal_list(store, status: str = "active", alert_id: str | None = None) -> lis
     alerts = store.alert_rows()
     names = {a["id"]: a["name"] for a in alerts}
     position = {a["id"]: i for i, a in enumerate(alerts)}
+    names[radar.RADAR_ALERT_ID] = radar.RADAR_ALERT_NAME     # Pseudo-Alarm des Radars
+    position[radar.RADAR_ALERT_ID] = len(alerts)
     statuses = ["active", "expired"] if status == "all" else [status]
     out = []
     for st in statuses:
@@ -101,14 +105,16 @@ def deal_list(store, status: str = "active", alert_id: str | None = None) -> lis
             d["alert_name"] = names[d["alert_id"]]
             d["compare"] = _gf_link(d)
             d["alert_ids"] = [d["alert_id"]]
+            d["source_label"] = source_label(d["source"])
+            d["verified"] = any(str(r).startswith(VERIFIED_PREFIX) for r in d.get("reasons") or [])
         if not alert_id:
             merged = _merge_articles(rows)
             by_link = {}
             for d in rows:
-                if d["source"].endswith("-feed") and d.get("link"):
+                if is_article(d) and d.get("link"):
                     by_link.setdefault(d["link"], []).append(d["alert_id"])
             for d in merged:
-                if d["source"].endswith("-feed") and d.get("link"):
+                if is_article(d) and d.get("link"):
                     d["alert_ids"] = by_link[d["link"]]
             rows = merged
         if st == "active":
@@ -133,6 +139,7 @@ def _int_param(query: dict, name: str, default: int, lo: int = 1, hi: int = 1000
 # -- Request-Handler ----------------------------------------------------------------
 
 LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1"}
+LAN_SUFFIXES = (".local", ".lan", ".home", ".home.arpa", ".internal", ".fritz.box")
 
 
 def host_allowed(host_header: str | None, extra: set[str]) -> bool:
@@ -146,6 +153,10 @@ def host_allowed(host_header: str | None, extra: set[str]) -> bool:
         host = host.partition(":")[0]
     host = host.rstrip(".")
     if host in LOCAL_HOSTS or host.endswith(".localhost") or "*" in extra or host in extra:
+        return True
+    # Namen im Heimnetz (tower, tower.local, nas.fritz.box …) kann keine fremde Webseite
+    # per DNS-Rebinding auf sich umbiegen - die gibt es nur im eigenen Netz.
+    if host and re.fullmatch(r"[a-z0-9-]+", host) or host.endswith(LAN_SUFFIXES):
         return True
     try:
         ipaddress.ip_address(host)
@@ -312,6 +323,7 @@ class Handler(BaseHTTPRequestHandler):
         ("GET", r"/api/settings", "get_settings"),
         ("PUT", r"/api/settings", "put_settings"),
         ("POST", r"/api/run", "run"),
+        ("GET", r"/api/sources", "sources"),
         ("GET", r"/api/runs", "runs"),
         ("GET", r"/api/notifications", "notifications"),
         ("POST", r"/api/notifications/read", "read_notifications"),
@@ -348,21 +360,51 @@ class Handler(BaseHTTPRequestHandler):
         st = self.scheduler.status()
         app = self.ctx.settings(store)
         alerts = store.alert_rows()
+        active = deal_list(store, "active")
         return 200, {
             "version": __version__,
             "demo": self.ctx.demo,
             "running": st["running"],
             "last_run": st["last_run"],
+            "last_full_run": st["last_full_run"],
             "next_run": st["next_run"],
+            "next_feed_run": st["next_feed_run"],
             "interval_hours": st["interval_hours"],
+            "feed_interval_minutes": st["feed_interval_minutes"],
             "configured": app.configured(self.ctx.demo),
+            "sources": app.get("sources"),
             "counts": {
                 "alerts": len(alerts),
                 "alerts_enabled": sum(1 for a in alerts if a.get("enabled", True)),
-                "active_deals": len(deal_list(store, "active")),
+                "active_deals": len(active),
+                "radar_deals": sum(1 for d in active if d["alert_id"] == radar.RADAR_ALERT_ID),
                 "unread": store.unread_count(),
             },
         }
+
+    def api_sources(self, store, **_):
+        """Alle Quellen mit Schalter-Zustand, Einsatzbereitschaft und Fehlern des letzten Laufs."""
+        app = self.ctx.settings(store)
+        active = app.get("sources")
+        configured = app.configured(self.ctx.demo)
+        last = store.last_run()
+        # Preis-APIs/Google laufen nur in vollen Läufen - deren Fehler aus dem letzten vollen
+        # Lauf, nicht aus dem letzten (evtl. reinen Feed-)Lauf
+        last_full = store.last_run(feed_runs=False)
+        out = []
+        for name in SOURCE_NAMES:
+            errors = ((last if name == "feeds" else last_full) or {}).get("errors") or []
+            needles = {name, SOURCE_LABELS[name]}
+            if name == "amadeus":
+                needles |= {"amadeus-dates", "amadeus-offers"}
+            if name == "feeds":
+                needles |= {"travel-dealz-feed", "feed:"}
+            hits = [e for e in errors if any(n in e for n in needles)]
+            out.append({"id": name, "name": SOURCE_LABELS[name], "enabled": name in active,
+                        "configured": bool(configured.get(name)),
+                        "last_error": hits[0] if hits else None})
+        return 200, {"sources": out, "last_run_at": (last or {}).get("finished_at"),
+                     "last_full_run_at": (last_full or {}).get("finished_at")}
 
     def api_deals(self, store, query, **_):
         status = query.get("status", ["active"])[0] or "active"
@@ -441,9 +483,12 @@ class Handler(BaseHTTPRequestHandler):
                 raise ApiError(400, "alert_id muss ein Text sein")
             if not store.has_alert(alert_id):
                 raise ApiError(404, f"Alarm '{alert_id}' nicht gefunden")
-        if not self.scheduler.trigger(alert_id, "manual"):
+        mode = body.get("mode") or "full"
+        if not isinstance(mode, str) or mode not in MODES:
+            raise ApiError(400, f"mode muss {' oder '.join(MODES)} sein")
+        if not self.scheduler.trigger(alert_id, "manual", mode):
             raise ApiError(409, "Es läuft bereits eine Prüfung")
-        return 202, {"started": True}
+        return 202, {"started": True, "mode": mode}
 
     def api_runs(self, store, query, **_):
         return 200, {"runs": store.runs(_int_param(query, "limit", 20, hi=500))}

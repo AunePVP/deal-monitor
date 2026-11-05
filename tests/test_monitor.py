@@ -265,7 +265,7 @@ class NotifyTest(unittest.TestCase):
         import os
         from unittest import mock
         from dealmonitor import notify
-        env = {"WEBHOOK_URL": "https://notify.example/hook", "WEBHOOK_TOKEN": "geheim"}
+        env = {"WEBHOOK_URL": "https://notify.example/hook", "WEBHOOK_TOKEN": "test-dummy-token"}
         with mock.patch.dict(os.environ, env, clear=True):
             channels = notify.from_env()
         self.assertEqual([c.name for c in channels], ["console", "webhook"])
@@ -276,7 +276,7 @@ class NotifyTest(unittest.TestCase):
         kw = req.call_args.kwargs
         body = json.loads(kw["data"])
         self.assertEqual(url, "https://notify.example/hook")
-        self.assertEqual(kw["headers"]["Authorization"], "Bearer geheim")
+        self.assertEqual(kw["headers"]["Authorization"], "Bearer test-dummy-token")
         self.assertEqual(body["deals"][0]["price"], 89)
         self.assertEqual(body["deals"][0]["status"], "new")
         self.assertEqual(body["deals"][0]["return"], "2027-01-19")

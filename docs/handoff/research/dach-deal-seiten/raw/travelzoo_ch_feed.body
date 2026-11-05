@@ -1,0 +1,2079 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://ssl.tzoo-img.com" crossorigin>
+    <link rel="dns-prefetch" href="https://ssl.tzoo-img.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,300italic,400italic&display=fallback" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,300italic,400italic&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,300italic,400italic&display=fallback" media="none" onload="if(media!='all')media='all'">
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+                <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>404 - Page Not Found | Travelzoo</title>
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-57x57.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="60x60" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-60x60.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="72x72" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-72x72.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="76x76" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-76x76.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="114x114" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-114x114.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="120x120" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-120x120.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="144x144" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-144x144.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="152x152" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-152x152.png?v=76jtl2zkm" async>
+    <link rel="apple-touch-icon" sizes="180x180" href="https://ssl.tzoo-img.com/res/favicon/apple-touch-icon-180x180.png?v=76jtl2zkm" async>
+    <link rel="icon" type="image/png" href="https://ssl.tzoo-img.com/res/favicon/favicon-32x32.png?v=76jtl2zkm" sizes="32x32" async>
+    <link rel="icon" type="image/png" href="https://ssl.tzoo-img.com/res/favicon/favicon-194x194.png?v=76jtl2zkm" sizes="194x194" async>
+    <link rel="icon" type="image/png" href="https://ssl.tzoo-img.com/res/favicon/favicon-96x96.png?v=76jtl2zkm" sizes="96x96" async>
+    <link rel="icon" type="image/png" href="https://ssl.tzoo-img.com/res/favicon/android-chrome-192x192.png?v=76jtl2zkm" sizes="192x192" async>
+    <link rel="icon" type="image/png" href="https://ssl.tzoo-img.com/res/favicon/favicon-16x16.png?v=76jtl2zkm" sizes="16x16">
+    <link rel="manifest" href="https://ssl.tzoo-img.com/res/favicon/manifest.json?v=76jtl2zkm" async>
+                            <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="https://ssl.tzoo-img.com/res/favicon/mstile-144x144.png?v=76jtl2zkm">
+    <meta name="theme-color" content="#ffffff">
+        
+        <script>
+    (function (tzoo) {
+        'use strict';
+
+        tzoo.EnvironmentPrefix='';
+        tzoo.ServiceBaseUrl = '/api/';
+        tzoo.TrackingBaseUrl = 'https://data.travelzoo.com/';
+        tzoo.AssetUrl='https://ssl.tzoo-img.com/';
+        tzoo.ImageUrl = 'https://www.travelzoo.com/';
+        tzoo.UrlPrefix = '/';
+        tzoo.TzLocale = 1;
+        tzoo.Lcid = 'en-US';
+        tzoo.MemberId = '';
+        tzoo.MemberIdLoggedIn = '';
+        tzoo.MemberQueueUniqueId = '';
+        tzoo.MemberIsPaid = false;
+        tzoo.MemberIsClubNonMember = false;
+        tzoo.MemberIsPaidTrial = false;
+        tzoo.IsMember = false;
+        tzoo.IsPendingMember = false;
+        tzoo.SignupMode = 2;
+        tzoo.IsPaidEdition = true;
+        tzoo.CountryCode = 'us';
+        tzoo.websiteType = 7;
+        tzoo.isMobile = false;
+        tzoo.isSmartPhone = false;
+        tzoo.isPrivateSite = false;
+        tzoo.clickSource = '';
+        tzoo.dealPlatform = {"Travel":0,"Local":1,"Hotel":2,"HotelDeal":3,"Story":4,"Collection":5,"Coupon":6,"None":-1};
+        tzoo.searchResultsPerPage=20;
+        tzoo.filterDisplayCount=7;
+        tzoo.decimalSeparator = '.';
+        tzoo.checkinDateParameter = 'checkinDate';
+        tzoo.checkoutDateParameter = 'checkoutDate';
+        tzoo.CurrentPageType = '';
+        tzoo.SearchHistoryStorageName = '_rsh_us';
+        tzoo.IsUser = false;
+        tzoo.cncc = 'cc';
+        tzoo.cnccfunc = 'cc-func';
+        tzoo.cnccmkt = 'cc-mkt';
+        tzoo.cnco = 'cc-co';
+        tzoo.ccaa = false;
+        tzoo.ccaf = false;
+        tzoo.ccam = false;
+        tzoo.reloadOnCookieConsent = false;
+        tzoo.cnhmb = 'hmb';
+        tzoo.hasLatinAlphabet = true;
+        
+        tzoo.resources = tzoo.resources || {};
+        tzoo.resources[':SearchInvalid'] = 'To search, choose a category from the box on the left and/or select a destination in the box on the right.';
+        tzoo.resources[':Loading'] = 'Loading...';
+        tzoo.resources[':Gallery.Counter'] = '';
+        tzoo.resources[':Gallery.Prev'] = 'Previous';
+        tzoo.resources[':Gallery.Next'] = 'Next';
+        tzoo.resources[':SetMyLocation'] = 'Set My Location';
+        tzoo.resources[':SetMyLocationShort'] = 'Set';
+        tzoo.resources[':FlightSearch.Enabled'] = 'false';
+        tzoo.resources[':Update'] = 'Update';
+        tzoo.resources[':SearchNearMe'] = 'Search near me in:';
+        tzoo.resources['BackToResult'] = 'Back to Results';
+        tzoo.resources['BackToResultShort'] = 'Back';
+        tzoo.resources['BackToTop20'] = 'Back to the Top 20';
+        tzoo.resources['Top20'] = '';
+        tzoo.resources['SearchWidget.SearchHistoryLabel'] = 'SEARCH HISTORY';
+        tzoo.resources['SearchWidget.CollapseLabel'] = 'Show Less';
+        tzoo.resources['SearchWidget.ExpandLabel'] = 'Show More';
+        tzoo.resources['SearchWidget.AnywhereLabel'] = 'Anywhere';
+        tzoo.resources['SearchWidget.NearMe'] = 'Near Me';
+        tzoo.resources['UseDefaultLoaderGif'] = 'true';
+        tzoo.globalization = {
+            longDatePattern : 'M dd, yy',
+            invariantCultureUrlDatePattern : 'mm/dd/yy',
+            calendar : {
+                longDatePattern : 'D, M d',
+                shortMonthNameDayPattern : 'M d'
+            },
+            utcOffset: -5.0
+        };
+        tzoo.zipValidation = {"US":"^\\d{5}([ -]\\d{4})?$","UK":"(^BFPO ?\\d{1,4}$^(?:GIR 0AA)|(?:(?:(?:A[BL]|B[ABDHLNRSTX]?|C[ABFHMORTVW]|D[ADEGHLNTY]|E[HNX]?|F[KY]|G[LUY]?|H[ADGPRSUX]|I[GMPV]|JE|K[ATWY]|L[ADELNSU]?|M[EKL]?|N[EGNPRW]?|O[LX]|P[AEHLOR]|R[GHM]|S[AEGKLMNOPRSTY]?|T[ADFNQRSW]|UB|W[ADFNRSV]|YO|ZE)[1-9]?[0-9]|((E|N|NW|SE|SW|W)1|EC[1-4]|WC[12])[A-HJKMNPR-Y]|(?:SW|W)(?:[2-9]|[1-9][0-9])|EC[1-9][0-9])\\s*[O0-9][ABD-HJLNP-UW-Z]{2})$)|(^[A-Za-z]{1,2}[\\d]{1,2}[A-Za-z]{0,1}$)","GB":"(^BFPO ?\\d{1,4}$^(?:GIR 0AA)|(?:(?:(?:A[BL]|B[ABDHLNRSTX]?|C[ABFHMORTVW]|D[ADEGHLNTY]|E[HNX]?|F[KY]|G[LUY]?|H[ADGPRSUX]|I[GMPV]|JE|K[ATWY]|L[ADELNSU]?|M[EKL]?|N[EGNPRW]?|O[LX]|P[AEHLOR]|R[GHM]|S[AEGKLMNOPRSTY]?|T[ADFNQRSW]|UB|W[ADFNRSV]|YO|ZE)[1-9]?[0-9]|((E|N|NW|SE|SW|W)1|EC[1-4]|WC[12])[A-HJKMNPR-Y]|(?:SW|W)(?:[2-9]|[1-9][0-9])|EC[1-9][0-9])\\s*[O0-9][ABD-HJLNP-UW-Z]{2})$)|(^[A-Za-z]{1,2}[\\d]{1,2}[A-Za-z]{0,1}$)","CA":"^[A-Z]\\d[A-Z][ -]?\\d[A-Z]\\d$","DE":"^\\d{5}$","FR":"^\\d{5}([ -]\\d{4})?$","ES":"^([1-9]{2}|[0-9][1-9]|[1-9][0-9])[0-9]{3}$","AU":"^\\d{4}$","HK":".*","JP":"^\\d{3}[-－]?\\d{4}$","CN":".*"};
+        tzoo.zipValidation["generic"] = '^[- A-Z0-9]+$';
+        tzoo.currencyCode = 'USD';
+        tzoo.gaProductClass = ' ga-product';
+        
+        tzoo.gaProductHtmlAttributesForTemplate = function (idToken, idPrefixToken, sourceToken, categoryToken, nameToken, dealTypeToken, platformToken, priceToken, positionToken, widgetName) {
+            var ret = ''
+            var attribs = {}
+            if (idToken && idToken.length !== 0 && idPrefixToken) {
+                attribs['data-ga-product-id'] = idPrefixToken + idToken
+            }
+            if (typeof platformToken != 'undefined' && platformToken !== null) {
+                attribs['data-ga-product-platform'] = platformToken.toString()
+            }
+            if (priceToken && priceToken.length !== 0) {
+                attribs['data-ga-product-price'] = priceToken
+            }
+            if (sourceToken && sourceToken.length !== 0) {
+                attribs['data-ga-product-brand'] = sourceToken
+            }
+            if (categoryToken && categoryToken.length !== 0) {
+                attribs['data-ga-product-category'] = categoryToken
+            }
+            if (nameToken && nameToken.length !== 0) {
+                attribs['data-ga-product-name'] = nameToken
+            }
+            if (dealTypeToken && dealTypeToken.length !== 0) {
+                attribs['data-ga-product-dealtype'] = dealTypeToken
+            }
+            if (typeof positionToken != 'undefined' && positionToken !== null) {
+                attribs['data-ga-product-position'] = positionToken.toString()
+            }
+            if (typeof widgetName === 'string') {
+                attribs['data-ga-product-widgetname'] = widgetName.toString()
+            }
+
+            if (Object.keys(attribs).length != 0) {
+                for (var key in attribs) {
+                    var value = attribs[key];
+                    ret += ' ' + key + '="' + tzoo.htmlAttributeEncode(value) + '"'
+                }
+            }
+            return ret
+        }
+        var dealCategoryImages = [{"id":0,"image":"generic"},{"id":1,"image":"flight"},{"id":2,"image":"hotel"},{"id":3,"image":"vacation"},{"id":4,"image":"entertainment"},{"id":5,"image":"cruise"},{"id":6,"image":"car"},{"id":7,"image":"lastminute"},{"id":8,"image":"generic"},{"id":9,"image":"generic"},{"id":10,"image":"rail"},{"id":-1,"image":"spa"},{"id":-2,"image":"restaurant"},{"id":-3,"image":"activity"}];
+        tzoo.dealCategoryImagesLookup = {}
+        for (var i = 0, len = dealCategoryImages.length; i < len; i++) {
+            tzoo.dealCategoryImagesLookup[dealCategoryImages[i].id] = dealCategoryImages[i];
+        }
+        tzoo.tagType = {"None":0,"Theme":1,"Category":2,"Adhoc":3};
+                tzoo.pagingStorageName='gds';
+    })(window.tzoo = window.tzoo || {});
+</script>
+
+    
+
+<script type="text/javascript">
+    var pageDL = {'env':'production','sit':0,'sei':1,'sec':'US','aid':5,'mid':0,'ili':0,'sed':[''],'csr':undefined,'cnm':undefined,'pp':undefined,'isp':false,'irs':true,'amt':false,'aat':false,'aft':false,'ipd':false,'itd':false};
+    
+    tzoo.gtm = { 'dl': undefined };
+</script>
+
+    
+<script type="text/javascript">
+    var gtmDL = [pageDL];
+</script>
+    <script>
+        // Define the gtag function.
+        function gtag() { gtmDL.push(arguments); }
+
+        // Set default consent to 'denied' as a placeholder
+        // Determine actual values based on your own requirements
+        gtag('consent', 'default', {
+            'ad_user_data': false ? 'granted' : 'denied',
+            'ad_personalization': false ? 'granted' : 'denied',
+            'ad_storage': false ? 'granted' : 'denied',
+            'analytics_storage': false ? 'granted': 'denied',
+
+            'security_storage': false ? 'granted': 'denied',
+            'personalization_storage': false ? 'granted' : 'denied'
+        });
+        gtag('set', 'url_passthrough', false);
+        gtag('set', 'ads_data_redaction', false ? false : true);
+    </script>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','gtmDL','GTM-WKCPVV');</script>
+
+    
+
+    
+
+    <link rel="stylesheet" type="text/css" href="https://ssl.tzoo-img.com/BundleHandler.ashx?f=%2fres%2fvendor%2fjquery-ui%2fjquery-ui.min.css%2c%2fres%2fcss%2fgen%2ftzsg-global.css%2c%2fres%2fcss%2fgen%2fsignup-overlay.css%2c%2fres%2fcss%2fgen%2fwidget-sitesearch.css%2c%2fres%2fcss%2fgen%2flocation.css%2c%2fres%2fvendor%2fsmartbanner%2fjquery.smartbanner.css%2c%2fres%2fcss%2fgen%2fcookie-consent.css&v=76JTL2ZKM-"><link rel="stylesheet" type="text/css" href="https://ssl.tzoo-img.com/BundleHandler.ashx?f=%2fres%2fcss%2fgen%2f404.css&v=76JTL2ZKM-">
+
+</head>
+<body id="bodyTop" class="tzoo-locale-en-US tzoo-notmember tzoo-notloggedin tzoo-memberstatus-0  ">
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-WKCPVV" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+        <header role="banner" class="global-header nocontent  hide-in-app">
+            <div class="header-content push">
+                        <div class="logo-header">
+                                    <a href="/?site=us" class="logo-travelzoo " title="Back to homepage">Travelzoo<sup>®</sup></a>
+
+
+                        </div>
+                
+                    <div data-name="header-menu-container" class="header-menu">
+
+                        <a role="button" class="header-menu-toggle icon-member-sm hide-text">Menu <div class="ellipse-div" style="display:none;"></div></a>
+                       
+                        <div class="header-menu-list">
+                            <ul>
+                                <li class="fb-button">
+                                    
+                                    
+                                </li>
+                                <li>
+                                        <ul class="js-header-content">
+                                            
+    <li class="signin" data-clientsideloginlogout="false">
+        <a role="button" data-clientsideloginlogout="false">Sign in</a>
+    </li>
+
+    <li class="site-edition">
+        <h3 class="margin-top-10 site-edition-title">Site Editions</h3>
+        <p class="text-sm margin-bottom-5 margin-top-5 site-edition-intro">You are currently on the U.S. site edition.</p>
+        <a role="button" class="site-edition-toggle"><i class="flag-us-sm" title="US edition"></i> U.S.</a>
+    </li>
+
+                                        </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                                                        <div class="join-cta v1 js-header-join">
+                            <a href="/signup/Subscribe/?Source=_signupwid&amp;Placement=Overlay-GlobalHeader-SignUpOB" class="button">Join <span class="optional-text noop-class">Travelzoo</span></a>
+                            <a href="/signup/Subscribe/?Source=_signupwid&amp;Placement=Overlay-GlobalHeader-SignUpOB" class="copy ada-state-ignore">Join Travelzoo, the club for travel enthusiasts, to gain access to our exclusive offers and benefits.</a>
+                        </div>
+                                                <div id="header-back-nav" class="hidden-md-larger hidden">
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+    
+<div id="hero-404" style="background-image: url('https://ssl.tzoo-img.com/res/img/404.jpg?v=76jtl2zkm');">
+    <div class="fixed-container">
+        <div id="line1">Not all those who wander are lost.</div>
+        <div id="line2">– J.R.R. Tolkien</div>
+        <div id="line3">However, <span class="text-bold">you</span> are definitely lost. Let's fix that.</div>
+
+
+<form class="search-form ada-auto-proxy ada-auto-ignore   " id="header-search-form">
+    <input id="page-type-field" type="hidden" value="PageNotFoundPage" />
+    <div class="search-heading-container">
+        <h3>Show me:</h3>
+    </div>
+    <div class="push search-fields">
+        <div class="what-field-container clear-in-field">
+            <label class="sr-only" for="what-field-1">What type of deals?</label>
+            <input id="what-field-1" class="input-clear js-input-clear" type="text" placeholder="e.g. Hotels, beach, Disney" value="All Deals" autocomplete="off" />
+            <input id="what-field-value-1" type="hidden" value="0" data-name="All Deals" data-searchtype="0" data-resultsviewtype="0" />
+            <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+        </div>
+        <div class="where-field-container js-location-autocomplete clear-in-field" data-query-type="exapt">
+            <label class="sr-only" for="where-field-1">Where?</label>
+            <input id="where-field-1" class="input-clear js-input-clear" type="text" placeholder="Anywhere..." autocomplete="off" />
+            <input id="where-field-value-1" type="hidden" value="" />
+            <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+        </div>
+        <div class="where-from-field-container js-location-autocomplete clear-in-field" data-query-type="apt">
+            <label class="sr-only" for="where-from-field-1">Where from?</label>
+            <input id="where-from-field-1" class="input-clear js-input-clear" type="text" placeholder="From..." autocomplete="off" data-suppress-default-locations="true" />
+            <input id="where-from-field-value-1" type="hidden" />
+            <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+        </div>
+        <div class="where-to-field-container js-location-autocomplete clear-in-field" data-query-type="apt">
+            <label class="sr-only" for="where-to-field-1">Where to?</label>
+            <input id="where-to-field-1" class="input-clear js-input-clear" type="text" placeholder="To..." autocomplete="off" />
+            <input id="where-to-field-value-1" type="hidden" />
+            <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+        </div>
+        <div class="when-field-container">
+            <label class="sr-only" for="when-field-1">When?</label>
+            <input id="when-field-1" type="text" placeholder="Anytime..." value="All Dates" autocomplete="off" readonly />
+            <input id="when-field-value-1" type="hidden" value="Anytime" />
+            <input id="when-field-value-month-1" type="hidden" value="" />
+        </div>
+        <div class="guests-field-container">
+            <label class="sr-only" for="guests-field-1">How many guests?</label>
+            <select id="guests-field-1" data-selected="2">
+                <option value="1">1 Guest</option>
+                <option value="2">2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+                <option value="5">5 Guests</option>
+            </select>
+        </div>
+        <div class="travelers-field-container">
+            <label class="sr-only" for="travelers-field-1">How many travelers?</label>
+            <select id="travelers-field-1" data-selected="1">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+        </div>
+    </div>
+    <div class="push search-submit-container">
+        <button id="search-button-1" type="submit" title="Search">Search Deals</button>
+    </div>
+</form>
+
+<div id="when-menu-container" style="display: none; z-index: 101;" class="ada-auto-ignore ">
+    <div class="close-button-container hidden">
+        <button id="close-button" class="fullscreen-overlay-close" type="button">Close</button>
+    </div>
+    <div id="when-menu">
+        <h3>Upcoming Dates</h3>
+        <div class="when-submenu">
+            <ul>
+                <li data-date-type="Anytime">All Dates</li> 
+                    <li data-date-type="ThisWeekend">This Weekend</li>
+                <li data-date-type="NextMonth">Next Month</li>
+                <li data-date-type="Spring">Spring</li>
+                <li data-date-type="Summer">Summer</li>
+                <li data-date-type="Fall">Fall</li>
+                <li data-date-type="Winter">Winter</li>
+            </ul>
+        </div>
+        <h3>Select a Month</h3>
+        <div class="when-submenu">
+            <ul>
+                <li data-date-type="SpecificMonth" data-month="1">January</li>
+                <li data-date-type="SpecificMonth" data-month="2">February</li>
+                <li data-date-type="SpecificMonth" data-month="3">March</li>
+                <li data-date-type="SpecificMonth" data-month="4">April</li>
+                <li data-date-type="SpecificMonth" data-month="5">May</li>
+                <li data-date-type="SpecificMonth" data-month="6">June</li>
+                <li data-date-type="SpecificMonth" data-month="7">July</li>
+                <li data-date-type="SpecificMonth" data-month="8">August</li>
+                <li data-date-type="SpecificMonth" data-month="9">September</li>
+                <li data-date-type="SpecificMonth" data-month="10">October</li>
+                <li data-date-type="SpecificMonth" data-month="11">November</li>
+                <li data-date-type="SpecificMonth" data-month="12">December</li>
+            </ul>
+        </div>
+        <h3 class="exact-dates-display">Exact Dates</h3>
+        <div class="when-submenu exact-dates-container">
+            <div class="exact-dates">
+                <div class="exact-dates-header clear-in-field">
+                    <input type="text" class="date-field input-clear period" id="period-selection" placeholder="" readonly>
+                    <button type="button" class="button-clear" tabindex="-1">x</button>
+                </div>
+                <div class="heatmap-legend hidden ">
+                    <h3>Average prices:</h3><div class="legend-boxes"><div class="low-box"><span></span> $</div><div class="medium-box"><span></span> $$</div><div class="high-box"><span></span> $$$</div></div>
+                </div>
+                <div class="clear-both"></div>
+                <div id="dpExactDates"></div>
+                <input id="when-field-value-startDate-1" type="hidden" value="" />
+                <input id="when-field-value-endDate-1" type="hidden" value="" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="search-overlay-button">
+    <button type="button">
+            Search Travelzoo Deals
+    </button>
+</div>
+
+    </div>
+</div>
+<section role="main">
+        <div class="fixed-container">
+            <h2 class="heading-divider margin-top-20 margin-bottom-15">Since this page doesn't exist, what can we help you find?</h2>
+            
+<div class="fixed-container">
+    <article class="fd-editorial">
+        <section class="fd-tips compact-tiles quicklink-tiles col-row">
+            <div class="tile-list-wrapper">
+                <ul class="tile-list">
+                        <li class="tile-headline">
+                            <a href="/top20/?pageType=PageNotFoundPage" target="_self">Top 20</a>
+                        </li>
+                        <li class="tile-headline">
+                            <a href="/collection/endingsoon/?pageType=PageNotFoundPage" target="_self">Deals Ending Soon</a>
+                        </li>
+                        <li class="tile-headline">
+                            <a href="/collection/things-to-do-america/?pageType=PageNotFoundPage" target="_self">Things to Do</a>
+                        </li>
+                        <li class="tile-headline">
+                            <a href="/collections/vacations/?pageType=PageNotFoundPage" target="_self">Vacations</a>
+                        </li>
+                        <li class="tile-headline">
+                            <a href="/collection/trending-deals/?pageType=PageNotFoundPage" target="_self">Trending Deals</a>
+                        </li>
+                        <li class="tile-headline">
+                            <a href="/collections/cruises/?pageType=PageNotFoundPage" target="_self">Cruises</a>
+                        </li>
+                </ul>
+            </div>
+        </section>
+    </article>
+</div>
+
+        </div>
+</section>
+
+            <footer role="contentinfo" class="global-footer nocontent push hide-in-app">
+                <div class="reset-location-footer">
+                        <div class="update-location" role="button">Set My Location</div>
+                </div>
+            <div class="footer-content">
+                        <div class="join-container">
+                            <div class="join-pitch">
+                                <h2>Join Today</h2>
+                                <p>Be the first to know about breaking news and exclusive deals from Travelzoo.</p>
+                            </div>
+                            <form class="join-form" id="footer-join-form">
+                                <div class="join-submit">
+                                    <button id="footer-join-button" type="submit" class="button-primary">Become a Club Member</button>
+                                </div>
+                            </form>
+                        </div>
+                <div class="main-container">
+                    <span id="extole_zone_global_footer"></span>
+                        <div class="mobile-app">
+                            <a id="lnkMobileApp" href="#" class="mobile-app-link" target="_blank">
+                                <i class="icon-tzoo-app"></i>
+                                <span>Get the Mobile App</span>
+                            </a>
+                        </div>
+                                            <div class="social">
+                            <ul>
+<li><a href="https://www.facebook.com/travelzoo" class="icon-facebook-circle" target="_blank" title="Travelzoo on Facebook">Facebook</a></li>
+<li><a href="https://www.instagram.com/travelzoo/" class="icon-instagram-circle" target="_blank" title="Travelzoo on Instagram">Instagram</a></li>
+<li><a href="https://www.linkedin.com/company/travelzoo" class="icon-linkedin-circle" target="_blank" title="Travelzoo on LinkedIn">LinkedIn</a></li>
+</ul>
+                        </div>
+                                    <div class="legal">
+<ul> 
+<li><a href="/about/">About us</a></li> 
+<li><a href="/careers/">Careers</a></li> 
+<li><a href="http://ir.travelzoo.com">Investor Relations</a></li> 
+<li><a href="/help-faq/">Help</a></li> 
+<li><a href="/privacy/">Privacy</a></li> 
+<li><a href="/terms-and-conditions/">Terms & Conditions</a></li> 
+<li><a href="/sitemap/">Site Map</a></li> 
+<li><a href="/sitemap/hotels/">Hotels</a></li> 
+<li><a href="/blog/">Blog</a></li> 
+<li><a href="https://ir.travelzoo.com/news/default.aspx">Press</a></li> 
+<li><a href="/web-accessibility/">Accessibility</a></li> 
+<li><a href="/custom/partner-with-us-usa/">Partner with Us</a></li> 
+</ul> 
+                                                                <ul class="cpra">
+                            <li><a class="js-cpra-optedout-link" href="/privacy/thirdpartyaffiliatesandcookies/?from=%2fError%2fNotFound%2f">YOUR PRIVACY CHOICES <img src="https://ssl.tzoo-img.com/res/img/privacyoptions29x14.png?v=76jtl2zkm"></a></li>
+                            <li><a class="js-cpra-optout-link hidden" href="/privacy/thirdpartyaffiliatesandcookies/?from=%2fError%2fNotFound%2f">YOUR PRIVACY CHOICES <img src="https://ssl.tzoo-img.com/res/img/privacyoptions29x14.png?v=76jtl2zkm"></a></li>
+                        </ul>
+                    <span class="copyright">&copy; 2026 Travelzoo</span>
+                </div>
+                                    </div>
+            </div>
+        </footer>
+
+        
+
+<section class="noprint cookiebanner">
+    <div class="cookiebanner-content fixed-container">
+        <div class="cookiebanner-text">
+            <p>Some tracking technologies are important for the functioning of our website and are always on. We use other tracking technologies (our own and third parties) to analyze traffic, personalize content and ads and provide social media features.</p>
+        </div>
+        <div class="cookiebanner-button">
+            <button type="button" class="button-primary js-button-accept">Accept all</button>
+            <button type="button" class="button-primary js-button-reject">Reject optional</button>
+            <button class="button-secondary js-button-manage">Manage Settings</button>
+        </div>
+    </div>
+</section>
+
+<section id="cookieSettingsOverlay" class="noprint hidden">
+    <div>
+        <button class="button-close" id="btnClose" type="button" title="Close">Close</button>
+    </div>
+    <div class="cookieoverlay-content">
+        <h4>Strictly Necessary Cookies</h4>
+<p class="margin-top-5 margin-bottom-5">These cookies are necessary for the website to function properly and cannot be switched off. You can 
+set your browser to block or alert you about these cookies, but some parts of the site will not then 
+work.</p>
+
+<h4>Functional Cookies</h4>
+<p class="margin-top-5 margin-bottom-5">By opting in to these cookies, you agree to our use of cookies to allow us to remember choices you 
+have made in the past, like what site edition you prefer, your recent searches, or your user name and 
+account credentials so you can automatically log in. These functional cookies are not strictly 
+necessary for the functioning of our website, but they add functionality for you and enhance your 
+experience.</p>
+<ul class="list-nostyle list-radios-inline margin-bottom-20">
+    <li>
+        <input type="radio" name="func-cookie-radio" id="func-cookie-accept" value="1">
+        <label for="func-cookie-accept">Accept</label>
+    </li>
+    <li>
+        <input type="radio" name="func-cookie-radio" id="func-cookie-decline" value="0" checked="checked">
+        <label for="func-cookie-decline">Decline</label>
+    </li>
+</ul>
+<h4>Analytical & Marketing Cookies</h4>
+<p class="margin-top-5 margin-bottom-5">Analytical technologies are primarily used to improve the operation and layout of our website, and 
+may be conducted by us, or one of our service providers. Non-service providers may set performance 
+cookies on this website for their own use.</p>
+<p>Marketing and targeting technologies are primarily used to display personalized ads and share 
+information about your use of our site with our advertising partners.
+</p>
+<ul class="list-nostyle list-radios-inline margin-bottom-20">
+    <li>
+        <input type="radio" name="mkt-cookie-radio" id="mkt-cookie-accept" value="1">
+        <label for="mkt-cookie-accept">Accept</label>
+    </li>
+    <li>
+        <input type="radio" name="mkt-cookie-radio" id="mkt-cookie-decline" value="0" checked="checked">
+        <label for="mkt-cookie-decline">Decline</label>
+    </li>
+</ul>
+<p class="margin-bottom-20">If you choose to decline these cookies, please also remember to clear any current cookies or site data from your browser, otherwise you may still see targeted ads based on cookies that have been set in the past.</p>
+<button class="button-primary button-block js-button-save">Save</button>
+<div class="margin-top-10">
+    <button class="button-primary button-block js-button-acceptall">Accept All</button>
+</div>
+    </div>
+</section>                <div class="nocontent">
+        <script src="https://ssl.tzoo-img.com/BundleHandler.ashx?f=%2fres%2fvendor%2fjquery%2fjquery-3.2.1.min.js%2c%2fres%2fvendor%2fjquery-ui%2fjquery-ui.min.js%2c%2fres%2fvendor%2fmodernizr-custom.min.js%2c%2fres%2fvendor%2fspin.js%2c%2fres%2fvendor%2fspin.ext.js%2c%2fres%2fvendor%2fjs.cookie.js%2c%2fres%2fvendor%2fjquery.fittext.js%2c%2fres%2fvendor%2fpurl.min.js%2c%2fres%2fjs%2fcommon.js%2c%2fres%2fjs%2flayout.js%2c%2fres%2fjs%2fimage-loader.js%2c%2fres%2fjs%2fgen%2fexternal.js%2c%2fres%2fjs%2ffocusMove.js%2c%2fres%2fjs%2fsite-search-history.js%2c%2fres%2fjs%2fsite-search.js%2c%2fres%2fjs%2fsignup.js%2c%2fres%2fjs%2foverlay-manager.js%2c%2fres%2fjs%2futility.js%2c%2fres%2fjs%2flocation-detection.js%2c%2fres%2fjs%2fcontrols.js%2c%2fres%2fjs%2ftooltip.js%2c%2fres%2fvendor%2fjs-storage%2fjs.storage.js%2c%2fres%2fjs%2fclient-cache-versioning.js%2c%2fres%2fjs%2ftmhelper.js%2c%2fres%2fjs%2fcalendar%2ftzsgDatepicker.js%2c%2fres%2fjs%2fcalendar%2fdatepicker.inline-extension.js%2c%2fres%2fjs%2fdeal%2fpagingStorage.js%2c%2fres%2fvendor%2fsmartbanner%2fjquery.smartbanner.js%2c%2fres%2fvendor%2fsmartbanner%2fbrowser-deeplink.js%2c%2fres%2fjs%2fcookiesettings.js%2c%2fres%2fjs%2fmembershipbanner.js&v=76JTL2ZKM-" type="text/javascript"></script>    <div id="search-form-overlay" class="noprint fullscreen-overlay ui-front" style="display: none;">
+        <div>
+            <div class="close-button-container">
+                <button id="close-button-2" class="fullscreen-overlay-close" type="button">Close</button>
+            </div>
+            <div class="fixed-container">
+                <div class="col-row">
+                    <form class="search-form ada-auto-proxy ada-auto-ignore" id="overlay-search-form" action="">
+                        <div>
+                            <div class="search-heading-container">
+                                <h3 class="resultheadline">Show me:</h3>
+                            </div>
+                            <div class="search-fields">
+                                <div class="what-field-container clear-in-field">
+                                    <label class="sr-only" for="what-field-2">What type of deals?</label>
+                                    <input id="what-field-2" class="input-clear js-input-clear" type="text" placeholder="e.g. Hotels, beach, Disney" value="All Deals" autocomplete="off" />
+                                    <input id="what-field-value-2" type="hidden" value="0" data-name="All Deals" data-searchtype="0" data-resultsviewtype="0" />
+                                    <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+                                </div>
+                                <div class="where-field-container js-location-autocomplete clear-in-field" data-query-type="exapt">
+                                    <label class="sr-only" for="where-field-2">Where?</label>
+                                    <input id="where-field-2" class="input-clear js-input-clear" type="text" placeholder="Anywhere..." autocomplete="off" />
+                                    <input id="where-field-value-2" type="hidden" />
+                                    <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+                                </div>
+                                <div class="where-from-field-container js-location-autocomplete clear-in-field" data-query-type="apt">
+                                    <label class="sr-only" for="where-from-field-2">Where from?</label>
+                                    <input id="where-from-field-2" class="input-clear js-input-clear" type="text" placeholder="From..." autocomplete="off" data-suppress-default-locations="true" />
+                                    <input id="where-from-field-value-2" type="hidden" />
+                                    <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+                                </div>
+                                <div class="where-to-field-container js-location-autocomplete clear-in-field" data-query-type="apt">
+                                    <label class="sr-only" for="where-to-field-2">Where to?</label>
+                                    <input id="where-to-field-2" class="input-clear js-input-clear" type="text" placeholder="To..." autocomplete="off" />
+                                    <input id="where-to-field-value-2" type="hidden" />
+                                    <button type="button" class="button-clear js-button-clear" tabindex="-1">x</button>
+                                </div>
+                                <div class="when-field-container">
+                                    <label class="sr-only" for="when-field-2">When?</label>
+                                    <input id="when-field-2" type="text" placeholder="Anytime..." autocomplete="off" value="All Dates" readonly />
+                                    <input id="when-field-value-2" type="hidden" value="Anytime" />
+                                    <input id="when-field-value-month-2" type="hidden" value="" />
+                                </div>
+                                <div class="guests-field-container">
+                                    <label class="sr-only" for="guests-field-2">How many guests?</label>
+                                    <select id="guests-field-2" data-selected="2">
+                                        <option value="1">1 Guest</option>
+                                        <option value="2">2 Guests</option>
+                                        <option value="3">3 Guests</option>
+                                        <option value="4">4 Guests</option>
+                                        <option value="5">5 Guests</option>
+                                    </select>
+                                </div>
+                                <div class="travelers-field-container">
+                                    <label class="sr-only" for="travelers-field-2">How many travelers?</label>
+                                    <select id="travelers-field-2" data-selected="1">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="search-history-div">
+                                <div class="search-history-headline">SEARCH HISTORY</div>
+                                <div class="search-history-list-div"><ul id="search-history-list"/></div>
+                            </div>
+                            <div class="what-button-container search-buttons hidden">
+                                <div class="search-buttons-title">What are you looking for?</div>
+                                <div id="what-buttons" class="btn-group">
+                                </div>
+                            </div>
+                            <div class="where-button-container search-buttons hidden">
+                                <div class="search-buttons-title">Start typing or select a destination</div>
+                                <div id="where-buttons" class="btn-group">
+                                </div>
+                            </div>
+                            <div class="search-submit-container">
+                                <button id="search-button-2" type="submit">Search Deals</button>
+                            </div>
+                        </div>
+                                            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showSearchFormOverlay() {
+            if($('#global-nav-search').length)
+            {
+                $('#global-nav-search').css('display','');
+            }
+            $('#search-form-overlay').show('slide');
+            $('body').addClass('js-noscroll');
+            if ($('.quicklinks-global-nav').length)
+            {
+                var searchelem = $('#overlay-search-form');
+                $('#overlay-search-form').css('margin-bottom', '0px');
+                $('#overlay-search-form').css('padding', '40px 10px 0px 10px');
+            }
+            /*Render SearchHistory section in the overlay*/
+            tzoo.SiteSearchHistory.renderSearchHistoryToOverlay($('#search-history-list'), $('.search-history-div'));
+            
+        }
+        $(function () {
+            function trackSearch(combinedQuery, trackingParameters) {
+                var label = combinedQuery;
+                try {tzoo.tm.analyticsEvent('Search', 'Search', label, 0, false, trackingParameters);} catch(err) {};
+            };
+            var translations = {
+                FromEmpty: 'Please enter an airport or city you would like to fly from.',
+                ToEmpty: 'Please enter an airport or city you would like to fly to.',
+                Showing: 'Showing {0} of {1}',
+            };
+
+            tzoo.SiteSearch.dpLocalization = {
+                tooltipTextNoRoomsAvailable: 'Deal not available',
+                tooltipTextNotAvailableMinimumStayRestriction: 'Not available due to {0} nights <br> minimum stay restriction',
+                tooltipTextAverageNightlyRate: 'average nightly rate',
+                tooltipTextpricePerNight: '/ night',
+                tooltipTextMinimumNight: 'nights min.',
+                tooltipTextRoomsLeft: 'rooms left',
+                tooltipTextRoomLeft: 'room left',
+                selectedDateRangePlaceHolder: 'Select dates',
+                selectedDateRangeBeginningTooltip: 'Check-in',
+                selectedDateRangeEndTooltip: 'Checkout',
+                dealRateText: 'Travelzoo Deal Rate',
+                checkRatesText: 'Check<br/>rates',
+                continueText: 'Continue',
+                signInRequired: 'Member Rate<br>Sign In required',
+                monthsshort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                notAvailable: 'N/A',
+                hintTextSelectStartDate: '',
+                hintTextSelectEndDate: '',
+                hintTextSelectedDates: '',
+                hintTextSelectedDatesWithPropertyFees: '',
+                hintTextNightsLiteral: '',
+                hintTextNightLiteral: ''
+            };
+            tzoo.SiteSearch.dpCurrentRegionSettings = {
+                closeText: 'Done',
+                prevText: 'Prev',
+                nextText: 'Next',
+                currentText: 'Today',
+                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+                weekHeader: 'Wk',
+                displayDateFormat: 'mm/dd/yy',
+                firstDay: '0',
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: "",
+                selectedDateRangePlaceHolder: 'Select dates',
+                selectedDateRangeBeginningTooltip: ['Depart', 'Check-in'],
+                selectedDateRangeEndTooltip: ['Return', 'Check-out'],
+                hintTextSelectStartDate: '',
+                hintTextSelectEndDate: '',
+                hintTextSelectedDates: '',
+                hintTextSelectedDatesWithPropertyFees: '',
+                hintTextNightsLiteral: '',
+                hintTextNightLiteral: ''
+            };
+
+            tzoo.SiteSearch.initializeSearch({
+                whatDisplayFieldSelector: '#what-field-1',
+                whatValueFieldSelector: '#what-field-value-1',
+                whereDisplayFieldSelector: '#where-field-1',
+                whereValueFieldSelector: '#where-field-value-1',
+                whereFromDisplayFieldSelector: '#where-from-field-1',
+                whereFromValueFieldSelector: '#where-from-field-value-1',
+                whereToDisplayFieldSelector: '#where-to-field-1',
+                whereToValueFieldSelector: '#where-to-field-value-1',
+                guestsFieldSelector: '#guests-field-1',
+                travelersFieldSelector: '#travelers-field-1',
+                whenMenuContainerSelector: '#when-menu-container',
+                whenMenuSelector: '#when-menu',
+                whenDisplayFieldSelector: '#when-field-1',
+                whenTypeValueFieldSelector: '#when-field-value-1',
+                whenMonthValueFieldSelector: '#when-field-value-month-1',
+                submitButtonSelector: '#search-button-1',
+                formSelector: '#header-search-form',
+                translations: translations,
+                trackSearch: trackSearch,
+                heatMapDataSource: '/Search/GetPriceHeatMapDataSource/',
+                whereFromHelperText: 'Start typing a location or select from our popular destinations.',
+                whereFieldPlaceholder: 'Anywhere...',
+                whereFieldAltPlaceholder: 'Start typing or select a destination'
+            });
+            tzoo.SiteSearch.initializeSearch({
+                whatDisplayFieldSelector: '#what-field-2',
+                whatValueFieldSelector: '#what-field-value-2',
+                whereDisplayFieldSelector: '#where-field-2',
+                whereValueFieldSelector: '#where-field-value-2',
+                whereFromDisplayFieldSelector: '#where-from-field-2',
+                whereFromValueFieldSelector: '#where-from-field-value-2',
+                whereToDisplayFieldSelector: '#where-to-field-2',
+                whereToValueFieldSelector: '#where-to-field-value-2',
+                guestsFieldSelector: '#guests-field-2',
+                travelersFieldSelector: '#travelers-field-2',
+                whenMenuContainerSelector: '#when-menu-container',
+                whenMenuSelector: '#when-menu',
+                whenDisplayFieldSelector: '#when-field-2',
+                whenTypeValueFieldSelector: '#when-field-value-1',
+                whenMonthValueFieldSelector: '#when-field-value-month-1',
+                submitButtonSelector: '#search-button-2',
+                formSelector: '#overlay-search-form',
+                translations: translations,
+                trackSearch: trackSearch,
+                heatMapDataSource: '/Search/GetPriceHeatMapDataSource/',
+                whereFromHelperText: 'Start typing a location or select from our popular destinations.',
+                formOverlaySelector: '#search-form-overlay'
+            });
+            $('.search-overlay-button').on('click', function () {
+                showSearchFormOverlay();
+                var label = $(this).text().trim();
+                try {tzoo.tm.analyticsEvent('Search', 'Search button Click', label, 0, false);} catch(err) {}
+            });
+
+            $('.button-globalnav').on('click', function () {
+                showSearchFormOverlay();
+                try {tzoo.tm.analyticsEvent('Global Navigation', 'Menu Open', 'Menu Open', 0, false);} catch(err) {}
+                tzoo.optimizelyTrackEvent('GNavClicks');
+            });
+
+            $('.fullscreen-overlay-close').on('click', function () {
+                $('#global-nav-search').css('display','none');
+                 try {tzoo.tm.analyticsEvent('Search', 'Search Overlay Close', 'Search Overlay Close', 0, false);} catch(err) {};
+            });
+
+
+            $('.quicklinks-global-nav a').on('click', function () {
+                var label = $(this).text().trim();
+                try {tzoo.tm.analyticsEvent('Global Navigation', 'Browsing Click', label, 0, false);} catch(err) {}
+                var href = $(this).attr('href');
+                location.href = href;
+                return false;
+            });
+
+            $('#when-menu-container .fullscreen-overlay-close').on('click', function () { $('#when-menu-container').hide()});
+            tzoo.locationCountryTypeSearchThreshold = 200;
+        });
+    </script>
+
+<script type="text/javascript">tzoo.trackImpressions([], [], [], [3855, 3860, 179, 3330, 602]);</script>
+<script type="text/javascript">tzoo.tm = new tzoo.TMHelper({ gtmDataLayer: gtmDL, ecommerceCurrency: null });</script>
+    <div id="locationDetection-overlay" class="text-center" style="display: none;">
+        <button class="button-close" id="closeLocationOverlay" type="button" role="button" title="Close">Close</button>
+        <h3 class="padding-top-30 text-bold">
+            Your location
+        </h3>
+        <div id="nonMemberLocDetection-header" class="padding-20" style="display: none;">
+            We think we’ve found your location. Should we use <span class="text-bold">{0}</span>?
+        </div>
+        <div id="memberLocDetection-header" class="padding-20" style="display: none;">
+            Should we use <span class="text-bold">{0}</span>?
+        </div>
+        <input type="hidden" id="detected-coords" />
+        <input type="hidden" id="detected-locid" />
+        <input type="hidden" id="is-nearme" />
+        <div class="text-center padding-20" id="divLocationDetection">
+            <div id="spanUseAssumedLocation" class="padding-bottom-10">
+                <button type="submit" class="button-primary" id="btnUseAssumedLocation">Yes</button>
+            </div>
+            <span id="spanChangeMyLocation">
+                <button type="submit" class="button-secondary" id="btnChangeMyLocation">No, Change My Location</button>
+            </span>
+
+        </div>
+        <div class="disclaimer">For more information on how we use your location data, see our <a href="/privacy/" target="_blank">privacy policy</a>.</div>
+    </div>
+
+<div id="setLocation" style="display: none;">
+    <div class="padding-20 padding-top-30">
+        <h3 class="text-center text-bold">
+            Where Are You?
+        </h3>
+        <div class="padding-top-10 text-center">Begin typing a city to find your location:</div>
+        <div class="where-field-container">
+            <label class="sr-only" for="where-locationPrompt">Where?</label>
+            <input id="where-locationPrompt" type="text" autocomplete="off" class="ui-autocomplete-input" data-suppress-default-locations="true">
+            <input id="where-locationPrompt-value" type="hidden">
+            <input id="where-locationPrompt-coords" type="hidden" />
+        </div>
+    </div>
+    <div id="divLocationChange" class="padding-20 text-center">
+        <div id="spanChangeLocation" class="padding-bottom-10">
+            <button type="submit" id="btnChangeLocation" class="padding-10 button-primary ">Set My Location</button>
+        </div>
+        <span id="spanCancelLocationChange">
+            <button type="submit" id="btnCancelLocationChange" class="padding-10">Cancel</button>
+        </span>
+    </div>
+    <div class="disclaimer">For more information on how we use your location data, see our <a href="/privacy/" target="_blank">privacy policy</a>.</div>
+</div>
+<script>
+    tzoo.LocationDetection.initializeOverlay(
+        {
+            akamaiLatitude: '32.7874',
+            akamaiLongitude: '-96.7989',
+            setLocationErrorMessage: 'Please enter a valid destination.'
+        });
+</script>
+
+    <script>
+        function headerMenuSignOut() {
+            $.get("/MyAccount/logout/",
+                {
+                    timeStamp: Date.now()
+                }).done(function (data) {
+                tzoo.MemberIdLoggedIn = "";
+                tzoo.layout.reloadHeader();
+                $(document).trigger("signedout.headermenu");
+            });
+        }
+            
+            $(document).ready(function() {
+                tzoo.layout.reloadMemberRecognition();
+            });
+            
+    </script>
+
+    <div id="siteEditionDrawer" class="noprint menu-drawer menu-drawer--right ada-auto-ignore">
+        <nav class="nav-site-edition menu-drawer-content">
+            <h3>Site Editions</h3>
+
+            <p class="text-sm margin-bottom-5">You are currently on the U.S. site edition.</p>
+            <div id="currentEdition"><i class="flag-us-sm"></i> <span>U.S.</span></div>
+            <p class="text-sm margin-bottom-5">Travelzoo publishes top travel deals from hundreds of travel companies in countries around the world.</p>
+            <ul id="siteEditions">
+                        <li><a data-code="au" href="https://www.travelzoo.com/au/"><i class="flag-au-sm"></i> Australia</a></li>
+                        <li><a data-code="ca" href="https://www.travelzoo.com/ca/"><i class="flag-ca-sm"></i> Canada</a></li>
+                        <li><a data-code="de" href="https://www.travelzoo.com/de/"><i class="flag-de-sm"></i> Deutschland</a></li>
+                        <li><a data-code="es" href="https://www.travelzoo.com/es/"><i class="flag-es-sm"></i> Espa&#241;a</a></li>
+                        <li><a data-code="fr" href="https://www.travelzoo.com/fr/"><i class="flag-fr-sm"></i> France</a></li>
+                        <li><a data-code="uk" href="https://www.travelzoo.com/uk/"><i class="flag-uk-sm"></i> UK</a></li>
+                        <li><a data-code="jp" href="https://www.travelzoo.com/jp/"><i class="flag-jp-sm"></i> 日本</a></li>
+            </ul>
+        </nav>
+        <button type="button" class="button-close">Close</button>
+    </div>
+    <script>
+            
+                tzoo.Overlays.register(
+                {
+                    id: 'siteEditionDrawer',
+                    priority: 100,
+                    show: function (id) {
+                        $('#siteEditionDrawer').addClass('menu-drawer--opened');
+                    },
+                    hide: function (id) {
+                        $('#siteEditionDrawer').removeClass('menu-drawer--opened');
+                    },
+                    autoShow: false
+                });
+            
+    </script>
+
+
+<div id="register-div" class="">
+        <div id="register-div-close"
+             >
+            <button class="button-close" id="btnClose" type="button" title="Close">Close</button>
+        </div>
+    <form id="register-form" class="">
+        <div id="register-message" class="alert-box-error" style="display:none;">
+            <div class="label-message-wechat" style="display:none;"></div>
+        </div>
+        <div id="signup" class="register-section">
+            <div class="ovrlayContainer">
+                <div class="ovrlay-image-container">
+                    <div class="tzsg-img-container"><div class="tzsg-img-2-by-1"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step1-us.jpg?v=76jtl2zkm&width={width}" alt="" data-credits="" class="tzsg-lazy ovrlayImage block  fade-in" title="" /></div></div>
+                </div>
+                <div class="ovrlayDealHdr js-dealSpecific "></div>
+                <div class="js-generic largeConvincingWords convincingWords">We are the club for travel enthusiasts
+<div class="text-reg margin-top-10"> 
+Join us in <b>the club for travel enthusiasts</b> and get access to negotiated and rigorously vetted travel and entertainment offers, and to other exciting benefits, for Club Members only.
+</div></div>
+            </div>
+            <div class="bodyDiv center text-center ">
+                <div class="js-expired-message convincingWords padding-bottom-10 padding-top-15 text-error" style="display: none;"></div>
+                <div class="js-dealSpecific js-convincing-words convincingWords padding-bottom-10">
+<div class="text-reg margin-top-10"> 
+Join us in <b>the club for travel enthusiasts</b> and get access to negotiated and rigorously vetted travel and entertainment offers, and to other exciting benefits, for Club Members only.
+</div>                </div>
+                <div class="js-favoriteSpecific convincingWords padding-bottom-10">
+                    <div class=" padding-top-15">
+                        <h2 class="padding-bottom-10">Create an account.</h2>
+                        <span class="dynamicSubTitle"></span>
+                    </div>
+                </div>
+                <div id="signup-email-step">
+                            <div class="signup-email-step-email-input">
+                                    <input type="email" id="emailSignup" class="narrow-input " placeholder="Your email" name="emailSignup" />
+                                    <button type="submit" id="btnSignup" class="narrow-button button-login button-primary button-preloader center block">
+                                        Get Started
+                                    </button>
+                                <input type="hidden" id="fbSignUpResponseUrl" name="fbSignUpResponseUrl" />
+                            </div>
+                            <div class="signup-email-step-postcode-input">
+                                <div class="margin-top-10 ">
+                                    <input type="text" name="zipCode" placeholder="ZIP code" id="js-signup-email-step-zipCode">
+                                </div>
+                                <div class="margin-top-10">
+                                    <select id="js-signup-email-step-ddpostcodes"></select>
+                                </div>
+                                <div class="margin-top-10">
+                                    <select id="js-signup-email-step-ddCountries"></select>
+                                </div>
+                            </div>
+                            <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                            <button type="button" class="button-signup-google button-social center block">Sign up with Google</button>
+                            <div class="padding-bottom-30 padding-top-20 center js-alreadymember-line"><span class="padding-right-5">Already registered?</span> <a role="button" class="js-alreadysubscriber">Sign in</a></div>
+                </div>
+                <div id="postcode-step" class="padding-top-15" style="display: none;">
+                    <div class="padding-bottom-10 js-generic">
+                        <h2 class="padding-bottom-10">Just one more thing...</h2>
+                        Your ZIP code will help us show you the best deals for your area.
+                    </div>
+                    <div class="padding-bottom-10 js-dealSpecific">
+                        <h2 class="padding-bottom-10">Just one more thing...</h2>
+                        Your ZIP code will help us show you the best deals for your area.
+                    </div>
+                    <div>
+                        <input type="text" name="zipCode" placeholder="ZIP code" id="zipCode">
+                    </div>
+                    <div class="margin-top-10">
+                        <select id="ddpostcodes"></select>
+                    </div>
+                    <div class="margin-top-10">
+                        <select id="ddCountries"></select>
+                    </div>
+                    <div id="updateZipButton" class="padding-bottom-40">
+                        <button type="submit" id="btnSubmitZip" class="button-primary button-preloader center block">Continue</button>
+                    </div>
+                </div>
+                <div id="confirmation-step" class="padding-top-20" style="display: none;">
+                    <div class="icon-signup-inbox center margin-bottom-5"></div>
+                    <h2 class="padding-bottom-10">Check your inbox.</h2>
+                    <div class="padding-bottom-40">Confirm your email and we’ll get you off and running.</div>
+                    <div id="goToEmail" class="margin-bottom-40" style="display: none;"><a id="lnkGoToEmail" class="link-gotoemail" href="#" target="_blank">Go to Email</a></div>
+                    <div id="changeEmail" class="text-muted margin-bottom-20" style="display:none;">We have sent the confirmation email to<br> <span class="email-addr"></span> (<a role="button" class="js-change-email-conf">change</a>)</div>
+                </div>
+                <div id="signup-password-step" class="padding-top-15 padding-bottom-15" style="display: none;">
+                    <h2>Create your password.</h2>
+                    <div class="margin-top-15">
+                        <input type="password" id="passwordSignup" placeholder="New password" name="passwordSignup" autocomplete="off" />
+                    </div>
+                    <div class="margin-top-10">
+                        <input type="password" id="password2Signup" placeholder="Confirm new password" name="password2Signup" autocomplete="off" />
+                    </div>
+                    <button type="submit" id="btnSignupPassword" class="button-primary button-preloader center block">Continue</button>
+                </div>
+                <div class="overlayFooter padding-bottom-10 padding-top-5"> 
+	By submitting your email, you agree to receive future emails from Travelzoo. We use cookies and similar technologies (our own and from third parties) to optimize your user experience on Travelzoo. By using our services, you consent to their use in accordance with our <a href="/privacy/" target="_blank">Privacy Policy</a> and accept our <a href="/terms-and-conditions/" target="_blank">Terms & Conditions</a>.
+</div>
+                            </div>
+            <div id="membership-step" class="" style="display: none;">
+                <div class="largeConvincingWords convincingWords">
+                    We are the club for travel enthusiasts
+<div class="text-reg margin-top-10"> 
+Join us in <b>the club for travel enthusiasts</b> and get access to negotiated and rigorously vetted travel and entertainment offers, and to other exciting benefits, for Club Members only.
+</div>
+                </div>
+                <div class="bodyDiv text-center">
+                    <div class="margin-bottom-40 margin-top-10"><a class="link-gotomembership" href="/membership/">Join Travelzoo</a></div>
+                    <div id="changeEmailMembership" class="text-muted margin-bottom-20" style="display:none;"><span class="email-addr"></span> (<a role="button" class="js-change-email-membership">change</a>)</div>
+                </div>
+            </div>
+            
+        </div>
+        <div id="membership-prepurchase" style="display:none;" class="register-section">
+            <div id="membership-prepurchase-content" class="padding-bottom-20">
+                <div class="ovrlayContainer">
+                    <div class="ovrlay-image-container">
+                        <div class="tzsg-img-container"><div class="tzsg-img-2-by-1"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step1-us.jpg?v=76jtl2zkm&width={width}" alt="" data-credits="" class="tzsg-lazy ovrlayImage block  fade-in" title="" /></div></div>
+                    </div>
+                    <div class="ovrlayDealHdr js-dealSpecific "></div>
+                </div>
+                <div class="bodyDiv center padding-bottom-20">
+                    
+                </div>
+            </div>
+        </div>
+        <div id="membership-ineligible" style="display:none;" class="register-section">
+            <div id="membership-ineligible-content" class="padding-bottom-20">
+                <div class="ovrlayContainer">
+                    <div class="ovrlay-image-container">
+                        <div class="tzsg-img-container"><div class="tzsg-img-2-by-1"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step1-us.jpg?v=76jtl2zkm&width={width}" alt="" data-credits="" class="tzsg-lazy ovrlayImage block  fade-in" title="" /></div></div>
+                    </div>
+                    <div class="ovrlayDealHdr js-dealSpecific"></div>
+                </div>
+                <div class="bodyDiv center padding-bottom-20" id="membership-ineligible-container">
+                    <div class="padding-top-20 text-center">
+                        <h2>You’ve already completed a trial</h2>
+
+                        <p>Unlock access to exclusive offers and benefits by upgrading to an annual membership.</p>
+
+                        <button type="submit" id="btnMembershipIneligibleContinue" class="button-login button-primary button-preloader center block" tabindex="-1" data-offerid="47">
+                            Start your annual club membership
+                        </button>
+                        
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="membership-purchase" style="display:none;" class="register-section">
+            <div id="membership-purchase-above">
+
+                <div class="ovrlay-image-container"><div class="tzsg-img-container"><div class="tzsg-img-2-by-1"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step1-us.jpg?v=76jtl2zkm&width={width}" alt="" data-credits="" class="tzsg-lazy ovrlayImage block  fade-in" title="" /></div></div></div>
+    <div class="js-exclude-reset" style="font-size:22px; text-align: left;padding: 20px 20px 10px 20px;">Try a Travelzoo club membership for 30 days for just $1 (usually $50/year).</div>
+<div class="padding-left-20 padding-bottom-20 padding-right-20 text-reg">
+    <div>
+        <div class="padding-bottom-10">As a Club Member, you get:</div>
+        <ul>
+            <li><strong>Lounge access</strong> if your flight is delayed for yourself, and up to 3 companions</li>
+            <li>Priority access to our <strong>famous Top 20<sup>&reg;</sup></strong> with the best offers each week</li>
+            <li><strong>Invitation-only</strong> Club Member events and experiences</li>
+            <li><strong>Hand-picked, quality-checked offers</strong> we'd book ourselves</li>
+        </ul>
+    </div>
+    <div class="box-solid margin-top-20 text-center"><b>You can cancel anytime.</b></div>
+</div>
+            </div>
+            <div id="membership-purchase-checkout-container" style="position: relative; min-height: 100px;"></div>
+            <div id="membership-purchase-below">
+                
+            </div>
+        </div>
+        <div id="signin" style="display: none;" class="register-section">
+            <div class="ovrlayContainer">
+                <div class="tzsg-img-container ovrlay-image-container">
+                    <div class="tzsg-img-2-by-1">
+                        <img class="ovrlayImage block fade-in" title="">
+                    </div>
+                </div>
+                <div class="js-signin-logo-memberonly" style="display:none;">
+                    <div class="logo-travelzoo">Travelzoo<sup>®</sup> </div>
+                    <div class="signin-membersonly-tag">Member Days</div>
+                </div>
+                <span class="convincingWords largeConvincingWords padding-top-20 js-generic">We are the club for travel enthusiasts
+<div class="text-reg margin-top-10"> 
+Join us in <b>the club for travel enthusiasts</b> and get access to negotiated and rigorously vetted travel and entertainment offers, and to other exciting benefits, for Club Members only.
+</div></span>
+                <div class="ovrlayDealHdr js-dealSpecific "></div>
+            </div>
+            <div class="bodyDiv center text-center">
+                <div class="js-dealSpecific convincingWords js-convincing-words-signin padding-bottom-10">
+                     Sign in to see this fantastic deal.
+                </div>
+                <div class="js-collection-headline-membersonly" style="display: none;">
+                    <div class="signin-membersonly-intro padding-bottom-5"><div>Access to these exceptionally low prices is reserved for <span style="white-space: nowrap;">Club Members</span></div> <div class="padding-top-10">Confirm your club membership or join now to get access as soon as the offers are live:</div> </div>
+                </div>
+                <div class="convincingWords js-convincing-words-signin-membersonly" style="display: none;">
+                    <div class="signin-membersonly-intro padding-top-10 padding-bottom-5">Access Club Offers specially selected for our Club Members<div class="padding-top-10">Confirm your club membership or sign up:</div></div>
+                </div>
+                <div id="signin-email-step">
+                    <input type="email" id="emailSignin" class="narrow-input" placeholder="Your email" name="emailSignin" />
+                    <button type="submit" id="btnSignin" class="narrow-button button-login button-primary button-preloader center block">
+                        Sign in
+                    </button>
+                    <button type="submit" id="btnSigninMemberOnly" class="narrow-button button-login button-primary button-preloader center block" style="display: none;">
+                        GO
+                    </button>
+
+                    <div class="padding-bottom-5 padding-top-20 center js-signin-signupbutton" style="display: none;">Not a Club Member yet?</div>
+
+                    <button type="submit" id="btnSignupSignIn" class="full-button button-login button-primary button-preloader center block js-signin-signupbutton" style="display: none;">Get Started</button>
+                    <div class="js-socialsignin">
+                            <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                                    <button type="submit" id="btnFbSignin" class="button-signin-facebook center block">Sign in with Facebook</button>
+                                                                                                    <button type="button" class="button-signin-google center block">Sign in with Google</button>
+                                                    <button type="button" class="button-signin-apple center block">Sign in with Apple</button>
+                    </div>
+                    <div class="padding-bottom-30 padding-top-20 center js-signin-becomesubscriber">Not a member?&nbsp;<a class="js-becomesubscriber" role="button">Join Travelzoo</a></div>
+                </div>
+                <div class="overlayFooter padding-bottom-10 padding-top-5"> 
+	By submitting your email, you agree to receive future emails from Travelzoo. We use cookies and similar technologies (our own and from third parties) to optimize your user experience on Travelzoo. By using our services, you consent to their use in accordance with our <a href="/privacy/" target="_blank">Privacy Policy</a> and accept our <a href="/terms-and-conditions/" target="_blank">Terms & Conditions</a>.
+</div>
+            </div>
+            
+        </div>
+        <div id="login" style="display:none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div id="login-email-step">
+                    <div class="js-nocookie" style="display:none;">
+                        <div class="icon-signin-account center margin-bottom-5"></div>
+                        <div>
+                            <h2 class="margin-bottom-10">Sign in to your account.</h2>
+                            <div class="margin-bottom-10 hidden js-email-is-associated-with-tzoo-account">This email address is associated with a Travelzoo account, please enter or reset your password.</div>
+                        </div>
+                        <div id="emailTextbox">
+                            <input type="email" id="emailLogin" placeholder="Email address" name="emailLogin" />
+                        </div>
+                        <div class="margin-top-10">
+                            <div class="password-field">
+                                <input type="password"
+                                       id="passwordLogin"
+                                       name="passwordLogin"
+                                       autocomplete="off"
+                                       placeholder="Password" />
+
+                                <button type="button"
+                                        id="togglePassword"
+                                        class="password-toggle"
+                                        aria-label="show/hide password"></button>
+                            </div>
+                        </div>
+                        <button type="submit" id="btnLogin" class="button-login button-primary button-preloader center block">Sign in</button>
+                    </div>
+                    <div class="js-signedin" style="display:none;">
+                        <div class="icon-pw center margin-bottom-5"></div>
+                        <div class="js-enterPassword" style="display:none;">
+                            <h2 class="margin-bottom-10">Enter your password</h2>
+                            <div id="emailText">
+                                <div class="text-muted">
+                                    <div class="js-memberEmail" style="display: inline-block;"></div>
+                                    <span class="change-email js-change-email-span">(<a role="button" class="js-change-email">change</a>)</span>
+                                </div>
+                            </div>
+                            <div class="margin-top-10">
+                                <div class="password-field">
+                                    <input type="password"
+                                           id="passwordLogin_memberWithPW"
+                                           placeholder="Password"
+                                           name="passwordLogin_member"
+                                           autocomplete="off" />
+
+                                    <button type="button"
+                                            id="togglePasswordLogin_memberWithPW"
+                                            class="password-toggle password-toggle"
+                                            aria-label="show/hide password"></button>
+                                </div>
+
+                            </div>
+                            <button type="submit" id="btnLogin_memberWithPW" class="button-primary button-preloader center block">Sign in</button>
+                        </div>
+                        <div class="js-createPassword" style="display:none;">
+                            <h2 class="margin-bottom-10">Create your password.</h2>
+                            <div class="text-muted padding-bottom-10 js-createPassword-changeemail">
+                                <div class="js-memberEmail inline-block padding-right-5"></div>
+                                <span class="change-email">(<a role="button" class="js-change-email">change</a>)</span>
+                            </div>
+                            <div>
+                                <input type="password" id="password_memberWithNoPW" placeholder="New password" name="password_memberWithNoPW" autocomplete="off" />
+                                <div class="margin-top-10">
+                                    <input type="password" id="password2_memberWithNoPW" placeholder="Confirm new password" name="password2_memberWithNoPW" autocomplete="off" />
+                                </div>
+                                <button type="submit" id="btnSignup_memberWithNoPW" class="button-primary button-preloader center block">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row padding-top-5 js-socialsignin">
+                        <div class="float-left js-rememberMe">
+                            <input type="checkbox" id="rememberMeLogin" checked="checked" />
+                            <label for="rememberMeLogin" class="text-sm">Stay signed in</label>
+                        </div>
+                        <div class="float-right js-forgotPassword">
+                            <a role="button" class="text-sm" id="forgotPasswordLogin">Don’t know password?</a>
+                        </div>
+                    </div>
+                    <div class="joinLinks js-socialsignin">
+                            <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                                    <button type="submit" id="btnFbLogin" class="button-signin-facebook center block">Sign in with Facebook</button>
+                                                                                                    <button type="button" class="button-signin-google center block">Sign in with Google</button>
+                                                    <button type="button" class="button-signin-apple center block">Sign in with Apple</button>
+                        <div class="padding-top-20 center text-bold becomesubscriber">Not a member?&nbsp;<a class="js-becomesubscriber" role="button">Join Travelzoo</a></div>
+                    </div>
+                </div>
+                <div class="overlayFooter">
+                    <span class="icon-secure-lock"><span class="padding-left-5">This connection is secure.</span></span>
+                </div>
+            </div>
+        </div>
+        <div id="password-reset" style="display: none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div id="password-reset-email-step">
+                    <div class="text-left">
+                        <a role="button" class="js-alreadysubscriber link-pointer-back">Sign in</a>
+                    </div>
+                    <div class="icon-pw center margin-bottom-5"></div>
+                    <div>
+                        <h2 class="margin-bottom-10">Don’t know password?</h2>
+                    </div>
+                    <div class="padding-bottom-10">
+                        Enter the email address that you used to join Travelzoo and we’ll send you a link to reset your password.
+                    </div>
+                    <div>
+                        <input type="email" id="emailPasswordReset" placeholder="Email address" name="emailPasswordReset" />
+                        <button type="submit" id="btnPasswordReset" class="button-primary button-preloader center block">Continue</button>
+                    </div>
+                </div>
+                <div class="overlayFooter">
+                    <span class="icon-secure-lock"><span class="padding-left-5">This connection is secure.</span></span>
+                </div>
+            </div>
+        </div>
+        <div id="password-reset-done" style="display: none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div id="password-reset-email-step">
+                    <div class="icon-signup-inbox center margin-bottom-5"></div>
+                    <div>
+                        <h2 class="margin-bottom-10">Check your inbox.</h2>
+                    </div>
+                    <div class="padding-bottom-40">
+                        We’ve sent you an email with instructions to reset your password.
+                    </div>
+                </div>
+                <div id="reset-goToEmail" class="margin-bottom-40" style="display: none;"><a id="reset-lnkGoToEmail" class="link-gotoemail" href="#" target="_blank">Go to Email</a></div>
+            </div>
+        </div>
+        <div id="password-create" style="display:none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div class="js-password-create margin-top-30">
+                    <div class="js-createPassword">
+                        
+                        <h2 class="create-password-header">Create your password.</h2>
+                        <div class="create-password-hint">
+                            Your password must contain <i>at least</i> 8 characters and 1 number.
+                        </div>
+                        <div>
+                            <div class="password-field">
+                                <input type="password"
+                                       id="password_createPW"
+                                       placeholder="New password"
+                                       name="password_createPW"
+                                       autocomplete="off" />
+
+                                <button type="button"
+                                        id="togglePasswordCreatePW"
+                                        class="password-toggle"
+                                        aria-label="show/hide password"></button>
+                            </div>
+
+                            <div class="">
+                                <div class="password-field">
+                                    <input type="password"
+                                           id="password2_createPW"
+                                           placeholder="Confirm new password"
+                                           name="password2_createPW"
+                                           autocomplete="off" />
+
+                                    <button type="button"
+                                            id="togglePasswordCreatePW2"
+                                            class="password-toggle"
+                                            aria-label="show/hide password"></button>
+                                </div>
+                            </div>
+                            <button type="submit" id="btnCreatePW" class="button-primary button-preloader center block">Continue</button>
+                        </div>
+                    </div>
+                    <div class="js-createPassword-success" style="display: none;">
+                            <div class="icon-pw-success center margin-bottom-5"></div>
+                            <h2 class="margin-bottom-10">You're all set!</h2>
+                    </div>
+                </div>
+                <div class="overlayFooter">
+                    <span class="icon-secure-lock"><span class="padding-left-5">This connection is secure.</span></span>
+                </div>
+            </div>
+        </div>
+        <div id="hotel-signup" style="display: none;" class="register-section">
+            <div>
+                <div class="tzsg-img-container"><div class="tzsg-img-2-by-1"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step1-us.jpg?v=76jtl2zkm&width={width}" alt="" data-credits="" class="tzsg-lazy ovrlayImage block  fade-in" title="" /></div></div>
+            </div>
+            <div class="bodyDiv center text-center">
+                <div id="hotel-signup-email-step" class="padding-bottom-30">
+                    <h2 class="padding-top-15 margin-bottom-10">Join Travelzoo</h2>
+                    <div class="margin-bottom-10"><span class="padding-right-5">(Already registered?</span><a class="js-alreadysubscriber text-bold" role="button">Sign in</a>)</div>
+                    <div><div class="text-reg margin-top-10"> 
+Join us in <b>the club for travel enthusiasts</b> and get access to negotiated and rigorously vetted travel and entertainment offers, and to other exciting benefits, for Club Members only.
+</div></div>
+                    <div id="signup-options">
+                                <div>
+                                    <input type="email" id="hotel-emailSignup" class="narrow-input" placeholder="Your email" name="hotel-emailSignup" />
+                                    <button type="submit" id="hotel-btnSignup" class="narrow-button button-login button-primary button-preloader center block">
+                                        Get Started
+                                    </button>
+                                </div>
+                                <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                <button type="button" class="button-signup-google button-social center block">Sign up with Google</button>
+                    </div>
+                </div>
+                <div id="hotel-postcode-step" class="padding-top-15 padding-bottom-15" style="display: none;">
+                    <div class="padding-bottom-10">
+                        <h2 class="padding-bottom-10">Just one more thing...</h2>
+                        Your ZIP code will help us show you the best deals for your area.
+                    </div>
+                    <div>
+                        <input type="text" name="hotel-zipCode" placeholder="ZIP code" id="hotel-zipCode">
+                    </div>
+                    <div class="margin-top-10">
+                        <select id="hotel-ddpostcodes"></select>
+                    </div>
+                    <div class="margin-top-10">
+                        <select id="hotel-ddCountries"></select>
+                    </div>
+                    <div class="padding-bottom-40">
+                        <button type="submit" id="hotel-btnSubmitZip" class="button-primary button-preloader center block">Continue</button>
+                    </div>
+                </div>
+                <div id="hotel-confirmation-step" class="padding-top-20 padding-bottom-40" style="display: none;">
+                    <div class="icon-signup-inbox center margin-bottom-5"></div>
+                    <h2 class="padding-bottom-10">Check your inbox.</h2>
+                    <div>Confirm your email and we’ll get you off and running.</div>
+                    <div id="hotel-goToEmail" class="margin-top-40" style="display: none;"><a id="hotel-lnkGoToEmail" class="link-gotoemail" href="#" target="_blank">Go to Email</a></div>
+                    <div id="continueWhereILeftOff">
+                        <div class="heading-divider padding-top-15 padding-bottom-15"> or </div>
+                        <div>Confirm later</div>
+                        <a id="lnkcontinueWhereILeftOff" role="button">Continue where I left off</a>
+                    </div>
+                </div>
+                <div class="overlayFooter padding-bottom-10 padding-top-5"> 
+	By submitting your email, you agree to receive future emails from Travelzoo. We use cookies and similar technologies (our own and from third parties) to optimize your user experience on Travelzoo. By using our services, you consent to their use in accordance with our <a href="/privacy/" target="_blank">Privacy Policy</a> and accept our <a href="/terms-and-conditions/" target="_blank">Terms & Conditions</a>.
+</div>
+            </div>
+            
+        </div>
+        <div id="hotel-signin" style="display:none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div class="icon-signin-account center margin-bottom-5"></div>
+                <h2 class="margin-bottom-10">Sign in to unlock</h2>
+                <div>Only members can access this deal.</div>
+                <div class="margin-bottom-10">(Not a member?&nbsp;<a class="text-bold js-becomesubscriber" role="button">Join Travelzoo</a>)</div>
+                <div id="hotel-signin-email-step" class="padding-bottom-40">
+                    <input type="email" id="hotel-emailSignin" placeholder="Your email" name="hotel-emailSignin" />
+                    <button type="submit" id="hotel-btnSignin" class="button-login button-primary button-preloader center block">Sign in</button>
+                        <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                            <button type="submit" id="hotel-btnFbSignin" class="button-signin-facebook center block">Sign in with Facebook</button>
+                                                                                    <button type="button" class="button-signin-google center block">Sign in with Google</button>
+                                            <button type="button" class="button-signin-apple center block">Sign in with Apple</button>
+
+                </div>
+            </div>
+        </div>
+        <div id="hotel-loginPortal" style="display:none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div class="icon-member-exclusive-lock center margin-bottom-20 margin-top-20"></div>
+                <div class="innerContent center">
+                    <h2 class="margin-bottom-10">DON'T MISS OUT!</h2>
+                    <h3 class="margin-bottom-20">Our Deal Experts have negotiated<br/><span class="member-exclusive">MEMBER EXCLUSIVE</span> rates<br/>for people like you.</h3>
+                    <div class="margin-bottom-10">Not a member?&nbsp;<a class="text-bold js-becomesubscriber" role="button">Sign up in seconds</a></div>
+                    <div class="margin-bottom-30">Already registered?&nbsp;<a class="text-bold js-alreadysubscriber" role="button">Sign in</a></div>
+                </div>
+            </div>
+        </div>
+        <div id="welcome-step" style="display: none;" class="register-section">
+            <div class="ovrlayContainer">
+                <div class="tzsg-img-container ovrlay-image-container">
+                    <div class="tzsg-img-2-by-1">
+                        <img alt="" data-credits="" class="ovrlayImage block fade-in" title="">
+                    </div>
+                </div>
+                <div class="ovrlayDealHdr js-dealSpecific "></div>
+            </div>
+            <div class="bodyDiv center text-center">
+                    <div class="icon-signup-success center margin-top-20"></div>
+                <h2 class="js-generic margin-top-10 padding-bottom-10">And You’re in.</h2>
+                <h2 class="js-dealSpecific padding-bottom-10">And You’re in.</h2>
+                <div class="js-generic padding-bottom-10">
+Start exploring more.<br>
+ For less.<br>
+                </div>
+                <div class="js-dealSpecific padding-bottom-20">
+                    <p>You now have access to all our deals.</p>
+                    <p>Here are the details of the deal you were interested in.</p>
+                </div>
+                <div class="js-generic js-explore-div-cnt padding-top-5 padding-bottom-40">
+                    <div class="explore-div">
+                        <button type="button" id="btnExplore" class="button-secondary center block">
+                            Explore
+                        </button>
+                    </div>
+                </div>
+                <div class="js-dealSpecific js-explore-div-cnt padding-top-5 padding-bottom-40">
+                    <div class="explore-div">
+                        <button type="button" id="btnExploreDeal" class="button-secondary center block">
+                            Explore
+                        </button>
+                    </div>
+                </div>
+                <div class="js-welcome-step-postcode" style="display: none;">
+                    <div class="padding-bottom-10">
+                        To show you the most relevant offers, please tell us where you live
+                    </div>
+                    <div>
+                        <input type="text" name="zipCode" placeholder="ZIP code" id="js-welcome-step-zipCode">
+                    </div>
+                    <div class="margin-top-10">
+                        <select id="js-welcome-step-ddpostcodes"></select>
+                    </div>
+                    <div class="margin-top-10">
+                        <select id="js-welcome-step-ddCountries"></select>
+                    </div>
+                    <div id="updateZipButton" class="padding-bottom-40">
+                        <button type="submit" id="btnSubmitZipPostConfirm" class="button-primary button-preloader center block">Explore</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="loginFavorite" style="display: none;" class="register-section">
+            <div class="bodyDiv center text-center">
+                <div id="login-email-step">
+                    <div class="js-nocookie" style="display:none;">
+                        <div class="icon-signin-account center margin-bottom-5"></div>
+                            <span id="destnmsg" style="display:none;">
+                                <h2 class="margin-bottom-10">Sign in to save and manage your deal alerts</h2>
+                            </span>
+                            <span id="favDealmsg">
+                                <h2 class="margin-bottom-10">Sign in to save this deal to Favorites.</h2>
+                                <div class="margin-bottom-10">With Favorites you can save deals for later, and be alerted when they are about to expire.</div>
+                            </span>
+                        <div id="emailTextbox_fav">
+                            <input type="email" id="emailLogin_fav" placeholder="Email address" name="emailLogin" />
+                        </div>
+                        <div class="margin-top-10">
+                            <input type="password" id="passwordLogin_fav" placeholder="Password" name="passwordLogin_fav" autocomplete="off" />
+                        </div>
+                        <button type="submit" id="btnLogin_fav" class="button-login button-primary button-preloader center block">Sign in</button>
+                    </div>
+                    <div class="js-signedin" style="display:none;">
+                        <div class="icon-pw center margin-bottom-5"></div>
+                        <div class="js-enterPassword" style="display:none;">
+                            <h2 class="margin-bottom-10 dynamicLoginTitle">Enter your password</h2>
+                            <div id="emailText_fav">
+                                <div class="text-muted">
+                                    <div class="js-memberEmail" style="display: inline-block;"></div>
+                                    <span class="change-email">(<a role="button" class="js-change-email">change</a>)</span>
+                                </div>
+                            </div>
+                            <div class="margin-top-10">
+                                <input type="password" id="passwordLogin_memberWithPW_fav" placeholder="Password" name="passwordLogin_member" autocomplete="off" />
+                            </div>
+                            <button type="submit" id="btnLogin_memberWithPW_fav" class="button-primary button-preloader center block">Sign in</button>
+                        </div>
+                        <div class="js-createPassword" style="display:none;">
+                            <h2 class="margin-bottom-10">Create your password.</h2>
+                            <div class="margin-bottom-10">To save and manage your favorite deals, create your password.</div>
+                            <div class="text-muted padding-bottom-10">
+                                <div class="js-memberEmail padding-right-5" style="display: inline-block;"></div>
+                                <span class="change-email">(<a role="button" class="js-change-email">change</a>)</span>
+                            </div>
+                            <div>
+                                <input type="password" id="password_memberWithNoPW_fav" placeholder="New password" name="password_memberWithNoPW_fav" autocomplete="off" />
+                                <div class="margin-top-10">
+                                    <input type="password" id="password2_memberWithNoPW_fav" placeholder="Confirm new password" name="password2_memberWithNoPW_fav" autocomplete="off" />
+                                </div>
+                                <button type="submit" id="btnSignup_memberWithNoPW_fav" class="button-primary button-preloader center block">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row padding-top-5">
+                        <div class="float-left">
+                            <input type="checkbox" id="rememberMeLogin_fav" checked="checked" />
+                            <label for="rememberMeLogin_fav" class="text-sm">Stay signed in</label>
+                        </div>
+                        <div class="float-right">
+                            <a role="button" class="text-sm" id="forgotPasswordLogin_fav">Don’t know password?</a>
+                        </div>
+                    </div>
+                    <div class="joinLinks">
+                            <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                                    <button type="submit" id="btnFbLogin_fav" class="button-signin-facebook center block">Sign in with Facebook</button>
+                                                                                                    <button type="button" class="button-signin-google center block">Sign in with Google</button>
+                                                    <button type="button" class="button-signin-apple center block">Sign in with Apple</button>
+                        <div class="padding-top-30 center text-bold becomesubscriber">Not a member?&nbsp;<a class="js-becomesubscriber" role="button">Join Travelzoo</a></div>
+                    </div>
+                </div>
+                <div class="overlayFooter">
+                    <span class="icon-secure-lock"><span class="padding-left-5">This connection is secure.</span></span>
+                </div>
+            </div>
+        </div>
+        <div id="purchase-signin" class="padding-top-30 register-section" style="display:none">
+            <div class="bodyDiv center text-center">
+                <div class="icon-signin-account center margin-bottom-5"></div>
+                <h2 class="margin-bottom-10">Already registered?</h2>
+                <div id="purchase-signin-email-step" class="padding-bottom-30">
+                    <input type="email" id="purchase-emailSignin" class="member-emailaddr" placeholder="Your email" />
+                    <button type="button" id="purchase-btnSignin" class="button-login button-primary button-preloader center block">Continue</button>
+                        <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                            <button type="button" id="purchase-btnFbSignin" class="button-signin-facebook center block">Sign in with Facebook</button>
+                                                                                    <button type="button" class="button-signin-google center block">Sign in with Google</button>
+
+                        <button type="button" class="button-signin-apple center block">Sign in with Apple</button>
+                </div>
+            </div>
+            <div id="purchase-signin-guest">
+                <div class="bodyDiv center text-center">
+                    <h2 class="padding-top-25">Not a Club Member yet?</h2>
+                    <button type="button" id="purchase-btnContinueAsGuest" class="button-primary center block close-dialog">Continue as a guest</button>
+                    <div class="overlayFooter">
+                        <span class="icon-secure-lock"><span class="padding-left-5">This connection is secure.</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="purchase-member-signin" class="padding-top-30 register-section" style="display:none">
+            <div class="bodyDiv center text-center">
+                <div class="icon-signin-account center margin-bottom-5"></div>
+                <h2 class="margin-bottom-10">Already registered?</h2>
+                <div id="purchase-member-signin-email-step">
+                    <span class="member-emailaddr js-member-emailaddr"></span>
+                    <span class="text-muted nowrap">(<a role="button" href="javascript:void(0)" class="js-not-you">Not you?</a>)</span>
+                </div>
+                <button type="button" id="purchase-member-btnSignin" class="close-dialog button-login button-primary button-preloader center block">That's me, continue</button>
+                    <div class="padding-top-15 padding-bottom-15 heading-divider">or</div>
+                                    <button type="button" id="purchase-member-btnFbSignin" class="button-signin-facebook center block">Sign in with Facebook</button>
+                                                                    <button type="button" class="button-signin-google center block">Sign in with Google</button>
+                                    <button type="button" class="button-signin-apple center block">Sign in with Apple</button>
+            </div>
+            <div id="purchase-member-signin-guest">
+                <div class="bodyDiv center text-center">
+                    <div class="overlayFooter">
+                        <span class="icon-secure-lock"><span class="padding-left-5">This connection is secure.</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </form>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    (function (tzoo) {
+        tzoo.SignupOverlay.singleConfirm = false;
+        tzoo.SignupOverlay.askForPostcodeAfterConfirmation = false;
+        tzoo.SignupOverlay.skipPostcodeInput = false;
+        tzoo.SignupOverlay.ResourceViewKey = 'SignupOverlay/Offer.49';
+        tzoo.SignupOverlay.askForProfileInfoAfterPasswordCreated = true;
+    })(window.tzoo = window.tzoo || {});
+    var globalOvrlSignupHdr;
+    function createSignupOverlay(overlayId, fbRedirectUrl) {
+        var isGoogleOneTapSignInEnabled = false;
+        if (!false && tzoo.layout.isXs()) {
+            isGoogleOneTapSignInEnabled = false;
+        }
+        if (!true && tzoo.layout.isSm()) {
+            isGoogleOneTapSignInEnabled = false;
+        }
+        if (!true && tzoo.layout.isMd()) {
+            isGoogleOneTapSignInEnabled = false;
+        }
+        if (!true && tzoo.layout.isLg()) {
+            isGoogleOneTapSignInEnabled = false;
+        }
+        var lH = new Object();
+        var lSH = new Object();
+        var ovrl = new tzoo.SignupOverlay();
+        lH[ovrl.dynamicTitleEnum.Default] = 'Enter your password';
+        lH[ovrl.dynamicTitleEnum.Favorites] = 'Sign in to save and manage your favorite deals.';
+        lH[ovrl.dynamicTitleEnum.Alerts] = 'Sign in to save and manage your deal alerts';
+        lSH[ovrl.dynamicTitleEnum.Default] = 'We\u0027ll save this deal to your Favorites.';
+        lSH[ovrl.dynamicTitleEnum.Alerts] = 'We\u0027ll save this destination to your Alerts.';
+        var translations = {
+            PassInvalid: 'Your password must be at least 8 characters and include 1 number.',
+            PassMisMatch: 'Passwords don\u0027t match.',
+            EmailInvalid: 'Please enter a valid email address.',
+            UnknownError: 'An error occurred. Please try again later.',
+            PassMultipleTries: 'You have entered an incorrect password multiple times. Please recover your password by clicking the \"Don\u0027t know password?\" link and follow instructions.',
+            PassMustCreate: 'You don\u0027t have a password yet. Please \u003ca id=\"linkCreatePassword\" role=\"button\"\u003ecreate a password\u003c/a\u003e.',
+            CredentialsInvalid: 'The email address or password entered is incorrect. Please try again.',
+            PassMustEnter: 'Please enter a password.',
+            AccountExists: 'You already have an account, please sign in using the link below.',
+            PostCodeInvalid: 'Please enter a valid zip code.',
+            EmailNotRegistered: 'This email address is not currently registered. Please enter a different address or sign up.',
+            NotAPremiumMember: '',
+            WxLoginError: 'Login error with Wechat, try again later please.',
+            QqLoginError: 'Login error with QQ, try again later please.'
+        };
+        ovrl.initializeOverlay({
+            overlayId: overlayId,
+            fbApiId: '140333999364794',
+            isMember: 'False',
+            overlayImages: ['https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step1-us.jpg?v=76jtl2zkm',
+                            'https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step2-us.jpg?v=76jtl2zkm',
+                            'https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step3-us.jpg?v=76jtl2zkm',
+                            'https://ssl.tzoo-img.com/static/images/signup-overlay-generic-step4-us.jpg?v=76jtl2zkm',
+                            '',
+                            ''],
+            fbRedirectUrl: fbRedirectUrl ? fbRedirectUrl : "https%3A%2F%2Fwww.travelzoo.com%2FAuthentication%2FConnectWithFacebook%3Ffsc%3Dtrue%26tzlocale%3D1%26source%3D_tzlock%26placement%3DOverlay-GlobalHeader-SignUpOB%26newsflash%3D1%26informer%3D1%26hotelId%3D0%26id%3D0",
+            placement: 'Overlay-GlobalHeader-SignUpOB',
+            source: '_tzlock',
+            isFbConnect: false,
+            isGoogleSignIn: false,
+            isAppleSignIn: false,
+            isGenericConfOverlay: false,
+            isExistingSubscriber: false,
+            isConfirmation: false,
+            isCreatePasswordAfterSignup: false,
+            createPasswordToken: '',
+            dynamicLoginTitles : lH,
+            dynamicSubTitles : lSH,
+            closeOnEscape: true,
+            forceNoClose: false,
+            translations: translations,
+            modal: true,
+            dialogClass: '',
+            isWithoutEmailOptin: false,
+            isHotelOverlay: false,
+            showGoToMembershipPageOverlay: false,
+            emailDomainUrl : '',
+            queueId: '',
+            isGoogleOneTapSignInEnabled: isGoogleOneTapSignInEnabled,
+            googleClientId:  '',
+            isDealPage: false,
+            customRedirectLink: '',
+            showPostcodeInputOnFirstScreen: false,
+            signupMode: 2,
+            membershipPageUrl: '/membership/',
+            membershipPurchaseMode: 'embedded',
+            promoCode: '',
+            offerCode: '',
+            offerId: '49',
+            isOfferForNewUser: true,
+            allowProspectsToSeeOnceSignedUp: false,
+            signupFlowVariation: null,
+            isAppUser: false,
+            appTargetUrl: '',
+            isAppAutoRedirect: false
+        });
+        return ovrl;
+    }
+    $(document).ready(function () {
+        var ovrlSignupHdr = createSignupOverlay('ovrlSignupHdr');
+        ovrlSignupHdr.populateGenericOverlay({
+            placement: 'Overlay-GlobalHeader-SignUpOB',
+            source: '_signupwid'
+        });
+        globalOvrlSignupHdr = ovrlSignupHdr;
+        var socialLoginParam = null;
+        $('.join').on('click', function (e) {
+            ovrlSignupHdr.showZOverlay();
+            return false;
+        });
+        
+        if (!socialLoginParam) {
+            ovrlSignupHdr.displayConfirmationOverlay();
+        }
+        
+        var ovrlLoginHdr = createSignupOverlay('ovrlLoginHdr');
+        var ovrlLoginHdrTargetUrl = '';
+        ovrlLoginHdr.populateLoginOverlay({
+            placement: 'Overlay-GlobalHeader-SignUpOB',
+            source: '_tzlock',
+            targetUrl: (ovrlLoginHdrTargetUrl != '' ? ovrlLoginHdrTargetUrl : location.href),
+            mode: ''
+        });
+        $(document).on( 'click', '.signin', function (e) {
+            ovrlLoginHdr.showZOverlay(false,null, false, null, false, $(e.target).data("clientsideloginlogout"));
+            return false;
+        });
+        $(document).on('click.credit-card-password-verify', '#js-dont-know-password', function(e) {
+            ovrlLoginHdr.showZOverlay(false, null, false, null, false, true);
+            ovrlLoginHdr.showPasswordReset();
+            return false;
+        });
+        var ovrlSignupFooter = createSignupOverlay('ovrlSignupFooter');
+        ovrlSignupFooter.populateGenericOverlay({
+            placement: 'Overlay-GlobalHeader-SignUpOB',
+            source: '_tz_footer'
+        });
+        $('#footer-join-button').on('click', function (e) {
+            $('#emailSignup, #emailSignin').val($('#footer-join-input').val());
+            ovrlSignupFooter.showZOverlay();
+            return false;
+        });
+        $('#emailSignup, #hotel-emailSignup').on('click', function (e) {
+            tzoo.tm.analyticsEvent('email_s_activated', '','');
+            return false;
+        });
+        $('#emailLogin, #emailLogin_fav, #emailSignin, #hotel-emailSignin').on('click', function (e) {
+            tzoo.tm.analyticsEvent('email_activated', '', '');
+            return false;
+        });
+        $("input[name^='passwordLogin']").on('click', function (e) {
+            tzoo.tm.analyticsEvent('password_acitvated', '', '');
+            return false;
+        });
+        
+        
+        var ovrlDealDL = createSignupOverlay('ovrlDealDL');
+        var fbRedirectUrlTemplate = 'https%3A%2F%2Fwww.travelzoo.com%2FAuthentication%2FConnectWithFacebook%3Ffsc%3Dtrue%26tzlocale%3D1%26source%3D_tzlock%26placement%3DOverlay-TravelDeal-DealPage-SignUpOB%26newsflash%3D1%26informer%3D1%26hotelId%3D0%26id%3DXXdealIdXX';
+        $('body').on('click.deal-lockup', '.deal-card--linkout a.deal-link, .deal-card--linkout-package a.deal-link, .deal-module--linkout a', function() {
+            var targetUrl = $(this).attr('href');
+            var adid = $(this).data('id');
+            var dealHdr = ($(this).attr('title') != undefined && $(this).attr('title') != "") ? $(this).attr('title') : $(this).data('headline');
+            var dealImage = $(this).data('image');
+            var fbRedirectUrl = fbRedirectUrlTemplate.replace('XXdealIdXX', adid);
+
+            ovrlDealDL.populateDealInformation({
+                dealHdr: dealHdr,
+                dealImage: dealImage,
+                targetUrl: targetUrl,
+                targetUrlNewWindow: !(tzoo.layout.isXs() && tzoo.platform.iOS()),
+                adid: adid,
+                source: '_tzlock',
+                placement: 'Overlay-TravelDeal-DealPage-SignUpOB',
+                fbRedirectUrl: fbRedirectUrl
+            });
+            ovrlDealDL.showZOverlay();
+            return false;
+        });
+        
+        $(window).on('orientationchange', function(event) {
+            if ($('#emailSignup').is(':focus')) {
+                setTimeout(function() {
+                    $('#emailSignup').blur().focus();
+                }, 300)
+            }
+        })
+        
+        
+        
+        var modeType = '';
+        if (modeType != null)
+        {
+            
+            if (modeType === 'signin' || modeType === 'resetpw' || modeType === 'createpw')
+            {
+                
+                $('.signin').trigger('click');
+                
+                setTimeout(function() {
+                    if (modeType === 'resetpw') {
+                        ovrlSignupHdr.showPasswordReset();
+                    } else if (modeType === 'createpw') {
+                        ovrlSignupHdr.showCreatePassword('', true);
+                    }
+                }, 200);
+            }
+        }
+                            
+                                                        
+                            showPasswordHandler('password_createPW', 'togglePasswordCreatePW');
+                            showPasswordHandler('password2_createPW', 'togglePasswordCreatePW2');
+
+                            showPasswordHandler('passwordLogin_memberWithPW', 'togglePasswordLogin_memberWithPW');
+
+                            });
+</script>
+
+    </div>
+    
+    <script>
+
+    (function (tzoo, $) {
+        function BrowserLocationDetector(params) {
+            var defaultParams = {
+                success: function () { },   
+                denied: function () { },    
+                timeout: 3000               
+            }
+
+            params = $.extend(defaultParams, params);
+
+            var resultReturned = false;
+
+            var getGeolocation = function() {
+                if ('geolocation' in navigator)
+                    navigator.geolocation.getCurrentPosition(onPosition, onError);
+                else {
+                // For non-HTML5 capable browsers, there are some other options.
+                    var s = document.createElement('script');
+                    s.type = 'text/javascript';
+                    s.src = 'https://ssl.tzoo-img.com/static/gears_init.js?v=76jtl2zkm';
+                    document.body.appendChild(s);
+                    var s2 = document.createElement('script');
+                    s2.type = 'text/javascript';
+                    s2.src = 'https://ssl.tzoo-img.com/static/geo.js?v=76jtl2zkm';
+                    document.body.appendChild(s2);
+                    window.setTimeout(getGeolocationAlt, 100);
+                }
+                try {tzoo.tm.analyticsEvent('LocationDetection', 'Request', 'Internal', 1, true);} catch(err) {}
+            };
+
+            var getGeolocationAlt = function() {
+                // Make sure those scripts have actually loaded.
+                if (window.geo_position_js) {
+                    if (geo_position_js.init()) {
+                        geo_position_js.getCurrentPosition(onPosition, onError);
+                    }
+                }
+                else {
+                // Wait a bit and try again.
+                    window.setTimeout(getGeolocationAlt, 100);
+                }
+            };
+
+            var onPosition = function(position) {
+                if (!resultReturned) {
+                    resultReturned = true;
+                    document.cookie = 'geol=' + position.coords.latitude + '|' + position.coords.longitude + '; domain=.travelzoo.com; path=/';
+                    document.cookie = 'nogeo=; domain=.travelzoo.com; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    try {tzoo.tm.analyticsEvent('LocationDetection', 'Allow', 'Internal', 1, true);} catch(err) {}
+                    params.success();
+                }
+            };
+
+            var onError = function(error) {
+                document.cookie = 'nogeo=true; domain=.travelzoo.com; path=/';
+                if (!resultReturned) {
+                    resultReturned = true;
+                    params.denied();
+                }
+            };
+
+            this.start = function () {
+                getGeolocation();
+
+                if (params.timeout && $.isNumeric(params.timeout))
+                setTimeout(function () {
+                    if (!resultReturned) {
+                        resultReturned = true;
+                        params.denied();
+                    }
+                }, params.timeout);
+            }
+        }
+
+        tzoo.BrowserLocationDetector = {
+            start: function (params) {
+                var detector = new BrowserLocationDetector(params);
+                detector.start();
+            }
+        }
+    })(window.tzoo = window.tzoo || {}, jQuery);
+
+
+
+</script>
+
+    <script>
+        $('#footer-join-input').on('keyup', function () {
+            if ($('#footer-join-input').val().length > 0)
+                $('#footer-join-button').prop("disabled", false);
+            else
+                $('#footer-join-button').prop("disabled", true);
+        });
+        $('.js-header-join a').on('click', function() {
+            tzoo.tm.analyticsEvent('banner_join_travelzoo_pressed', '', '');
+        });
+        $('.footer-content .join-container #footer-join-button').on('click', function () {
+            tzoo.tm.analyticsEvent('footer_become_a_member', '', '');
+        });
+        $('.banner-membership-inner').on('click', function () {
+            $(this).addClass('expanded');
+        });
+            
+            if (tzoo.platform.Android() && !tzoo.device.AndroidTablet()) {
+                var isCNEdition = (tzoo.CountryCode && tzoo.CountryCode.toUpperCase() == "CN");
+                if (isCNEdition) {
+                    //for CN Andriod we'll use APK directly rather than goole play.
+                    $('#lnkMobileApp').prop("href", "/androidapp/").prop("target", "_self");
+                }
+                else {
+                    $('#lnkMobileApp').prop("href", "https://play.google.com/store/apps/details?id=com.travelzoo.android&hl=en");
+                }
+            } else if (tzoo.platform.iOS() && !tzoo.device.iPad()) {
+                $('#lnkMobileApp').prop("href", "https://itunes.apple.com/us/app/travelzoo-travel-deals-hotels/id451314284?mt=8");
+            } else {
+                $('#lnkMobileApp').prop("href", "/mobile/").prop("target", "_self");
+            }
+            
+                    
+            if (tzoo.platform.Android()) {
+                deeplink.setup({
+                    android: {
+                        appId: "com.travelzoo.android"
+                    }
+                });
+                $.smartbanner({
+                    title: "Travelzoo",
+                    daysHidden: 0,
+                    daysReminder: 0,
+                    force: 'android',
+                    inGooglePlay: 'In Google Play', 
+                    button: 'OPEN', 
+                    price: 'Free',
+                    daysHidden: 1, // Duration to hide the banner after being closed (0 = always show banner),
+                    deeplink: "travelzoo://travelzoo/1/top20/",
+                });
+            }
+            
+        (function ($, tzoo) {
+            tzoo.LabelInSelect();
+            tzoo.LabelInInput();
+            tzoo.LabelInTextarea();
+            tzoo.searchFormInHeader = false;
+            tzoo.layout = tzoo.layout || {};
+            tzoo.layout.reloadHeader = function () {
+                
+                var rh=$.ajax({
+                    url: '/Header/GetHeader/?ClientSideLoginLogout=False&ShowMyAccount=True&ShowSignup=True&ShowEditionSelector=True&SignoutRedirectToHomepage=False&ShowEditionStatic=False&ShowMemberMenu=True',
+                    cache: false,
+                    dataType: 'html'
+                })
+                var rat=$.ajax({
+                    url: '/Authentication/RefreshAntiForgeryToken/',
+                    cache: false,
+                    dataType: 'html'
+                })
+                $.when(rh, rat).done(function (data1, data2) {
+                    $('.js-header-content').html(data1[0]);
+                    $('#AFTForm').html(data2[0])
+                    $(document).trigger('headerreloaded.layout');
+                })
+            };
+            tzoo.layout.setOriginAirports = function (force) {
+                
+
+                if(true && (force || true)) {
+                    var qs = ''
+                    if (force) {
+                        qs = '?force=true'
+                    }
+                    return $.ajax({
+                        url: '/Header/SetOriginAirports/' + qs,
+                        cache: false,
+                        dataType: 'text'
+                    })
+                } else {
+                    return $.Deferred().resolve().promise();
+                }
+            }
+            tzoo.layout.setOriginAirports()
+            tzoo.layout.refreshMemberRecognition = function (fname, fnameDefault, yearDefault, fnameTemplate, yearTemplate, memberStatus) {
+                var isPaidSite = true;
+                if (!(isPaidSite && (memberStatus == 4 || memberStatus == 5 || memberStatus == 6))) {
+                    var val = Cookies.get('user_d');
+                    var resolvedyear, year;
+                    if (val) {
+                        parms = tzoo.parseParams(val);
+                    
+                        year = parms['yr'];
+                    
+                        if (!fname) {
+                            fname = parms['fname'];
+                        }
+                    }
+                    
+                    if (!fname) {
+                        fname = fnameDefault;
+                    }
+                    if (year) {
+                        resolvedyear = yearTemplate.replace('{0}', year);
+                    } else {
+                        resolvedyear = yearDefault;
+                    }
+                    var resolvedfname = fnameTemplate.replace('{0}', fname);
+                    $('#aMemRecog').html(resolvedfname);
+                    $('#liMemberSince').html(resolvedyear);
+                    $('#aMemRecog').removeClass("hidden");
+                }
+            }
+            tzoo.layout.reloadMemberRecognition = function (fname) {
+                
+                if($('#aMemRecog').length > 0) {
+                    $.ajax({
+                        url: '/Header/GetReloadMemberRecognition/',
+                        success: function (data) {
+                            
+                            if (!fname) {
+                                fname = data.fname;
+                            }
+                            tzoo.layout.refreshMemberRecognition(fname, data.fnameDefault, data.yearDefault, data.fnameTemplate, data.yearTemplate, data.memberStatus)
+                        }
+                    });
+                }
+            }
+            if ('' == 'signedup' || '' == 'signedup-cpw') {
+                tzoo.layout.reloadMemberRecognition();
+            }
+            $(document).on("LoadMemberRecognition", function (e, fname) {
+                tzoo.layout.reloadMemberRecognition(fname);
+                var headerMenuToggle = $('.header-menu-toggle, .member-menu-toggle');
+                headerMenuToggle.off('click');
+                headerMenuToggle.on('click', function () {
+                    $(this).toggleClass('menu-open');
+                });
+            });
+            
+                
+                tzoo.PagingStorage.clear()
+                
+            
+            if (tzoo.Controls && tzoo.Controls.CookieDialog && typeof tzoo.Controls.CookieDialog.initializeCookieDialog === 'function') {
+                tzoo.Controls.CookieDialog.initializeCookieDialog('.cookiedialog');
+            }
+
+            var isPaidSignup = new URLSearchParams(location.search).has('supd');
+            if (isPaidSignup) {
+                tzoo.tm.analyticsEvent('membership_payment_successful', '', '');
+                $.getJSON(tzoo.ServiceBaseUrl + 'v1/member/getmembersimple/', {
+                    MemberIdEncrypted: tzoo.MemberId,
+                    TzLocale: tzoo.TzLocale,
+                    IncludeMembershipPaymentDetails: true,
+                    CacheVersion: tzoo.clientCache.versioning.getVersion("membersimple")
+                }).done(function (data) {
+                    if (data.mbr != null) {
+                        tzoo.tm.signupEvent('ConfirmedPurchased', '_tzlock', 'Overlay-GlobalHeader-SignUpOB', '',
+                            data.mbr.eml, '', data.mbr.mpoid, data.mbr.id, data.mbr.fn, data.mbr.ln);
+                        if (data.mbr.mppp != null) {
+                            if (data.mbr.cids != null && data.mbr.cids.length > 0) {
+                                tzoo.tm.membershipPurchaseForDeal(data.mbr.mppp, data.mbr.mppcc, data.mbr.mpoid, data.mbr.cids);
+                            } else {
+                                tzoo.tm.membershipPurchase(data.mbr.mppp, data.mbr.mppcc, data.mbr.mpoid);
+                            }
+                        }
+                    }
+                });
+            }
+
+            var isConvertedLegacyMember = new URLSearchParams(location.search).has('clm');
+            if (isConvertedLegacyMember) {
+                tzoo.tm.analyticsEvent('Legacy_Member', 'Membership_Purchased', '');
+            }
+        })(jQuery, window.tzoo = window.tzoo || {});
+    </script>
+    <form name="AFTForm" id="AFTForm">
+        <input name="__RequestVerificationToken" type="hidden" value="4UTxUQaJjPsnmNgDS1Gz9sQr-B0a9dSDlD-SfRx8-IVrgZLk7eB77RQpSdE8hfw21APhYxmI41YuvXCeicWH5NZ6TxU1" />
+    </form>
+    <script async="async" src="https://static.srcspot.com/libs/fayina.js" type="application/javascript"></script>
+    <script type="text/javascript"  src="/EqW8p6Y4k/Y/q/-4lvd5kQ4BCA5Rsc/Lu7kpk4zQmzSpmQu/PmI8IgE/CV96/JB9ReDw"></script><link rel="stylesheet" type="text/css"  href="/EqW8p6Y4k/Y/q/-4lvd5kQ4BCA5Rsc/SN7k/XjgfIgE/NApt/cDNtBzlX"><script  src="/EqW8p6Y4k/Y/q/-4lvd5kQ4BCA5Rsc/SN7k/XjgfIgE/aEwG/flQsTzIp" async defer></script><div id="sec-overlay" style="display:none;"><div id="sec-container"></div></div></body>
+
+</html>

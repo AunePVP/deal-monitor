@@ -1,0 +1,86 @@
+##### td_visibility_hot_feed
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 17:43:00 +0000 | Letzte Chance: 50.000 Hilton Honors Punkte + Gold Status für die Hilton Honors Kreditkarte | https://travel-dealz.de/deal/hilton-honors-kreditkarte-willkommensbonus-okt27/?utm_source=
+  [2] Wed, 04 Nov 2026 17:30:42 +0000 | Lufthansa Gutschein: 40€ Rabatt auf Langstrecken im Nov. 2026 (z.B. Seattle ab 529€ inkl. Gepäck) | https://travel-dealz.de/gutschein/lufthansa/?utm_source=feed&utm_medium=rss&utm_campaign=r
+  [3] Wed, 04 Nov 2026 13:41:11 +0000 | Explora Journeys Sonderpreise: Luxuskreuzfahrten im Winter 2026/27 ab 1.430€ p.P. (Alleinreisende ab 1.790€) | https://travel-dealz.de/deal/explora-journeys-sonderpreise-winter/?utm_source=feed&utm_med
+  [4] Wed, 04 Nov 2026 12:41:23 +0000 | Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau – Auckland – München | https://travel-dealz.de/deal/qatar-gabelfluege-down-under/?utm_source=feed&utm_medium=rss&
+  [5] Wed, 04 Nov 2026 10:37:46 +0000 | China Eastern: Gabelflüge Amsterdam – Tokio – Frankfurt ab 426€ (Nov. / Dez. 2026) | https://travel-dealz.de/ticker/486604/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [6] Wed, 04 Nov 2026 10:17:50 +0000 | Kanaren: 7 Nächte mit der Costa Smeralda ab Gran Canaria inkl. Flügen, Zug zum Flug & Transfers ab 699€ p.P. | https://travel-dealz.de/ticker/472935/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [7] Wed, 04 Nov 2026 10:00:46 +0000 | New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum) | https://travel-dealz.de/deal/new-york-condor-premium-class/?utm_source=feed&utm_medium=rss
+  [8] Wed, 04 Nov 2026 09:03:00 +0000 | 50% Rabatt: Schweiz ↔ Paris mit dem TGV Lyria ab 20€ pro Richtung | https://travel-dealz.de/deal/tgv-lyria-schweiz-paris/?utm_source=feed&utm_medium=rss&utm_c
+  [9] Wed, 04 Nov 2026 08:48:51 +0000 | MSC World Europa: 14 Nächte Karibik Kreuzfahrten von Martinique mit Flügen & Transfers ab 1.849€ p.P. | https://travel-dealz.de/deal/mscworld-europa-kreuzfahrt-von-martinique-2026/?utm_source=fe
+  [10] Wed, 04 Nov 2026 08:47:35 +0000 | TUI JAZ Bluemarine, Hurghada: Ab 564€ p.P. für 1 Woche All-inclusive mit Flügen & Transfers im Winter | https://travel-dealz.de/deal/tuijaz-bluemarine-pauschal/?utm_source=feed&utm_medium=rss&ut
+  [11] Wed, 04 Nov 2026 08:22:29 +0000 | Genf – Sao Paulo: LATAM kommt in die Schweiz | https://travel-dealz.de/ticker/486575/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [12] Wed, 04 Nov 2026 07:12:32 +0000 | Costa Toscana: 7 Nächte Mittelmeer-Kreuzfahrten von Savona ab 399€ p.P. (auch Alleinreisende) | https://travel-dealz.de/deal/costa-toscana-savona-mittelmeer-dezember/?utm_source=feed&utm
+##### td_cat_economy_p2
+FORMAT=RSS ITEMS=20
+  [1] Tue, 20 Oct 2026 13:00:00 +0000 | United Airlines: Gabelflüge Europa – Südamerika – Deutschland ab 432€ (inkl. Gepäck) | https://travel-dealz.de/deal/united-gabelfluege-suedamerika/?utm_source=feed&utm_medium=rs
+  [2] Tue, 20 Oct 2026 08:52:01 +0000 | Seattle → Singapur ab 246€ oneway mit Singapore Airlines (inkl. Gepäck) | https://travel-dealz.de/ticker/484023/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [3] Fri, 16 Oct 2026 13:17:12 +0000 | Oneway: SAS Business Class Thailand → Frankfurt ab 806€ (Economy ab 233€) | https://travel-dealz.de/deal/sas-bangkok-kopenhagen-oneway/?utm_source=feed&utm_medium=rss
+  [4] Wed, 14 Oct 2026 11:18:57 +0000 | Korean Air: Gratis Loungezugang für ausgewählte Umsteigeverbindungen | https://travel-dealz.de/ticker/482946/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [5] Fri, 09 Oct 2026 05:01:04 +0000 | Hongkong ab 469€ mit Air China von München und Frankfurt (inklusive Gepäck) | https://travel-dealz.de/deal/air-china-frankfurt-hongkong/?utm_source=feed&utm_medium=rss&
+  [6] Wed, 07 Oct 2026 13:22:39 +0000 | Reykjavik, Island: Ab 130€ mit Transavia von Brüssel (234€ inkl. Gepäck) | https://travel-dealz.de/ticker/467216/?utm_source=feed&utm_medium=rss&utm_campaign=rss-fee
+  [7] Wed, 07 Oct 2026 07:50:47 +0000 | Australien ab 769€ mit China Eastern von Frankfurt (inkl. 2x 23 kg Gepäck) | https://travel-dealz.de/deal/china-eastern-frankfurt-australien/?utm_source=feed&utm_mediu
+  [8] Tue, 29 Sep 2026 12:45:56 +0000 | 12 Ziele in (Süd-)Ostasien ab 352€ mit Air China von Brüssel inkl. Gepäck | https://travel-dealz.de/deal/air-china-bruessel-asien/?utm_source=feed&utm_medium=rss&utm_
+  [9] Thu, 17 Sep 2026 08:36:18 +0000 | Dublin: Hin- und Rückflug mit Aer Lingus ab 61€ (inkl. Personal Item + 10 kg Gepäck) | https://travel-dealz.de/deal/aer-lingus-angebot/?utm_source=feed&utm_medium=rss&utm_campai
+  [10] Mon, 07 Sep 2026 10:56:42 +0000 | Aer Lingus: Gabelflüge Brüssel – Cancún – Deutschland ab 374€ (inkl. Gepäck) | https://travel-dealz.de/deal/aer-lingus-gabelfluege-cancun/?utm_source=feed&utm_medium=rss
+  [11] Fri, 04 Sep 2026 16:57:53 +0000 | Island ab 196€ mit Icelandair von München (284€ mit Gepäck) | https://travel-dealz.de/deal/icelandair-reykjavik-ab-deutschland/?utm_source=feed&utm_medi
+  [12] Thu, 03 Sep 2026 07:03:05 +0000 | Hongkong ab 484€ mit China Eastern von Frankfurt (inkl. Gepäck) | https://travel-dealz.de/deal/hongkong-china-eastern/?utm_source=feed&utm_medium=rss&utm_ca
+##### meilenoptimieren_flugangebote_feed
+FORMAT=RSS ITEMS=15
+  [1] Sat, 11 Jul 2026 03:45:44 +0000 | Condor & Visa Sale – 30 Prozent Rabatt auf ausgewählte Flüge | https://meilenoptimieren.com/condor-sale/
+  [2] Sat, 20 Jun 2026 04:00:26 +0000 | Aegean Sale: Bis zu 30 % Rabatt auf Flüge nach Griechenland (exkl. Steuern und Gebühren) | https://meilenoptimieren.com/aegean-sale/
+  [3] Sat, 19 Apr 2025 05:00:43 +0000 | Die 20 besten Lufthansa Business Class Deals mit Abflug in Europa | https://meilenoptimieren.com/beste-lufthansa-business-class-deals-mit-abflug-in-europa/
+  [4] Sun, 13 Apr 2025 04:00:00 +0000 | Die 10 günstigsten Lufthansa First Class Flüge mit Abflug in Europa | https://meilenoptimieren.com/die-guenstigsten-lufthansa-first-class-fluege-mit-abflug-in-e
+  [5] Wed, 15 Jan 2025 05:00:45 +0000 | Lufthansa & SWISS Business Class Angebote ab Skandinavien – Asien ab ca. 1.350€ | https://meilenoptimieren.com/lufthansa-swiss-business-class-angebote-ab-skandinavien/
+  [6] Tue, 20 Aug 2024 16:30:49 +0000 | Lufthansa & SWISS First Class Partnerangebote ab Skandinavien – Asien, Afrika und Südamerika ab 2.000€ | https://meilenoptimieren.com/lufthansa-swiss-first-class-partnerangebote-ab-skandinavien/
+  [7] Tue, 20 Aug 2024 16:25:38 +0000 | Lufthansa & SWISS Business Class Partnerangebote ab Skandinavien – Asien, Afrika und Südamerika ab 750€ | https://meilenoptimieren.com/lufthansa-swiss-business-class-partnerangebote-ab-skandinavie
+  [8] Thu, 22 Feb 2024 05:00:58 +0000 | Lufthansa & Swiss Business Class Angebote ab London – Dubai ab ca. 1.500€ | https://meilenoptimieren.com/lufthansa-swiss-business-class-angebote-ab-london/
+  [9] Fri, 09 Feb 2024 09:45:26 +0000 | Lufthansa & SWISS Business Class Partnerangebote ab Deutschland – Nordamerika ab 1.700€ | https://meilenoptimieren.com/lufthansa-swiss-business-class-partnerangebote-ab-deutschland
+  [10] Tue, 16 Jan 2024 18:00:51 +0000 | Lufthansa Business Class Angebote zwischen Europa und Nahost – Statuspunkte ab 0,80 €/Punkt | https://meilenoptimieren.com/lufthansa-business-class-angebote-nahost-statuspunkte/
+  [11] Mon, 15 Jan 2024 06:00:58 +0000 | Lufthansa & Swiss Business Class Angebote ab Spanien – Nordamerika ab ca. 1.600€ | https://meilenoptimieren.com/lufthansa-swiss-business-class-angebote-ab-spanien/
+  [12] Tue, 09 Jan 2024 05:15:57 +0000 | Lufthansa & SWISS Business Class Angebote ab Amsterdam – Südamerika ab 1.500€, Asien ab 1.800€ | https://meilenoptimieren.com/lufthansa-swiss-business-class-angebote-ab-amsterdam/
+##### vft_firstbusiness_rss
+FORMAT=RSS ITEMS=25
+  [1] Wed, 04 Nov 2026 09:57:58 +0000 | HAM-LIS-PDL in C wieder verfügbar ab 463 EUR | https://www.vielfliegertreff.de/forum/threads/ham-lis-pdl-in-c-wieder-verfuegbar-ab-463-eu
+  [2] Mon, 02 Nov 2026 14:37:49 +0000 | DUB-BWI in C GBP 955/ca. 1140 EURO | https://www.vielfliegertreff.de/forum/threads/dub-bwi-in-c-gbp-955-ca-1140-euro.167216/
+  [3] Mon, 26 Oct 2026 11:55:30 +0000 | Riyadh Air: MNL - MAN 650 EUR o/w im Oktober | https://www.vielfliegertreff.de/forum/threads/riyadh-air-mnl-man-650-eur-o-w-im-oktober.16
+  [4] Fri, 02 Oct 2026 09:35:29 +0000 | T5: PEK-FRA ab 611 EUR in C | https://www.vielfliegertreff.de/forum/threads/t5-pek-fra-ab-611-eur-in-c.166913/
+  [5] Sun, 20 Sep 2026 18:52:45 +0000 | Business Class Göteborg – Hongkong mit Etihad ab ca. 1.632 € return | https://www.vielfliegertreff.de/forum/threads/business-class-goeteborg-hongkong-mit-etihad
+  [6] Fri, 18 Sep 2026 13:39:18 +0000 | Etihad C ex-WAW nach SIN ab 1.862 € return | 787 + A380 | Feb–Jun 2027 | https://www.vielfliegertreff.de/forum/threads/etihad-c-ex-waw-nach-sin-ab-1-862-eur-return
+  [7] Wed, 16 Sep 2026 17:45:27 +0000 | Etihad: DUS-SIN Return | https://www.vielfliegertreff.de/forum/threads/etihad-dus-sin-return.166880/
+  [8] Sat, 12 Sep 2026 14:51:34 +0000 | USA im Frühjahr 2025 in C um 1250€ (DUB-USA-Spanien) | https://www.vielfliegertreff.de/forum/threads/usa-im-fruehjahr-2025-in-c-um-1250eur-dub-us
+  [9] Wed, 02 Sep 2026 21:03:10 +0000 | CA: ARN-KUL/SIN/BKK/HKG r/t 1200Euro | https://www.vielfliegertreff.de/forum/threads/ca-arn-kul-sin-bkk-hkg-r-t-1200euro.166564/
+  [10] Sun, 23 Aug 2026 18:10:52 +0000 | QR/JL C D-JP ca. 1270 Euro wide open | https://www.vielfliegertreff.de/forum/threads/qr-jl-c-d-jp-ca-1270-euro-wide-open.165479/
+  [11] Wed, 22 Jul 2026 13:17:34 +0000 | HU: BRU-NRT, C ab € 1930 RT, Mitte Feb - März 2027 | https://www.vielfliegertreff.de/forum/threads/hu-bru-nrt-c-ab-eur-1930-rt-mitte-feb-maerz-
+  [12] Tue, 21 Jul 2026 07:39:29 +0000 | MS: Wien-Sansibar, C, ab € 1300.-, Sept. 2026 | https://www.vielfliegertreff.de/forum/threads/ms-wien-sansibar-c-ab-eur-1300-sept-2026.166
+##### vft_economy_rss
+FORMAT=RSS ITEMS=25
+  [1] Tue, 03 Nov 2026 22:04:36 +0000 | Pegasus-Sale | https://www.vielfliegertreff.de/forum/threads/pegasus-sale.143412/
+  [2] Thu, 29 Oct 2026 08:26:51 +0000 | Condor Eintagsfliegen | https://www.vielfliegertreff.de/forum/threads/condor-eintagsfliegen.127812/
+  [3] Wed, 28 Oct 2026 09:35:45 +0000 | Flex: DUB-USA/Kanada mit Aer Lingus | https://www.vielfliegertreff.de/forum/threads/flex-dub-usa-kanada-mit-aer-lingus.142168/
+  [4] Wed, 28 Oct 2026 08:44:36 +0000 | Mit Westjet ab Dublin an einem Tag nach Kanada und zurück nach Gatwick | ab 70€ | https://www.vielfliegertreff.de/forum/threads/mit-westjet-ab-dublin-an-einem-tag-nach-kana
+  [5] Tue, 27 Oct 2026 21:08:06 +0000 | LOT: Angebote/Sale | https://www.vielfliegertreff.de/forum/threads/lot-angebote-sale.156675/
+  [6] Mon, 26 Oct 2026 22:46:09 +0000 | Round The World (RTW) / Weltreise —>Flug-Bausteine | https://www.vielfliegertreff.de/forum/threads/round-the-world-rtw-weltreise-flug-bausteine
+  [7] Fri, 23 Oct 2026 16:34:54 +0000 | Air Serbia: Deals, Schnäppchen und interessante Verbindungen | https://www.vielfliegertreff.de/forum/threads/air-serbia-deals-schnaeppchen-und-interessan
+  [8] Fri, 09 Oct 2026 10:58:20 +0000 | Deals ex-LUX -> Europa ab 10 Euro  oneway | https://www.vielfliegertreff.de/forum/threads/deals-ex-lux-europa-ab-10-euro-oneway.140943
+  [9] Wed, 07 Oct 2026 19:27:19 +0000 | Deals ins Grenzgebiet zur Ukraine für Helfer/innen | https://www.vielfliegertreff.de/forum/threads/deals-ins-grenzgebiet-zur-ukraine-fuer-helfe
+  [10] Tue, 06 Oct 2026 18:55:00 +0000 | IB: EU - Südamerika - DE ab 136€ | https://www.vielfliegertreff.de/forum/threads/ib-eu-suedamerika-de-ab-136eur.166546/
+  [11] Tue, 22 Sep 2026 14:32:10 +0000 | DE: HAM-BKK in Y+ ab 773 (mit AMEX ab 689) | https://www.vielfliegertreff.de/forum/threads/de-ham-bkk-in-y-ab-773-mit-amex-ab-689.16690
+  [12] Tue, 15 Sep 2026 13:52:09 +0000 | Aer Lingus Deals von/nach D-A-CH | https://www.vielfliegertreff.de/forum/threads/aer-lingus-deals-von-nach-d-a-ch.151802/
+##### vft_bestpreis_rss
+FORMAT=RSS ITEMS=0
+##### aerotelegraph_feed
+FORMAT=RSS ITEMS=20
+  [1] Wed, 04 Nov 2026 20:14:15 GMT   | Plus Ultra verhandelt über Zusammenarbeit mit Laser Airlines | https://www.aerotelegraph.com/ticker/plus-ultra-verhandelt-ueber-zusammenarbeit-mit-laser-
+  [2] Wed, 04 Nov 2026 19:31:37 GMT   | Air France landet erstmals mit Airbus A350 in St. Maarten | https://www.aerotelegraph.com/ticker/air-france-landet-erstmals-mit-airbus-a350-in-st-maar
+  [3] Wed, 04 Nov 2026 18:45:28 GMT   | Air Tahiti Nui führt kostenloses Highspeed-Internet ein | https://www.aerotelegraph.com/ticker/air-tahiti-nui-fuehrt-kostenloses-highspeed-internet-
+  [4] Wed, 04 Nov 2026 18:01:19 GMT   | Mauritius trennt Air Mauritius vom Flughafenbetreiber | https://www.aerotelegraph.com/ticker/mauritius-trennt-air-mauritius-vom-flughafenbetreiber
+  [5] Wed, 04 Nov 2026 17:31:28 GMT   | Chef von Croatia Airlines tritt aus gesundheitlichen Gründen zurück | https://www.aerotelegraph.com/ticker/chef-von-croatia-airlines-tritt-aus-gesundheitlichen-
+  [6] Wed, 04 Nov 2026 17:30:00 GMT   | So will Bangkok-Suvarnabhumi zum Mega-Flughafen wachsen | https://www.aerotelegraph.com/airports/flughafen-bangkok-suvarnabhumi-plant-suedterminal-u
+  [7] Wed, 04 Nov 2026 17:02:24 GMT   | Icao will auf Weltklimakonferenz für klimaneutrale Luftfahrt werben | https://www.aerotelegraph.com/ticker/icao-will-auf-weltklimakonferenz-fuer-klimaneutrale-l
+  [8] Wed, 04 Nov 2026 16:30:20 GMT   | Finnair übernimmt fünf Regionalstrecken auf eigene Rechnung | https://www.aerotelegraph.com/ticker/finnair-uebernimmt-fuenf-regionalstrecken-auf-eigene-
+  [9] Wed, 04 Nov 2026 16:02:42 GMT   | Fly BIS bestellt bis zu zwölf Evtol von Eve für Brasilien | https://www.aerotelegraph.com/ticker/fly-bis-bestellt-bis-zu-zwoelf-evtol-von-eve-fuer-bra
+  [10] Wed, 04 Nov 2026 15:31:23 GMT   | Discover Airlines übernimmt weitere Lufthansa-Strecken zu Trainigszwecken | https://www.aerotelegraph.com/ticker/discover-airlines-uebernimmt-weitere-lufthansa-streck
+  [11] Wed, 04 Nov 2026 15:01:11 GMT   | Konflikte in Nahost: Arabische Airlines steuern auf Milliardenverlust zu | https://www.aerotelegraph.com/ticker/konflikte-in-nahost-arabische-airlines-steuern-auf-mi
+  [12] Wed, 04 Nov 2026 14:31:21 GMT   | Ajet startet acht neue Strecken zwischen Deutschland und der Türkei | https://www.aerotelegraph.com/ticker/ajet-startet-acht-neue-strecken-zwischen-deutschland-

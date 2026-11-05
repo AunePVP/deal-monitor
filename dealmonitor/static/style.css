@@ -26,6 +26,10 @@
   --good-bg: #1f6fc0;
   --deal-bg: #7048c8;
   --danger-bg: #c0352b;
+  /* Radar (Hammer-Deals der Deal-Seiten): Amber, weiße Schrift ≥ 4,5:1 */
+  --radar: #b45309;
+  --radar-bg: #b45309;
+  --radar-soft: #fff4e5;
   --ok-soft: #e5f5ee;
   --warn-bg: #fff4c2;
   --warn-text: #5c4300;
@@ -65,6 +69,9 @@
     --good-bg: #2b6fc0;
     --deal-bg: #6c4bc4;
     --danger-bg: #c63d33;
+    --radar: #f0a24a;
+    --radar-bg: #a8530b;
+    --radar-soft: #34240f;
     --danger: #f0736a;
     --danger-soft: #3a1f1d;
     --ok: #3ccf91;
@@ -203,6 +210,7 @@ h1, h2, h3 { line-height: 1.25; }
 
 /* ------------------------------------------------------------- Layout */
 main { max-width: 1160px; margin: 0 auto; padding: 8px 16px 72px; outline: none; }
+main:focus-visible { outline: none; }   /* Fokus nach Seitenwechsel (Screenreader), ohne Rahmen */
 .view-head {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   margin: 18px 0 16px;
@@ -237,6 +245,10 @@ main { max-width: 1160px; margin: 0 auto; padding: 8px 16px 72px; outline: none;
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 .chip[aria-pressed="true"] .chip-count { background: rgba(255, 255, 255, .25); color: inherit; }
 .chip-small { min-height: 32px; padding: 4px 10px; font-size: 13px; }
+/* Radar-Chip: Amber-Punkt, gedrückt in Amber */
+.chip[data-id="radar"]::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--radar); }
+.chip[data-id="radar"][aria-pressed="true"] { background: var(--radar-bg); border-color: var(--radar-bg); color: #fff; }
+.chip[data-id="radar"][aria-pressed="true"]::before { background: #fff; }
 
 .switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 14px; user-select: none; }
 .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -275,11 +287,15 @@ main { max-width: 1160px; margin: 0 auto; padding: 8px 16px 72px; outline: none;
 .r-good { background: var(--good-bg); }
 .r-deal { background: var(--deal-bg); }
 .r-exp { background: var(--exp); }
+.r-radar { background: var(--radar-bg); }
+.badge-verified { background: var(--ok-soft); color: var(--ok); border: 1px solid currentColor; }
+.deal-card.is-radar:not(.expired) { border-color: color-mix(in srgb, var(--radar) 45%, var(--line)); box-shadow: inset 4px 0 0 var(--radar), var(--shadow); }
 .r-exp-soft { background: transparent; color: var(--muted); border: 1px solid var(--line-strong); }
 .badge-outline { background: transparent; color: var(--muted); border: 1px solid var(--line-strong); }
 .route { margin: 8px 0 0; font-weight: 700; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
 .price-box { text-align: right; flex: none; }
 .price { font-size: 34px; font-weight: 800; line-height: 1; color: var(--price); letter-spacing: -.02em; white-space: nowrap; }
+.price.price-none { font-size: 17px; letter-spacing: 0; }
 .price-sub { font-size: 12px; color: var(--muted); margin-top: 4px; white-space: nowrap; }
 .price-ref { font-size: 12.5px; color: var(--muted); margin-top: 4px; white-space: nowrap; }
 .discount { color: var(--ok); font-weight: 700; }
@@ -398,6 +414,40 @@ input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-
 }
 .form-section { margin: 20px 0 10px; font-size: 15px; }
 
+/* ------------------------------------------------------------- Quellen-Karten */
+.source-cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); }
+.source-card {
+  min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface-2); display: flex; flex-direction: column; gap: 10px;
+}
+.source-card.is-off { background: transparent; border-style: dashed; }
+.source-card.is-off .source-head h3 { color: var(--muted); }
+/* Titel + Schalter in einer Zeile, Erklärung darunter über die ganze Breite */
+.source-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+.source-title { display: contents; }
+.source-head h3 { grid-column: 1; grid-row: 1; margin: 0; font-size: 16px; overflow-wrap: anywhere; }
+.source-head > .switch { grid-column: 2; grid-row: 1; }
+.source-head .help { grid-column: 1 / -1; max-width: 75ch; }
+.source-state { margin: 0; align-self: flex-start; padding: 3px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.source-state:empty { display: none; }
+.source-state.ok { background: var(--ok-soft); color: var(--ok); }
+.source-state.warn { background: var(--warn-bg); color: var(--warn-text); }
+.source-card .field, .source-card .field-grid { margin-bottom: 0; }
+.source-card .btn-row { margin-top: 2px; }
+.preset-list { display: flex; flex-direction: column; gap: 8px; }
+.check.preset {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 2px 10px; align-items: center;
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+}
+.check.preset > a, .check.preset > strong { font-weight: 600; overflow-wrap: anywhere; }
+.check.preset > .help-inline { grid-column: 2; }
+.check.preset:has(input:not(:checked)) { opacity: .8; }
+.field-bool { justify-content: center; }
+.field-bool .switch { align-items: flex-start; font-weight: 600; overflow-wrap: anywhere; }
+.field-bool .switch > span:last-child { min-width: 0; padding-top: 2px; }
+#radar-panel { border-color: color-mix(in srgb, var(--radar) 35%, var(--line)); }
+#radar-panel legend::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 8px; border-radius: 50%; background: var(--radar); vertical-align: 1px; }
+
 .channel-results { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .channel-results li { font-size: 14px; padding: 6px 10px; border-radius: 8px; overflow-wrap: anywhere; }
 .channel-results li.ok { background: var(--ok-soft); color: var(--ok); }
@@ -508,6 +558,7 @@ table.runs tr.has-errors td { background: color-mix(in srgb, var(--danger-soft) 
   .chip { flex: none; max-width: 80vw; }
   .view-head > .btn { align-self: flex-start; }
   .deal-card, .alert-card, .panel { padding: 14px; }
+  .source-card { padding: 12px; }
   .price { font-size: 30px; }
   /* Speichern-Leiste über der fixierten Tab-Leiste halten, nicht dahinter */
   .sticky-actions { bottom: calc(60px + env(safe-area-inset-bottom)); }

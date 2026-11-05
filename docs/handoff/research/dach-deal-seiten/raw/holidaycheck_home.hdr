@@ -1,0 +1,15 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+reporting-endpoints: default="https://www.holidaycheck.de/svc/collector-browser-crash-reports/default"
+x-b3-sampled: 0
+x-b3-traceid: 6bd31da80a2e2784216f1d2d93fc367a
+x-frame-options: SAMEORIGIN
+cache-control: public, max-age=829, s-maxage=1800
+expires: Wed, 04 Nov 2026 22:05:05 GMT
+date: Wed, 04 Nov 2026 21:51:16 GMT
+set-cookie: internal_traffic=false; expires=Mon, 31-Dec-2038 23:59:59 GMT; path=/; domain=.holidaycheck.de; secure
+set-cookie: mobile_detected=false; path=/; domain=.holidaycheck.de
+strict-transport-security: max-age=15768000 ; includeSubDomains
+

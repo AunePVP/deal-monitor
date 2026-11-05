@@ -1,0 +1,18 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+x-powered-by: PHP/8.4.27
+set-cookie: _fbp=fb.1.1793829273711.1067096596.AQECAQIB; expires=Tue, 02 Feb 2027 21:54:33 GMT; Max-Age=7776000; path=/; domain=frankfurtflyer.de; secure; SameSite=Lax
+last-modified: Wed, 04 Nov 2026 12:00:30 GMT
+etag: "37942e0567a8bdf55cef2a6cd6447719"
+link: <https://frankfurtflyer.de/wp-json/>; rel="https://api.w.org/"
+link: <https://frankfurtflyer.de/wp-json/wp/v2/categories/9>; rel="alternate"; title="JSON"; type="application/json"
+link: <https://frankfurtflyer.de/category/deal/>; rel="canonical"
+content-type: application/rss+xml; charset=UTF-8
+x-litespeed-cache-control: public,max-age=604800
+x-litespeed-tag: 306_category,306_URL.5e62f68d79b970935f4c6dc5fd1147bf,306_T.9,306_
+x-litespeed-cache: miss
+date: Wed, 04 Nov 2026 21:54:35 GMT
+server: LiteSpeed
+alt-svc: h3=":443"; ma=2592000, h3-29=":443"; ma=2592000
+

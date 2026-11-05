@@ -250,20 +250,20 @@ class HttpTest(unittest.TestCase):
         self.assertTrue(cm.exception.network)
 
     def test_redact(self):
-        r = http._redact("https://user:pw@api.telegram.org/bot123:SECRET/sendMessage?token=abc&x=1")
-        self.assertNotIn("SECRET", r)
-        self.assertNotIn("pw", r)
-        self.assertNotIn("abc", r)
+        r = http._redact("https://user:test-pw@api.telegram.org/bot123456:test-dummy/sendMessage"
+                         "?token=test-dummy-token&x=1")
+        self.assertNotIn("test-dummy", r)
+        self.assertNotIn("test-pw", r)
         self.assertIn("x=1", r)
 
     def test_telegram_token_not_in_test_notify(self):
-        token = "999999:SECRETTOKENabcdefgh"
+        token = "123456:test-dummy"
         with mock.patch("urllib.request.urlopen",
                         side_effect=urllib.error.URLError("Name or service not known")), \
                 mock.patch("time.sleep"):
             res = notify.send_test([notify.Telegram(token, "42")])
         self.assertFalse(res[0]["ok"])
-        self.assertNotIn("SECRETTOKEN", res[0]["error"])
+        self.assertNotIn("test-dummy", res[0]["error"])
 
 
 class SettingsTest(unittest.TestCase):
@@ -277,18 +277,18 @@ class SettingsTest(unittest.TestCase):
 
     def test_webhook_url_change_needs_token(self):
         app = AppSettings(self.store, {})
-        app.update({"webhook_url": "https://mein.example/hook"}, {"webhook_token": "geheim"})
+        app.update({"webhook_url": "https://mein.example/hook"}, {"webhook_token": "test-dummy-token"})
         with self.assertRaises(ValueError):
             app.update({"webhook_url": "http://127.0.0.1:18799/x"})
         self.assertEqual(app.get("webhook_url"), "https://mein.example/hook")
         app.update({"webhook_url": "https://mein.example/hook"})          # unverändert: ok
-        app.update({"webhook_url": "https://neu.example/"}, {"webhook_token": "neu"})
-        self.assertEqual(app.get("webhook_token"), "neu")
+        app.update({"webhook_url": "https://neu.example/"}, {"webhook_token": "test-dummy-neu"})
+        self.assertEqual(app.get("webhook_token"), "test-dummy-neu")
         app.update({"webhook_url": "https://ohne.example/"}, {"webhook_token": ""})
         self.assertIsNone(app.get("webhook_token"))
 
     def test_env_token_locks_url(self):
-        app = AppSettings(self.store, {"WEBHOOK_TOKEN": "env-geheim"})
+        app = AppSettings(self.store, {"WEBHOOK_TOKEN": "test-dummy-env"})
         self.assertIn("webhook_url", app.env_locked())
         app.update({"webhook_url": "http://evil.example/"})
         self.assertEqual(app.get("webhook_url"), "")
@@ -305,8 +305,9 @@ class SettingsTest(unittest.TestCase):
                         'destinations = ["HAM"]\nmax_price = 100\n', encoding="utf-8")
         import_config(self.store, path)
         app = AppSettings(self.store, {})
+        # "feed" ist der alte Name der Deal-Seiten-Quelle - wird zu "feeds" normalisiert
         self.assertEqual((app.get("interval_hours"), app.get("sources"), app.get("scan_months")),
-                         (6.0, ["feed"], 3))
+                         (6.0, ["feeds"], 3))
         path.write_text('[settings]\ngibtsnicht = 1\n', encoding="utf-8")
         with self.assertRaises(ValueError):
             config_mod.load_raw(path)
@@ -376,7 +377,10 @@ class WebSecurityTest(ServerTest):
         status, data = self.raw("GET", "/api/settings", headers={"Host": "attacker.example:1"})
         self.assertEqual(status, 403)
         self.assertIn("DEALMONITOR_ALLOWED_HOSTS", data["error"])
-        for ok in ("localhost:8080", "127.0.0.1", "[::1]:8080", "192.168.1.20:8080"):
+        for bad in ("evil.com", "tower.evil.com", "local.attacker.example:8080"):
+            self.assertEqual(self.raw("GET", "/api/status", headers={"Host": bad})[0], 403, bad)
+        for ok in ("localhost:8080", "127.0.0.1", "[::1]:8080", "192.168.1.20:8080",
+                   "tower:8080", "Tower.local:8080", "nas.fritz.box", "unraid.lan"):
             self.assertEqual(self.raw("GET", "/api/status", headers={"Host": ok})[0], 200, ok)
         self.ctx.env["DEALMONITOR_ALLOWED_HOSTS"] = "nas.local, deals.example"
         self.assertEqual(self.raw("GET", "/api/status", headers={"Host": "NAS.local:8080"})[0],
@@ -403,7 +407,7 @@ class WebSecurityTest(ServerTest):
         self.assertIn(b" 413 ", reply.split(b"\r\n")[0])
 
     def test_test_notify_hides_telegram_token(self):
-        token = "999999:SECRETTOKENabcdefgh"
+        token = "123456:test-dummy"
         with self.ctx.store() as store:
             AppSettings(store, self.ctx.env).update({"telegram_chat_id": "42"},
                                                     {"telegram_bot_token": token})
@@ -415,7 +419,7 @@ class WebSecurityTest(ServerTest):
         self.assertEqual(status, 200)
         tg = [c for c in data["channels"] if c["name"] == "telegram"][0]
         self.assertFalse(tg["ok"])
-        self.assertNotIn("SECRETTOKEN", json.dumps(data))
+        self.assertNotIn("test-dummy", json.dumps(data))
 
 
 if __name__ == "__main__":
@@ -468,7 +472,7 @@ class InvalidTokenTest(unittest.TestCase):
             calls.append(url)
             raise http.HttpError("HTTP 401: Unauthorized", 401)
 
-        src = TravelpayoutsSource(token="falsch", request_delay=0)
+        src = TravelpayoutsSource(token="test-dummy-falsch", request_delay=0)
         with mock.patch("dealmonitor.sources.travelpayouts.http.get_json", side_effect=fake):
             with self.assertRaises(SourceError) as ctx:
                 src.fetch(a)
