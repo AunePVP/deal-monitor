@@ -8,7 +8,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/AunePVP/deal-monitor</Support>
   <Project>https://github.com/AunePVP/deal-monitor</Project>
-  <Overview>Flug-Deal-Monitor mit Deal-Alarmen im Stil von Travel-Dealz. Weboberfläche für Deals, Alarme und Meldungen. Quellen: Travelpayouts, Google Flights (inoffiziell, ohne Key), Amadeus (optional, ungetestet, Self-Service eingestellt) und Deal-Seiten (Travel-Dealz, mydealz, fly4free, premium-flights) mit Radar für Error Fares. Prüft alle 3 Stunden, die Deal-Seiten alle 30 Minuten. Tokens/Keys bequem in der Weboberfläche unter Einstellungen → Quellen eintragen (alle optional).</Overview>
+  <Overview>Flug-Deal-Monitor mit Deal-Alarmen im Stil von Travel-Dealz. Weboberfläche für Deals, Alarme und Meldungen. Quellen: Travelpayouts, Google Flights (inoffiziell, ohne Key), Amadeus (optional, ungetestet, Self-Service eingestellt) und Deal-Seiten (Travel-Dealz, Secret Flying, mydealz, fly4free, premium-flights, reisetopia, You have been upgraded) mit Radar für Error Fares und Nachbar-Hubs (z. B. Business ab Budapest). Prüft alle 3 Stunden, die Deal-Seiten alle 30 Minuten, die schnellen Quellen alle 10 Minuten; Seite „Quellen“ zeigt, ob jede Quelle liefert. Tokens/Keys bequem in der Weboberfläche unter Einstellungen → Quellen eintragen (alle optional).</Overview>
   <Category>Tools: Other</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
   <Config Name="Weboberfläche" Target="8080" Default="8080" Mode="tcp" Description="Port der Weboberfläche" Type="Port" Display="always" Required="true" Mask="false">8080</Config>

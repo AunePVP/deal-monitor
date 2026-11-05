@@ -127,6 +127,16 @@ class OriginTest(unittest.TestCase):
         self.assertEqual(detect_origin("Paris → Maldives Business Class Round Trip 1680€", "en"),
                          "foreign")
 
+    def test_compass_prefix_keeps_place(self):
+        # Live-Lauf 05.11.2026: "von Westkanada" landete als Abflug ohne Angabe im Radar
+        title = "Westjet: Oneway von Westkanada nach London oder Paris ab 155€ (219€ mit Gepäck)"
+        self.assertEqual(detect_origin(title), "foreign")
+        self.assertIsNone(check(item(title, cats=["Economy Class"]), RadarSettings()))
+        self.assertEqual(regions.place_kind("Ostschweiz"), "home")
+        self.assertEqual(regions.place_kind("Süd-Spanien"), "foreign")
+        for word in ("Südtirol", "Ostende", "Westerland", "Nordhausen"):
+            self.assertEqual(regions.place_kind(word), "unknown", word)
+
 
 class CantonTest(unittest.TestCase):
     def test_swiss_canton_and_can_are_not_guangzhou(self):

@@ -191,3 +191,13 @@ Screenshots (Demo, Desktop 1280 / Mobil 390): `docs/handoff/screens/`.
   ErrorFareAlerts und premium-flights (`demo_articles`: 3 Quellen, Budapest-Hub mit Ablaufdatum,
   veraltete Quelle). Rotations-Gedächtnis über `demo.StateStore` in der Demo-Datenbank.
   `FixtureFeed()` ohne Argumente verhält sich wie vorher (nur Travel-Dealz).
+
+## 11. Abnahme (Integration, 05.11.2026)
+
+- `regions.place_kind` erkennt Himmelsrichtung + bekannten Ort („Westkanada“ → foreign, „Ostschweiz“ →
+  home, „Süd-Spanien“ → foreign); unbekannter Rest bleibt `unknown` („Südtirol“, „Ostende“). Grund: Live-Lauf,
+  „Westjet: Oneway von Westkanada nach London“ kam ohne REST-Abflug als „ohne Angabe“ ins Radar.
+  Test: `tests/test_review_fixes.py::OriginTest.test_compass_prefix_keeps_place`.
+- Live-Ergebnis je Quelle und offene Punkte: `docs/HANDOFF.md` („Abnahme-Live-Lauf“).
+- Stand: 627 Unit-Tests, 43 E2E-Schritte grün. Keine neuen Umgebungsvariablen in Runde 2 außer den schon
+  dokumentierten (`FAST_INTERVAL_MINUTES`, `HUBS_ENABLED`, `HUB_SURCHARGE_A/B`).

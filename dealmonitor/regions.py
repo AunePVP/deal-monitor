@@ -359,13 +359,19 @@ _HOME_SET = _place_set(HOME_PLACES, HOME_CODES)
 _FOREIGN_SET = _place_set(FOREIGN_PLACES) - _HOME_SET
 
 
+#: "Westkanada", "Süd-Spanien", "Ostschweiz": Himmelsrichtung vor einem bekannten Land/Ort
+_COMPASS_RE = re.compile(r"^(?:west|ost|nord|sued|mittel|zentral)-?(?P<rest>.{3,})$")
+
+
 def place_kind(place: str) -> str:
     """"home" (DACH), "foreign" (bekannter fremder Ort) oder "unknown"."""
     key = normalize_name(place)
-    if key in _HOME_SET:
-        return "home"
-    if key in _FOREIGN_SET:
-        return "foreign"
+    m = _COMPASS_RE.match(key)
+    for k in (key, m.group("rest") if m else None):
+        if k in _HOME_SET:
+            return "home"
+        if k in _FOREIGN_SET:
+            return "foreign"
     return "unknown"
 
 
