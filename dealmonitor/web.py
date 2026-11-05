@@ -103,6 +103,23 @@ def cheapest_json(entries: list[dict] | None) -> dict | None:
             "updated_at": max(e["seen_at"] for e in items)}
 
 
+#: so viele Beinahe-Deals zeigt ein Alarm höchstens
+NEAR_DEALS = 5
+
+
+def near_deals_json(entries: list[dict] | None) -> list[dict]:
+    """Beinahe-Deals eines Alarms (über der Grenze, aber deutlich unter dem Üblichen; nur
+    anzeigen, nie melden): je Strecke der günstigste Bestpreis mit ``near``-Gründen."""
+    out: dict[str, dict] = {}
+    for e in sorted(entries or [], key=lambda x: x["price"]):
+        if not e.get("near"):
+            continue
+        key = e["route"] if e["route"] == "artikel" else f"{e.get('origin')}-{e.get('destination')}"
+        if key not in out:
+            out[key] = dict(e, compare=_gf_link(e), source_label=source_label(e["source"]))
+    return list(out.values())[:NEAR_DEALS]
+
+
 def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = None) -> dict:
     out = dict(raw)
     try:
@@ -115,6 +132,7 @@ def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = Non
     out["active_deals"] = st.get("active_deals", 0)
     out["best_price"] = st.get("best_price")
     out["cheapest"] = cheapest_json((cheapest or {}).get(raw["id"]))
+    out["near_deals"] = near_deals_json((cheapest or {}).get(raw["id"]))
     return out
 
 

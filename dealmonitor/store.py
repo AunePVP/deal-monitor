@@ -16,6 +16,7 @@ import time
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
+from . import principles
 from .models import Deal, Offer
 
 SCHEMA = """
@@ -88,6 +89,21 @@ CREATE TABLE IF NOT EXISTS cheapest (
     PRIMARY KEY (alert_id, source, route)
 );
 
+-- derselbe Artikel-Deal bei mehreren Deal-Seiten: jede Meldung einer Quelle, zugeordnet der
+-- Deal-Zeile der Erstmeldung (siehe dealmonitor.sightings)
+CREATE TABLE IF NOT EXISTS sightings (
+    deal_key    TEXT NOT NULL,          -- Ziel-Kabine-Reiseart, z. B. "MRU-economy-RT"
+    origin      TEXT NOT NULL DEFAULT '',   -- Abflug-IATA, kommagetrennt; leer = unbekannt
+    source      TEXT NOT NULL,
+    first_seen  TEXT NOT NULL,          -- Veröffentlichung laut Quelle (sonst erster Lauf)
+    price       REAL NOT NULL,
+    fingerprint TEXT NOT NULL,          -- Deal der Erstmeldung
+    link        TEXT,
+    UNIQUE (deal_key, source, fingerprint)
+);
+CREATE INDEX IF NOT EXISTS sightings_key ON sightings (deal_key);
+CREATE INDEX IF NOT EXISTS sightings_fp ON sightings (fingerprint);
+
 CREATE TABLE IF NOT EXISTS runs (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     trigger     TEXT NOT NULL,
@@ -124,6 +140,12 @@ FEED_SOURCE = "feed:travel-dealz"
 #: Bestpreise, die so lange in keinem Lauf mehr gesehen wurden, werden nicht mehr angezeigt
 CHEAPEST_MAX_AGE = timedelta(days=3)
 
+#: Payload-Felder eines Deals, die ein späterer Lauf nicht kennt und deshalb übernimmt:
+#: Quellenliste und Erstmeldung (``dealmonitor.sightings``)
+DEAL_KEEP = ("sources", "lead")
+#: Meldungen anderer Quellen werden so lange aufgehoben (für den Abgleich reichen 7 Tage)
+SIGHTINGS_MAX_AGE = timedelta(days=30)
+
 _INIT_LOCK = threading.Lock()
 _READY: set[str] = set()   # Dateien, deren Schema in diesem Prozess schon angelegt ist
 
@@ -131,6 +153,15 @@ _READY: set[str] = set()   # Dateien, deren Schema in diesem Prozess schon angel
 def now_iso() -> str:
     """Zeitstempel ISO 8601, lokal, ohne Zeitzone (2026-11-04T16:20:00)."""
     return datetime.now().isoformat(timespec="seconds")
+
+
+def _load(payload) -> dict:
+    """Gespeichertes JSON-Dict (kaputt oder kein Dict -> leer)."""
+    try:
+        value = json.loads(payload or "{}")
+    except (TypeError, ValueError):
+        return {}
+    return value if isinstance(value, dict) else {}
 
 
 def _restrict(path: str) -> None:
@@ -242,7 +273,7 @@ class Store:
     # -- Deals ------------------------------------------------------------
     def _deal_row(self, fingerprint: str):
         return self.db.execute(
-            "SELECT status, notified_price, expired_at FROM deals WHERE fingerprint=?",
+            "SELECT status, notified_price, expired_at, payload FROM deals WHERE fingerprint=?",
             (fingerprint,)).fetchone()
 
     @staticmethod
@@ -282,17 +313,26 @@ class Store:
         """
         now_s = (now or datetime.now()).isoformat(timespec="seconds")
         o = deal.offer
-        payload = json.dumps({
+        row = self._deal_row(deal.fingerprint)
+        data = {
             "origin": o.origin, "destination": o.destination,
             "departure": o.departure and o.departure.isoformat(),
             "return_date": o.return_date and o.return_date.isoformat(),
             "airline": o.airline, "stops": o.stops, "cabin": o.cabin,
             "roundtrip": o.roundtrip, "nights": o.nights,
             "reference_price": deal.reference_price, "discount": deal.discount,
-            "reasons": deal.reasons, "alert_name": deal.alert.name,
+            "reasons": list(deal.reasons), "alert_name": deal.alert.name,
             **o.extras(),       # insight, via_hub, … nur wenn gesetzt (alte Zeilen haben sie nicht)
-        }, ensure_ascii=False)
-        row = self._deal_row(deal.fingerprint)
+        }
+        if row is not None:     # Quellenliste/Erstmeldung (sightings) bleiben erhalten
+            old = _load(row["payload"])
+            for key in DEAL_KEEP:
+                if old.get(key) is not None:
+                    data[key] = old[key]
+            if isinstance(old.get("lead"), str) and old["lead"] not in data["reasons"]:
+                data["reasons"].append(old["lead"])
+        data["why"] = principles.why(data["reasons"])
+        payload = json.dumps(data, ensure_ascii=False)
 
         if row is None:
             self.db.execute(
@@ -426,6 +466,62 @@ class Store:
         cur = self.db.execute("DELETE FROM deals WHERE alert_id=?", (alert_id,))
         self.db.commit()
         return cur.rowcount
+
+    def has_deal(self, fingerprint: str) -> bool:
+        return self._deal_row(fingerprint) is not None
+
+    def update_deal_payload(self, fingerprint: str, **fields) -> bool:
+        """Einzelne Payload-Felder eines gespeicherten Deals setzen (z. B. ``sources``) - die
+        Kurzbegründung ``why`` wird aus den Gründen neu berechnet. ``False`` ohne Deal."""
+        row = self._deal_row(fingerprint)
+        if row is None:
+            return False
+        data = _load(row["payload"])
+        data.update(fields)
+        data["why"] = principles.why(data.get("reasons"))
+        self.db.execute("UPDATE deals SET payload=? WHERE fingerprint=?",
+                        (json.dumps(data, ensure_ascii=False), fingerprint))
+        self.db.commit()
+        return True
+
+    def deal_payload(self, fingerprint: str) -> dict | None:
+        row = self._deal_row(fingerprint)
+        return None if row is None else _load(row["payload"])
+
+    # -- Meldungen derselben Deals bei mehreren Quellen (dealmonitor.sightings) -----
+    def add_sighting(self, keys: list[str], origin: str, source: str, seen: datetime,
+                     price: float, fingerprint: str, link: str | None = None,
+                     now: datetime | None = None) -> None:
+        """Meldung einer Quelle merken (je Schlüssel eine Zeile; vorhandene bleiben, damit
+        ``first_seen`` die erste Meldung ist). Räumt Meldungen älter als 30 Tage weg."""
+        cutoff = ((now or datetime.now()) - SIGHTINGS_MAX_AGE).isoformat(timespec="seconds")
+        self.db.execute("DELETE FROM sightings WHERE first_seen < ?", (cutoff,))
+        self.db.executemany(
+            "INSERT OR IGNORE INTO sightings (deal_key, origin, source, first_seen, price, "
+            "fingerprint, link) VALUES (?,?,?,?,?,?,?)",
+            [(k, origin, source, seen.isoformat(timespec="seconds"), float(price), fingerprint,
+              link) for k in keys])
+        self.db.commit()
+
+    def sightings(self, keys: list[str] | None = None, *, fingerprint: str | None = None,
+                  since: datetime | None = None, until: datetime | None = None) -> list[dict]:
+        """Gemerkte Meldungen (älteste zuerst) - nach Schlüsseln und/oder Deal, im Zeitraum."""
+        sql, args = "SELECT * FROM sightings WHERE 1=1", []
+        if keys is not None:
+            if not keys:
+                return []
+            sql += " AND deal_key IN (%s)" % ",".join("?" * len(keys))
+            args += list(keys)
+        if fingerprint is not None:
+            sql += " AND fingerprint=?"
+            args.append(fingerprint)
+        if since is not None:
+            sql += " AND first_seen >= ?"
+            args.append(since.isoformat(timespec="seconds"))
+        if until is not None:
+            sql += " AND first_seen <= ?"
+            args.append(until.isoformat(timespec="seconds"))
+        return [dict(r) for r in self.db.execute(sql + " ORDER BY first_seen, rowid", args)]
 
     # -- Alarme -----------------------------------------------------------
     def alert_rows(self) -> list[dict]:

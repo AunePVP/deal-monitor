@@ -11,6 +11,11 @@ Zusätzlich (seit "Mehr Quellen"):
   gemeldet, mit Hinweis "nicht gegengeprüft".
 * Erst auswählen (Quellen-Abgleich, ``max_deals_per_alert``), dann speichern: Aussortierte
   Deals werden ohne "gemeldet"-Vermerk gespeichert und später gemeldet.
+* **Bewertung** (``principles``): Bezugspreis auch aus Googles Preisniveau, Fehlerpreis-Verdacht
+  (``_market``: eigene Preise der letzten 30 Tage, Economy-Median), Beinahe-Deals landen in den
+  Bestpreisen (``near``).
+* **Erstmeldung über alle Quellen** (``sightings``): Hat eine andere Deal-Seite denselben Artikel-
+  Deal schon gemeldet, wird er nicht noch einmal gemeldet, sondern ergänzt die Erstmeldung.
 * **Radar**: nach den Alarmen werden alle Flug-Artikel der Deal-Seiten auf Hammer-Deals geprüft
   (``dealmonitor.radar``), Artikel, die schon einem Alarm zugeordnet wurden, nicht noch einmal.
 """
@@ -20,14 +25,15 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, datetime
+from statistics import median
 
-from . import principles, radar
+from . import principles, radar, sightings
 from .config import Config
 from .models import Alert, Deal, Offer
 from .principles import euro
 from .sources import SourceError
-from .sources.feed import SAFE_LINK_RE, normalize_link
+from .sources.feed import SAFE_LINK_RE, analyze, normalize_link
 from .store import Store
 
 log = logging.getLogger(__name__)
@@ -163,12 +169,14 @@ def verify_deal(deal: Deal, verifier, today: date | None = None) -> str:
     o.stops = found.get("stops")
     o.duration_out_min = found.get("duration_min")
     o.duration_back_min = None                  # Google nennt nur die Hinflug-Dauer
+    old_insight = o.insight
+    o.insight = found.get("insight") or o.insight   # Preisniveau der Google-Strecke
     if not principles.reprice(deal, google_price, today):
         o.price, o.airline, o.stops, o.duration_out_min, o.duration_back_min = old
+        o.insight = old_insight
         log.info("Deal verworfen: %s - bei Google Flights %s, damit kein Deal mehr", what,
                  euro(google_price))
         return "rejected"
-    o.insight = found.get("insight") or o.insight   # Preisniveau der Google-Strecke
     details = [x for x in (o.airline, None if o.stops is None else
                            ("direkt" if o.stops == 0 else f"{o.stops} Umstieg"
                             + ("e" if o.stops > 1 else ""))) if x]
@@ -210,7 +218,7 @@ CHEAPEST_RULES = ("origins", "destinations", "trip", "cabin", "max_stops", "max_
                   "min_nights", "max_nights", "exclude_airlines", "feed_keywords")
 
 
-def _entry(o: Offer, confirmed: bool) -> dict:
+def _entry(o: Offer, confirmed: bool, near: list[str] | None = None) -> dict:
     return {
         "price": o.price,
         "origin": o.origin or None, "destination": o.destination or None,
@@ -223,12 +231,14 @@ def _entry(o: Offer, confirmed: bool) -> dict:
         "published": o.found_at.isoformat(timespec="minutes") if o.title and o.found_at else None,
         "kind": "article" if o.title else ("live" if o.source in LIVE_SOURCES else "cache"),
         "confirmed": confirmed,
+        **({"near": near} if near else {}),
         **o.extras(),
     }
 
 
 def cheapest_entries(alert: Alert, offers: list[Offer], deals: list[Deal],
-                     rejected_fps: set[str], today: date | None = None) -> dict[str, dict[str, dict]]:
+                     rejected_fps: set[str], today: date | None = None, *,
+                     near: dict[int, list[str]] | None = None) -> dict[str, dict[str, dict]]:
     """Bestpreise: je Offer-Quelle und Strecke das günstigste Angebot, das zu den Regeln des
     Alarms passt (Kabine, Reiseart, Umstiege, Dauer, Nächte, Airlines) - *ohne* Preisgrenze.
     Artikel der Deal-Seiten zählen je Seite als eine Strecke ``artikel``.
@@ -239,8 +249,12 @@ def cheapest_entries(alert: Alert, offers: list[Offer], deals: list[Deal],
     Zusätzlich wird je Strecke der günstigste bestätigte Preis gesondert gespeichert
     (``<strecke>|bestätigt``), damit er neben einem billigeren ungeprüften sichtbar bleibt.
 
+    ``near``: Beinahe-Deals (``id(offer)`` -> Gründe aus ``principles.near_deal``) - ihr Eintrag
+    trägt dann ``near`` (für die Liste "Beinahe-Deals" je Alarm).
+
     Rückgabe: ``{offer.source: {strecke: angaben}}``.
     """
+    near = near or {}
     confirmed = {id(d.offer) for d in deals if is_confirmed(d)}
     rejected = {id(o) for o in offers if f"{alert.id}:{o.fingerprint}" in rejected_fps}
     checked = {_slot(o) for o in offers if id(o) in confirmed or id(o) in rejected}
@@ -249,7 +263,7 @@ def cheapest_entries(alert: Alert, offers: list[Offer], deals: list[Deal],
     def put(source: str, route: str, o: Offer, ok: bool) -> None:
         cur = out[source].get(route)
         if cur is None or o.price < cur["price"]:
-            out[source][route] = _entry(o, ok)
+            out[source][route] = _entry(o, ok, near.get(id(o)))
 
     for o in offers:
         if id(o) in rejected or principles.quality_problems(alert, o, today):
@@ -344,14 +358,19 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
             by_route[o.route_key].append(o)
 
         deals: list[Deal] = []
+        near: dict[int, list[str]] = {}     # Beinahe-Deals: id(offer) -> Gründe
         for route_key, route_offers in by_route.items():
             # Referenz VOR dem Speichern der neuen Preise bestimmen
             history = store.history(route_key, s.history_days) if source.records_history else []
+            market = _market(store, route_key, s) if source.records_history else None
             for o in route_offers:
-                d = principles.evaluate(alert, o, history,
-                                        min_samples=s.min_history_samples, today=today)
+                d = principles.evaluate(alert, o, history, min_samples=s.min_history_samples,
+                                        today=today, market=market)
                 if d:
                     deals.append(d)
+                elif (close := principles.near_deal(alert, o, history, today=today,
+                                                    min_samples=s.min_history_samples)):
+                    near[id(o)] = close
             if source.records_history:
                 store.add_prices(route_offers)
 
@@ -373,7 +392,8 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
                 store.refresh_deal(d)
         try:
             _save_cheapest(store, alert, source,
-                           cheapest_entries(alert, offers, deals, rejected_fps, today), incomplete)
+                           cheapest_entries(alert, offers, deals, rejected_fps, today, near=near),
+                           incomplete)
         except Exception:  # noqa: BLE001 - Anzeige darf den Lauf nie stoppen
             log.exception("[%s] %s: Bestpreise nicht gespeichert", alert.id, source.name)
         result.deals += len(best)
@@ -392,9 +412,11 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
     # "gemeldet"-Vermerk gespeichert - sonst käme es nie in Inbox/Webhook
     picked = best_across_sources(candidates) if len(sources) > 1 else list(candidates)
     picked_ids = {id(d) for d in picked}
+    # Artikel, die eine andere Deal-Seite schon gemeldet hat, ergänzen nur die Erstmeldung
+    checked, merged = first_reports(
+        store, [(d, store.deal_status(d, s.renotify_drop)) for d in picked], sources)
     pending: list[tuple[Deal, str]] = []
-    for d in picked:
-        status = store.deal_status(d, s.renotify_drop)
+    for d, status in checked:
         if status == "known":
             store.upsert_deal(d, s.renotify_drop)       # Preis/last_seen aktualisieren
         else:
@@ -408,7 +430,113 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
     for d in candidates:
         if id(d) not in picked_ids:
             store.upsert_deal(d, s.renotify_drop, notify=False)
+    _refresh_sources(store, merged, [d for d, _ in checked])
     return to_notify, result
+
+
+def _market(store: Store, route_key: str, settings) -> principles.Market:
+    """Eigene Preise der Strecke für den Fehlerpreis-Verdacht: die letzten 30 Tage
+    (Preissturz) und - bei Business/First - der Economy-Median derselben Strecke."""
+    try:
+        recent = store.history(route_key, principles.DROP_DAYS)
+        market = principles.Market(
+            recent=recent if len(recent) >= settings.min_history_samples else [])
+        base, _, cabin = route_key.rpartition("-")
+        if cabin in ("business", "first"):
+            eco = store.history(f"{base}-economy", settings.history_days)
+            if len(eco) >= settings.min_history_samples:
+                market.economy = float(median(eco))
+        return market
+    except Exception:  # noqa: BLE001 - Zusatzbewertung darf den Lauf nie stoppen
+        log.exception("Preisverlauf %s nicht lesbar", route_key)
+        return principles.Market()
+
+
+def _article_codes(sources: list):
+    """Abflug-/Ziel-Codes der Artikel, wie die Quelle sie nennt (Loader: Secret Flying,
+    ErrorFareAlerts, Travel-Dealz) - je normalisiertem Link. Erst bei Bedarf geladen."""
+    cache: dict[str, tuple[set, set]] | None = None
+
+    def lookup(link: str | None) -> tuple[set, set]:
+        nonlocal cache
+        if cache is None:
+            cache = {}
+            feed = _feed_source(sources)
+            try:
+                items = feed.all_items() if feed is not None else []
+            except Exception:  # noqa: BLE001 - ohne Codes zählt der Titel
+                items = []
+            for it in items:
+                try:
+                    info = analyze(it)
+                except Exception:  # noqa: BLE001
+                    continue
+                if info.origin_codes or info.dest_codes:
+                    cache[info.link] = (info.origin_codes, info.dest_codes)
+        return cache.get(normalize_link(link or ""), (set(), set()))
+    return lookup
+
+
+def first_reports(store: Store, pending: list[tuple[Deal, str]], sources: list
+                  ) -> tuple[list[tuple[Deal, str]], dict[str, list[Deal]]]:
+    """Neue Artikel-Deals gegen die Meldungen anderer Quellen prüfen (``sightings``): Hat eine
+    andere Deal-Seite denselben Deal schon gemeldet, wird er nicht erneut gemeldet, sondern
+    der Erstmeldung zugeordnet. Früher veröffentlichte Artikel zuerst, damit im selben Lauf
+    die älteste Meldung gewinnt. Rückgabe: (weiter zu meldende, {Erstmeldung: [Deals]})."""
+    codes = _article_codes(sources)
+    kept: list[tuple[Deal, str]] = []
+    merged: dict[str, list[Deal]] = defaultdict(list)
+    fresh: set[str] = set()       # Erstmeldungen dieses Laufs (noch nicht gespeichert)
+    for d, status in sorted(pending, key=lambda x: x[0].offer.found_at or datetime.min):
+        if not d.offer.title:
+            kept.append((d, status))
+            continue
+        try:
+            info = sightings.parts(d.offer, *codes(d.offer.link))
+            # schon gespeicherte Deals (auch aus der Zeit vor dem Abgleich) zählen als Erstmeldung
+            first = sightings.first_report(store, d, info, fresh) if status == "new" else None
+            sightings.record(store, d.offer, info, first or d.fingerprint)
+        except Exception:  # noqa: BLE001 - im Zweifel lieber doppelt melden als gar nicht
+            log.exception("Abgleich über Quellen fehlgeschlagen: %s", d.headline)
+            first = None
+        if first is None:
+            fresh.add(d.fingerprint)
+            kept.append((d, status))
+        else:
+            log.info("Schon gemeldet (andere Quelle): %s", d.headline)
+            merged[first].append(d)
+    return kept, merged
+
+
+def _record_twins(store: Store, twins: list[tuple[Offer, Deal]], merged: dict[str, list[Deal]],
+                  sources: list) -> None:
+    """Radar: derselbe Deal bei zwei Seiten im selben Lauf ("Auch bei …") - beide Meldungen
+    der Erstmeldung zuordnen, damit Quellenliste und Vorsprung stimmen."""
+    group = {d.fingerprint: fp for fp, ds in merged.items() for d in ds}
+    codes = _article_codes(sources)
+    for twin, primary in twins:
+        fp = group.get(primary.fingerprint, primary.fingerprint)
+        try:
+            if abs(twin.found_at - primary.offer.found_at) > sightings.WINDOW:
+                continue            # alter Artikel, neu aufgelegt: kein Vorsprung
+
+            for o in (primary.offer, twin):
+                sightings.record(store, o, sightings.parts(o, *codes(o.link)), fp)
+        except Exception:  # noqa: BLE001
+            log.exception("Quellenliste von %s nicht ergänzt", primary.headline)
+            continue
+        merged.setdefault(fp, [])
+
+
+def _refresh_sources(store: Store, merged: dict[str, list[Deal]], deals: list[Deal]) -> None:
+    """Quellenliste und Vorsprung der Erstmeldungen aktualisieren (gespeichert und - falls
+    im selben Lauf gemeldet - in der Meldung)."""
+    by_fp = {d.fingerprint: d for d in deals}
+    for fp in merged:
+        try:
+            sightings.refresh(store, fp, by_fp.get(fp))
+        except Exception:  # noqa: BLE001
+            log.exception("Quellenliste von %s nicht aktualisiert", fp)
 
 
 def _feed_source(sources: list):
@@ -428,8 +556,9 @@ def run_radar(sources: list, store: Store, cfg: Config, settings: radar.RadarSet
     feed = _feed_source(sources)
     if feed is None or not settings.enabled:
         return [], result
+    twins: list[tuple[Offer, Deal]] = []
     try:
-        deals = radar.scan(feed, settings, exclude_links=exclude_links)
+        deals = radar.scan(feed, settings, exclude_links=exclude_links, twins=twins)
     except SourceError as e:
         msg = f"[{radar.RADAR_ALERT_ID}] {feed.name}: {e}"
         log.warning(msg)
@@ -441,12 +570,17 @@ def run_radar(sources: list, store: Store, cfg: Config, settings: radar.RadarSet
         result.errors.append(msg)
         return [], result
     result.radar = len(deals)
+    # Schon von einer anderen Deal-Seite gemeldet (früherer Lauf): nur der Erstmeldung zuordnen
+    kept, merged = first_reports(
+        store, [(d, store.deal_status(d, s.renotify_drop)) for d in deals], sources)
     to_notify: list[tuple[Deal, str]] = []
-    for d in deals:
+    for d, _ in kept:
         status = store.upsert_deal(d, s.renotify_drop)
         if status != "known":
             to_notify.append((d, status))
-    seen = {d.fingerprint for d in deals}
+    _record_twins(store, twins, merged, sources)
+    _refresh_sources(store, merged, [d for d, _ in kept])
+    seen = {d.fingerprint for d, _ in kept}
     partial = getattr(feed, "load_errors", None)
     if partial:
         result.errors.append(f"[{radar.RADAR_ALERT_ID}] {feed.name}: {partial}")

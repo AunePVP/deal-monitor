@@ -19,7 +19,7 @@ import logging
 import os
 
 from . import http
-from .principles import euro
+from .principles import euro, suspected_error_fare, why
 from .models import Deal
 from .sources.feed import SAFE_LINK_RE, source_label
 
@@ -62,11 +62,20 @@ def article_price(deal: Deal) -> str | None:
     return f"Preis: ab {euro(o.price)}" if o.price and o.price > 0 else "Preis: siehe Artikel"
 
 
+def priority(deal: Deal) -> int:
+    """ntfy-Priorität: Fehlerpreis-Verdacht dringend (5), Top-Deal hoch (4), sonst normal."""
+    if suspected_error_fare(deal.reasons):
+        return 5
+    return 4 if deal.rating == "Top-Deal" else 3
+
+
 def format_text(deal: Deal, status: str) -> str:
     o = deal.offer
     lines = [f"[{STATUS_LABEL.get(status, status)}] {deal.rating}: {deal.headline}"]
     if (line := article_price(deal)):
         lines.append(line)
+    if (short := why(deal.reasons)):
+        lines.append(f"Warum: {short}")
     if o.departure:
         when = o.departure.strftime("%d.%m.%Y")
         if o.return_date:
@@ -128,6 +137,8 @@ class Telegram:
                      f"<b>{html.escape(deal.rating)}:</b> {html.escape(deal.headline)}"]
             if (line := article_price(deal)):
                 parts.append(html.escape(line))
+            if (short := why(deal.reasons)):
+                parts.append(f"<i>Warum: {html.escape(short)}</i>")
             if o.departure:
                 when = o.departure.strftime("%d.%m.%Y")
                 if o.return_date:
@@ -187,7 +198,7 @@ class Ntfy:
                 "title": f"{alert_name}: {price_text(deal.offer.price)} ({deal.rating})",
                 "message": format_text(deal, status),
                 "tags": ["airplane"],
-                "priority": 4 if deal.rating == "Top-Deal" else 3,
+                "priority": priority(deal),
             }
             if (link := safe_link(deal.offer.link)):
                 msg["click"] = link
@@ -221,6 +232,7 @@ class Webhook:
                 "return": d.offer.return_date and d.offer.return_date.isoformat(),
                 "link": safe_link(d.offer.link), "compare": compare_link(d), "source": d.offer.source,
                 "source_label": source_label(d.offer.source), "reasons": list(d.reasons),
+                "why": why(d.reasons), "error_fare": suspected_error_fare(d.reasons),
             } for d, s in items],
         }
         headers = {"Content-Type": "application/json"}

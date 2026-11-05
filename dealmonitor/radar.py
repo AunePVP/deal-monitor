@@ -7,7 +7,8 @@ Alarmname "Radar: Hammer-Deals", ``rating = "Radar"``).
 Regeln (Einstellungen ``radar_*``, Umgebungsvariablen ``RADAR_*``):
 
 * Immer melden: Überschrift/Kategorie nennt Error Fare, Fehlerpreis, Hammer, Kracher,
-  Knaller, Wahnsinn, Preisfehler, Mistake fare, price error.
+  Knaller, Wahnsinn, Preisfehler, Mistake fare, price error, Glitch, CRAZY HOT, PRICE DROP
+  oder Preissturz ("Sale"/"Flash" zählen nicht - nur mit Preis unter der Grenze).
 * Economy ≤ ``radar_economy_max`` (Standard 300 €) - aber ≥ ``radar_economy_min``
   (Standard 40 €), damit Kurzstrecken-Promos wie "Ryanair ab 14,99€" nicht alarmieren.
 * Premium Economy ≤ 700 €, Business ≤ 1.300 €, First ≤ 2.500 €.
@@ -63,12 +64,15 @@ LABELS: dict[str, str] = {
 HOT_RE = re.compile(
     r"\b(?:error[\s-]?fares?|errorfares?|fehlerpreis\w*|preisfehler|"
     r"hammer(?:[\s-]?(?:deal|preis|angebot)s?)?\b|kracher|knaller|wahnsinn\w*|"
-    r"mistake[\s-]?fares?|price[\s-]?errors?)", re.I)
+    r"mistake[\s-]?fares?|price[\s-]?errors?|glitch\w*|crazy[\s-]?hot\b|"
+    r"price[\s-]?drops?\b|preisst(?:urz|ürze)\w*)", re.I)
 HOT_LABELS = [
-    (re.compile(r"error[\s-]?fares?|errorfares?|mistake[\s-]?fares?|price[\s-]?errors?", re.I),
-     "Error Fare laut Überschrift"),
+    (re.compile(r"error[\s-]?fares?|errorfares?|mistake[\s-]?fares?|price[\s-]?errors?|glitch",
+                re.I), "Error Fare laut Überschrift"),
     (re.compile(r"fehlerpreis|preisfehler", re.I), "Fehlerpreis laut Überschrift"),
-    (re.compile(r"hammer|kracher|knaller|wahnsinn", re.I), "Als Hammer-Deal angekündigt"),
+    (re.compile(r"price[\s-]?drop|preisst(?:urz|ürze)", re.I), "Preissturz laut Überschrift"),
+    (re.compile(r"hammer|kracher|knaller|wahnsinn|crazy[\s-]?hot", re.I),
+     "Als Hammer-Deal angekündigt"),
 ]
 
 
@@ -201,7 +205,8 @@ def _offer(item: dict, info: feed_mod.ItemInfo, hub: tuple[str, float] | None = 
 
 
 def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
-         exclude_links: set[str] | None = None) -> list[Deal]:
+         exclude_links: set[str] | None = None,
+         twins: list[tuple[Offer, Deal]] | None = None) -> list[Deal]:
     """Alle Flug-Artikel prüfen und Radar-Deals liefern (günstigste zuerst, Error Fares vorn).
 
     ``items_or_source``: eine :class:`FeedSource` (``load``/``all_items`` wird aufgerufen)
@@ -209,6 +214,8 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
     gemeldet werden (der Monitor übergibt die Artikel, die Deal eines Alarms wurden); ohne
     Angabe werden die Artikel aus ``FeedSource.matched_links`` ausgelassen. ``settings``: :class:`RadarSettings` oder Dict mit
     ``radar_*``-Werten. Fehler beim Laden (``SourceError``) werden durchgereicht.
+    ``twins``: Liste, in die derselbe Deal von einer zweiten Seite als ``(Offer, Deal)``
+    eingetragen wird (für die Quellenliste über ``dealmonitor.sightings``).
     """
     if isinstance(settings, dict) or settings is None:
         settings = RadarSettings.from_values(settings)
@@ -247,6 +254,8 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
         if twin is not None:      # gleicher Deal bei einer zweiten Seite: einmal melden
             twin.reasons.append(f"Auch bei {feed_mod.source_label(info.source)}: "
                                 f"{euro(info.price)}")
+            if twins is not None:
+                twins.append((_offer(it, info, radar_hub(info, settings)), twin))
             continue
         deal = Deal(alert=RADAR_ALERT, offer=_offer(it, info, radar_hub(info, settings)),
                     rating=RATING,
