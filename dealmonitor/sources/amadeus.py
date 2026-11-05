@@ -1,9 +1,11 @@
 """Preisquelle: Amadeus Self-Service APIs (Flight Cheapest Date Search, Flight Offers Search).
 
-Achtung: Der Amadeus Self-Service (developers.amadeus.com, kostenlose Keys) ist laut Anbieter
-seit 17.07.2026 eingestellt; neue Keys gibt es nur noch für Enterprise-Kunden (Recherche in
-docs/handoff/research/preis-apis/NOTES.md). Die Quelle ist nur mit einem noch gültigen Key
-nutzbar. Test-Umgebung ``test.api.amadeus.com``, Produktion ``api.amadeus.com``; die Umgebung
+**Status: abgeschaltet seit 17.07.2026** (``STATUS``). Der Amadeus Self-Service
+(developers.amadeus.com, kostenlose Keys) ist eingestellt, ``test.api.amadeus.com`` antwortet
+nicht mehr (CONNECT 502, geprüft 05.11.2026), ``api.amadeus.com`` nur noch für Enterprise-Kunden
+(HTTP 401). Recherche: docs/handoff/research/preis-apis/NOTES.md. Die Quelle ist standardmäßig
+aus und in der Oberfläche als abgeschaltet markiert; der Code bleibt für einen evtl. noch
+gültigen Enterprise-Key (und weil Tests ihn nutzen). Test-Umgebung ``test.api.amadeus.com``, Produktion ``api.amadeus.com``; die Umgebung
 wählt die Einstellung ``amadeus_env`` ("test"|"production").
 
 **Stand: strikt nach Doku umgesetzt (OpenAPI-Spezifikation und Developer-Guides von
@@ -67,12 +69,16 @@ DEFAULT_DURATION = (1, 30)
 #: frühester Abflugtag = heute + so viele Tage (heute selbst wird nicht mehr abgefragt)
 MIN_LEAD_DAYS = 1
 
+#: Self-Service eingestellt - für Meldungen, Einstellungen und Oberfläche
+SHUTDOWN_DATE = "17.07.2026"
+STATUS = f"abgeschaltet seit {SHUTDOWN_DATE}"
+SHUTDOWN_HINT = f"Amadeus Self-Service ist {STATUS}"
+
 KEY_REJECTED = "Amadeus lehnt den Key ab"
 KEY_HINT = "bitte API Key und Secret in den Einstellungen prüfen"
-MISSING_KEY = ("Amadeus-Key/Secret fehlen - der Self-Service ist laut Anbieter seit 17.07.2026 "
-               "eingestellt (nur Enterprise). Mit einem gültigen Key in den Einstellungen "
-               "eintragen (oder AMADEUS_API_KEY/AMADEUS_API_SECRET setzen), sonst Amadeus "
-               "ausschalten.")
+MISSING_KEY = (f"Amadeus-Key/Secret fehlen - {SHUTDOWN_HINT} (nur noch Enterprise). Mit einem "
+               "gültigen Key in den Einstellungen eintragen (oder AMADEUS_API_KEY/"
+               "AMADEUS_API_SECRET setzen), sonst Amadeus ausschalten.")
 RATE_LIMITED = "Amadeus-Limit erreicht (HTTP 429{detail}) - später erneut"
 
 #: JSON-Felder aus Fehlerantworten, die in der Meldung landen (Reihenfolge = Vorrang)
@@ -262,7 +268,7 @@ class AmadeusClient:
             elif e.status == 429:
                 self._down = RATE_LIMITED.format(detail="")
             else:
-                self._down = f"Amadeus nicht erreichbar (Token-Anfrage): {e}"
+                self._down = f"Amadeus nicht erreichbar (Token-Anfrage): {e} - {SHUTDOWN_HINT}."
             raise SourceError(self._down) from None
         try:
             data = json.loads(raw)
@@ -340,7 +346,7 @@ class AmadeusClient:
             self._consecutive_failures += 1
             if self._consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
                 self._down = (f"Amadeus nicht erreichbar ({self._consecutive_failures} Fehler "
-                              f"hintereinander, Prüfung abgebrochen): {e}")
+                              f"hintereinander, Prüfung abgebrochen): {e} - {SHUTDOWN_HINT}.")
                 raise SourceError(self._down) from None
         else:
             self._consecutive_failures = 0

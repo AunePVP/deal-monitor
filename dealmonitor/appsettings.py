@@ -35,7 +35,7 @@ DEFAULT_SOURCES = ["travelpayouts", "google_flights", "feeds"]
 #: Anteil des Google-Budgets, den der Scan für die Gegenprüfung übrig lässt (1/4)
 VERIFY_RESERVE_DIVISOR = 4
 SOURCE_LABELS = {"travelpayouts": "Travelpayouts (Preis-API)", "google_flights": "Google Flights",
-                 "amadeus": "Amadeus", "feeds": "Deal-Seiten (Feeds)"}
+                 "amadeus": "Amadeus (abgeschaltet seit 17.07.2026)", "feeds": "Deal-Seiten (Feeds)"}
 
 #: Geheimnisse -> Umgebungsvariable. Werden nie im Klartext ausgeliefert.
 SECRETS: dict[str, str] = {
