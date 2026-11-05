@@ -501,8 +501,10 @@ async function desktopFlows(browser) {
     assert(await page.inputValue("#f-max-price") === "450", "Preis nicht vorbelegt");
     assert(await page.isHidden("#f-reverse-wrap"), "Gegenrichtung beim Bearbeiten sichtbar");
     assert(/VIE/.test(await page.textContent("#f-origins .chip-list")), "Von nicht vorbelegt");
+    assert(!(await page.isChecked("#f-rotation")), "Tagesrotation ungefragt an");
     await page.fill("#f-max-price", "399");
     await page.fill("#f-baseline", ""); // optionales Feld leeren → null
+    await page.check("#f-rotation");
     await page.click("#alert-save");
     await page.waitForSelector("#alert-dialog[open]", { state: "detached" });
     await waitToast(page, /gespeichert/);
@@ -512,6 +514,7 @@ async function desktopFlows(browser) {
     assert(a.max_price === 399, `API max_price ${a.max_price}`);
     assert(a.baseline_price === null || a.baseline_price === undefined, `Normalpreis nicht geleert: ${a.baseline_price}`);
     assert(a.min_nights === 5, "Andere Felder verloren");
+    assert(a.rotation === true, "Tagesrotation nicht gespeichert");
   });
 
   await step("Deutsche Zahlen und Airline-Codes im Formular", async () => {

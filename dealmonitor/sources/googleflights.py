@@ -28,21 +28,27 @@ typische Spanne, Verlauf); es hängt an jeder Offer (``Offer.insight``) und jede
 Google liefert gelegentlich eine leere Suchmaske oder eine ErrorResponse - dann genau ein
 zweiter Abruf (zählt aufs Budget). Bleibt auch der leer, gilt das als "Abruf leer"
 (``empty_fetches``), nicht als Netzfehler.
+
+Alarme mit ``rotation = true`` fragen statt zwei Terminen je Monat reihum jeden Abflugtag
+einzeln als One-way ab (``dealmonitor.rotation``), im Rahmen ihres Budget-Anteils. Zwischen zwei
+Prüfungen eines Tages gilt der zuletzt gesehene Preis (Quellen-Zustand ``google-rotation``);
+Hin/Rück-Alarme bekommen daraus zusätzlich Angebote "kombiniert aus 2 One-way".
 """
 
 from __future__ import annotations
 
 import gzip
+import hashlib
 import html as html_mod
 import logging
 import random
 import re
 import time
 import zlib
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from urllib.parse import quote, urlsplit
 
-from .. import http, regions
+from .. import http, regions, rotation
 from ..models import Alert, Offer
 from . import SourceError, google_insights
 
@@ -403,6 +409,9 @@ class GoogleFlightsSource:
         fetcher=None,
         seed: int | None = None,
         verify_reserve: int = 0,
+        state_store=None,
+        period_hours: float = rotation.PERIOD_HOURS,
+        now: datetime | None = None,
     ) -> None:
         self.max_requests = max(int(max_requests), 0)
         #: so viele Abfragen lässt der Scan für die Gegenprüfung übrig
@@ -415,6 +424,12 @@ class GoogleFlightsSource:
         #: ``fetcher(url) -> html`` - für Tests/Demo austauschbar (Standard: ``fetch_html``)
         self.fetcher = fetcher
         self.rng = random.Random(seed)
+        #: Store für das Rotations-Gedächtnis (None = gilt nur für dieses Objekt)
+        self.state_store = state_store
+        #: Takt der vollen Läufe - danach zählt der Lauf-Index der Rotation weiter
+        self.period_hours = period_hours
+        self.now = now
+        self._memory: rotation.Memory | None = None
         #: nach ``fetch``: None = alles abgefragt, sonst {"message": str, "routes": {(o, d), ...}}
         self.incomplete: dict | None = None
         #: Grund des letzten gescheiterten ``verify`` (None = ok)
@@ -443,6 +458,8 @@ class GoogleFlightsSource:
         self._consecutive_empty = 0
         #: Scan-Budget je Alarm (``begin_run``); ohne Eintrag gilt das ganze Scan-Budget
         self._shares: dict[str, int] = {}
+        #: so lange gelten Preise im Rotations-Gedächtnis (längster Durchgang dieses Laufs)
+        self._keep_hours = 0.0
 
     @property
     def scan_budget(self) -> int:
@@ -581,7 +598,10 @@ class GoogleFlightsSource:
 
     # -- Scan (Source-Protokoll) --------------------------------------------
     def plan(self, alert: Alert) -> list[tuple[str, str, date, date | None]]:
-        """Abfragen für einen Alarm: Strecken zufällig, Monate nah -> fern, 2 Termine je Monat."""
+        """Abfragen für einen Alarm: Strecken zufällig, Monate nah -> fern, 2 Termine je Monat.
+        Mit ``alert.rotation``: das Stück der Tagesrotation für diesen Lauf (One-ways)."""
+        if alert.rotation:
+            return self._rotation_plan(alert)
         today = self.today or date.today()
         pairs = list(alert.pairs)
         self.rng.shuffle(pairs)
@@ -610,8 +630,10 @@ class GoogleFlightsSource:
         affected: set[tuple[str, str]] = set()
         share = self._shares.get(alert.id)
         used = 0
+        roundtrip = alert.roundtrip and not alert.rotation      # Rotation: immer One-ways
+        fresh: set[tuple[str, str, date]] = set()
         for origin, dest, dep, ret in plan:
-            url = build_url(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
+            url = build_url(origin, dest, dep, ret, alert.cabin, roundtrip)
             cached = url in self._cache
             if not cached and (self.scans_made >= self.scan_budget
                                or self.requests_made >= self.max_requests
@@ -624,7 +646,7 @@ class GoogleFlightsSource:
                 self.scans_made += 1
             before = self.requests_made
             try:
-                results = self.query(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
+                results = self.query(origin, dest, dep, ret, alert.cabin, roundtrip)
             except GoogleBlocked:
                 self._release_share(share)
                 raise SourceError(self._down or BLOCKED_MESSAGE) from None
@@ -644,9 +666,19 @@ class GoogleFlightsSource:
                 retried = max(self.requests_made - before - 1, 0)
                 used += retried
                 self.scans_made += retried
-            offers += self.to_offers(results, alert, origin, dest, dep, ret, url,
-                                     insight=self.insight(url))
+            if alert.rotation:
+                self.memory.put(origin, dest, alert.cabin, dep, results, self.insight(url),
+                                self._now())
+                fresh.add((origin, dest, dep))
+            if roundtrip == alert.roundtrip:      # Rotation bei Hin/Rück: nur kombiniert
+                offers += self.to_offers(results, alert, origin, dest, dep, ret, url,
+                                         insight=self.insight(url))
         self._release_share(share)
+        if alert.rotation:
+            offers += self._remembered(alert, fresh)
+            self._save_memory(alert, total)
+        if alert.roundtrip:
+            offers += self.combined(alert)
         if total and errors == total:
             raise SourceError(f"Alle {total} Google-Flights-Abfragen fehlgeschlagen")
         if skipped or errors:
@@ -658,6 +690,117 @@ class GoogleFlightsSource:
                              + (f" (davon {empty} leer)" if empty else ""))
             self.incomplete = {"message": "; ".join(parts), "routes": affected}
         return offers
+
+    # -- Datumsrotation (``dealmonitor.rotation``) -----------------------------
+    def _now(self) -> datetime:
+        return self.now or datetime.now()
+
+    def _rotation_plan(self, alert: Alert) -> list[tuple[str, str, date, None]]:
+        """So viele (Strecke, Tag)-Abfragen, wie der Budget-Anteil des Alarms hergibt (ohne
+        ``begin_run``: ``rotation.PER_RUN``) - ein fester Anteil hält den Kreis lückenlos."""
+        share = self._shares.get(alert.id)
+        picked = rotation.slice_for_run(
+            self._now(), rotation.routes_for(alert), rotation.horizon_for(alert, self.scan_months),
+            rotation.PER_RUN if share is None else share, today=self.today or date.today(),
+            period_hours=self.period_hours)
+        return [(o, d, day, None) for o, d, day in picked]
+
+    @property
+    def memory(self) -> rotation.Memory:
+        """Rotations-Gedächtnis (beim ersten Zugriff aus dem Store geladen)."""
+        if self._memory is None:
+            data = None
+            if self.state_store is not None:
+                try:
+                    data = self.state_store.source_state(rotation.STATE_NAME)
+                except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
+                    log.exception("Google-Rotation: gespeicherte Preise nicht lesbar")
+            self._memory = rotation.Memory(data)
+        return self._memory
+
+    def _save_memory(self, alert: Alert, per_run: int) -> None:
+        """Veraltetes entfernen und speichern. Ein Preis gilt 1,5 Durchgänge lang (mindestens
+        ``rotation.MIN_KEEP_HOURS``, höchstens ``rotation.MAX_KEEP_HOURS``)."""
+        cycle = rotation.cycle_hours(rotation.routes_for(alert),
+                                     rotation.horizon_for(alert, self.scan_months), per_run,
+                                     self.period_hours)
+        keep = min(max(rotation.MIN_KEEP_HOURS, 1.5 * cycle), rotation.MAX_KEEP_HOURS)
+        self._keep_hours = max(self._keep_hours, keep)
+        mem = self.memory
+        if mem.keep_hours != self._keep_hours:
+            mem.keep_hours, mem.changed = self._keep_hours, True
+        mem.prune(self.today or date.today(), self._now())
+        if mem.changed and self.state_store is not None:
+            try:
+                self.state_store.set_source_state(rotation.STATE_NAME, mem.dump())
+                mem.changed = False
+            except Exception:  # noqa: BLE001
+                log.exception("Google-Rotation: Preise nicht gespeichert")
+
+    def _remembered(self, alert: Alert, fresh: set[tuple[str, str, date]]) -> list[Offer]:
+        """One-way-Alarm: die zuletzt gesehenen Preise der Tage, die dieser Lauf nicht abgefragt
+        hat - so laufen ihre Deals nicht ab und die Bestpreise decken den ganzen Horizont ab."""
+        if alert.roundtrip:
+            return []
+        today, now = self.today or date.today(), self._now()
+        last = today + timedelta(days=rotation.horizon_for(alert, self.scan_months))
+        out: list[Offer] = []
+        for o, d in alert.pairs:
+            for day, entry in sorted(self.memory.get(o, d, alert.cabin, today, now).items()):
+                if (o, d, day) in fresh or day > last:
+                    continue
+                out += self.to_offers(entry["rows"], alert, o, d, day, None,
+                                      build_url(o, d, day, None, alert.cabin, False),
+                                      insight=entry["insight"])
+        return out
+
+    def _legs(self, origin: str, dest: str, alert: Alert, today: date,
+              now: datetime) -> dict[date, dict]:
+        """Je Tag die günstigste One-way-Zeile im Gedächtnis, die zu den Alarm-Regeln passt."""
+        criteria = alert_criteria(alert)
+        out = {}
+        for day, entry in self.memory.get(origin, dest, alert.cabin, today, now).items():
+            row = next((r for r in entry["rows"] if row_problem(r, **criteria) is None), None)
+            if row:
+                out[day] = {**row, "at": entry["at"],
+                            "link": build_url(origin, dest, day, None, alert.cabin, False)}
+        return out
+
+    def combined(self, alert: Alert) -> list[Offer]:
+        """Hin/Rück aus zwei One-ways der Rotation: je Hinflug-Tag der günstigste Rückflug
+        innerhalb ``min_nights..max_nights``; gekennzeichnet über ``Offer.legs``."""
+        if not alert.roundtrip:
+            return []
+        today, now = self.today or date.today(), self._now()
+        out: list[Offer] = []
+        for o, d in alert.pairs:
+            there = self._legs(o, d, alert, today, now)
+            back = self._legs(d, o, alert, today, now) if there else {}
+            for dep, ret, a, b in rotation.combine(there, back, alert.min_nights,
+                                                   alert.max_nights):
+                out.append(self._combo(alert, o, d, dep, ret, a, b))
+        return out
+
+    def _combo(self, alert: Alert, origin: str, dest: str, dep: date, ret: date,
+               there: dict, back: dict) -> Offer:
+        def leg(o: str, d: str, day: date, row: dict) -> dict:
+            return {"origin": o, "destination": d, "departure": day.isoformat(),
+                    "price": row["price"], "airline": row.get("airline") or row.get("airline_code"),
+                    "stops": row.get("stops"), "link": row["link"],
+                    "seen": row["at"].isoformat(timespec="minutes")}
+        legs = [leg(origin, dest, dep, there), leg(dest, origin, ret, back)]
+        airline = " / ".join(dict.fromkeys(x["airline"] for x in legs if x["airline"])) or None
+        stops = [x["stops"] for x in legs if x["stops"] is not None]
+        # eigene Identität: nie derselbe Deal wie ein echter Hin/Rück-Flug mit gleichen Daten
+        ident = hashlib.sha1(f"{self.name}|2xOW|{origin}|{dest}|{dep}|{ret}|{airline}"
+                             .encode()).hexdigest()[:16]
+        return Offer(source=self.name, origin=origin.upper(), destination=dest.upper(),
+                     price=round(there["price"] + back["price"], 2), currency="EUR",
+                     roundtrip=True, cabin=alert.cabin, departure=dep, return_date=ret,
+                     airline=airline, stops=max(stops) if stops else None,
+                     duration_out_min=there.get("duration_min"),
+                     duration_back_min=back.get("duration_min"),
+                     link=there["link"], ident=ident, legs=legs)
 
     def _release_share(self, share: int | None) -> None:
         """Alarm fertig gescannt: sein (ggf. unverbrauchter) Anteil ist nicht mehr reserviert."""

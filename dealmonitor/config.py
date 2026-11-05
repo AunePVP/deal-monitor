@@ -269,6 +269,8 @@ def normalize_alert(data: dict, existing: dict | None = None) -> dict:
         raise ValueError("Mindestens-Nächte dürfen nicht größer als Höchst-Nächte sein")
     if not isinstance(out["enabled"], bool):
         raise ValueError("'enabled' muss true oder false sein")
+    if not isinstance(out["rotation"], bool):
+        raise ValueError("„Jeden Tag prüfen“ muss true oder false sein")
     for key in ("trip", "cabin"):
         if not isinstance(out[key], str):
             raise ValueError(f"'{key}' muss ein Text sein")

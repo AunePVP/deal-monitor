@@ -118,3 +118,19 @@ Jedes Paket bringt eigene Tests (`tests/test_<paket>.py`) mit. Loader-Pakete (P1
 `models.py`, `store.py`, `currency.py` und der Loader-Teil von `feed.py` (Preset, `load_loader`,
 `normalize_item`, `analyze`, `stats`, `_fetch_loader`) sind nach Paket 0 eingefroren – Änderungswünsche
 als Hinweis an die Integration.
+
+## 8. Google-Datumsrotation (Paket 7)
+
+- `Alert.rotation: bool = False` (TOML, API, Formular „Jeden Tag einzeln prüfen“). Der Standard-Alarm
+  `zrh-ham-oneway` hat `rotation = true`; ältere Datenbanken bekommen es einmal über
+  `migrate_settings` (Version 4, nur wenn das Feld fehlt).
+- `googleflights.plan()` liefert für Rotations-Alarme ein Stück aus `rotation.slice_for_run`: One-way je
+  Tag, 90 Tage, bei Hin/Rück beide Richtungen. Größe = Budget-Anteil aus `begin_run` (ohne Planung
+  `PER_RUN = 23`) – andere Alarme (China) verlieren nichts. Kleines Budget = längerer Durchgang
+  (40 Abfragen/Lauf mit Reserve: 6 je Alarm → 30 Läufe für 180 Tage).
+- Gedächtnis: `store.source_state("google-rotation")` hält die zuletzt gesehenen One-way-Preise je Tag.
+  Daraus kommen nicht abgefragte Tage als Offers zurück (Deals laufen nicht ab, Bestpreis über den
+  ganzen Horizont) und Hin/Rück-Kombinationen für jeden Hin/Rück-Alarm derselben Strecke.
+- `Offer.legs` (in `EXTRA_FIELDS`): zwei Teilstrecken `{origin, destination, departure, price, airline,
+  stops, link, seen}` = „kombiniert aus 2 One-way“ (Grund in der Meldung über `rotation.note`, Badge
+  „2× One-way“ in der UI). Eigene `ident`: nie derselbe Deal wie ein echtes Hin/Rück.

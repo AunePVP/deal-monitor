@@ -26,7 +26,7 @@ from __future__ import annotations
 from datetime import date
 from statistics import median
 
-from . import hubs, regions
+from . import hubs, regions, rotation
 from .models import Alert, Deal, Offer
 
 CABIN_LABEL = {
@@ -176,9 +176,10 @@ def evaluate(
 
 
 def _with_hub(offer: Offer, reasons: list[str]) -> list[str]:
-    """Abflug ab Nachbar-Hub zuerst nennen: Ticketpreis + Zubringer = gemeldeter Preis."""
-    note = hubs.note(offer)
-    return ([note] if note else []) + list(reasons)
+    """Abflug ab Nachbar-Hub zuerst nennen: Ticketpreis + Zubringer = gemeldeter Preis.
+    Ebenso Hin/Rück, das aus zwei One-ways kombiniert ist (Google-Rotation)."""
+    notes = [n for n in (hubs.note(offer), rotation.note(offer)) if n]
+    return notes + list(reasons)
 
 
 def reprice(deal: Deal, price: float, today: date | None = None) -> bool:
