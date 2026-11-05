@@ -6,6 +6,9 @@
 * ntfy (Push)    - NTFY_TOPIC (optional NTFY_SERVER, Standard https://ntfy.sh)
 * Webhook        - WEBHOOK_URL (eigener Benachrichtigungsserver, Slack, Discord, n8n ...)
                    optional WEBHOOK_TOKEN -> Header "Authorization: Bearer <token>"
+
+Neben Deals melden Telegram, ntfy und Webhook auch kurze Status-Texte (``send_text``, z. B.
+"Quelle gestört" aus :mod:`dealmonitor.health`); Inbox und Konsole bleiben den Deals vorbehalten.
 """
 
 from __future__ import annotations
@@ -154,6 +157,21 @@ class Telegram:
                     msg = msg.replace(self.token, "***")
                 raise http.HttpError(msg, getattr(e, "status", None)) from None
 
+    def send_text(self, title: str, text: str, *, priority: int = 3, tags=()) -> None:
+        body = f"<b>{html.escape(title)}</b>\n{html.escape(text)}"
+        try:
+            http.request(
+                f"https://api.telegram.org/bot{self.token}/sendMessage",
+                data=json.dumps({"chat_id": self.chat_id, "text": body, "parse_mode": "HTML",
+                                 "disable_web_page_preview": True,
+                                 "disable_notification": priority < 3}).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+        except Exception as e:  # noqa: BLE001 - Token darf nie in Fehlertexten landen
+            msg = str(e).replace(self.token, "***") if self.token else str(e)
+            raise http.HttpError(msg, getattr(e, "status", None)) from None
+
 
 class Ntfy:
     name = "ntfy"
@@ -175,6 +193,12 @@ class Ntfy:
                 msg["click"] = link
             http.request(self.server, data=json.dumps(msg).encode(),
                          headers={"Content-Type": "application/json"}, method="POST")
+
+    def send_text(self, title: str, text: str, *, priority: int = 3, tags=()) -> None:
+        msg = {"topic": self.topic, "title": title, "message": text,
+               "tags": list(tags) or ["warning"], "priority": priority}
+        http.request(self.server, data=json.dumps(msg).encode(),
+                     headers={"Content-Type": "application/json"}, method="POST")
 
 
 class Webhook:
@@ -203,6 +227,34 @@ class Webhook:
         if self.token:
             headers["Authorization"] = f"Bearer {self.token}"
         http.request(self.url, data=json.dumps(payload).encode(), headers=headers, method="POST")
+
+    def send_text(self, title: str, text: str, *, priority: int = 3, tags=()) -> None:
+        body = f"{title}\n\n{text}"
+        payload = {"text": body, "content": body[:1990], "kind": "status", "title": title,
+                   "message": text, "priority": priority}
+        headers = {"Content-Type": "application/json"}
+        if self.token:
+            headers["Authorization"] = f"Bearer {self.token}"
+        http.request(self.url, data=json.dumps(payload).encode(), headers=headers, method="POST")
+
+
+def send_status(notifiers: list, title: str, text: str, *, priority: int = 3,
+                heartbeat: bool = False) -> list[str]:
+    """Status-Text über alle Kanäle mit ``send_text`` (ntfy, Webhook, Telegram).
+    Fehler werden nicht geworfen, sondern als Liste zurückgegeben."""
+    tags = ["heartbeat"] if heartbeat else ["warning"] if priority >= 3 else ["white_check_mark"]
+    log.info("%s: %s", title, text.replace("\n", "; "))
+    errors = []
+    for n in notifiers:
+        if not hasattr(n, "send_text"):
+            continue
+        try:
+            n.send_text(title, text, priority=priority, tags=tags)
+        except Exception as e:  # noqa: BLE001 - jeder Kanal einzeln, nie den Lauf stoppen
+            msg = f"Statusmeldung über {getattr(n, 'name', '?')} fehlgeschlagen: {e}"
+            log.warning(msg)
+            errors.append(msg)
+    return errors
 
 
 def from_env() -> list:

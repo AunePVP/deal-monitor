@@ -109,8 +109,13 @@ REVIVE_AFTER = timedelta(hours=24)
 #: später hinzugekommene Zähler der Tabelle ``runs`` (werden per ALTER TABLE nachgerüstet):
 #: radar = Radar-Treffer, rejected = bei Google Flights verworfene Deals
 RUN_EXTRA_COLUMNS = ("radar", "rejected")
-#: Läufe, die nur die Deal-Seiten (Feeds + Radar) prüfen - zählen nicht als volle Prüfung
-FEED_TRIGGERS = ("feeds", "manual-feeds")
+#: Läufe nur der schnellen Deal-Seiten (``Preset.lane == "fast"``, eigener Takt)
+FAST_TRIGGERS = ("fast", "manual-fast")
+#: Sofort-Prüfung eines Alarms bei Google nach einem heißen Deal (kleines Budget)
+HOT_TRIGGER = "hot"
+#: Läufe, die nur einen Teil der Quellen prüfen (Deal-Seiten, schnelle Deal-Seiten, Sofort-
+#: Prüfung) - zählen nicht als volle Prüfung
+FEED_TRIGGERS = ("feeds", "manual-feeds", *FAST_TRIGGERS, HOT_TRIGGER)
 
 #: alte Quelle der Travel-Dealz-Artikel und ihr heutiger Name (Deal-Seiten-Preset)
 LEGACY_FEED_SOURCE = "travel-dealz-feed"
@@ -616,15 +621,19 @@ class Store:
         rows = self.db.execute("SELECT * FROM runs ORDER BY id DESC LIMIT ?", (limit,))
         return [self._run(r) for r in rows]
 
-    def last_run(self, full_only: bool = False, *, feed_runs: bool = True) -> dict | None:
+    def last_run(self, full_only: bool = False, *, feed_runs: bool = True,
+                 fast_runs: bool = True) -> dict | None:
         """Letzter Lauf. ``full_only``: nur Läufe über alle Alarme; ``feed_runs=False``:
-        reine Feed-Läufe (``FEED_TRIGGERS``) nicht mitzählen."""
+        reine Feed-Läufe (``FEED_TRIGGERS``) nicht mitzählen; ``fast_runs=False``: Läufe nur
+        der schnellen Deal-Seiten (``FAST_TRIGGERS``) nicht mitzählen."""
         conds = []
+        args: tuple = ()
         if full_only:
             conds.append("alert_id IS NULL")
-        if not feed_runs:
-            conds.append("trigger NOT IN (%s)" % ",".join("?" * len(FEED_TRIGGERS)))
+        for skip, triggers in ((not feed_runs, FEED_TRIGGERS), (not fast_runs, FAST_TRIGGERS)):
+            if skip:
+                conds.append("trigger NOT IN (%s)" % ",".join("?" * len(triggers)))
+                args += tuple(triggers)
         sql = "SELECT * FROM runs" + (" WHERE " + " AND ".join(conds) if conds else "")
-        args = tuple(FEED_TRIGGERS) if not feed_runs else ()
         row = self.db.execute(sql + " ORDER BY id DESC LIMIT 1", args).fetchone()
         return self._run(row) if row else None
