@@ -95,13 +95,15 @@ class _SentDeals:
 
 def hot_alerts(sent: list) -> list[str]:
     """Alarme, deren gerade gemeldete Artikel-Deals eine Sofort-Prüfung bei Google wert sind:
-    Hot-Marker (``ERROR FARE`` …) oder Preis unter der Grenze des Alarms. Radar zählt nicht."""
+    Hot-Marker (``ERROR FARE`` …) oder Hot-Wort im Titel ("Preissturz", "CRAZY HOT") oder Preis
+    unter der Grenze des Alarms. Radar zählt nicht."""
     out: list[str] = []
     for deal, _status in sent:
         a, o = deal.alert, deal.offer
         if a.id == radar.RADAR_ALERT_ID or not o.title or a.id in out:
             continue
-        if o.hot or (a.max_price is not None and o.price and 0 < o.price <= a.max_price):
+        if o.hot or radar.hot_reason(o.title) or (
+                a.max_price is not None and o.price and 0 < o.price <= a.max_price):
             out.append(a.id)
     return out
 

@@ -118,3 +118,24 @@ Jedes Paket bringt eigene Tests (`tests/test_<paket>.py`) mit. Loader-Pakete (P1
 `models.py`, `store.py`, `currency.py` und der Loader-Teil von `feed.py` (Preset, `load_loader`,
 `normalize_item`, `analyze`, `stats`, `_fetch_loader`) sind nach Paket 0 eingefroren – Änderungswünsche
 als Hinweis an die Integration.
+
+## 8. Deal-Bewertung (Paket 8)
+
+Getestet in `tests/test_scoring.py`. Alles zusätzlich; alte Zeilen ohne die Felder laden unverändert.
+
+- **Bezugspreis** (`principles.reference`): eigene Historie ≥ `min_history_samples` → Median; sonst
+  `Offer.insight` (Median von `history` ab 3 Punkten, sonst `typical`); sonst `baseline_price`.
+  Herkunft in `Deal.reference_source` (`REF_GOOGLE_HISTORY`, `REF_GOOGLE_TYPICAL`, …).
+- **Gründe** (`Deal.reasons`, Reihenfolge): Nachbar-Hub, Fehlerpreis-Hinweise
+  (`Verdacht auf Fehlerpreis: …`, `Preissturz: …`), Grenze/Referenz, Googles Einordnung
+  (`31% unter typischer Spanne (195 €–275 €)`, `Google: Preise derzeit niedrig (67 € unter Normalpreis)`),
+  ggf. `Erstmeldung Secret Flying, 19 h vor ErrorFareAlerts`.
+  `principles.suspected_error_fare(reasons)` → ntfy-Priorität 5, Webhook `error_fare: true`.
+- **Kurzbegründung** `principles.why(reasons)` → Deal-Payload `why` (`/api/deals`), Meldungstext
+  `Warum: …`, Webhook `deals[].why`.
+- **Erstmeldung** (`dealmonitor/sightings.py`, Tabelle `sightings`): nur Artikel. Deal-Payload
+  `sources` = `[{source, label, seen, price, link}]` (früheste zuerst, ab 2 Seiten) und `lead` (Text).
+  Spätere Meldungen derselben Deals werden nicht gespeichert und nicht gemeldet.
+- **Beinahe-Deals**: `/api/alerts[].near_deals` = Liste (höchstens 5, je Strecke einer) aus den
+  Bestpreisen mit `near: [Gründe]`, z. B. `["61 € über deiner Grenze", "7% unter typischer Spanne (600 €–1.050 €)"]`.
+  Nie gemeldet. Gespeichert als Feld `near` im Bestpreis-Eintrag (`store.cheapest`).
