@@ -30,6 +30,8 @@ class Alert:
     exclude_airlines: list[str] = field(default_factory=list)
     feed_keywords: list[list[str]] = field(default_factory=list)
     enabled: bool = True
+    #: Google Flights prüft reihum jeden Abflugtag einzeln (one-way), siehe ``rotation.py``
+    rotation: bool = False
 
     def __post_init__(self) -> None:
         self.origins = regions.expand(self.origins)
@@ -43,6 +45,8 @@ class Alert:
                 f"[{self.id}] bitte max_price und/oder baseline_price angeben"
             )
         self.exclude_airlines = [a.upper() for a in self.exclude_airlines]
+        if not isinstance(self.rotation, bool):
+            raise ValueError(f"[{self.id}] rotation muss true oder false sein")
 
     @property
     def roundtrip(self) -> bool:
@@ -54,7 +58,7 @@ class Alert:
 
 
 #: optionale Offer-Felder, die ``Offer.extras`` ausgibt (Reihenfolge = Ausgabe)
-EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "hot", "uid")
+EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "hot", "uid", "legs")
 
 
 @dataclass
@@ -93,6 +97,9 @@ class Offer:
     hot: str | None = field(default=None, compare=False)
     #: stabile ID der Quelle (Bluesky ``post.uri``, Travel-Dealz ``id:modified``)
     uid: str | None = field(default=None, repr=False, compare=False)
+    #: Hin/Rück aus zwei One-ways (Google-Rotation): je Teilstrecke ``{origin, destination,
+    #: departure, price, airline, stops, link, seen}`` - JSON-tauglich
+    legs: list | None = field(default=None, repr=False, compare=False)
 
     @property
     def nights(self) -> int | None:

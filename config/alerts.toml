@@ -15,6 +15,8 @@
 # "Würde ich das selbst buchen?"
 #   max_stops, max_duration_hours (pro Richtung), min_nights/max_nights, exclude_airlines
 #
+# rotation = true: Google Flights prüft jeden Abflugtag einzeln (siehe dealmonitor/rotation.py)
+#
 # feed_keywords: Stichwort-Gruppen für die Deal-Seiten (Feeds). Innerhalb einer Gruppe
 #   müssen alle Wörter vorkommen (UND), zwischen den Gruppen reicht eine (ODER).
 
@@ -63,7 +65,10 @@ min_nights = 1
 max_nights = 21
 feed_keywords = [["Hamburg", "Zürich"]]
 
-# Einzelflüge lohnen sich auf der Kurzstrecke oft - eigener Alarm, klar als one-way markiert
+# Einzelflüge lohnen sich auf der Kurzstrecke oft - eigener Alarm, klar als one-way markiert.
+# rotation = true: Google Flights prüft reihum jeden Tag der nächsten 90 Tage einzeln (statt
+# zwei Terminen je Monat). Die Hin/Rück-Alarme oben bekommen daraus zusätzlich Angebote
+# "kombiniert aus 2 One-way".
 [[alert]]
 id = "zrh-ham-oneway"
 name = "Zürich ⇄ Hamburg one-way"
@@ -74,6 +79,7 @@ max_price = 45
 baseline_price = 95
 max_stops = 0
 months_ahead = 4
+rotation = true
 
 
 # --- Deutschland → China ------------------------------------------------------

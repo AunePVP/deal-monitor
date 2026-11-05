@@ -404,7 +404,9 @@ def ensure_seeded(store: Store, path: str | Path) -> bool:
 
 
 #: Stand der gespeicherten Einstellungen; ältere Datenbanken werden einmal angepasst
-SETTINGS_VERSION = 3
+SETTINGS_VERSION = 4
+#: Standard-Alarme, die mit Version 4 die Google-Tagesrotation bekommen (``rotation.py``)
+ROTATION_ALERTS_V4 = ("zrh-ham-oneway",)
 #: Deal-Seiten, die mit Version 3 neu und standardmäßig an sind: wer seine Auswahl schon
 #: gespeichert hat, bekommt sie einmal dazu (bestehende Presets bleiben, wie gewählt)
 NEW_PRESETS_V3 = ("travel-dealz-rest", "secretflying", "yhbu")
@@ -420,6 +422,9 @@ def migrate_settings(store: Store) -> list[str]:
 
     Version 2: gespeicherte ``feed_presets`` kennen die neuen Deal-Seiten :data:`NEW_PRESETS_V3`
     noch nicht -> einmal ergänzen.
+
+    Version 3: die Standard-Alarme :data:`ROTATION_ALERTS_V4` kennen ``rotation`` noch nicht ->
+    einmal einschalten (nur, wenn das Feld noch fehlt).
     """
     from .sources.feed import PRESETS_BY_ID, normalize_link
     version = store.kv_get("settings_version") or 1
@@ -447,6 +452,11 @@ def migrate_settings(store: Store) -> list[str]:
         if kept != feeds:
             store.kv_set("feeds", kept)
             changes.append("feeds")
+    for alert_id in ROTATION_ALERTS_V4:
+        raw = store.get_alert(alert_id)
+        if isinstance(raw, dict) and "rotation" not in raw:
+            store.update_alert({**raw, "rotation": True})
+            changes.append(f"rotation:{alert_id}")
     store.kv_set("settings_version", SETTINGS_VERSION)
     if changes:
         log.info("Einstellungen aus älterer Version übernommen: %s", ", ".join(changes))
@@ -572,7 +582,8 @@ class Context:
                 out.append(GoogleFlightsSource(
                     max_requests=max_requests, delay=3.0, scan_months=s.scan_months,
                     today=self.today,
-                    verify_reserve=max_requests // VERIFY_RESERVE_DIVISOR if verifies else 0))
+                    verify_reserve=max_requests // VERIFY_RESERVE_DIVISOR if verifies else 0,
+                    state_store=store, period_hours=app.get("interval_hours")))
             elif n == "feeds":
                 presets = app.get("feed_presets")
                 if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen

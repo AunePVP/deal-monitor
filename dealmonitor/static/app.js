@@ -409,6 +409,10 @@
   }
 
   // ------------------------------------------------------------------ Bestpreise (auch ohne Deal)
+  /** Hin- und Rückflug aus zwei einzelnen One-way-Tickets (Google-Tagesrotation). */
+  const isCombo = (x) => Array.isArray(x.legs) && x.legs.length === 2;
+  const COMBO_LABEL = "2× One-way";
+  const COMBO_TITLE = "Hin- und Rückflug als zwei einzelne One-way-Tickets";
   function shortDates(e) {
     if (!e.departure) return null;
     const d = fmtDate(e.departure);
@@ -419,7 +423,7 @@
     if (e.kind === "article") return [e.title || "Artikel einer Deal-Seite"];
     return [e.origin && e.destination ? `${e.origin} → ${e.destination}` : null, shortDates(e),
       typeof e.nights === "number" ? plural(e.nights, "Nacht", "Nächte") : null,
-      e.airline || null, stopsLabel(e.stops)].filter(Boolean);
+      e.airline || null, stopsLabel(e.stops), isCombo(e) ? COMBO_LABEL : null].filter(Boolean);
   }
   function bestNote(e) {
     if (e.kind === "article") return "Artikel";
@@ -539,6 +543,7 @@
       el("span", { class: `badge ${expired ? "r-exp-soft" : ratingClass(d.rating)}` }, d.rating || "Deal"),
       d.cabin && d.cabin !== "economy" ? el("span", { class: "badge badge-outline" }, CABIN[d.cabin] || d.cabin) : null,
       d.roundtrip === false ? el("span", { class: "badge badge-outline" }, "one-way") : null,
+      isCombo(d) ? el("span", { class: "badge badge-outline", title: COMBO_TITLE }, COMBO_LABEL) : null,
       verified && !expired ? el("span", { class: "badge badge-verified", title: "Preis bei Google Flights gegengeprüft" }, "✓ Google Flights bestätigt") : null);
 
     const route = d.origin && d.destination ? `${d.origin} → ${d.destination}` : null;
@@ -916,6 +921,7 @@
     $("#f-airlines").value = (v.exclude_airlines || []).join(", ");
     $("#f-keywords").value = (v.feed_keywords || []).map((g) => (Array.isArray(g) ? g : [g]).join(", ")).join("\n");
     $("#f-enabled").checked = v.enabled !== false;
+    $("#f-rotation").checked = v.rotation === true;
 
     $("#alert-dialog").showModal();
     $("#f-name").focus();
@@ -947,6 +953,7 @@
       feed_keywords: $("#f-keywords").value.split(/\n+/)
         .map((line) => line.split(",").map((w) => w.trim()).filter(Boolean)).filter((g) => g.length),
       enabled: $("#f-enabled").checked,
+      rotation: $("#f-rotation").checked,
     });
     if (data.max_price === null && data.baseline_price === null) throw new Error("Bitte eine Preisgrenze und/oder einen Normalpreis angeben.");
     if (data.max_price !== null && data.max_price <= 0) throw new Error("Die Preisgrenze muss größer als 0 sein.");
