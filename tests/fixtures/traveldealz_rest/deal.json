@@ -1,0 +1,1183 @@
+[
+{
+"id": 486582,
+"date": "2026-11-05T11:19:39",
+"date_gmt": "2026-11-05T10:19:39",
+"modified": "2026-11-05T11:19:57",
+"modified_gmt": "2026-11-05T10:19:57",
+"link": "https://travel-dealz.de/deal/icelandair-saga-class-zuerich-nordamerika/",
+"title": {
+"rendered": "Nordamerika ab 903€ in der Icelandair Saga Class von Zürich und Frankfurt (inkl. 32 kg Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+3225
+],
+"tags": [
+40272
+],
+"destinations": [
+2305,
+133,
+189,
+883
+],
+"origins": [
+2940,
+2971
+]
+},
+{
+"id": 402955,
+"date": "2026-11-04T11:00:46",
+"date_gmt": "2026-11-04T10:00:46",
+"modified": "2026-11-04T17:49:54",
+"modified_gmt": "2026-11-04T16:49:54",
+"link": "https://travel-dealz.de/deal/new-york-condor-premium-class/",
+"title": {
+"rendered": "New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+3225
+],
+"tags": [],
+"destinations": [
+189
+],
+"origins": []
+},
+{
+"id": 486615,
+"date": "2026-11-04T13:41:23",
+"date_gmt": "2026-11-04T12:41:23",
+"modified": "2026-11-04T17:45:51",
+"modified_gmt": "2026-11-04T16:45:51",
+"link": "https://travel-dealz.de/deal/qatar-gabelfluege-down-under/",
+"title": {
+"rendered": "Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau &#8211; Auckland &#8211; München"
+},
+"meta": {
+"suspend_date": "2026-11-06 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+763
+],
+"destinations": [
+2386,
+3292,
+472,
+1168
+],
+"origins": [
+3015,
+2993
+]
+},
+{
+"id": 476472,
+"date": "2026-09-07T12:56:42",
+"date_gmt": "2026-09-07T10:56:42",
+"modified": "2026-11-04T15:18:39",
+"modified_gmt": "2026-11-04T14:18:39",
+"link": "https://travel-dealz.de/deal/aer-lingus-gabelfluege-cancun/",
+"title": {
+"rendered": "Aer Lingus: Gabelflüge Brüssel &#8211; Cancún &#8211; Deutschland ab 374€ (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-23 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+763
+],
+"destinations": [
+1304
+],
+"origins": [
+2942,
+2963,
+2939,
+2941,
+2971
+]
+},
+{
+"id": 485777,
+"date": "2026-10-30T11:47:58",
+"date_gmt": "2026-10-30T10:47:58",
+"modified": "2026-11-04T11:46:56",
+"modified_gmt": "2026-11-04T10:46:56",
+"link": "https://travel-dealz.de/deal/china-eastern-gabelfluege-down-under/",
+"title": {
+"rendered": "China Eastern: Gabelflüge nach Down Under ab 528€, z.B. Stockholm &#8211; Auckland &#8211; Frankfurt (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+763
+],
+"destinations": [
+2386,
+1167,
+472,
+997
+],
+"origins": [
+3002
+]
+},
+{
+"id": 486462,
+"date": "2026-11-03T15:47:24",
+"date_gmt": "2026-11-03T14:47:24",
+"modified": "2026-11-04T08:58:22",
+"modified_gmt": "2026-11-04T07:58:22",
+"link": "https://travel-dealz.de/deal/round-the-world-nov26/",
+"title": {
+"rendered": "Round the World: Vancouver, Seattle, Singapur, Kuala Lumpur + Hanoi ab 898€ inkl. Gepäck (getrennte Tickets)"
+},
+"meta": {
+"suspend_date": "2026-11-23 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+1155,
+40303,
+40787
+],
+"destinations": [
+2799,
+935,
+384,
+2276,
+895,
+501
+],
+"origins": [
+2940
+]
+},
+{
+"id": 283597,
+"date": "2026-08-24T14:20:00",
+"date_gmt": "2026-08-24T12:20:00",
+"modified": "2026-11-03T21:25:06",
+"modified_gmt": "2026-11-03T20:25:06",
+"link": "https://travel-dealz.de/deal/airhelp-plus/",
+"title": {
+"rendered": "AirHelp+: Bis zu 200€ Entschädigung bei Flug- und Gepäckverspätung &#8211; ab 36€ / Jahr (dank 10%-Gutschein)"
+},
+"meta": {
+"suspend_date": "2026-12-21 23:59:00"
+},
+"categories": [
+24
+],
+"tags": [
+40452,
+2762,
+1886,
+340,
+26700
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 271246,
+"date": "2026-09-04T18:57:53",
+"date_gmt": "2026-09-04T16:57:53",
+"modified": "2026-11-03T13:40:37",
+"modified_gmt": "2026-11-03T12:40:37",
+"link": "https://travel-dealz.de/deal/icelandair-reykjavik-ab-deutschland/",
+"title": {
+"rendered": "Island ab 196€ mit Icelandair von München (284€ mit Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-17 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+972
+],
+"origins": [
+2941
+]
+},
+{
+"id": 345302,
+"date": "2026-03-29T15:16:00",
+"date_gmt": "2026-03-29T13:16:00",
+"modified": "2026-11-03T11:44:19",
+"modified_gmt": "2026-11-03T10:44:19",
+"link": "https://travel-dealz.de/deal/singapore-airlines-new-york-singapur/",
+"title": {
+"rendered": "Längster Flug der Welt: Singapore Airlines Premium Economy New York → Singapur ab 476€ oneway"
+},
+"meta": {
+"suspend_date": "2026-11-23 23:59:00"
+},
+"categories": [
+3225
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [
+895
+],
+"origins": [
+40077
+]
+},
+{
+"id": 327842,
+"date": "2025-10-29T15:52:01",
+"date_gmt": "2025-10-29T14:52:01",
+"modified": "2026-11-03T11:39:28",
+"modified_gmt": "2026-11-03T10:39:28",
+"link": "https://travel-dealz.de/deal/wizzair-all-you-can-fly/",
+"title": {
+"rendered": "All you can fly: Unbegrenzt mit Wizzair fliegen für 499€ Jahresgebühr + 10€ pro Flug"
+},
+"meta": {
+"suspend_date": "2026-12-07 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+46
+],
+"destinations": [
+3329,
+1485,
+131,
+983,
+2446
+],
+"origins": []
+},
+{
+"id": 459024,
+"date": "2026-09-30T09:49:01",
+"date_gmt": "2026-09-30T07:49:01",
+"modified": "2026-11-03T11:38:50",
+"modified_gmt": "2026-11-03T10:38:50",
+"link": "https://travel-dealz.de/deal/turkmenistan-airlines-business-peking/",
+"title": {
+"rendered": "Peking: Business Class von Frankfurt ab 1.123€ mit Turkmenistan Airlines"
+},
+"meta": {
+"suspend_date": "2026-11-23 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+112
+],
+"origins": [
+2940
+]
+},
+{
+"id": 474775,
+"date": "2026-08-28T08:38:24",
+"date_gmt": "2026-08-28T06:38:24",
+"modified": "2026-11-03T10:57:52",
+"modified_gmt": "2026-11-03T09:57:52",
+"link": "https://travel-dealz.de/deal/hanoi-vietnam-juneyao-airlines/",
+"title": {
+"rendered": "Hanoi, Vietnam ab 388€ mit Juneyao Airlines von Brüssel (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+2799
+],
+"origins": [
+2963
+]
+},
+{
+"id": 293299,
+"date": "2026-11-03T09:13:02",
+"date_gmt": "2026-11-03T08:13:02",
+"modified": "2026-11-03T09:13:05",
+"modified_gmt": "2026-11-03T08:13:05",
+"link": "https://travel-dealz.de/deal/new-york-icelandair-angebot/",
+"title": {
+"rendered": "New York ab 306€ mit Icelandair von Berlin, München &amp; Frankfurt (441€ mit Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-17 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+189
+],
+"origins": [
+2942,
+2940,
+2941
+]
+},
+{
+"id": 483993,
+"date": "2026-10-20T10:04:07",
+"date_gmt": "2026-10-20T08:04:07",
+"modified": "2026-11-02T19:19:47",
+"modified_gmt": "2026-11-02T18:19:47",
+"link": "https://travel-dealz.de/deal/royal-jordanian-business-class-bangkok/",
+"title": {
+"rendered": "Bangkok ab 1.694€ in der Royal Jordanian Business Class von Hamburg"
+},
+"meta": {
+"suspend_date": "2026-11-09T23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+25
+],
+"origins": [
+2945
+]
+},
+{
+"id": 265531,
+"date": "2024-05-25T13:25:00",
+"date_gmt": "2024-05-25T11:25:00",
+"modified": "2026-11-02T19:19:35",
+"modified_gmt": "2026-11-02T18:19:35",
+"link": "https://travel-dealz.de/deal/aegean-genairation/",
+"title": {
+"rendered": "Aegean Jugendrabatte: 50% Rabatt auf die erste Buchung (exkl. Gebühren), zwei gratis Gepäckvoucher pro Jahr &amp; vieles mehr"
+},
+"meta": {
+"suspend_date": "2026-11-23T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+847,
+1772
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 381260,
+"date": "2026-06-05T10:55:00",
+"date_gmt": "2026-06-05T08:55:00",
+"modified": "2026-11-02T19:19:33",
+"modified_gmt": "2026-11-02T18:19:33",
+"link": "https://travel-dealz.de/deal/swiss-graz-johannesburg/",
+"title": {
+"rendered": "Johannesburg ab 526€ mit Swiss von Graz (586€ inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-23T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+1213
+],
+"origins": [
+2967
+]
+},
+{
+"id": 283739,
+"date": "2026-10-16T15:17:12",
+"date_gmt": "2026-10-16T13:17:12",
+"modified": "2026-11-02T19:19:28",
+"modified_gmt": "2026-11-02T18:19:28",
+"link": "https://travel-dealz.de/deal/sas-bangkok-kopenhagen-oneway/",
+"title": {
+"rendered": "Oneway: SAS Business Class Thailand → Frankfurt ab 806€ (Economy ab 233€)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+884,
+1757,
+3225
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [
+25
+],
+"origins": [
+39974
+]
+},
+{
+"id": 337036,
+"date": "2026-10-23T10:21:25",
+"date_gmt": "2026-10-23T08:21:25",
+"modified": "2026-11-02T19:19:27",
+"modified_gmt": "2026-11-02T18:19:27",
+"link": "https://travel-dealz.de/deal/china-southern-business-budapest-china/",
+"title": {
+"rendered": "China ab 1.440€ in der China Southern Business Class von Budapest"
+},
+"meta": {
+"suspend_date": "2026-11-09T23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+2537,
+3097,
+14291,
+3749,
+3169
+],
+"origins": [
+3275
+]
+},
+{
+"id": 69256,
+"date": "2026-10-25T09:10:00",
+"date_gmt": "2026-10-25T08:10:00",
+"modified": "2026-11-02T19:19:26",
+"modified_gmt": "2026-11-02T18:19:26",
+"link": "https://travel-dealz.de/deal/air-china-deutschland-taipeh/",
+"title": {
+"rendered": "Taipeh ab 411€ mit Air China von München &amp; Frankfurt (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-09T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+2682
+],
+"origins": [
+2940,
+2941
+]
+},
+{
+"id": 486169,
+"date": "2026-11-02T13:00:00",
+"date_gmt": "2026-11-02T12:00:00",
+"modified": "2026-11-02T17:56:45",
+"modified_gmt": "2026-11-02T16:56:45",
+"link": "https://travel-dealz.de/deal/lufthansa-geschenkkarten/",
+"title": {
+"rendered": "Lufthansa: 5% Rabatt auf Geschenkkarten"
+},
+"meta": {
+"suspend_date": "2026-12-02 23:59:00"
+},
+"categories": [
+24
+],
+"tags": [
+3118,
+40884
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 133542,
+"date": "2026-10-31T13:08:00",
+"date_gmt": "2026-10-31T12:08:00",
+"modified": "2026-11-01T15:07:23",
+"modified_gmt": "2026-11-01T14:07:23",
+"link": "https://travel-dealz.de/deal/lufthansa-island/",
+"title": {
+"rendered": "Island ab 156€ mit Discover Airlines &amp; Bus von Innsbruck (nur Personal Item; 236€ mit Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+972
+],
+"origins": [
+2968
+]
+},
+{
+"id": 113713,
+"date": "2026-11-01T07:00:00",
+"date_gmt": "2026-11-01T06:00:00",
+"modified": "2026-11-01T07:03:06",
+"modified_gmt": "2026-11-01T06:03:06",
+"link": "https://travel-dealz.de/deal/sas-youth-fares/",
+"title": {
+"rendered": "SAS Youth Fares: Rabatte auf Flüge sichern (für alle unter 26)"
+},
+"meta": {
+"suspend_date": "2026-12-07 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+847,
+1772
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 354477,
+"date": "2026-10-31T09:00:00",
+"date_gmt": "2026-10-31T08:00:00",
+"modified": "2026-10-31T09:03:05",
+"modified_gmt": "2026-10-31T08:03:05",
+"link": "https://travel-dealz.de/deal/luxair-jugendtarif-rabatt/",
+"title": {
+"rendered": "Luxair: Bis zu 40€ Rabatt für Jugendliche von 12 bis 24 Jahren (nicht im Light-Tarif)"
+},
+"meta": {
+"suspend_date": "2027-01-11 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+847
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 485492,
+"date": "2026-10-29T17:15:36",
+"date_gmt": "2026-10-29T16:15:36",
+"modified": "2026-10-29T17:25:19",
+"modified_gmt": "2026-10-29T16:25:19",
+"link": "https://travel-dealz.de/deal/gol-business-lissabon-belo-horizonte/",
+"title": {
+"rendered": "Belo Horizonte ab 1.427€ in der GOL / Wamos Air Business Class ab Lissabon inkl. 2x 23 kg Gepäck"
+},
+"meta": {
+"suspend_date": "2026-11-09 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+3555
+],
+"origins": [
+3614
+]
+},
+{
+"id": 485438,
+"date": "2026-10-29T07:43:50",
+"date_gmt": "2026-10-29T06:43:50",
+"modified": "2026-10-29T07:43:52",
+"modified_gmt": "2026-10-29T06:43:52",
+"link": "https://travel-dealz.de/deal/oman-air-kuala-lumpur-frankfurt/",
+"title": {
+"rendered": "Oman Air: Oneway-Tickets von Kuala Lumpur nach Frankfurt ab 183€ (209€ inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-12 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [
+2385
+],
+"origins": [
+40230
+]
+},
+{
+"id": 485452,
+"date": "2026-10-28T14:18:00",
+"date_gmt": "2026-10-28T13:18:00",
+"modified": "2026-10-28T14:18:02",
+"modified_gmt": "2026-10-28T13:18:02",
+"link": "https://travel-dealz.de/deal/air-china-oneway-vietnam/",
+"title": {
+"rendered": "Oneway: Hanoi → Deutschland ab 172€ mit Air China (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [
+2799
+],
+"origins": []
+},
+{
+"id": 439242,
+"date": "2026-10-28T10:14:01",
+"date_gmt": "2026-10-28T09:14:01",
+"modified": "2026-10-28T12:48:09",
+"modified_gmt": "2026-10-28T11:48:09",
+"link": "https://travel-dealz.de/deal/turkmenistan-airlines-frankfurt-bangkok-business/",
+"title": {
+"rendered": "Bangkok: Business Class von Frankfurt ab 1.208€ mit Turkmenistan Airlines"
+},
+"meta": {
+"suspend_date": "2026-11-23 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [
+35609
+],
+"destinations": [
+25
+],
+"origins": [
+2940
+]
+},
+{
+"id": 363011,
+"date": "2026-10-27T12:01:41",
+"date_gmt": "2026-10-27T11:01:41",
+"modified": "2026-10-27T12:01:45",
+"modified_gmt": "2026-10-27T11:01:45",
+"link": "https://travel-dealz.de/deal/westjet-oneway-europa-kanada/",
+"title": {
+"rendered": "Westjet: Oneway von Westkanada nach London oder Paris ab 155€ (219€ mit Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [
+650,
+501,
+3722
+],
+"origins": []
+},
+{
+"id": 293021,
+"date": "2026-10-07T09:50:47",
+"date_gmt": "2026-10-07T07:50:47",
+"modified": "2026-10-27T11:33:07",
+"modified_gmt": "2026-10-27T10:33:07",
+"link": "https://travel-dealz.de/deal/china-eastern-frankfurt-australien/",
+"title": {
+"rendered": "Australien ab 769€ mit China Eastern von Frankfurt (inkl. 2x 23 kg Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-09T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+2386,
+1167,
+472,
+997
+],
+"origins": [
+2940
+]
+},
+{
+"id": 485068,
+"date": "2026-10-26T17:04:04",
+"date_gmt": "2026-10-26T16:04:04",
+"modified": "2026-10-26T21:08:35",
+"modified_gmt": "2026-10-26T20:08:35",
+"link": "https://travel-dealz.de/deal/air-china-oneway-australien/",
+"title": {
+"rendered": "Oneway: Von Australien nach D‑A‑CH ab 246€ mit Air China &amp; Shenzhen Airlines (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-12-31 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+39972,
+40303
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 339268,
+"date": "2026-09-22T12:52:50",
+"date_gmt": "2026-09-22T10:52:50",
+"modified": "2026-10-26T14:45:54",
+"modified_gmt": "2026-10-26T13:45:54",
+"link": "https://travel-dealz.de/deal/dschidda-eurowings-business-class/",
+"title": {
+"rendered": "Dschidda, Saudi-Arabien ab 470€ in der Eurowings „Business Class“ (inkl. 400 Statuspunkten bei Miles&amp;More)"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+2916
+],
+"origins": [
+2942,
+2938
+]
+},
+{
+"id": 302422,
+"date": "2026-10-26T13:28:45",
+"date_gmt": "2026-10-26T12:28:45",
+"modified": "2026-10-26T13:28:50",
+"modified_gmt": "2026-10-26T12:28:50",
+"link": "https://travel-dealz.de/deal/royal-jordanian-athen-bangkok/",
+"title": {
+"rendered": "Bangkok ab 1.274€ in der Royal Jordanian Business Class von Athen (Langer Layover)"
+},
+"meta": {
+"suspend_date": "2026-11-08 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+25
+],
+"origins": [
+3087
+]
+},
+{
+"id": 158406,
+"date": "2024-05-26T07:03:00",
+"date_gmt": "2024-05-26T05:03:00",
+"modified": "2026-10-26T09:52:56",
+"modified_gmt": "2026-10-26T08:52:56",
+"link": "https://travel-dealz.de/deal/etihad-stopover/",
+"title": {
+"rendered": "Etihad Stopover Programm: Zwei (fast) kostenlose Hotelnächte in Abu Dhabi"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+24
+],
+"tags": [
+3264
+],
+"destinations": [
+39934
+],
+"origins": []
+},
+{
+"id": 837,
+"date": "2024-10-06T11:50:00",
+"date_gmt": "2024-10-06T09:50:00",
+"modified": "2026-10-26T09:52:51",
+"modified_gmt": "2026-10-26T08:52:51",
+"link": "https://travel-dealz.de/deal/eurowings-blind-booking/",
+"title": {
+"rendered": "Blind Booking: Kurzfristige Eurowings-Flüge ab 94€ roundtrip (nur Personal Item)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+2805
+],
+"destinations": [
+983
+],
+"origins": [
+2942,
+2954,
+2939,
+2967,
+2945,
+2938,
+2991,
+2966,
+3002,
+2946
+]
+},
+{
+"id": 329266,
+"date": "2025-10-07T08:51:49",
+"date_gmt": "2025-10-07T06:51:49",
+"modified": "2026-10-26T09:52:46",
+"modified_gmt": "2026-10-26T08:52:46",
+"link": "https://travel-dealz.de/deal/norwegian-rewards-status-match/",
+"title": {
+"rendered": "Norwegian Rewards: Status Match Challenge von SAS Eurobonus (mit Freigepäck &amp; weiteren Vorteilen)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+2733,
+40627,
+2242,
+3295
+],
+"destinations": [],
+"origins": []
+},
+{
+"id": 71537,
+"date": "2025-12-26T10:01:00",
+"date_gmt": "2025-12-26T09:01:00",
+"modified": "2026-10-26T09:52:44",
+"modified_gmt": "2026-10-26T08:52:44",
+"link": "https://travel-dealz.de/deal/lufthansa-surprise/",
+"title": {
+"rendered": "Lufthansa Surprise: Blind Booking ab 109€ roundtrip (Business Class ab 229€)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+884,
+1757
+],
+"tags": [
+2805
+],
+"destinations": [
+983
+],
+"origins": [
+2940,
+2941
+]
+},
+{
+"id": 201673,
+"date": "2026-07-18T12:46:00",
+"date_gmt": "2026-07-18T10:46:00",
+"modified": "2026-10-26T09:52:35",
+"modified_gmt": "2026-10-26T08:52:35",
+"link": "https://travel-dealz.de/deal/helikopter-flug-ceuta/",
+"title": {
+"rendered": "Spanische Exklave in Afrika: Helikopter-Flüge von Spanien nach Ceuta ab 42€ roundtrip"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+3558,
+35609
+],
+"destinations": [
+39949
+],
+"origins": [
+39950,
+40172
+]
+},
+{
+"id": 471055,
+"date": "2026-08-07T08:33:39",
+"date_gmt": "2026-08-07T06:33:39",
+"modified": "2026-10-26T09:50:47",
+"modified_gmt": "2026-10-26T08:50:47",
+"link": "https://travel-dealz.de/deal/wien-bangkok-air-china/",
+"title": {
+"rendered": "Bangkok ab 448€ mit Air China von Wien (inklusive Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+25
+],
+"origins": [
+2965
+]
+},
+{
+"id": 475813,
+"date": "2026-09-03T09:03:05",
+"date_gmt": "2026-09-03T07:03:05",
+"modified": "2026-10-26T09:50:45",
+"modified_gmt": "2026-10-26T08:50:45",
+"link": "https://travel-dealz.de/deal/hongkong-china-eastern/",
+"title": {
+"rendered": "Hongkong ab 484€ mit China Eastern von Frankfurt (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+293
+],
+"origins": [
+2940
+]
+},
+{
+"id": 47973,
+"date": "2026-09-17T10:36:18",
+"date_gmt": "2026-09-17T08:36:18",
+"modified": "2026-10-26T09:50:40",
+"modified_gmt": "2026-10-26T08:50:40",
+"link": "https://travel-dealz.de/deal/aer-lingus-angebot/",
+"title": {
+"rendered": "Dublin: Hin- und Rückflug mit Aer Lingus ab 61€ (inkl. Personal Item + 10 kg Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-16T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+35609
+],
+"destinations": [
+666
+],
+"origins": [
+2942,
+2939,
+2940,
+2945,
+2941,
+2971
+]
+},
+{
+"id": 469413,
+"date": "2026-10-09T07:01:04",
+"date_gmt": "2026-10-09T05:01:04",
+"modified": "2026-10-26T09:50:38",
+"modified_gmt": "2026-10-26T08:50:38",
+"link": "https://travel-dealz.de/deal/air-china-frankfurt-hongkong/",
+"title": {
+"rendered": "Hongkong ab 469€ mit Air China von München und Frankfurt (inklusive Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-09T23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+3264
+],
+"destinations": [
+293
+],
+"origins": [
+2940
+]
+},
+{
+"id": 484553,
+"date": "2026-10-24T13:00:00",
+"date_gmt": "2026-10-24T11:00:00",
+"modified": "2026-10-23T09:34:41",
+"modified_gmt": "2026-10-23T07:34:41",
+"link": "https://travel-dealz.de/deal/gulf-air-mailand-bangkok-business/",
+"title": {
+"rendered": "Bangkok in der Gulf Air Business Class ab 1.551€ von Mailand"
+},
+"meta": {
+"suspend_date": "2026-11-05 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+25
+],
+"origins": [
+2997
+]
+},
+{
+"id": 381333,
+"date": "2026-10-23T09:18:06",
+"date_gmt": "2026-10-23T07:18:06",
+"modified": "2026-10-23T09:18:10",
+"modified_gmt": "2026-10-23T07:18:10",
+"link": "https://travel-dealz.de/deal/gulf-air-business-singapur/",
+"title": {
+"rendered": "Singapur ab 1.368€ in der Gulf Air Business Class von Mailand &amp; Rom"
+},
+"meta": {
+"suspend_date": "2026-11-05 23:59:00"
+},
+"categories": [
+884
+],
+"tags": [],
+"destinations": [
+895
+],
+"origins": [
+3058
+]
+},
+{
+"id": 307133,
+"date": "2026-10-22T14:06:49",
+"date_gmt": "2026-10-22T12:06:49",
+"modified": "2026-10-22T14:07:13",
+"modified_gmt": "2026-10-22T12:07:13",
+"link": "https://travel-dealz.de/deal/air-china-bangkok/",
+"title": {
+"rendered": "Bangkok, Phuket &amp; Chiang Mai ab 482€ mit Air China von Deutschland (inkl. Gepäck)"
+},
+"meta": {
+"suspend_date": "2026-11-09 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [
+3264
+],
+"destinations": [
+25,
+2871,
+978
+],
+"origins": [
+2940,
+2941
+]
+},
+{
+"id": 480414,
+"date": "2026-09-29T14:45:56",
+"date_gmt": "2026-09-29T12:45:56",
+"modified": "2026-10-22T13:22:31",
+"modified_gmt": "2026-10-22T11:22:31",
+"link": "https://travel-dealz.de/deal/air-china-bruessel-asien/",
+"title": {
+"rendered": "12 Ziele in (Süd-)Ostasien ab 352€ mit Air China von Brüssel inkl. Gepäck"
+},
+"meta": {
+"suspend_date": "2026-11-16 23:59:00"
+},
+"categories": [
+1757
+],
+"tags": [],
+"destinations": [
+25,
+2871,
+2799,
+2695,
+293,
+2149,
+935,
+2440,
+978,
+2202,
+895,
+2682
+],
+"origins": []
+}
+]
