@@ -71,6 +71,8 @@ VALUES: dict[str, Spec] = {
     "telegram_chat_id": Spec("str", "", "Telegram-Chat-ID"),
     "interval_hours": Spec("float", 3.0, "Prüfintervall (Stunden)", 0.5, 168),
     "feed_interval_minutes": Spec("int", 30, "Feed-Intervall (Minuten)", 10, 1440),
+    # schnelle Deal-Seiten (Preset.lane == "fast", z. B. Secret Flying): leicht, kurzlebige Deals
+    "fast_interval_minutes": Spec("int", 10, "Schnell-Intervall (Minuten)", 5, 1440),
     "sources": Spec("list", list(DEFAULT_SOURCES), "Quellen", choices=SOURCE_NAMES),
     "currency": Spec("str", _D.currency, "Währung", required=True),
     "scan_months": Spec("int", _D.scan_months, "Monate voraus", 1, 12),
@@ -521,8 +523,12 @@ class Context:
         return out
 
     def sources(self, cfg: Config, store: Store, names: list[str] | None = None,
-                app: AppSettings | None = None) -> list:
-        """Quellen für einen Lauf bauen (frische Objekte: Zähler/Schutzschalter pro Lauf)."""
+                app: AppSettings | None = None, *, lanes: set[str] | None = None,
+                google_max: int | None = None) -> list:
+        """Quellen für einen Lauf bauen (frische Objekte: Zähler/Schutzschalter pro Lauf).
+
+        ``lanes``: nur Deal-Seiten dieser Takte (``{"fast"}``); ``google_max``: Google-Budget
+        für diesen Lauf höchstens so groß (Sofort-Prüfung)."""
         app = app or self.settings(store)
         names = order_sources(list(names) if names is not None else app.get("sources"))
         if self.source_factory:
@@ -546,6 +552,8 @@ class Context:
                     scan_months=s.scan_months, request_delay=s.request_delay, today=self.today)
             elif n == "google_flights":
                 max_requests = app.get("google_max_requests")
+                if google_max is not None:
+                    max_requests = min(max_requests, google_max)
                 # Ein Teil des Budgets bleibt der Gegenprüfung gecachter Preise vorbehalten
                 verifies = app.get("google_verify") and bool({"travelpayouts", "amadeus"} & set(names))
                 out.append(GoogleFlightsSource(
@@ -556,7 +564,8 @@ class Context:
                 presets = app.get("feed_presets")
                 if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen
                     feed = FeedSource(presets=presets, extra_feeds=s.feeds,
-                                      max_age_days=s.feed_max_age_days, state_store=store)
+                                      max_age_days=s.feed_max_age_days, state_store=store,
+                                      lanes=lanes)
                     feed.hub_settings = app.hub_settings()
                     out.append(feed)
         return out

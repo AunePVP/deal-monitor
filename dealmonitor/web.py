@@ -23,7 +23,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from . import __version__, notify, radar, regions
+from . import __version__, health, notify, radar, regions
 from .appsettings import SOURCE_LABELS, SOURCE_NAMES, Context
 from .config import normalize_alert, slugify
 from .models import Alert
@@ -353,6 +353,7 @@ class Handler(BaseHTTPRequestHandler):
         ("PUT", r"/api/settings", "put_settings"),
         ("POST", r"/api/run", "run"),
         ("GET", r"/api/sources", "sources"),
+        ("GET", r"/api/sources/health", "sources_health"),
         ("GET", r"/api/runs", "runs"),
         ("GET", r"/api/notifications", "notifications"),
         ("POST", r"/api/notifications/read", "read_notifications"),
@@ -400,6 +401,8 @@ class Handler(BaseHTTPRequestHandler):
             "next_feed_run": st["next_feed_run"],
             "interval_hours": st["interval_hours"],
             "feed_interval_minutes": st["feed_interval_minutes"],
+            "next_fast_run": st.get("next_fast_run"),
+            "fast_interval_minutes": st.get("fast_interval_minutes"),
             "configured": app.configured(self.ctx.demo),
             "sources": app.get("sources"),
             "counts": {
@@ -434,6 +437,10 @@ class Handler(BaseHTTPRequestHandler):
                         "last_error": hits[0] if hits else None})
         return 200, {"sources": out, "last_run_at": (last or {}).get("finished_at"),
                      "last_full_run_at": (last_full or {}).get("finished_at")}
+
+    def api_sources_health(self, store, **_):
+        """Gesundheit je Quelle (OK/Leer/Veraltet/Fehler) aus dem letzten Lauf, der sie las."""
+        return 200, health.report(store)
 
     def api_deals(self, store, query, **_):
         status = query.get("status", ["active"])[0] or "active"
