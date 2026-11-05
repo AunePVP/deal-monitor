@@ -16,7 +16,7 @@ from typing import Callable
 from urllib.parse import urlsplit
 
 from . import config as config_mod
-from . import http, notify, radar
+from . import http, hubs, notify, radar
 from .config import Config, Settings
 from .models import Alert
 from .sources.feed import FEED_PRESETS, default_preset_ids
@@ -62,6 +62,7 @@ class Spec:
 
 _D = Settings()
 _R = radar.DEFAULTS
+_H = hubs.DEFAULTS
 VALUES: dict[str, Spec] = {
     "travelpayouts_marker": Spec("str", "", "Travelpayouts-Marker"),
     "webhook_url": Spec("str", "", "Webhook-URL", url=True),
@@ -107,6 +108,12 @@ VALUES: dict[str, Spec] = {
     "radar_first_max": Spec("float", _R["radar_first_max"], radar.LABELS["radar_first_max"],
                             0, 100000),
     "radar_home_only": Spec("bool", _R["radar_home_only"], radar.LABELS["radar_home_only"]),
+    # Nachbar-Hubs (Abflug Amsterdam, Budapest, Rom … mit Zubringer-Aufschlag)
+    "hubs_enabled": Spec("bool", _H["hubs_enabled"], hubs.LABELS["hubs_enabled"]),
+    "hub_surcharge_a": Spec("float", _H["hub_surcharge_a"], hubs.LABELS["hub_surcharge_a"],
+                            0, 5000),
+    "hub_surcharge_b": Spec("float", _H["hub_surcharge_b"], hubs.LABELS["hub_surcharge_b"],
+                            0, 5000),
 }
 SETTINGS_FIELDS = [f.name for f in fields(Settings) if f.name not in ("database", "report")]
 URL_RE = re.compile(r"^https?://[^\s/$.?#][^\s]*$", re.I)
@@ -347,7 +354,11 @@ class AppSettings:
         }
 
     def radar_settings(self) -> radar.RadarSettings:
-        return radar.RadarSettings.from_values({n: self.get(n) for n in radar.DEFAULTS})
+        return radar.RadarSettings.from_values({n: self.get(n) for n in (*radar.DEFAULTS,
+                                                                         *hubs.DEFAULTS)})
+
+    def hub_settings(self) -> hubs.HubSettings:
+        return hubs.HubSettings.from_values({n: self.get(n) for n in hubs.DEFAULTS})
 
 
 # -- Seeding aus der TOML-Datei ------------------------------------------------
@@ -544,8 +555,10 @@ class Context:
             elif n == "feeds":
                 presets = app.get("feed_presets")
                 if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen
-                    out.append(FeedSource(presets=presets, extra_feeds=s.feeds,
-                                          max_age_days=s.feed_max_age_days, state_store=store))
+                    feed = FeedSource(presets=presets, extra_feeds=s.feeds,
+                                      max_age_days=s.feed_max_age_days, state_store=store)
+                    feed.hub_settings = app.hub_settings()
+                    out.append(feed)
         return out
 
     def verifier(self, sources: list, app: AppSettings):

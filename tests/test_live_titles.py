@@ -263,7 +263,8 @@ class LiveParserTest(unittest.TestCase):
 
 
 class LiveAlarmTest(unittest.TestCase):
-    """Die Standard-Alarme gegen die echten Titel: nur der Peking-Business-Deal passt."""
+    """Die Standard-Alarme gegen die echten Titel: nur der Peking-Business-Deal passt - und seit
+    Paket 4 (Nachbar-Hubs) China-Business ab Budapest mit 180 € Zubringer (1.440 + 180 €)."""
 
     def test_standard_alerts(self):
         cfg = config.load(ROOT / "config" / "alerts.toml")
@@ -273,7 +274,8 @@ class LiveAlarmTest(unittest.TestCase):
             deals = [principles.evaluate(a, o, [], min_samples=8) for o in src.fetch(a)]
             found[a.id] = [(d.offer.title[:24], d.offer.price, d.offer.cabin) for d in deals if d]
         self.assertEqual(found, {"zrh-ham": [], "ham-zrh": [], "zrh-ham-oneway": [], "de-cn-economy": [],
-                                 "de-cn-business": [("Peking: Business Class v", 1123, "business")]})
+                                 "de-cn-business": [("Peking: Business Class v", 1123, "business"),
+                                                    ("China ab 1.440€ in der C", 1620, "business")]})
         # das Radar meldet den Alarm-Deal nicht noch einmal
         self.assertFalse(any(d.offer.title.startswith("Peking") for d in scan(src)))
 

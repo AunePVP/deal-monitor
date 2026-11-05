@@ -11,7 +11,9 @@ Regeln (Einstellungen ``radar_*``, Umgebungsvariablen ``RADAR_*``):
 * Economy ≤ ``radar_economy_max`` (Standard 300 €) - aber ≥ ``radar_economy_min``
   (Standard 40 €), damit Kurzstrecken-Promos wie "Ryanair ab 14,99€" nicht alarmieren.
 * Premium Economy ≤ 700 €, Business ≤ 1.300 €, First ≤ 2.500 €.
-* ``radar_home_only`` (Standard an): nur Abflug aus DACH oder ohne Angabe.
+* ``radar_home_only`` (Standard an): nur Abflug aus DACH oder ohne Angabe - und ab
+  Nachbar-Hub (``dealmonitor.hubs``) in Premium/Business/First oder als Error Fare: dann
+  zählt Ticket + Zubringer-Aufschlag gegen die Grenze, mit Hinweis "Abflug Nachbar-Hub".
 * Keine Dopplung: Artikel, die im selben Lauf schon einem Alarm zugeordnet wurden
   (``FeedSource.matched_links``), erscheinen nicht noch einmal als Radar-Treffer.
 
@@ -29,7 +31,7 @@ import re
 from dataclasses import dataclass, fields
 from datetime import datetime
 
-from . import regions
+from . import hubs, regions
 from .models import Alert, Deal, Offer
 from .principles import CABIN_LABEL, euro
 from .sources import feed as feed_mod
@@ -79,12 +81,16 @@ class RadarSettings:
     first_max: float = 2500.0
     premium_max: float = 700.0
     home_only: bool = True
+    #: Nachbar-Hubs (aus ``hubs_enabled``, ``hub_surcharge_a/b`` desselben Dicts)
+    hub_settings: hubs.HubSettings = hubs.DEFAULT
 
     @classmethod
     def from_values(cls, values: dict | None) -> "RadarSettings":
         """Aus einem Einstellungs-Dict (``radar_economy_max`` oder ``economy_max``) bauen."""
-        kw = {}
+        kw = {"hub_settings": hubs.HubSettings.from_values(values)}
         for f in fields(cls):
+            if f.name == "hub_settings":
+                continue
             for key in (f"radar_{f.name}", f.name):
                 if values and key in values and values[key] is not None:
                     kw[f.name] = _coerce(f.name, values[key])
@@ -135,7 +141,8 @@ def check(item: dict, settings: RadarSettings | None = None,
     if not info.flight:
         return None
     hot = hot_reason(item["title"], item.get("categories"))
-    if settings.home_only and info.origin == "foreign":
+    hub = radar_hub(info, settings)
+    if settings.home_only and info.origin == "foreign" and hub is None:
         return None
     reasons: list[str] = []
     if hot:
@@ -146,8 +153,11 @@ def check(item: dict, settings: RadarSettings | None = None,
     for cabin, p in options:
         if p is None or p <= 0:
             continue
+        if hub and cabin == "economy":
+            continue     # Economy ab Nachbar-Hub zählt nicht (siehe radar_hub)
         limit = settings.limit(cabin)
-        if p <= limit and (cabin != "economy" or p >= settings.economy_min):
+        total = p + (hub[1] if hub else 0)
+        if total <= limit and (cabin != "economy" or p >= settings.economy_min):
             reasons.append(f"{CABIN_LABEL.get(cabin, cabin)} ≤ {euro(limit)}")
             if (cabin, p) != (info.cabin, price):
                 info.cabin, info.price = cabin, p   # der Treffer gilt für diese Kabine
@@ -157,19 +167,36 @@ def check(item: dict, settings: RadarSettings | None = None,
                        else "Preis nur in Fremdwährung")
     if not reasons:
         return None
+    if hub:
+        reasons.append(f"Abflug Nachbar-Hub {regions.name(hub[0])} (+{euro(hub[1])} Zubringer)")
     if info.oneway:
         reasons.append("one-way")
     return reasons
 
 
-def _offer(item: dict, info: feed_mod.ItemInfo) -> Offer:
+def radar_hub(info: feed_mod.ItemInfo, settings: RadarSettings) -> tuple[str, float] | None:
+    """Nachbar-Hub eines Artikels mit fremdem Abflug, wenn ``home_only`` ihn sonst verwerfen
+    würde: ``(Hub-Stadtcode, Aufschlag)`` oder ``None``. Nur mit Preis in Premium/Business/
+    First - Economy ab Amsterdam & Co. ist meist Kurzstrecke, da lohnt kein Zubringer."""
+    if not settings.home_only or info.origin != "foreign":
+        return None
+    if all(c == "economy" for c in [info.cabin, *info.alt_prices]):
+        return None
+    return hubs.cheapest(info.origin_codes, settings.hub_settings)
+
+
+def _offer(item: dict, info: feed_mod.ItemInfo, hub: tuple[str, float] | None = None) -> Offer:
     published = item.get("published")
+    price = info.price if info.price is not None else 0.0
+    if hub and price > 0:
+        price = round(price + hub[1], 2)        # wie bei Alarmen: Ticket + Zubringer
     return Offer(
-        source=info.source, origin="", destination="",
-        price=info.price if info.price is not None else 0.0,
+        source=info.source, origin=hub[0] if hub else "", destination="",
+        price=price,
         roundtrip=not info.oneway, cabin=info.cabin, link=item["link"], title=item["title"],
         found_at=(published.astimezone().replace(tzinfo=None) if published else datetime.now()),
         expires=info.expires, hot=info.hot, uid=info.uid,
+        via_hub=hub[0] if hub else None, surcharge=hub[1] if hub else None,
     )
 
 
@@ -221,7 +248,8 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
             twin.reasons.append(f"Auch bei {feed_mod.source_label(info.source)}: "
                                 f"{euro(info.price)}")
             continue
-        deal = Deal(alert=RADAR_ALERT, offer=_offer(it, info), rating=RATING,
+        deal = Deal(alert=RADAR_ALERT, offer=_offer(it, info, radar_hub(info, settings)),
+                    rating=RATING,
                     reference_price=None, discount=None, reasons=reasons, headline=it["title"])
         kept.append((deal, dkey))
         out.append(deal)
