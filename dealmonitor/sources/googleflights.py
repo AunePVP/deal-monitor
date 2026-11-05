@@ -22,6 +22,12 @@ Blockade sofort mit ``SourceError`` abgebrochen (Schutzschalter ``_down`` für d
 
 Weil die Preise echte Live-Preise sind, fließen sie in die Preis-Historie ein
 (``records_history = True``) und dienen zur Gegenprüfung gecachter Quellen (``verify``).
+
+Jede Seite bringt außerdem Googles Preisniveau mit (``google_insights``: Tiefst-/Normalpreis,
+typische Spanne, Verlauf); es hängt an jeder Offer (``Offer.insight``) und jeder Gegenprüfung.
+Google liefert gelegentlich eine leere Suchmaske oder eine ErrorResponse - dann genau ein
+zweiter Abruf (zählt aufs Budget). Bleibt auch der leer, gilt das als "Abruf leer"
+(``empty_fetches``), nicht als Netzfehler.
 """
 
 from __future__ import annotations
@@ -38,7 +44,7 @@ from urllib.parse import quote, urlsplit
 
 from .. import http, regions
 from ..models import Alert, Offer
-from . import SourceError
+from . import SourceError, google_insights
 
 log = logging.getLogger(__name__)
 
@@ -81,6 +87,12 @@ BLOCK_BODY_RE = re.compile(
     r"<form[^>]+consent\.google\.com|ungewöhnlichen Datenverkehr|unusual traffic|"
     r"www\.google\.com/sorry/|id=\"recaptcha\"|class=\"g-recaptcha\"", re.I)
 NO_FLIGHTS_RE = re.compile(r"keine (?:Flüge|Ergebnisse|passenden Flüge)|no flights found", re.I)
+#: leere Suchmaske ~1,95 MB, Ergebnisseiten 2,3-2,45 MB (entpackt, gemessen 05.11.2026)
+EMPTY_PAGE_MAX_CHARS = 2_100_000
+#: Kennzeichen einer echten Google-Flights-Seite (sonst: anderes Layout -> kein zweiter Versuch)
+GOOGLE_PAGE_RE = re.compile(r"AF_initDataCallback|Google Fl(?:ü|ue)ge|Google Flights")
+#: Wartezeit vor dem zweiten Abruf (Sekunden): ErrorResponse bzw. leere Suchmaske
+RETRY_WAIT = {"error": 2.0, "empty": 4.0}
 
 # -- Parser-Regexe ----------------------------------------------------------------------
 LABEL_RE = re.compile(r"""aria-label=(["'])(Ab\s+\d[\d.]*(?:,\d+)?\s+Euro\b.*?)\1""", re.S)
@@ -116,6 +128,10 @@ class GoogleBlocked(SourceError):
 
 class ParseError(RuntimeError):
     """Seite geladen, aber keine Ergebnisse erkennbar (Seitenaufbau geändert?)."""
+
+
+class EmptyPage(ParseError):
+    """Abruf leer: leere Suchmaske/ErrorResponse auch beim zweiten Versuch (vorübergehend)."""
 
 
 # -- URL und Abruf ----------------------------------------------------------------------
@@ -270,6 +286,18 @@ def parse_results(html: str) -> list[dict]:
     return results
 
 
+def transient_problem(page: str, results: list[dict]) -> str | None:
+    """Vorübergehend unbrauchbare Seite, bei der ein zweiter Abruf lohnt: ``"error"``
+    (``ds:1`` ist eine ErrorResponse), ``"empty"`` (leere Suchmaske: Google-Seite ohne
+    Ergebnisse und ohne "keine Flüge", kleiner als eine Ergebnisseite) oder ``None``."""
+    if google_insights.is_error_response(page):
+        return "error"
+    if (not results and not NO_FLIGHTS_RE.search(page) and len(page) < EMPTY_PAGE_MAX_CHARS
+            and GOOGLE_PAGE_RE.search(page)):
+        return "empty"
+    return None
+
+
 def page_settings(html: str) -> dict[str, str | None]:
     """Reiseart und Kabine, die Google tatsächlich angewendet hat (aus der Suchmaske).
 
@@ -399,6 +427,8 @@ class GoogleFlightsSource:
         self.requests_made = 0
         self.scans_made = 0          # echte Scan-Abfragen (ohne Gegenprüfungen)
         self.verifications = 0
+        self.retries = 0             # zweite Abrufe nach leerer Maske/ErrorResponse
+        self.empty_fetches = 0       # "Abruf leer": auch der zweite Abruf ohne Ergebnis
         #: Scan-Abfragen, die den noch nicht geprüften Alarmen zustehen (``begin_run``) -
         #: so viel lässt die Gegenprüfung frei, damit spätere Alarme nicht leer ausgehen
         self._scan_pending = 0
@@ -406,8 +436,11 @@ class GoogleFlightsSource:
         self.last_error = None
         self._down: str | None = None
         self._cache: dict[str, list[dict]] = {}
+        #: Preisniveau je abgefragter URL (``google_insights.parse``; None = keins)
+        self._insights: dict[str, dict | None] = {}
         self._last_request_at: float | None = None
         self._consecutive_failures = 0
+        self._consecutive_empty = 0
         #: Scan-Budget je Alarm (``begin_run``); ohne Eintrag gilt das ganze Scan-Budget
         self._shares: dict[str, int] = {}
 
@@ -445,10 +478,10 @@ class GoogleFlightsSource:
         return self._down
 
     # -- Abruf ----------------------------------------------------------------
-    def _pause(self) -> None:
+    def _pause(self, minimum: float = 0.0) -> None:
         if self._last_request_at is None or self.delay <= 0:
             return
-        wanted = self.rng.uniform(max(self.delay - 1.0, 0.0), self.delay + 1.0)
+        wanted = max(self.rng.uniform(max(self.delay - 1.0, 0.0), self.delay + 1.0), minimum)
         wait = wanted - (time.monotonic() - self._last_request_at)
         if wait > 0:
             time.sleep(wait)
@@ -458,8 +491,10 @@ class GoogleFlightsSource:
         """Eine Google-Abfrage (gecacht pro Lauf, zählt auf ``max_requests``).
 
         Wirft ``GoogleBlocked`` (und setzt den Schutzschalter), ``http.HttpError`` bei
-        Netzwerkfehlern, ``ParseError`` wenn keine Ergebnisse erkennbar sind und
-        ``SourceError`` wenn das Budget erschöpft ist.
+        Netzwerkfehlern, ``ParseError`` wenn keine Ergebnisse erkennbar sind (``EmptyPage``:
+        auch der zweite Abruf leer) und ``SourceError`` wenn das Budget erschöpft ist.
+        Leere Suchmaske oder ErrorResponse -> genau ein zweiter Abruf (zählt aufs Budget).
+        Das Preisniveau der Seite steht danach in ``insight(url)``.
         """
         url = build_url(origin, dest, departure, return_date, cabin, roundtrip)
         if url in self._cache:
@@ -468,10 +503,50 @@ class GoogleFlightsSource:
             raise GoogleBlocked(self._down)
         if self.requests_made >= self.max_requests:
             raise SourceError(f"Google Flights: Limit von {self.max_requests} Abfragen erreicht")
-        self._pause()
+        page = self._load(url)
+        results = parse_results(page)
+        problem = transient_problem(page, results)
+        if problem and self.requests_made < self.max_requests:
+            log.info("Google Flights: %s, zweiter Abruf für %s",
+                     "ErrorResponse" if problem == "error" else "leere Seite", url)
+            self.retries += 1
+            page = self._load(url, wait=RETRY_WAIT[problem])
+            results = parse_results(page)
+            problem = transient_problem(page, results)
+        if not results:
+            if problem:             # ErrorResponse ist kein "keine Flüge"
+                self._empty_fetch()
+            elif NO_FLIGHTS_RE.search(page):
+                log.info("Google Flights: keine Flüge für %s", url)
+            else:
+                self._consecutive_failures += 1
+                if self._consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
+                    self._down = ("Google Flights liefert keine auswertbaren Ergebnisse "
+                                  f"({self._consecutive_failures} Seiten hintereinander) – "
+                                  "Seitenaufbau geändert oder Sperre?")
+                    raise GoogleBlocked(self._down)
+                raise ParseError("keine Ergebnisse auf der Seite erkannt")
+        self._consecutive_failures = 0
+        self._consecutive_empty = 0
+        # Sicherheitsnetz: nie Economy-Preise als Business melden oder One-way als Hin/Rück -
+        # falls Google die Angaben aus der Suchanfrage ignoriert hat
+        applied = page_settings(page)
+        if applied["cabin"] and applied["cabin"] != cabin:
+            raise ParseError(f"Google zeigt {applied['cabin']} statt {cabin}")
+        wanted_trip = "roundtrip" if roundtrip else "oneway"
+        if applied["trip"] and applied["trip"] != wanted_trip:
+            raise ParseError(f"Google zeigt {applied['trip']} statt {wanted_trip}")
+        results = [r for r in results if r["roundtrip"] is None or r["roundtrip"] == roundtrip]
+        self._insights[url] = google_insights.parse(page)
+        self._cache[url] = results
+        return results
+
+    def _load(self, url: str, wait: float = 0.0) -> str:
+        """Ein Abruf (zählt auf ``max_requests``) mit Pause, Sperre und Netzfehler-Zähler."""
+        self._pause(wait)
         self.requests_made += 1
         try:
-            page = self.fetcher(url) if self.fetcher else fetch_html(url, self.timeout)
+            return self.fetcher(url) if self.fetcher else fetch_html(url, self.timeout)
         except GoogleBlocked as e:
             self._down = f"{BLOCKED_MESSAGE} ({e})"
             raise
@@ -486,30 +561,23 @@ class GoogleFlightsSource:
             raise
         finally:
             self._last_request_at = time.monotonic()
-        results = parse_results(page)
-        if not results:
-            if NO_FLIGHTS_RE.search(page):
-                log.info("Google Flights: keine Flüge für %s", url)
-            else:
-                self._consecutive_failures += 1
-                if self._consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
-                    self._down = ("Google Flights liefert keine auswertbaren Ergebnisse "
-                                  f"({self._consecutive_failures} Seiten hintereinander) – "
-                                  "Seitenaufbau geändert oder Sperre?")
-                    raise GoogleBlocked(self._down)
-                raise ParseError("keine Ergebnisse auf der Seite erkannt")
+
+    def _empty_fetch(self) -> None:
+        """Abruf leer: eigener Zähler, kein Netzfehler (die Seite kam ja an); nur wenn es
+        sich häuft, ist für diesen Lauf Pause."""
+        self.empty_fetches += 1
         self._consecutive_failures = 0
-        # Sicherheitsnetz: nie Economy-Preise als Business melden oder One-way als Hin/Rück -
-        # falls Google die Angaben aus der Suchanfrage ignoriert hat
-        applied = page_settings(page)
-        if applied["cabin"] and applied["cabin"] != cabin:
-            raise ParseError(f"Google zeigt {applied['cabin']} statt {cabin}")
-        wanted_trip = "roundtrip" if roundtrip else "oneway"
-        if applied["trip"] and applied["trip"] != wanted_trip:
-            raise ParseError(f"Google zeigt {applied['trip']} statt {wanted_trip}")
-        results = [r for r in results if r["roundtrip"] is None or r["roundtrip"] == roundtrip]
-        self._cache[url] = results
-        return results
+        self._consecutive_empty += 1
+        if self._consecutive_empty >= self.MAX_CONSECUTIVE_FAILURES:
+            self._down = ("Google Flights liefert nur leere Seiten "
+                          f"({self._consecutive_empty} Abfragen hintereinander) – "
+                          "pausiert bis zum nächsten Lauf")
+            raise GoogleBlocked(self._down)
+        raise EmptyPage("Abruf leer – Google zeigte auch beim zweiten Versuch keine Flüge")
+
+    def insight(self, url: str) -> dict | None:
+        """Preisniveau der (in diesem Lauf geladenen) Seite ``url`` - None, wenn keins."""
+        return self._insights.get(url)
 
     # -- Scan (Source-Protokoll) --------------------------------------------
     def plan(self, alert: Alert) -> list[tuple[str, str, date, date | None]]:
@@ -537,6 +605,7 @@ class GoogleFlightsSource:
         total = len(plan)
         offers: list[Offer] = []
         errors = 0
+        empty = 0
         skipped = 0
         affected: set[tuple[str, str]] = set()
         share = self._shares.get(alert.id)
@@ -553,17 +622,30 @@ class GoogleFlightsSource:
             if not cached:
                 used += 1
                 self.scans_made += 1
+            before = self.requests_made
             try:
                 results = self.query(origin, dest, dep, ret, alert.cabin, alert.roundtrip)
             except GoogleBlocked:
                 self._release_share(share)
                 raise SourceError(self._down or BLOCKED_MESSAGE) from None
+            except EmptyPage as e:
+                errors += 1
+                empty += 1
+                affected.add((origin, dest))
+                log.warning("Google Flights %s-%s %s: %s", origin, dest, dep, e)
+                continue
             except (http.HttpError, ParseError) as e:
                 errors += 1
                 affected.add((origin, dest))
                 log.warning("Google Flights %s-%s %s: %s", origin, dest, dep, e)
                 continue
-            offers += self.to_offers(results, alert, origin, dest, dep, ret, url)
+            finally:
+                # ein zweiter Abruf (leere Seite) geht vom Scan-Anteil dieses Alarms ab
+                retried = max(self.requests_made - before - 1, 0)
+                used += retried
+                self.scans_made += retried
+            offers += self.to_offers(results, alert, origin, dest, dep, ret, url,
+                                     insight=self.insight(url))
         self._release_share(share)
         if total and errors == total:
             raise SourceError(f"Alle {total} Google-Flights-Abfragen fehlgeschlagen")
@@ -572,7 +654,8 @@ class GoogleFlightsSource:
             if skipped:
                 parts.append(f"Google Flights: {total - skipped} von {total} Abfragen (Limit)")
             if errors:
-                parts.append(f"{errors} von {total} Abfragen fehlgeschlagen")
+                parts.append(f"{errors} von {total} Abfragen fehlgeschlagen"
+                             + (f" (davon {empty} leer)" if empty else ""))
             self.incomplete = {"message": "; ".join(parts), "routes": affected}
         return offers
 
@@ -582,7 +665,10 @@ class GoogleFlightsSource:
             self._scan_pending = max(self._scan_pending - share, 0)
 
     def to_offers(self, results: list[dict], alert: Alert, origin: str, dest: str,
-                  departure: date, return_date: date | None, link: str) -> list[Offer]:
+                  departure: date, return_date: date | None, link: str,
+                  insight: dict | None = None) -> list[Offer]:
+        """Ergebniszeilen -> Offers (passend zum Alarm, höchstens ``MAX_RESULTS_PER_QUERY``);
+        jede trägt das Preisniveau der Seite (``insight``)."""
         offers: list[Offer] = []
         # erst nach den Alarm-Regeln filtern, dann kürzen - sonst verdrängen 10 billigere
         # Umsteigeflüge einen passenden Nonstop-Flug
@@ -605,6 +691,7 @@ class GoogleFlightsSource:
                 duration_out_min=row.get("duration_min"),
                 duration_back_min=None,
                 link=link,
+                insight=dict(insight) if insight else None,
             ))
         return offers
 
@@ -613,7 +700,8 @@ class GoogleFlightsSource:
                cabin: str = "economy", roundtrip: bool = True, *, max_stops: int | None = None,
                max_minutes: float | None = None, exclude_airlines=()) -> dict | None:
         """Günstigster *passender* Google-Flug für genau diese Daten:
-        ``{price, airline, airline_code, stops, duration_min, link}``.
+        ``{price, airline, airline_code, stops, duration_min, link}`` - plus ``insight``
+        (Preisniveau der Seite), wenn Google eins zeigt.
 
         Passend heißt: höchstens ``max_stops`` Umstiege, Hinflug höchstens ``max_minutes``,
         keine Airline aus ``exclude_airlines`` (die Regeln des Alarms). Zeigt Google Flüge,
@@ -642,6 +730,10 @@ class GoogleFlightsSource:
                 return None
         try:
             results = self.query(origin, dest, departure, return_date, cabin, roundtrip)
+        except EmptyPage as e:
+            self.last_error = self._down or f"Google Flights: {e}"
+            log.warning("Google Flights Gegenprüfung %s-%s %s: %s", origin, dest, departure, e)
+            return None
         except (SourceError, http.HttpError, ParseError) as e:
             self.last_error = self._down or f"Google Flights nicht erreichbar: {e}"
             log.warning("Google Flights Gegenprüfung %s-%s %s: %s", origin, dest, departure, e)
@@ -655,11 +747,14 @@ class GoogleFlightsSource:
         criteria = {"max_stops": max_stops, "max_minutes": max_minutes,
                     "exclude_airlines": exclude_airlines}
         best = next((r for r in results if row_problem(r, **criteria) is None), None)
+        insight = self.insight(url)
+        extra = {"insight": dict(insight)} if insight else {}
         if best is None:
             first = results[0]
             return {"price": None, "cheapest": float(first["price"]), "link": url,
-                    "reason": f"kein passender Flug (günstigster: {row_problem(first, **criteria)})"}
+                    "reason": f"kein passender Flug (günstigster: {row_problem(first, **criteria)})",
+                    **extra}
         return {"price": float(best["price"]),
                 "airline": best.get("airline") or best.get("airline_code"),
                 "airline_code": best.get("airline_code"), "stops": best.get("stops"),
-                "duration_min": best.get("duration_min"), "link": url}
+                "duration_min": best.get("duration_min"), "link": url, **extra}
