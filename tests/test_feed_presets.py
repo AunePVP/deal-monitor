@@ -18,6 +18,7 @@ from pathlib import Path
 from unittest import mock
 
 from dealmonitor import http
+from dealmonitor.hubs import HubSettings
 from dealmonitor.models import Alert
 from dealmonitor.sources import feed
 from dealmonitor.sources.feed import (
@@ -78,8 +79,10 @@ def by_title(items: list[dict], part: str) -> dict:
     return hits[0]
 
 
-def fetch(presets: list[str], a: Alert, **kw):
+def fetch(presets: list[str], a: Alert, hubs: bool = True, **kw):
     src = FeedSource(presets=presets, max_age_days=OLD, **kw)
+    if not hubs:
+        src.hub_settings = HubSettings(enabled=False)
     with mock.patch.object(http, "request", side_effect=fake_request):
         return src, src.fetch(a)
 
@@ -221,10 +224,13 @@ class ReisetopiaTest(unittest.TestCase):
         _, offers = fetch(["reisetopia"], alert(origins=["ZRH"], destinations=["YYC"],
                                                 feed_keywords=[["Calgary"]]))
         self.assertEqual(offers, [])
-        # Barcelona–Shanghai ist kein Deal ab Deutschland
+        # Barcelona–Shanghai ist kein Deal ab Deutschland, zählt nur als Nachbar-Hub (Paket 4):
+        # Ticket 1.919 € + 180 € Zubringer, also über der Grenze
         _, offers = fetch(["reisetopia"], alert(origins=["@DE"], destinations=["@CN"],
                                                 max_price=1999))
-        self.assertEqual(offers, [])
+        self.assertEqual([(o.via_hub, o.price) for o in offers], [("BCN", 2099)])
+        self.assertEqual(fetch(["reisetopia"], alert(origins=["@DE"], destinations=["@CN"]),
+                               hubs=False)[1], [])
 
     def test_without_article_text_no_price(self):
         # alte Fixture ohne content:encoded: keine erfundenen Preise aus dem Titel
@@ -297,12 +303,17 @@ class YhbuTest(unittest.TestCase):
 
     def test_alert(self):
         _, offers = fetch(["yhbu"], alert(max_price=1999, feed_keywords=[["Peking"]]))
-        self.assertEqual([(o.source, o.price) for o in offers], [("feed:yhbu", 1330)])
-        # ab Deutschland nur Frankfurt–Peking; Budapest/Rom/Oslo–China sind Nachbar-Hubs
-        # (eigenes Paket), "Qatar Business China – Europa" fliegt nach Europa
-        _, offers = fetch(["yhbu"], alert(origins=["@DE"], destinations=["@CN"], max_price=1999,
-                                          feed_keywords=[["China"], ["Peking"], ["Shanghai"]]))
-        self.assertEqual([o.price for o in offers], [1330])
+        self.assertEqual([(o.source, o.price) for o in offers if not o.via_hub],
+                         [("feed:yhbu", 1330)])
+        # ab Deutschland nur Frankfurt–Peking; Budapest/Rom/Oslo–China kommen nur als
+        # Nachbar-Hub (Ticket + Zubringer), "Qatar Business China – Europa" fliegt nach Europa
+        a = alert(origins=["@DE"], destinations=["@CN"], max_price=1999,
+                  feed_keywords=[["China"], ["Peking"], ["Shanghai"]])
+        _, offers = fetch(["yhbu"], a)
+        self.assertEqual([o.price for o in offers if not o.via_hub], [1330])
+        self.assertTrue(all(o.surcharge for o in offers if o.via_hub))
+        self.assertIn(("BUD", 1670), [(o.via_hub, o.price) for o in offers])   # 1.490 + 180
+        self.assertEqual([o.price for o in fetch(["yhbu"], a, hubs=False)[1]], [1330])
 
 
 class PremiumFlightsTagsTest(unittest.TestCase):
@@ -328,8 +339,10 @@ class PremiumFlightsTagsTest(unittest.TestCase):
 
     def test_pek_tag_feed_finds_frankfurt_beijing(self):
         src, offers = fetch(["premium-flights"], alert(max_price=1999, feed_keywords=[["Beijing"]]))
-        self.assertEqual([(o.source, o.price, o.cabin) for o in offers],
+        self.assertEqual([(o.source, o.price, o.cabin) for o in offers if not o.via_hub],
                          [("feed:premium-flights", 1810, "business")])
+        # Oslo–Beijing 1.875 € nur als Nachbar-Hub: mit Zubringer 2.055 €
+        self.assertIn(("OSL", 2055), [(o.via_hub, o.price) for o in offers])
         self.assertIsNone(src.load_errors)
         self.assertEqual(src.stats["feed:premium-flights"]["error"], None)
 
