@@ -17,13 +17,13 @@ import sqlite3
 import sys
 import threading
 import traceback
-from datetime import timedelta
+from datetime import date, datetime, timedelta
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from . import __version__, health, notify, radar, regions
+from . import __version__, health, notify, radar, regions, rotation
 from .appsettings import SOURCE_LABELS, SOURCE_NAMES, Context
 from .config import normalize_alert, slugify
 from .models import Alert
@@ -80,6 +80,13 @@ class ApiError(Exception):
 CHEAPEST_ROUTES = 500
 
 
+def with_names(e: dict) -> dict:
+    """Anzeigename des Nachbar-Hubs ergänzen ("BUD" -> "Budapest")."""
+    if e.get("via_hub"):
+        e["hub_name"] = regions.name(e["via_hub"])
+    return e
+
+
 def cheapest_json(entries: list[dict] | None) -> dict | None:
     """Bestpreis-Übersicht eines Alarms: günstigstes Angebot insgesamt (``best``), günstigster
     Live-/bestätigter Preis, falls der beste nur ein Cache-Preis ist (``best_live``), und je
@@ -88,7 +95,7 @@ def cheapest_json(entries: list[dict] | None) -> dict | None:
         return None
     items = []
     for e in sorted(entries, key=lambda x: x["price"]):
-        e = dict(e)
+        e = with_names(dict(e))
         e["compare"] = _gf_link(e)
         e["source_label"] = source_label(e["source"])
         items.append(e)
@@ -116,11 +123,40 @@ def near_deals_json(entries: list[dict] | None) -> list[dict]:
             continue
         key = e["route"] if e["route"] == "artikel" else f"{e.get('origin')}-{e.get('destination')}"
         if key not in out:
-            out[key] = dict(e, compare=_gf_link(e), source_label=source_label(e["source"]))
+            out[key] = with_names(dict(e, compare=_gf_link(e),
+                                       source_label=source_label(e["source"])))
     return list(out.values())[:NEAR_DEALS]
 
 
-def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = None) -> dict:
+#: Strecken, die keine Deal-Seite meldet (Recherche 11/2026) - dort trägt die Google-Rotation
+NO_DEAL_SITE_ROUTES = (frozenset({"ZRH", "HAM"}),)
+
+
+def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
+                  today: date, now: datetime, scan_months: int) -> dict | None:
+    """Abdeckung eines Alarms durch die Google-Tagesrotation: der Alarm rotiert selbst oder ist
+    ein Hin/Rück-Alarm, dessen Strecken ein aktiver Rotations-Alarm (gleiche Kabine) abdeckt
+    (Kombinationen aus 2 One-ways). ``days`` = Abflugtage mit aktuellem Preis im Gedächtnis."""
+    routes = rotation.routes_for(alert)
+    source = alert if alert.rotation else next(
+        (a for a in alerts if a.rotation and a.enabled and a.cabin == alert.cabin
+         and alert.roundtrip and set(routes) <= set(rotation.routes_for(a))), None)
+    if source is None or not routes:
+        return None
+    horizon = rotation.horizon_for(source, scan_months)
+    days: set[date] = set()
+    for o, d in routes:
+        try:
+            days |= set(memory.get(o, d, alert.cabin, today, now))
+        except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
+            log.exception("Google-Rotation: Gedächtnis nicht lesbar")
+    airports = {c for pair in alert.pairs for c in pair}
+    return {"horizon_days": horizon, "days": len(days),
+            "no_deal_sites": any(airports <= r for r in NO_DEAL_SITE_ROUTES)}
+
+
+def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = None,
+               cover: dict | None = None) -> dict:
     out = dict(raw)
     try:
         a = Alert(**raw)
@@ -128,6 +164,7 @@ def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = Non
         out["pairs"] = len(a.pairs)
     except (TypeError, ValueError):
         out["origins_expanded"], out["destinations_expanded"], out["pairs"] = [], [], 0
+    out["rotation_cover"] = (cover or {}).get(raw["id"])
     st = (stats or {}).get(raw["id"], {})
     out["active_deals"] = st.get("active_deals", 0)
     out["best_price"] = st.get("best_price")
@@ -153,6 +190,7 @@ def deal_list(store, status: str = "active", alert_id: str | None = None) -> lis
             d["compare"] = _gf_link(d)
             d["alert_ids"] = [d["alert_id"]]
             d["source_label"] = source_label(d["source"])
+            with_names(d)
             d["verified"] = any(str(r).startswith(VERIFIED_PREFIX) for r in d.get("reasons") or [])
         if not alert_id:
             merged = _merge_articles(rows)
@@ -476,9 +514,33 @@ class Handler(BaseHTTPRequestHandler):
         return store.cheapest(alert_id, today=self.ctx.today,
                               max_age=timedelta(hours=2 * hours) if hours > 0 else None)
 
+    def _rotation(self, store, rows: list[dict]) -> dict[str, dict]:
+        """Abdeckung durch die Google-Rotation je Alarm-ID (nur betroffene Alarme)."""
+        alerts = []
+        for raw in rows:
+            try:
+                alerts.append(Alert(**raw))
+            except (TypeError, ValueError):
+                continue
+        if not any(a.rotation for a in alerts):
+            return {}
+        memory = rotation.Memory(store.source_state(rotation.STATE_NAME))
+        try:
+            months = int(self.ctx.settings(store).get("scan_months"))
+        except (KeyError, TypeError, ValueError):
+            months = 6
+        today, now = self.ctx.today or date.today(), datetime.now()
+        out = {}
+        for a in alerts:
+            if (c := rotation_json(a, alerts, memory, today=today, now=now, scan_months=months)):
+                out[a.id] = c
+        return out
+
     def api_alerts(self, store, **_):
         stats, cheapest = store.deal_stats(), self._cheapest(store)
-        return 200, {"alerts": [alert_json(a, stats, cheapest) for a in store.alert_rows()]}
+        rows = store.alert_rows()
+        cover = self._rotation(store, rows)
+        return 200, {"alerts": [alert_json(a, stats, cheapest, cover) for a in rows]}
 
     def api_create_alert(self, store, body, **_):
         data = dict(body)

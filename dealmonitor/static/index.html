@@ -24,6 +24,10 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
         <span>Alarme</span>
       </a>
+      <a href="#quellen" data-route="quellen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span>Quellen</span>
+      </a>
       <a href="#meldungen" data-route="meldungen">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1Z"/></svg>
         <span>Meldungen</span>
@@ -83,6 +87,33 @@
       </details>
     </section>
     <div class="deal-grid" id="deal-list" aria-live="polite"></div>
+    <section class="near-panel" id="near-deals" aria-labelledby="h-near" hidden>
+      <div class="near-head">
+        <h2 id="h-near">Beinahe-Deals <span class="chip-count" id="h-near-count"></span></h2>
+        <p class="help">Knapp über deiner Grenze, aber günstiger als üblich. Nur zur Info – wird nie gemeldet.</p>
+      </div>
+      <ul class="near-list" id="near-list"></ul>
+    </section>
+  </section>
+
+  <!-- ================= Quellen ================= -->
+  <section class="view" id="view-quellen" aria-labelledby="h-quellen" hidden>
+    <div class="view-head">
+      <div>
+        <h1 id="h-quellen">Quellen-Gesundheit</h1>
+        <p class="lead">Liefert jede Quelle? So sieht ein stiller Ausfall nie aus wie „gerade keine Deals“.</p>
+      </div>
+    </div>
+    <div class="health-summary" id="health-summary" hidden></div>
+    <section class="panel" aria-labelledby="h-health">
+      <h2 id="h-health" class="panel-title">Stand je Quelle</h2>
+      <div id="health-list"></div>
+    </section>
+    <section class="panel" id="unused-panel" aria-labelledby="h-unused" hidden>
+      <h2 id="h-unused" class="panel-title">Bewusst nicht genutzt</h2>
+      <p class="help">Geprüft und aussortiert – lieber keine Quelle als eine, die still kaputtgeht.</p>
+      <ul class="unused-list" id="unused-list"></ul>
+    </section>
   </section>
 
   <!-- ================= Alarme ================= -->

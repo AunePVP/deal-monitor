@@ -164,3 +164,28 @@ Getestet in `tests/test_scoring.py`. Alles zusätzlich; alte Zeilen ohne die Fel
 - **Beinahe-Deals**: `/api/alerts[].near_deals` = Liste (höchstens 5, je Strecke einer) aus den
   Bestpreisen mit `near: [Gründe]`, z. B. `["61 € über deiner Grenze", "7% unter typischer Spanne (600 €–1.050 €)"]`.
   Nie gemeldet. Gespeichert als Feld `near` im Bestpreis-Eintrag (`store.cheapest`).
+
+## 10. Oberfläche und Demo (Paket 9)
+
+Getestet in `tests/test_ui_api.py` (Demo-Lauf über die echte API) und `tests/e2e/ui.mjs`.
+Screenshots (Demo, Desktop 1280 / Mobil 390): `docs/handoff/screens/`.
+
+- **API-Zusätze** (nur additiv): `/api/deals[]` und Bestpreise/Beinahe-Deals tragen `hub_name`
+  (`regions.name(via_hub)`); `/api/alerts[].rotation_cover` = `{horizon_days, days, no_deal_sites}` für
+  Rotations-Alarme und Hin/Rück-Alarme, deren Strecken ein aktiver Rotations-Alarm gleicher Kabine
+  abdeckt (`days` = Abflugtage mit aktuellem Preis im Gedächtnis, `no_deal_sites` bei ZRH⇄HAM,
+  `web.NO_DEAL_SITE_ROUTES`); `/api/sources/health` zusätzlich `sources[].empty_share` (nur Google:
+  Anteil leerer Abrufe) und `not_used` (`health.NOT_USED`: Name + Grund).
+- **Deal-Karte**: Verlauf (Inline-SVG, Band typisch von–bis, Marke = Angebotspreis, Hover-Wert,
+  `aria-label`), Badges Google-Preisniveau, Spanne (ohne Verlauf), „läuft ab“, Nachbar-Hub (Preis-Box
+  „inkl. 180 € Zubringer“), Erstmeldung mit Vorsprung, „n Quellen“ (Links in der Quellenzeile).
+  Gründe, die schon als Badge stehen (Erstmeldung, Google-Niveau, Hub), werden nicht doppelt gelistet.
+  Alle Werte defensiv: fehlende/kaputte Felder → Element fehlt, nie ein Fehler.
+- **Beinahe-Deals**: Abschnitt unter den Deals (folgt dem Filter) und auf jeder Alarm-Karte.
+- **Seite „Quellen“** (`#quellen`): Ampel je Quelle, Alter des neuesten Artikels, Artikel/Abrufe im
+  letzten Lauf, Google-leer-Anteil, Liste „Bewusst nicht genutzt“.
+- **Demo** (`demo.py`): Google-Seiten mit Preisniveau (ZRH⇄HAM one-way, FRA→PEK mit 559 € als
+  Beinahe-Deal, erfundenes Niveau für die bestätigte 92-€-Karte), erfundene Artikel von Secret Flying,
+  ErrorFareAlerts und premium-flights (`demo_articles`: 3 Quellen, Budapest-Hub mit Ablaufdatum,
+  veraltete Quelle). Rotations-Gedächtnis über `demo.StateStore` in der Demo-Datenbank.
+  `FixtureFeed()` ohne Argumente verhält sich wie vorher (nur Travel-Dealz).

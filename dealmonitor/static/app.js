@@ -205,7 +205,7 @@
   try { state.showExpired = localStorage.getItem("dm.showExpired") === "1"; } catch (e) { /* egal */ }
 
   // ------------------------------------------------------------------ Routing
-  const ROUTES = ["deals", "alarme", "meldungen", "einstellungen"];
+  const ROUTES = ["deals", "alarme", "quellen", "meldungen", "einstellungen"];
   function currentRoute() {
     const h = (location.hash || "").replace(/^#/, "");
     return ROUTES.includes(h) ? h : "deals";
@@ -219,13 +219,14 @@
       if (a.dataset.route === r) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
     }
-    document.title = { deals: "Deals", alarme: "Alarme", meldungen: "Meldungen", einstellungen: "Einstellungen" }[r] + " · Deal-Monitor";
+    document.title = { deals: "Deals", alarme: "Alarme", quellen: "Quellen", meldungen: "Meldungen", einstellungen: "Einstellungen" }[r] + " · Deal-Monitor";
     loadView(r);
     if (changed) { window.scrollTo(0, 0); $("#main").focus({ preventScroll: true }); }
   }
   function loadView(r) {
     if (r === "deals") loadDeals();
     else if (r === "alarme") loadAlerts();
+    else if (r === "quellen") loadHealth();
     else if (r === "meldungen") loadNotes();
     else if (r === "einstellungen") { loadSettings(); loadRuns(); }
   }
@@ -324,6 +325,7 @@
     });
     if (state.route === "meldungen") loadNotes();
     if (state.route === "einstellungen") loadRuns();
+    if (state.route === "quellen") loadHealth();
   }
 
   async function startRun(alertId, mode) {
@@ -393,6 +395,7 @@
     if (state.dealFilter && state.dealFilter !== RADAR_ID && !state.alerts.some((a) => a.id === state.dealFilter)) state.dealFilter = null;
     renderDealFilters();
     renderBestPrices();
+    renderNearDeals();
     $("#show-expired").checked = state.showExpired;
     const q = new URLSearchParams({ status: state.showExpired ? "all" : "active" });
     if (state.dealFilter) q.set("alert_id", state.dealFilter);
@@ -406,6 +409,127 @@
       if (req !== dealsReq) return;
       list.replaceChildren(el("div", { class: "empty" }, el("p", null, `Deals konnten nicht geladen werden: ${e.message}`)));
     }
+  }
+
+  // ------------------------------------------------------------------ Preisniveau, Verlauf, Signale
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) {
+    const node = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs || {})) node.setAttribute(k, String(v));
+    return node;
+  }
+  const num = (v) => typeof v === "number" && isFinite(v);
+  const euroNum = (v) => euroFmt.format(v).replace(/\s*€$/, "");
+  const LEVEL = { niedrig: "Preise niedrig", typisch: "Preise typisch", hoch: "Preise hoch" };
+
+  /** Googles Preisniveau, bereinigt (Werte sind abgeleitet – nie blind vertrauen). */
+  function googleLevel(ins) {
+    if (!ins || typeof ins !== "object") return null;
+    const lo = num(ins.typical_low) && ins.typical_low > 0 ? ins.typical_low : null;
+    const hi = num(ins.typical_high) && lo && ins.typical_high >= lo ? ins.typical_high : null;
+    const history = (Array.isArray(ins.history) ? ins.history : [])
+      .filter((p) => Array.isArray(p) && p.length === 2 && parseIso(p[0]) && num(p[1]) && p[1] > 0);
+    const level = LEVEL[ins.level] ? ins.level : null;
+    if (!level && !hi && history.length < 2) return null;
+    return { level, lo: hi ? lo : null, hi, saving: num(ins.saving) ? ins.saving : null, history };
+  }
+  function rangeText(g) { return g.hi ? `typisch ${euroNum(g.lo)}–${euro(g.hi)}` : null; }
+  function levelBadge(g) {
+    if (!g || !g.level) return null;
+    let text = `Google: ${LEVEL[g.level]}`;
+    if (g.saving && g.saving > 0 && g.level === "niedrig") text += ` · ${euro(g.saving)} unter Normalpreis`;
+    return el("span", { class: `badge badge-soft lvl-${g.level}`, title: "Einschätzung von Google Flights für diese Suche" }, text);
+  }
+
+  /** 62-Tage-Verlauf als Inline-SVG: Band „typisch von–bis“, Linie, Marke für das Angebot. */
+  function sparkline(ins, price, { compact = false } = {}) {
+    const g = googleLevel(ins);
+    if (!g || g.history.length < 2) return null;
+    const pts = g.history.map(([day, p]) => ({ day, p }));
+    const values = pts.map((x) => x.p).concat(g.hi ? [g.lo, g.hi] : []).concat(num(price) && price > 0 ? [price] : []);
+    let min = Math.min(...values), max = Math.max(...values);
+    const margin = Math.max((max - min) * 0.12, 1);
+    min -= margin; max += margin;
+    const W = 100, H = 40;
+    const x = (i) => (i / (pts.length - 1)) * W;
+    const y = (v) => H - ((v - min) / (max - min)) * H;
+    const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: "none", "aria-hidden": "true", focusable: "false" });
+    if (g.hi) svg.append(svgEl("rect", { class: "spark-band", x: 0, y: y(g.hi), width: W, height: Math.max(y(g.lo) - y(g.hi), 0.5) }));
+    const d = pts.map((pt, i) => `${i ? "L" : "M"}${x(i).toFixed(2)},${y(pt.p).toFixed(2)}`).join("");
+    svg.append(svgEl("path", { class: "spark-line", d, "vector-effect": "non-scaling-stroke" }));
+    const cross = el("span", { class: "spark-cross", hidden: true });
+    const tip = el("span", { class: "spark-tip", hidden: true });
+    const first = pts[0], last = pts[pts.length - 1];
+    const label = [`Google-Preisverlauf der letzten ${pts.length} Tage: zwischen ${euro(Math.min(...pts.map((q) => q.p)))} und ${euro(Math.max(...pts.map((q) => q.p)))}`,
+      g.hi ? `typisch ${euro(g.lo)} bis ${euro(g.hi)}` : null, num(price) && price > 0 ? `dieses Angebot ${euro(price)}` : null].filter(Boolean).join(", ");
+    const plot = el("div", { class: "spark-plot", role: "img", "aria-label": label }, svg, cross, tip);
+    if (num(price) && price > 0) {
+      const top = (y(price) / H) * 100;
+      plot.append(el("span", { class: "spark-dot", style: `top:${top.toFixed(1)}%` }));
+    }
+    const show = (ev) => {
+      const r = plot.getBoundingClientRect();
+      if (!r.width) return;
+      const i = Math.max(0, Math.min(pts.length - 1, Math.round(((ev.clientX - r.left) / r.width) * (pts.length - 1))));
+      const left = (x(i) / W) * 100;
+      cross.style.left = `${left}%`;
+      tip.textContent = `${fmtDate(pts[i].day).slice(0, 6)}: ${euro(pts[i].p)}`;
+      tip.style.left = `${Math.min(Math.max(left, 14), 86)}%`;
+      cross.hidden = tip.hidden = false;
+    };
+    plot.addEventListener("pointermove", show);
+    plot.addEventListener("pointerdown", show);
+    plot.addEventListener("pointerleave", () => { cross.hidden = tip.hidden = true; });
+    const legend = el("div", { class: "spark-legend" },
+      g.hi ? el("span", { class: "key key-band" }, rangeText(g)) : null,
+      num(price) && price > 0 ? el("span", { class: "key key-dot" }, `dieses Angebot ${euro(price)}`) : null);
+    const axis = compact ? null : el("div", { class: "spark-axis", "aria-hidden": "true" },
+      el("span", null, fmtDate(first.day).slice(0, 6)), el("span", null, "heute"));
+    return el("figure", { class: `spark${compact ? " spark-compact" : ""}` },
+      compact ? null : el("figcaption", { class: "spark-head" },
+        el("span", { class: "spark-title" }, `Preisverlauf bei Google · ${pts.length} Tage`), levelBadge(g)),
+      plot, axis, legend);
+  }
+
+  /** "läuft ab 12.11." – Ablaufdatum des Angebots (Deal-Seite). */
+  function expiresBadge(d) {
+    const when = parseIso(d.expires);
+    if (!when || d.status === "expired") return null;
+    const days = (when.getTime() - Date.now()) / 86400000;
+    const label = `läuft ab ${pad(when.getDate())}.${pad(when.getMonth() + 1)}.`;
+    return el("span", { class: `badge badge-soft${days <= 3 ? " sig-warn" : ""}`, title: `Angebot gilt laut Deal-Seite bis ${fmtDateTime(d.expires)}` }, label);
+  }
+  function hubBadge(d) {
+    if (!d.via_hub) return null;
+    const name = d.hub_name || d.via_hub;
+    const extra = num(d.surcharge) && d.surcharge > 0 ? ` (+${euro(d.surcharge)} Zubringer)` : "";
+    return el("span", { class: "badge badge-soft sig-info", title: "Abflug ab einem Flughafen in der Nachbarschaft – Anreise ist im Preis eingerechnet" },
+      `Abflug Nachbar-Hub ${name}${extra}`);
+  }
+  /** Quellen eines Deals (früheste zuerst), nur gültige Einträge. */
+  function dealSources(d) {
+    return (Array.isArray(d.sources) ? d.sources : []).filter((x) => x && typeof x === "object" && (x.label || x.source));
+  }
+  function leadBadge(d) {
+    const src = dealSources(d);
+    if (src.length < 2) return null;
+    const a = parseIso(src[0].seen), b = parseIso(src[1].seen);
+    const h = a && b ? (b - a) / 3600000 : null;
+    const gap = h === null ? null : h < 1 ? "kurz davor" : h < 48 ? `${Math.round(h)} h früher` : `${Math.round(h / 24)} Tage früher`;
+    return el("span", { class: "badge badge-soft sig-accent", title: d.lead || null },
+      `Erstmeldung ${src[0].label || src[0].source}${gap ? `, ${gap}` : ""}`);
+  }
+  function sourcesBadge(d) {
+    const n = dealSources(d).length;
+    return n >= 2 ? el("span", { class: "badge badge-soft" }, `${n} Quellen`) : null;
+  }
+  /** Schon als Badge/Verlauf sichtbar: diese Gründe nicht doppelt auflisten. */
+  function reasonShown(r, d, g) {
+    const t = String(r);
+    if (/^Erstmeldung/.test(t) && dealSources(d).length >= 2) return true;
+    if (/^Google: Preise/.test(t) && g && g.level) return true;
+    if (/^Abflug Nachbar-Hub/.test(t) && d.via_hub) return true;
+    return false;
   }
 
   // ------------------------------------------------------------------ Bestpreise (auch ohne Deal)
@@ -463,7 +587,8 @@
       live ? el("p", { class: "best-live" }, `${live.kind === "live" ? "Live" : "✓ Bestätigt"} bei ${live.kind === "live" ? (live.source_label || "Google Flights") : "Google Flights"}: ab ${euro(live.price)}`,
         shortDates(live) ? ` (${shortDates(live)})` : "", el("span", { class: "muted" }, ` · ${bestAge(live)}`)) : null,
       el("p", { class: "best-meta" }, `Quelle: ${sourceLabel(e)} · ${bestNote(e)} · ${bestAge(e)}`,
-        c.route_count > 1 ? ` · Preise für ${plural(c.route_count, "Strecke", "Strecken")}` : ""));
+        c.route_count > 1 ? ` · Preise für ${plural(c.route_count, "Strecke", "Strecken")}` : ""),
+      rotationHint(a, true));
     const priceBox = el("div", { class: "best-price" },
       el("div", { class: "price" }, euro(e.price)), el("div", { class: "price-sub" }, sub), bestGap(a, e.price));
     const actions = el("div", { class: "best-actions" },
@@ -479,6 +604,55 @@
     box.hidden = !alerts.length;
     if (!alerts.length) return;
     $("#best-list").replaceChildren(...alerts.map(bestRow));
+  }
+
+  // ------------------------------------------------------------------ Beinahe-Deals, Google-Rotation
+  /** Kurzangaben eines Bestpreis-Eintrags ohne Airline (für knappe Zeilen). */
+  function nearFacts(e) {
+    return [e.origin && e.destination ? el("strong", null, `${e.origin} → ${e.destination}`) : null, shortDates(e),
+      e.airline || null, stopsLabel(e.stops)].filter(Boolean);
+  }
+  function nearRow(e, a, { chart = true } = {}) {
+    const reasons = (Array.isArray(e.near) ? e.near : []).filter((r) => typeof r === "string");
+    return el("li", { class: "near-row" },
+      el("div", { class: "near-main" },
+        a ? el("p", { class: "near-alert" }, a.name || a.id) : null,
+        el("p", { class: "near-facts" }, ...joinDots(nearFacts(e))),
+        reasons.length ? el("p", { class: "near-reasons" }, ...joinDots(reasons)) : null,
+        el("p", { class: "best-meta" }, `${sourceLabel(e)} · ${bestAge(e)}`)),
+      chart ? sparkline(e.insight, e.price, { compact: true }) : null,
+      el("div", { class: "near-price" }, el("div", { class: "price" }, euro(e.price)),
+        el("div", { class: "price-sub" }, e.roundtrip === false ? "one-way" : "hin & zurück"),
+        extLink(e.link || e.compare, "ansehen", "inline-link")));
+  }
+
+  function renderNearDeals() {
+    const box = $("#near-deals");
+    const f = state.dealFilter;
+    const rows = [];
+    if (f !== RADAR_ID) {
+      for (const a of state.alerts) {
+        if (f && a.id !== f) continue;
+        for (const e of Array.isArray(a.near_deals) ? a.near_deals : []) rows.push([e, a]);
+      }
+    }
+    box.hidden = !rows.length;
+    if (!rows.length) return;
+    rows.sort((x, y) => (x[0].price || 0) - (y[0].price || 0));
+    $("#h-near-count").textContent = String(rows.length);
+    $("#near-list").replaceChildren(...rows.map(([e, a]) => nearRow(e, a)));
+  }
+
+  /** Hinweis, wenn die Google-Tagesrotation den Alarm abdeckt (z. B. ZRH ⇄ HAM). */
+  function rotationHint(a, short) {
+    const c = a.rotation_cover;
+    if (!c || typeof c !== "object") return null;
+    const horizon = num(c.horizon_days) ? c.horizon_days : 90;
+    if (short) return el("p", { class: "rotation-hint is-short" }, `Google prüft jeden Abflugtag (${horizon} Tage)`);
+    return el("p", { class: "rotation-hint" },
+      c.no_deal_sites ? el("strong", null, "Keine Deal-Seite meldet diese Strecke. ") : null,
+      `Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten ${horizon} Tage wird einzeln geprüft.`,
+      num(c.days) && c.days > 0 ? el("span", { class: "muted" }, ` Aktuell ${c.days} von ${horizon} Tagen mit Preis.`) : null);
   }
 
   function renderDealFilters() {
@@ -553,7 +727,10 @@
       el("div", { class: "price-sub" }, d.roundtrip === false ? "p. P. one-way" : "p. P. hin & zurück"),
       typeof d.discount === "number" && d.discount > 0 && typeof d.reference_price === "number"
         ? el("div", { class: "price-ref" }, el("span", { class: "discount" }, `−${Math.round(d.discount * 100)} %`), " statt ", el("s", null, euro(d.reference_price)))
-        : null);
+        : null,
+      // Nachbar-Hub: gemeldeter Preis = Ticket + Zubringer
+      d.via_hub && num(d.surcharge) && d.surcharge > 0 && d.price > d.surcharge
+        ? el("div", { class: "price-ref", title: `Ticket ${euro(d.price - d.surcharge)} + ${euro(d.surcharge)} Zubringer` }, `inkl. ${euro(d.surcharge)} Zubringer`) : null);
 
     let when = fmtDate(d.departure);
     if (when && d.return_date) when += ` – ${fmtDate(d.return_date)}`;
@@ -562,11 +739,21 @@
       d.airline || null, stopsLabel(d.stops)].filter(Boolean);
     const factsEl = facts.length ? el("p", { class: "deal-facts" }, ...facts.flatMap((f, i) => (i ? [" · ", f] : [f]))) : null;
 
-    const reasons = Array.isArray(d.reasons) && d.reasons.length
-      ? el("ul", { class: "reasons", "aria-label": "Warum ein Deal?" }, ...d.reasons.map((r) => el("li", null, r))) : null;
+    const g = googleLevel(d.insight);
+    const chart = expired ? null : sparkline(d.insight, d.price);
+    const signals = el("div", { class: "badges signals" },
+      chart ? null : levelBadge(g), chart || !g ? null : (rangeText(g) ? el("span", { class: "badge badge-soft" }, rangeText(g)) : null),
+      expiresBadge(d), hubBadge(d), leadBadge(d), sourcesBadge(d));
+    const shownReasons = (Array.isArray(d.reasons) ? d.reasons : []).filter((r) => !reasonShown(r, d, chart || levelBadge(g) ? g : null));
+    const reasons = shownReasons.length
+      ? el("ul", { class: "reasons", "aria-label": "Warum ein Deal?" }, ...shownReasons.map((r) => el("li", null, r))) : null;
 
+    const srcs = dealSources(d);
+    const srcPart = srcs.length >= 2
+      ? [" · Quellen: ", ...srcs.flatMap((x, i) => [i ? ", " : "", extLink(x.link, x.label || x.source, "inline-link") || (x.label || x.source)])]
+      : [" · Quelle: ", sourceLabel(d)];
     const meta = el("p", { class: "deal-meta" },
-      d.alert_name || d.alert_id || "", " · Quelle: ", sourceLabel(d),
+      d.alert_name || d.alert_id || "", ...srcPart,
       d.first_seen ? ` · gefunden am ${fmtDateTime(d.first_seen)}` : "",
       expired && d.expired_at ? ` · abgelaufen am ${fmtDateTime(d.expired_at)}` : "");
 
@@ -578,7 +765,7 @@
     return el("article", { class: `deal-card${expired ? " expired" : ""}${isRadar ? " is-radar" : ""}${verified && !expired ? " is-verified" : ""}` },
       el("div", { class: "deal-top" }, el("div", { class: "deal-top-left" }, badges, route ? el("p", { class: "route" }, route) : null), priceBox),
       el("h2", { class: "deal-title" }, d.headline || "Deal"),
-      factsEl, reasons, meta, actions.childElementCount ? actions : null);
+      factsEl, signals.childElementCount ? signals : null, chart, reasons, meta, actions.childElementCount ? actions : null);
   }
 
   function setShowExpired(v) {
@@ -669,7 +856,9 @@
         el("li", null, el("span", { class: "fact-k" }, "Kabine"), el("span", { class: "fact-v" }, CABIN[a.cabin || "economy"] || a.cabin)),
         el("li", null, el("span", { class: "fact-k" }, "Reiseart"), el("span", { class: "fact-v" }, roundtrip ? "Hin- und Rückflug" : "one-way")),
         el("li", null, el("span", { class: "fact-k" }, "Deals"), el("span", { class: `fact-v${a.active_deals ? " good" : ""}` }, dealsText))),
+      rotationHint(a),
       alertBest(a),
+      alertNear(a),
       el("div", { class: "alert-actions" },
         runBtn,
         a.active_deals ? el("a", { class: "btn btn-small", href: "#deals", onclick: () => { state.dealFilter = a.id; } }, "Deals ansehen") : null,
@@ -701,6 +890,15 @@
         el("ul", { class: "best-routes" }, ...c.routes.map(routeLine), more)));
     }
     return el("div", { class: "alert-best" }, ...parts);
+  }
+
+  /** Beinahe-Deals auf der Alarm-Karte (aufklappbar). */
+  function alertNear(a) {
+    const list = Array.isArray(a.near_deals) ? a.near_deals : [];
+    if (!list.length) return null;
+    return el("details", { class: "alert-near", open: true },
+      el("summary", null, `Beinahe-Deals (${list.length})`, el("span", { class: "muted" }, " – knapp verpasst, nicht gemeldet")),
+      el("ul", { class: "near-list" }, ...list.map((e) => nearRow(e, null, { chart: false }))));
   }
 
   async function deleteAlert(a) {
@@ -1002,6 +1200,87 @@
     } finally {
       btn.disabled = false;
     }
+  }
+
+  // ------------------------------------------------------------------ Quellen-Gesundheit
+  const HEALTH = {
+    ok: { cls: "h-ok", icon: "✓", text: "OK" }, leer: { cls: "h-warn", icon: "!", text: "Leer" },
+    veraltet: { cls: "h-warn", icon: "!", text: "Veraltet" }, fehler: { cls: "h-bad", icon: "×", text: "Fehler" },
+  };
+  const GOOGLE_ID = "google_flights";
+  function hoursText(h) {
+    if (!num(h)) return null;
+    if (h < 1) return "unter 1 Std.";
+    if (h < 48) return `${Math.round(h)} Std.`;
+    return `${Math.round(h / 24)} Tagen`;
+  }
+
+  let healthReq = 0;
+  async function loadHealth() {
+    const req = ++healthReq;
+    const list = $("#health-list");
+    if (!list.childElementCount) list.replaceChildren(el("p", { class: "loading" }, "Lade Quellen …"));
+    try {
+      const data = await api("GET", "/api/sources/health");
+      if (req !== healthReq) return;
+      renderHealth(data);
+    } catch (e) {
+      if (req !== healthReq) return;
+      list.replaceChildren(el("div", { class: "empty" }, el("p", null, `Quellen-Zustand konnte nicht geladen werden: ${e.message}`)));
+    }
+  }
+
+  function healthRow(s) {
+    const st = HEALTH[s.state] || HEALTH.fehler;
+    const google = s.id === GOOGLE_ID;
+    const facts = [];
+    if (google) {
+      if (num(s.items)) facts.push(`${s.items.toLocaleString("de-DE")} ${s.items === 1 ? "Abruf" : "Abrufe"} im letzten Lauf`);
+      if (num(s.empty_share)) facts.push(`${Math.round(s.empty_share * 100)} % leer`);
+    } else {
+      if (num(s.age_hours)) facts.push(`neuester Artikel vor ${hoursText(s.age_hours)}`
+        + (s.state === "veraltet" && num(s.threshold_hours) ? ` (erwartet: höchstens ${hoursText(s.threshold_hours)})` : ""));
+      if (num(s.items)) facts.push(`${plural(s.items, "Artikel", "Artikel")} im letzten Lauf` + (num(s.parsed) && s.items ? `, ${s.parsed} mit Preis` : ""));
+    }
+    const when = [s.checked ? `geprüft ${relTime(s.checked)}` : null,
+      s.state !== "ok" && s.since ? `so seit ${fmtTime(s.since)}` : null].filter(Boolean).join(" · ");
+    return el("li", { class: `health-row ${st.cls}`, dataset: { id: String(s.id || "") } },
+      el("span", { class: "h-light", "aria-hidden": "true" }, st.icon),
+      el("div", { class: "health-main" },
+        el("p", { class: "health-name" }, s.name || s.id, el("span", { class: `h-label ${st.cls}` }, s.label || st.text)),
+        facts.length ? el("p", { class: "health-facts" }, facts.join(" · ")) : null,
+        s.detail && !["ok", "veraltet"].includes(s.state) ? el("p", { class: "health-detail" }, s.detail) : null),
+      when ? el("p", { class: "health-when" }, when) : null);
+  }
+
+  function renderHealth(data) {
+    const sources = Array.isArray(data.sources) ? data.sources.filter((s) => s && typeof s === "object") : [];
+    const list = $("#health-list");
+    const summary = $("#health-summary");
+    if (!sources.length) {
+      summary.hidden = true;
+      list.replaceChildren(el("div", { class: "empty" }, el("p", { class: "empty-title" }, "Noch keine Prüfung gelaufen"),
+        el("p", null, "Nach der ersten Prüfung steht hier, ob jede Quelle liefert.")));
+    } else {
+      const ok = sources.filter((s) => s.state === "ok").length;
+      const bad = sources.filter((s) => s.state === "fehler").length;
+      const cls = bad ? "h-bad" : ok === sources.length ? "h-ok" : "h-warn";
+      const latest = sources.map((s) => s.checked).filter(Boolean).sort().pop();
+      summary.hidden = false;
+      summary.className = `health-summary ${cls}`;
+      summary.replaceChildren(
+        el("span", { class: "h-light h-big", "aria-hidden": "true" }, (HEALTH[cls === "h-ok" ? "ok" : cls === "h-bad" ? "fehler" : "leer"]).icon),
+        el("div", null,
+          el("p", { class: "health-headline" }, ok === sources.length ? `Alle ${sources.length} Quellen liefern`
+            : `${ok} von ${sources.length} Quellen OK`),
+          el("p", { class: "help" }, (ok === sources.length ? "Keine stillen Ausfälle." : "Probleme stehen oben – die übrigen Quellen laufen normal weiter.")
+            + (latest ? ` Zuletzt geprüft ${relTime(latest)}.` : ""))));
+      list.replaceChildren(el("ul", { class: "health-list" }, ...sources.map(healthRow)));
+    }
+    const unused = Array.isArray(data.not_used) ? data.not_used.filter((x) => x && x.name) : [];
+    $("#unused-panel").hidden = !unused.length;
+    $("#unused-list").replaceChildren(...unused.map((x) => el("li", null,
+      el("span", { class: "unused-name" }, x.name), el("span", { class: "unused-reason" }, x.reason || ""))));
   }
 
   // ------------------------------------------------------------------ Meldungen

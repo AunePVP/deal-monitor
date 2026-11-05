@@ -67,6 +67,18 @@ RULES: dict[str, Rule] = {
 }
 
 
+#: Geprüft und bewusst nicht genutzt (Recherche 11/2026, ``docs/handoff/RESEARCH.md`` Abschnitt 5)
+NOT_USED: tuple[dict, ...] = (
+    {"name": "Lufthansa, SWISS, Eurowings, Condor",
+     "reason": "Airline-Seiten sperren automatische Abrufe (403)"},
+    {"name": "secretflying.com", "reason": "Cloudflare-Sperre – Secret Flying kommt über Bluesky"},
+    {"name": "Amadeus Self-Service", "reason": "vom Anbieter am 17.07.2026 abgeschaltet"},
+    {"name": "Skyscanner, Kayak", "reason": "Captcha bzw. gesperrt"},
+    {"name": "fly4free Error-Fare-Feed", "reason": "seit 22.08.2025 eingestellt"},
+    {"name": "Telegram-Kanäle der Deal-Seiten", "reason": "keine Web-Vorschau abrufbar"},
+)
+
+
 def rule_for(source: str) -> Rule:
     if source in RULES:
         return RULES[source]
@@ -243,15 +255,19 @@ def report(store, now: datetime | None = None) -> dict:
         newest = _aware(e.get("newest"))
         rule = rule_for(name) if name != GOOGLE else Rule(None)
         st = e.get("state") if e.get("state") in LABELS else ERROR
+        items, parsed = e.get("items"), e.get("parsed")
+        share = None    # Google: Anteil der Abrufe ohne Ergebnis
+        if name == GOOGLE and isinstance(items, int) and isinstance(parsed, int) and items > 0:
+            share = round(min(max(items - parsed, 0) / items, 1.0), 3)
         out.append({
             "id": name, "name": source_label(name), "state": st, "label": LABELS[st],
             "detail": e.get("detail"), "items": e.get("items"), "parsed": e.get("parsed"),
             "newest": e.get("newest"),
             "age_hours": round((now - newest).total_seconds() / 3600, 1) if newest else None,
             "threshold_hours": rule.stale_hours, "error": e.get("error"),
-            "since": e.get("since"), "checked": e.get("checked"),
+            "since": e.get("since"), "checked": e.get("checked"), "empty_share": share,
         })
     order = {ERROR: 0, EMPTY: 1, STALE: 2, OK: 3}
     out.sort(key=lambda x: (order[x["state"]], x["name"].lower()))
     return {"sources": out, "heartbeat": state.get("heartbeat"),
-            "labels": LABELS}
+            "labels": LABELS, "not_used": [dict(x) for x in NOT_USED]}

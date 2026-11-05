@@ -275,7 +275,9 @@ async function desktopFlows(browser) {
         return c && c.getAttribute("aria-pressed") === "true";
       }, a.name);
       const expected = (await api("GET", `/api/deals?alert_id=${encodeURIComponent(a.id)}`)).deals.length;
-      await waitFor(async () => (await page.locator(".deal-card").count()) === expected
+      // gleiche Kartenzahl wie beim vorigen Filter: auch auf die neuen Karten warten
+      await waitFor(async () => ((await page.locator(".deal-card").count()) === expected
+        && (await page.$$eval(".deal-card .deal-meta", (els, n) => els.every((e) => e.textContent.includes(n)), a.name)))
         || (expected === 0 && await page.locator("#deal-list .empty").count() === 1),
       { timeout: 5000, msg: `Filter ${a.id}: erwartet ${expected} Karten` });
       if (expected) {
@@ -350,6 +352,115 @@ async function desktopFlows(browser) {
     assert(await page.isVisible("#best-list"), "Aufklappen wirkt nicht");
     await noHScroll(page, "Deals mit Bestpreisen");
     await shot(page, "desktop-bestpreise");
+  });
+
+  await step("Deal-Karte: Google-Preisniveau, 62-Tage-Verlauf, Quellen, Nachbar-Hub, Ablauf", async () => {
+    await page.goto(base + "/#deals");
+    await page.waitForSelector(".deal-card");
+    const deals = (await api("GET", "/api/deals")).deals;
+    const withHistory = deals.filter((d) => d.insight && Array.isArray(d.insight.history) && d.insight.history.length >= 2);
+    assert(withHistory.length >= 2, `Demo mit zu wenig Preisverläufen: ${withHistory.length}`);
+    assert(await page.locator("#deal-list .deal-card .spark").count() === withHistory.length, "Verlauf fehlt auf Karten");
+    // Zürich → Hamburg 92 €: Google bestätigt, Preise niedrig, Band 160–230 €
+    const card = page.locator(".deal-card.is-verified").first();
+    const spark = card.locator(".spark");
+    assert(/Preisverlauf bei Google · 62 Tage/.test(norm(await spark.textContent())), "Titel des Verlaufs fehlt");
+    assert(norm(await spark.locator(".badge.lvl-niedrig").textContent()) === "Google: Preise niedrig · 97 € unter Normalpreis", "Preisniveau-Badge falsch");
+    assert(norm(await spark.locator(".key-band").textContent()) === "typisch 160–230 €", "Band-Legende falsch");
+    assert(norm(await spark.locator(".key-dot").textContent()) === "dieses Angebot 92 €", "Angebots-Marke fehlt");
+    const d = await spark.locator("path.spark-line").getAttribute("d");
+    assert((d.match(/[ML]/g) || []).length === 62, `Linie hat nicht 62 Punkte: ${d.slice(0, 40)}`);
+    const band = await spark.locator("rect.spark-band").evaluate((r) => [Number(r.getAttribute("y")), Number(r.getAttribute("height"))]);
+    assert(band[1] > 0 && band[0] >= 0 && band[0] + band[1] <= 40, `Band außerhalb: ${band}`);
+    // Marke liegt unter dem Band (92 € < 160 €) und im Bild
+    const geo = await spark.locator(".spark-plot").evaluate((p) => {
+      const r = p.getBoundingClientRect(), dot = p.querySelector(".spark-dot").getBoundingClientRect(),
+        b = p.querySelector(".spark-band").getBoundingClientRect();
+      return { top: r.top, bottom: r.bottom, dot: dot.top + dot.height / 2, bandBottom: b.bottom };
+    });
+    assert(geo.dot > geo.bandBottom && geo.dot <= geo.bottom + 1, `Marke falsch: ${JSON.stringify(geo)}`);
+    assert(/Google-Preisverlauf der letzten 62 Tage/.test(await spark.locator(".spark-plot").getAttribute("aria-label")), "Verlauf ohne Textalternative");
+    await spark.locator(".spark-plot").hover({ position: { x: 20, y: 20 } });
+    assert(/^\d{2}\.\d{2}\.: \d+ €$/.test(norm(await spark.locator(".spark-tip").textContent())), "Hover-Wert fehlt");
+    assert(!/Google: Preise derzeit niedrig/.test(await card.locator(".reasons").textContent()), "Preisniveau doppelt in den Gründen");
+    // derselbe China-Deal bei drei Seiten
+    const multi = page.locator(".deal-card", { hasText: "3 Quellen" });
+    assert(await multi.count() === 1, "Karte mit 3 Quellen fehlt");
+    assert(norm(await multi.locator(".badge.sig-accent").textContent()) === "Erstmeldung Secret Flying, 7 h früher", "Erstmeldung-Badge falsch");
+    const links = await multi.locator(".deal-meta a").evaluateAll((as) => as.map((a) => [a.textContent, a.getAttribute("href")]));
+    assert(links.length === 3 && links.every(([, h]) => /^https:\/\//.test(h)), `Quellen-Links: ${JSON.stringify(links)}`);
+    assert(/Quellen: Secret Flying, Travel-Dealz-Artikel, ErrorFareAlerts/.test(norm(await multi.locator(".deal-meta").textContent())), "Quellenliste fehlt");
+    assert(await page.locator(".deal-card", { hasText: "2 Quellen" }).count() === 1, "Karte mit 2 Quellen fehlt");
+    // Abflug ab Budapest, Zubringer eingerechnet, läuft ab
+    const hub = page.locator(".deal-card", { hasText: "Abflug Nachbar-Hub Budapest" });
+    assert(norm(await hub.locator(".badge.sig-info").textContent()) === "Abflug Nachbar-Hub Budapest (+180 € Zubringer)", "Hub-Badge falsch");
+    assert(/^läuft ab \d{2}\.\d{2}\.$/.test(norm(await hub.locator(".signals .badge", { hasText: "läuft ab" }).textContent())), "Ablauf-Badge fehlt");
+    assert(norm(await hub.locator(".price-box").textContent()).includes("inkl. 180 € Zubringer"), "Zubringer am Preis fehlt");
+    assert(!/Abflug Nachbar-Hub/.test(await hub.locator(".reasons").textContent()), "Hub doppelt in den Gründen");
+    await noHScroll(page, "Deals mit Signalen");
+    await card.scrollIntoViewIfNeeded();
+    await shot(page, "desktop-deal-signale", false);
+  });
+
+  await step("Beinahe-Deals: je Alarm sichtbar, nie gemeldet", async () => {
+    const alerts = (await api("GET", "/api/alerts")).alerts;
+    const near = alerts.flatMap((a) => a.near_deals.map((e) => [a, e]));
+    assert(near.length >= 1, "Demo ohne Beinahe-Deal");
+    assert(await page.isVisible("#near-deals"), "Beinahe-Deals fehlen");
+    const rows = page.locator("#near-list .near-row");
+    assert(await rows.count() === near.length, `Beinahe-Zeilen ${await rows.count()} ≠ ${near.length}`);
+    const txt = norm(await rows.first().textContent());
+    assert(/559 €/.test(txt) && /60 € über deiner Grenze/.test(txt) && /7% unter typischer Spanne/.test(txt), `Beinahe-Deal: ${txt}`);
+    assert(await rows.first().locator(".spark-compact path.spark-line").count() === 1, "Mini-Verlauf fehlt");
+    assert(/nie gemeldet/.test(await page.textContent("#near-deals")), "Hinweis „nie gemeldet“ fehlt");
+    const notes = (await api("GET", "/api/notifications?limit=500")).notifications;
+    assert(!notes.some((n) => n.price === 559), "Beinahe-Deal wurde gemeldet");
+    // Filter: anderer Alarm -> Liste weg, Radar -> weg, Alle -> wieder da
+    await page.locator("#deal-filters .chip").filter({ hasText: "Zürich → Hamburg (und zurück)" }).click();
+    await waitFor(async () => !(await page.isVisible("#near-deals")), { msg: "Filter zeigt fremde Beinahe-Deals" });
+    await page.locator('#deal-filters .chip[data-id=""]').click();
+    await waitFor(async () => (await rows.count()) === near.length, { msg: "„Alle“ ohne Beinahe-Deals" });
+    await page.locator("#near-deals").scrollIntoViewIfNeeded();
+    await shot(page, "desktop-beinahe-deals", false);
+    // Alarm-Karte: Beinahe-Deals und Hinweis zur Google-Rotation
+    await go(page, "alarme");
+    const [a] = near[0];
+    const card = await alertCard(page, a.name);
+    assert(await card.locator(".alert-near .near-row").count() === a.near_deals.length, "Beinahe-Deals fehlen auf der Alarm-Karte");
+    const rot = alerts.find((x) => x.rotation);
+    const rotCard = await alertCard(page, rot.name);
+    const hint = norm(await rotCard.locator(".rotation-hint").textContent());
+    assert(/^Keine Deal-Seite meldet diese Strecke\. Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten 90 Tage wird einzeln geprüft\./.test(hint), `Rotations-Hinweis: ${hint}`);
+    assert(/Aktuell \d+ von 90 Tagen mit Preis/.test(hint), `Rotations-Stand fehlt: ${hint}`);
+    assert(await card.locator(".rotation-hint").count() === 0, "Rotations-Hinweis bei China");
+    await noHScroll(page, "Alarme mit Beinahe-Deals");
+  });
+
+  await step("Quellen-Gesundheit: Ampel, Alter, Artikel, Google leer, bewusst nicht genutzt", async () => {
+    const rep = await api("GET", "/api/sources/health");
+    await go(page, "quellen");
+    await page.waitForSelector(".health-row");
+    const rows = page.locator(".health-row");
+    assert(await rows.count() === rep.sources.length, `Zeilen ${await rows.count()} ≠ ${rep.sources.length}`);
+    const ok = rep.sources.filter((s) => s.state === "ok").length;
+    assert(ok < rep.sources.length, "Demo ohne Quelle mit Problem");
+    assert(norm(await page.textContent(".health-headline")) === `${ok} von ${rep.sources.length} Quellen OK`, "Zusammenfassung falsch");
+    const first = rows.first();
+    assert((await first.getAttribute("class")).includes("h-warn") && norm(await first.locator(".h-label").textContent()) === "Veraltet", "Veraltete Quelle nicht oben/gelb");
+    assert(/premium-flights/.test(await first.textContent()) && /neuester Artikel vor 30 Std\. \(erwartet: höchstens 24 Std\.\)/.test(norm(await first.textContent())), `Alter fehlt: ${norm(await first.textContent())}`);
+    const light = await first.locator(".h-light").evaluate((e) => getComputedStyle(e).backgroundColor);
+    assert(light === "rgb(180, 83, 9)", `Ampel nicht gelb: ${light}`);
+    const google = norm(await page.locator('.health-row[data-id="google_flights"]').textContent());
+    assert(/[\d.]+ Abrufe im letzten Lauf · \d+ % leer/.test(google), `Google-Zeile: ${google}`);
+    assert(/\d+ Artikel im letzten Lauf/.test(norm(await page.locator('.health-row[data-id="feed:secretflying"]').textContent())), "Artikelzahl fehlt");
+    const unused = page.locator("#unused-list li");
+    assert(await unused.count() === rep.not_used.length && rep.not_used.length >= 5, "Liste „bewusst nicht genutzt“ unvollständig");
+    const utxt = norm(await page.textContent("#unused-list"));
+    assert(/secretflying\.com.*Cloudflare/.test(utxt) && /Amadeus.*abgeschaltet/.test(utxt) && /Lufthansa.*403/.test(utxt), `Gründe fehlen: ${utxt}`);
+    await noHScroll(page, "Quellen");
+    await shot(page, "desktop-quellen");
+    await go(page, "deals");               // weitere Schritte beginnen auf der Deals-Seite
+    await page.waitForSelector(".deal-card");
   });
 
   await step("Status: „nächster Feed-Check in …“", async () => {
@@ -807,8 +918,11 @@ async function desktopFlows(browser) {
     await page.click('label.switch:has(#s-google_verify)');
     await page.click("#settings-save");
     await waitToast(page, /Einstellungen gespeichert/);
-    let s = await api("GET", "/api/settings");
-    assert(JSON.stringify(s.values.sources) === '["travelpayouts","feeds"]', `sources: ${s.values.sources}`);
+    // der Hinweis kann noch vom vorigen Speichern stehen: auf den gespeicherten Stand warten
+    let s = await waitFor(async () => {
+      const x = await api("GET", "/api/settings");
+      return JSON.stringify(x.values.sources) === '["travelpayouts","feeds"]' && x;
+    }, { timeout: 5000, msg: "Google-Schalter nicht gespeichert" });
     assert(s.values.google_max_requests === 12 && s.values.google_verify === false, `Google-Werte: ${s.values.google_max_requests}/${s.values.google_verify}`);
     await page.reload();
     await page.waitForSelector("#s-google_max_requests");
@@ -949,7 +1063,7 @@ async function mobileFlows(browser) {
     await shot(page, "mobile-deals");
     const nav = await page.locator(".main-nav").boundingBox();
     assert(nav && nav.y + nav.height >= 844 - 2, `Navigation nicht unten: ${JSON.stringify(nav)}`);
-    for (const r of ["alarme", "meldungen", "einstellungen"]) {
+    for (const r of ["alarme", "quellen", "meldungen", "einstellungen"]) {
       await go(page, r);
       await page.waitForTimeout(400);
       await noHScroll(page, `${r} (mobil)`);
@@ -981,6 +1095,24 @@ async function mobileFlows(browser) {
     await noHScroll(page, "Deals Radar (mobil)");
     await shot(page, "mobile-deals-radar", false);
     await page.locator('#deal-filters .chip[data-id=""]').click();
+  });
+
+  await step("Mobil: Verlauf, Signale und Beinahe-Deals passen (390 px)", async () => {
+    await go(page, "deals");
+    await page.waitForSelector(".deal-card .spark");
+    for (const sel of [".deal-card .spark", ".deal-card .signals .badge", "#near-list .near-row", "#near-list .spark-compact"]) {
+      const boxes = await page.$$eval(sel, (els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.left, r.right, r.width]; }));
+      assert(boxes.length > 0, `${sel} fehlt`);
+      assert(boxes.every(([l, r, w]) => l >= 0 && r <= 390 && w > 0), `${sel} ragt aus dem Bild: ${JSON.stringify(boxes)}`);
+    }
+    await noHScroll(page, "Deals mit Verlauf (mobil)");
+    await page.locator(".deal-card .spark").first().scrollIntoViewIfNeeded();
+    await shot(page, "mobile-deal-signale", false);
+    await go(page, "quellen");
+    await page.waitForSelector(".health-row");
+    await noHScroll(page, "Quellen (mobil)");
+    const nav = await page.$$eval(".main-nav a", (as) => as.map((a) => a.getBoundingClientRect().right));
+    assert(nav.length === 5 && nav.every((r) => r <= 390), `Tab-Leiste: ${nav}`);
   });
 
   await step("Mobil: Speichern-Button nicht von der Tab-Leiste verdeckt", async () => {
@@ -1053,6 +1185,10 @@ async function darkFlows(browser) {
       await go(page, "alarme");
       await page.waitForSelector(".alert-card");
       await shot(page, `dark-${label}-alarme`);
+      await go(page, "quellen");
+      await page.waitForSelector(".health-row");
+      await noHScroll(page, "Quellen dunkel");
+      await shot(page, `dark-${label}-quellen`);
     });
     await ctx.close();
   }
