@@ -1,0 +1,14 @@
+# error-fares-premium – Live-Tests 2026-11-05 (curl, Chrome-UA)
+FUNDE
+- Secret Flying Bluesky-RSS: https://bsky.app/profile/secretflying.bsky.social/rss -> 200, 30 Items, neuester 09:46 heute, <item> OHNE title; Text in <description> ("#Zurich, Switzerland to Mauritius for only €471 roundtrip #Travel https://www.secretflying.com/posts/..."), 29/30 mit Preis, Marker "ERROR FARE", "CRAZY HOT", "Non-stop", "SUMMER:". Business-Class-Deals nur Teaser (Premium). Global, DACH ca. 2-3 von 30.
+- Secret Flying HTML https://www.secretflying.com/europe-flight-deals/ -> 200 (2x), 9-13 <article>, .entry-title, Datum .entry-date, Preis im Titel, DACH vorhanden (Zurich, Frankfurt). /error-fares/, /page/2/, /posts/..., wp-json, sitemap, /feed/ -> 403 (Cloudflare, teils zufaellig). Startseite 200.
+- premium-flights.com: /feed/ 12 Items, Kategorien "Active"/"Cheap Business Class flights"/"From Europe"; Tag-Feeds /tag/<germany|frankfurt|zurich|vienna|munich|hamburg|berlin|austria|switzerland>/feed/ 200 je 12 Items; Suche /?s=China&feed=rss2 200; /feed/?paged=2 200. Kategorie-Pfade -> 404. (.de = Verbindung nicht moeglich)
+- fly4free.com: /feed/ 50 Items (4,5 Tage), 38 Flug, 13 mit DACH-Bezug (Kategorien-Tags germany/austria/vienna/frankfurt), 46/50 Preis im Titel; /flight-deals/business-class/feed/ 200 aktiv (neuester 02.11.2026, ca. 1 Deal/Woche, selten DACH); /flight-deals/error-fare/feed/ 200 aber STALE (neuester 22.08.2025); /feed/?s=zurich 200 (Suche, gemischt mit Artikeln); /tag/*/feed/ und ?s=...&feed=rss2 -> 403.
+- The Flight Deal https://theflightdeal.com/feed/ 200, 16 Items, aktuell, nur US-Abflug (Preis immer im Titel). Fuer DACH wertlos.
+NEGATIV
+- t.me/s/: secretflying, travel_dealz, fly4free, urlaubspiraten, mydealz, jacksflightclub ... = kein Web-Preview. flugdeals (letzter Post 28.04.2025, Skyscanner-Bot), flightdeals (Mai 2023), errorfares (leer) = tot.
+- Mastodon @traveldealzde/@traveldealz: RSS 200, aber nur Posts bis Jun/Okt 2026, kein Mehrwert gegenueber travel-dealz-Feed. #errorfare-Tag: letzter Post 2023.
+- Reddit: r/Flights/.rss 200 aber Fragen-Forum, 0 Preise; r/awardtravel .rss 200 Diskussion; r/flightdeals/.rss + /new/.rss -> 429 (3x), /new.json -> 403, old.reddit 403, r/Flugdeals 404/429, r/ErrorFare 404. Nicht nutzbar von hier.
+- Google-News-RSS (error fare / Fehlerpreis when:2d) -> 200 aber 0 Items. Bluesky API public.api.bsky.app -> 403/400. feedburner SecretFlying -> liefert HTML der Seite, kein Feed.
+- travelfree.info 429; jacksflightclub.com/feed 404; going.com/feed 404; Mighty Travels /feed -> HTML Premium-Seite; Airfarewatchdog -> HTML-SPA; faredealalert.com/feed 200 aber nur US-Deals (aelter 2 Tage).
+- Blogs (OMAAT 25 Items, Loyalty Lobby, VFTW, GSTP (letzter Post Jul 2025), Thrifty Traveler, TPG, Travelzoo-Atom 519 Items Pakete/Hotels): 200 aber News/Kreditkarten/Awards, keine Flugpreis-Deals.

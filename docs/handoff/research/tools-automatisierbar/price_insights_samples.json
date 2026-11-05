@@ -1,0 +1,116 @@
+{
+ "zrh_ham_2027-01-15_19": {
+  "html_text": "Die Preise sind aktuell niedrig – 67 € unter dem Normalpreis der Suchergebnisse",
+  "ds1_index5_head": [
+   1,
+   [
+    null,
+    168
+   ],
+   [
+    null,
+    235
+   ],
+   [
+    null,
+    67
+   ],
+   [
+    null,
+    195
+   ],
+   [
+    null,
+    275
+   ],
+   1,
+   null,
+   null
+  ],
+  "history_n": 62,
+  "history_first": [
+   1788559200000,
+   164
+  ],
+  "history_last": [
+   1793833200000,
+   168
+  ]
+ },
+ "fra_pek_2027-03-10_24": {
+  "html_text": "Die Preise sind derzeit normal",
+  "ds1_index5_head": [
+   2,
+   [
+    null,
+    720
+   ],
+   [
+    null,
+    723
+   ],
+   [
+    null,
+    3
+   ],
+   [
+    null,
+    600
+   ],
+   [
+    null,
+    1050
+   ],
+   1,
+   null,
+   null
+  ],
+  "history_n": 62,
+  "history_first": [
+   1788559200000,
+   683
+  ],
+  "history_last": [
+   1793833200000,
+   720
+  ]
+ },
+ "ham_zrh_2026-12-23_27": {
+  "html_text": "Die Preise sind derzeit normal",
+  "ds1_index5_head": [
+   4,
+   [
+    null,
+    220
+   ],
+   [
+    null,
+    181
+   ],
+   [
+    null,
+    -40
+   ],
+   [
+    null,
+    155
+   ],
+   [
+    null,
+    250
+   ],
+   1,
+   null,
+   null
+  ],
+  "history_n": 62,
+  "history_first": [
+   1788559200000,
+   132
+  ],
+  "history_last": [
+   1793833200000,
+   220
+  ]
+ }
+}

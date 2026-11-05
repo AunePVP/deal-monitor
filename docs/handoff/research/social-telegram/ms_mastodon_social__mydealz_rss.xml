@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html data-color-scheme="auto" data-contrast="auto" lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta charset="utf-8">
+<title>The page you are looking for isn&#39;t here.
+ - Mastodon</title>
+<meta content="width=device-width,initial-scale=1" name="viewport">
+
+
+<script src="/packs/polyfills-D_EDs9kk.js" crossorigin="anonymous" type="module" integrity="sha384-qlw1d1+1j0gvMPJj2Xbbt6JGBSPm3pzt61h1wIWVCPLALEnF1o1yW96D383bKn8u"></script>
+<script src="/packs/theme-selection-CsHSifyN.js" crossorigin="anonymous" integrity="sha384-IUsVvmu169uH0bLPEievIRMV8CzFUzT9/o+TlQY8yhFN4MHruN/RWHLJd/AEp6gL" type="module" blocking="render"></script>
+<link rel="stylesheet" crossorigin="anonymous" href="/packs/assets/themes/default-CrqLoWnq.css" integrity="sha384-UgoypRloUM23ZJm8qgM6G55VRu0xg7/5RrszEa+0ETepVBhroptMXUY3cgEW++Sq" media="all" />
+<script src="/packs/error-BVgPTIG-.js" crossorigin="anonymous" integrity="sha384-rZH143yE//bTLW26hWgnUGP1vLOs3pNcph0Wtir8L54pqj4YiVYsOxoT4buyHTia" type="module"></script><link rel="modulepreload" href="/packs/ready-B3bZnx13.js" as="script" crossorigin="anonymous" integrity="sha384-nTEv3TKyDyKr3e4qK2oN+eC8U/HypVFL2mkgEIOeCkg0JKQpaxDFc3Y4nX46gXb8">
+</head>
+<body class="error">
+<main class="dialog">
+<div class="dialog__illustration">
+<img alt="Mastodon" src="/oops.png">
+</div>
+<div class="dialog__message">
+<h1>The page you are looking for isn&#39;t here.
+</h1>
+<a class="button button-secondary" href="/">Go home</a>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:webfeeds="http://webfeeds.org/rss/1.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>#errorfare</title>
+    <description>Public posts tagged #errorfare</description>
+    <link>https://mastodon.social/tags/errorfare</link>
+    <lastBuildDate>Sun, 10 Sep 2023 14:36:04 +0000</lastBuildDate>
+    <generator>Mastodon v5.0.0-beta.1+pr-41513-9d1e429</generator>
+    <item>
+      <guid isPermaLink="true">https://toot.works/@joe/111041351804603120</guid>
+      <link>https://toot.works/@joe/111041351804603120</link>
+      <pubDate>Sun, 10 Sep 2023 14:36:04 +0000</pubDate>
+      <description>&lt;p&gt;😒 I tried to book it but I didn't get to it fast enough.&lt;/p&gt;&lt;p&gt;&lt;a href="https://toot.works/tags/ErrorFares" class="mention hashtag" rel="nofollow noopener" target="_blank"&gt;#&lt;span&gt;ErrorFares&lt;/span&gt;&lt;/a&gt; &lt;a href="https://toot.works/tags/ErrorFare" class="mention hashtag" rel="nofollow noopener" target="_blank"&gt;#&lt;span&gt;ErrorFare&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;</description>
+      <media:content url="https://mastodon.social/files/original/missing.png" type="" fileSize="" medium="image">
+        <media:rating scheme="urn:simple">nonadult</media:rating>
+        <media:description type="plain">⚠️ ERROR FARE ⚠️ Los Angeles to Tokyo, Japan for only $81 one-way (Sep-Mar dates)
+Error Fare flights from Los Angeles to Tokyo, Japan for only $81 one-way.
+
+Appears to be an OTA glitch.
+
+ 
+
+WE STRONGLY RECOMMEND YOU DELAY MAKING FURTHER PLANS AS MUCH AS POSSIBLE.
+BECAUSE THIS IS AN ERROR-FARE, THERE IS ALWAYS THE SMALL CHANCE THE AIRLINE MAY CANCEL THE TICKET.
+
+ 
+
+The example dates listed below range between $81 and $122 one-way.
+
+ 
+
+DEPART:
+Los Angeles, USA
+
+ 
+
+ARRIVE:
+Tokyo, Japan
+
+ 
+
+DATES:
+Availability from September 2023 to March 2024
+
+Example dates:
+28th Sep
+1st, 2nd, 7th Oct
+5th, 12th, 13th, 14th, 20th, 24th, 25th, 26th, 27th, 28th, 29th, 30th Nov
+1st, 2nd, 3rd, 5th Dec
+9th, 10th, 11th, 14th, 17th, 18th, 20th, 23rd, 26th, 28th, 29th, 30th, 31st Jan
+1st, 2nd, 3rd, 5th, 6th, 7th, 8th, 10th, 12th, 13th, 16th, 18th, 19th, 20th, 21st, 22nd, 23rd, 24th, 25th, 26th, 28th, 29th Feb
+1st, 3rd, 4th, 5th, 6th Mar
+
+and more…
+
+ 
+
+STOPS:</media:description>
+      </media:content>
+      <category>errorfares</category>
+      <category>errorfare</category>
+    </item>
+  </channel>
+</rss>

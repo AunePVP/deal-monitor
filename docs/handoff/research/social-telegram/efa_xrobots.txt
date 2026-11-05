@@ -1,0 +1,7 @@
+User-agent: * 
+
+Allow: / 
+
+Disallow: /downloads/ 
+
+Sitemap: https://errorfarealerts.com/sitemap.xml

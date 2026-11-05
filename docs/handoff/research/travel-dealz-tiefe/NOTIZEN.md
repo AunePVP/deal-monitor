@@ -1,0 +1,17 @@
+# Travel-Dealz Tiefe (live geprueft 2026-11-05)
+Basis: https://travel-dealz.de/wp-json/wp/v2/{deal|ticker}  (200, Cloudflare, gzip, kein Auth, kein Rate-Limit bei 12 Abrufen/10 s)
+Params: per_page<=100 (101 -> 400), page (Seite > totalpages -> 400), X-WP-Total/X-WP-TotalPages-Header,
+ after=ISO, modified_after=ISO, orderby=date|modified, search=, _fields=id,date,modified,link,title,categories,origins,destinations,airline,tags,meta.suspend_date (20 Items ~2 KB gzip)
+Taxonomien (Query-Param = Feldname): categories, origins, destinations, airline, tags, region, period, visibility. Gleiche Taxonomie "a,b" = OR; verschiedene = AND.
+IDs: categories Fluege 24 (Eco 1757, Biz 884, Prem 3225, First 1047), Meilen 12, Pauschal 13, Kreuzf. 2480, Hotels 41, Bahn 2466.
+origins: ZRH 2971, BSL 2972, GVA 2973, HAM 2945, FRA 2940, MUC 2941, BER 2942, DUS 2939, VIE 2965, STR 2946, CGN 2938, HAJ 2957, BRE 2959, NUE 2947, SZG 2966, GRZ 2967, INN 2968, LEJ 2948, DRS 2949; Eltern: Schweiz 2970, Oesterreich 2964.
+destinations: China 745 (Eltern), Peking 112, Shanghai 292, Guangzhou 2808, Chengdu 2537, Hongkong 293, Chongqing 3097, Shenzhen 3195, Dalian 14472, Xian 3169, Hangzhou 3193, Hamburg 371, Zuerich 1828, Asien 291.
+ ACHTUNG: Deals sind an Stadt-Terms getaggt; Eltern-ID (745) allein expandiert Kinder, in Kombination mit categories= aber NICHT (0 Treffer) -> immer Blatt-IDs auflisten (112,292,2808,2537,293,3097,3195,3169,3193,14472).
+tags: Error Fares 94 (derzeit 0 aktive), Eilmeldungen 3091, Oneway 39972, Gabelfluege 763, Stopover 3264. visibility Hot 39997 (321, meist Hotels/Kreuzf.), highlight 39741. airline: Air China 1596, China Eastern 2463, China Southern 2504, Hainan 3192, Turkmenistan 40847, Swiss 169, Condor 86, Eurowings 2451, Edelweiss 3157, Lufthansa 2528.
+Ablauf: abgelaufene Deals verschwinden aus der API (430 aktive Posts insgesamt, 0 mit suspend_date in der Vergangenheit). meta.suspend_date = geplantes Ende, Formate gemischt "YYYY-MM-DD HH:MM:SS" und "YYYY-MM-DDTHH:MM:SS", bei Evergreen leer. Kein Titel-Praefix. `modified` aendert sich bei Preis-Updates -> id+modified als Dedupe-Schluessel.
+Preis: KEIN Preisfeld (kein meta.price/acf). Nur Titel: 55/70 Flug-Titel haben "ab 745€" (Regex siehe recipe_poll.py); 15 ohne Preis sind Rabatt/Programm-Posts. Waehrung im Titel meist EUR, im Content teils USD.
+Content: content.rendered enthaelt "Zum Deal"-Buttonlink (Buchungsseite), Reisezeitraum, Oneway-Preise. period-Term = Reisemonate.
+Ticker: /ticker (66 Eintraege, 20 mit categories=24) = Kurzmeldungen, teils Error-Fare-nahe; wird NICHT im Deal-Endpoint gelistet -> beide pollen.
+RSS-Kombis: /feed/?post_type=deal&origins=<SLUG> OK (ID -> 404); &category_name=<slug> filtert zusaetzlich (hamburg-ham+economy-class = 4); &categories=ID wird ignoriert (54 Items, 2,3 MB!). Feeds ohne ETag-304, 100 KB-2 MB -> REST bevorzugen.
+Schlagwortalarm (travel-dealz.de/schlagwortalarm/): bis zu 2 Schlagwoerter kombiniert (AND), Telegram-Bot oder Browser-Push, Benachrichtigung binnen Minuten; Beispiele "Zuerich + New York", "Business Class + USA", "Eilmeldungen". Newsletter: taeglich/woechentlich + Sofort bei Error Fares, Region DE/AT/CH. -> nachbilden: Alarm = (Kategorie, Abflug, Ziel, Airline, Tag) AND-Kombi + Sofort-Push bei Tag Error Fares/Eilmeldungen.
+Ehrlich: ZRH->HAM Deals sind bei Travel-Dealz extrem selten (aktuell 0 Eco-Flugdeals ab ZRH/HAM mit Ziel HAM/ZRH).

@@ -1,0 +1,105 @@
+[
+ {
+  "id": 486615,
+  "date": "2026-11-04T13:41:23",
+  "modified": "2026-11-04T17:45:51",
+  "link": "https://travel-dealz.de/deal/qatar-gabelfluege-down-under/",
+  "title": {
+   "rendered": "Qatar Airways: Gabelflüge nach Down Under ab 745€, z.B. Warschau &#8211; Auckland &#8211; München"
+  },
+  "meta": {
+   "suspend_date": "2026-11-06 23:59:00"
+  },
+  "categories": [
+   1757
+  ],
+  "airline": [
+   1007
+  ],
+  "destinations": [
+   2386,
+   3292,
+   472,
+   1168
+  ],
+  "origins": [
+   3015,
+   2993
+  ]
+ },
+ {
+  "id": 402955,
+  "date": "2026-11-04T11:00:46",
+  "modified": "2026-11-04T17:49:54",
+  "link": "https://travel-dealz.de/deal/new-york-condor-premium-class/",
+  "title": {
+   "rendered": "New York: Nonstop in der Condor „Premium Class“ von Frankfurt ab 640€ (540€ mit Amex Platinum)"
+  },
+  "meta": {
+   "suspend_date": "2026-11-16 23:59:00"
+  },
+  "categories": [
+   3225
+  ],
+  "airline": [
+   86
+  ],
+  "destinations": [
+   189
+  ],
+  "origins": []
+ },
+ {
+  "id": 486462,
+  "date": "2026-11-03T15:47:24",
+  "modified": "2026-11-04T08:58:22",
+  "link": "https://travel-dealz.de/deal/round-the-world-nov26/",
+  "title": {
+   "rendered": "Round the World: Vancouver, Seattle, Singapur, Kuala Lumpur + Hanoi ab 898€ inkl. Gepäck (getrennte Tickets)"
+  },
+  "meta": {
+   "suspend_date": "2026-11-23 23:59:00"
+  },
+  "categories": [
+   1757
+  ],
+  "airline": [],
+  "destinations": [
+   2799,
+   935,
+   384,
+   2276,
+   895,
+   501
+  ],
+  "origins": [
+   2940
+  ]
+ },
+ {
+  "id": 293299,
+  "date": "2026-11-03T09:13:02",
+  "modified": "2026-11-03T09:13:05",
+  "link": "https://travel-dealz.de/deal/new-york-icelandair-angebot/",
+  "title": {
+   "rendered": "New York ab 306€ mit Icelandair von Berlin, München &amp; Frankfurt (441€ mit Gepäck)"
+  },
+  "meta": {
+   "suspend_date": "2026-11-17 23:59:00"
+  },
+  "categories": [
+   1757
+  ],
+  "airline": [
+   2390
+  ],
+  "destinations": [
+   189
+  ],
+  "origins": [
+   2942,
+   2940,
+   2941
+  ]
+ }
+]

@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+  <meta name="description"
+        content="Die aktuellsten Error Fares für Flüge, Hotels und Pauschalreisen findest du hier.">
+  <meta name="robots" content="index,follow"/>
+  <meta name="author" content="MyActivities GmbH">
+  <title>Aktuelle Error Fares und Deals |
+    ErrorFareAlerts</title>
+
+  <!-- Fav Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png?v=xQOmjoYkKP">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png?v=xQOmjoYkKP">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png?v=xQOmjoYkKP">
+  <link rel="manifest" href="/images/favicons/site.webmanifest?v=xQOmjoYkKP">
+  <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg?v=xQOmjoYkKP" color="#ff0000">
+  <link rel="shortcut icon" href="/images/favicons/favicon.ico?v=xQOmjoYkKP">
+  <meta name="apple-mobile-web-app-title" content="ErrorFareAlerts">
+  <meta name="application-name" content="ErrorFareAlerts">
+  <meta name="msapplication-TileColor" content="#ff0000">
+  <meta name="msapplication-config" content="/images/favicons/browserconfig.xml?v=xQOmjoYkKP">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Tags -->
+  <meta property="fb:app_id" content="1841465282757336"/>
+  <meta property="og:site_name" content="ErrorFareAlerts.com"/>
+  <meta property="og:locale" content="de_DE"/>
+  <meta property="og:url"
+        content="https://errorfarealerts.com/errorfares"/>
+  <meta property="og:title"
+        content="Aktuelle Error Fares und Deals"/>
+  <meta property="og:description"
+        content="Die aktuellsten Error Fares für Flüge, Hotels und Pauschalreisen findest du hier.">
+  <meta property="og:type" content="website"/>
+  <meta property="og:image"
+        content="/images/social-share/facebook-cover.jpg"/>
+  <meta property="og:image:width" content="1920"/>
+  <meta property="og:image:height" content="1080"/>
+
+  <meta name="twitter:url" content="https://errorfarealerts.com/errorfares"/>
+  <meta name="twitter:site" content="@ErrorFareAlerts"/>
+  <meta name="twitter:creator" content="@ErrorFareAlerts"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title"
+        content="Aktuelle Error Fares und Deals"/>
+  <meta name="twitter:description"
+        content="Die aktuellsten Error Fares für Flüge, Hotels und Pauschalreisen findest du hier."/>
+  <meta name="twitter:image"
+        content="/images/social-share/twitter-cover.jpg"/>
+
+  
+
+  <link rel=“canonical“
+        href=“https://errorfarealerts.com“/>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NKNBTG');</script>
+  <!-- End Google Tag Manager -->
+
+  <!--STYLES-->
+  <link rel="stylesheet" href="/min/production.min.css">
+  <!--STYLES END-->
+
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+
+  <div id="google-tag-manager"></div>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKNBTG"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<!-- End Google Tag Manager (noscript) -->
+
+
+<div class="cookie-backdrop"></div>
+<div class="modal fade" id="modal-cookie-consent" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="d-flex">
+        <div class="cookie-modal-image">
+        </div>
+        <div class="cookie-modal-content">
+          <div class="p-4">
+            <div class="h4 mb-4">
+              Unterstütze uns mit deiner Zustimmung
+            </div>
+            <p>
+              Wir und unsere Partner verwenden technisch notwendige Cookies und ähnliche Technologien auf unserer Webseite, um die Nutzung unserer Website zu analysieren, für Werbe-, Tracking- und Analysezwecke während deines Besuchs auf unsere Website. Weitere Informationen findest du in unsere <a href='/privacy' target='_blank'>Datenschutzbestimmungen</a>.
+            </p>
+            <div class="row mt-5">
+              <div class="col-12 col-lg-6">
+                <button class="btn btn-block btn-primary mb-2 cookie-accept" id="cookie-accept-btn">
+                  Akzeptieren
+                </button>
+              </div>
+              <div class="col-12 col-lg-6">
+                <button class="btn btn-block btn-outline-secondary mb-2 cookie-decline" id="cookie-decline-btn">
+                  Ablehnen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="modal fade" id="exit-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content exit-modal-container">
+      <div class="close-button-container">
+        <button id="exit-modal-close-btn" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="d-flex">
+        <div class="exit-modal-image">
+          <div class="d-none d-lg-block plane">
+            <img src="/images/elements/plane.png">
+          </div>
+          <div class="bg-moving-clouds"></div>
+        </div>
+        <div class="exit-modal-content">
+          <div>
+            <div class="h4 text-center mb-4">
+              Alle Error Fares und Premium Deals kostenlos!
+            </div>
+            <p>
+              <b>Nur für kurze Zeit:</b>
+              <br> Kostenlos abonnieren und als Erster auch alle Error Fares &amp; Premium Deals bekommen.
+            </p>
+            <p class="font-weight-bold">
+              Deine Vorteile:
+            </p>
+            <ul>
+              <li>Nie mehr außergewöhnliche Deals und Error Fares verpassen.</li>
+              <li>Bis zu 90% günstiger reisen.</li>
+              <li>Kein Spam. Keine Kosten. Jederzeit abbestellbar.</li>
+            </ul>
+            <div>
+              <div class="container-fluid">
+    <form action="https://myactivities.us9.list-manage.com/subscribe/post" method="POST">
+        <fieldset>
+            <input type="hidden" name="u" value="aa43153d45fdaf3e92b2474ec">
+            <input type="hidden" name="id" value="7b95ae1d5e">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <input type="email" name="EMAIL" class="form-control" placeholder="Email" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-2 newsletter-check">
+                    <input type="checkbox" class="form-check-input" id="newsletter-checkbox" required>
+                    <label for="newsletter-checkbox">
+                        Ja, ich möchte News & Deals von Error Fare Alerts abonnieren und ich habe die Hinweise zum <a href='/privacy' target='_blank' class='privacyStatementLink'>Datenschutz</a> gelesen und akzeptiert.
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3 text-right">
+                    <button class="btn btn-primary btn-block" type="submit">
+                        Kostenlos abonnieren
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="preloader">
+  <div class="sk-spinner sk-spinner-wave">
+    <div class="sk-rect1"></div>
+    <div class="sk-rect2"></div>
+    <div class="sk-rect3"></div>
+    <div class="sk-rect4"></div>
+    <div class="sk-rect5"></div>
+  </div>
+</div>
+<!-- End Preload -->
+
+<div class="layer"></div>
+
+<header class="sticky">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-5 col-md-3">
+        <div id="logo_home">
+          <a href="/" title="ErrorFareAlerts Home">
+            <img src="/images/ErrorFareAlertsLogo.png" alt="ErrorFareAlerts Logo" class="logo-default">
+            <img src="/images/ErrorFareAlertsLogo_white.png" alt="ErrorFareAlerts Logo" class="logo-white">
+          </a>
+        </div>
+      </div>
+      <nav class="col-7 col-md-9">
+        <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close">
+          <span>Menu mobile</span> X
+        </a>
+        <div class="main-menu">
+          <div id="header_menu">
+            <img src="/images/ErrorFareAlertsLogo.png" width="119" alt="ErrorFareAlerts" data-retina="true">
+          </div>
+          <a class="open_close" id="close_in">
+            <i class="fa fa-times"></i>
+          </a>
+          <ul>
+            <li>
+              <a href="/" title="landingPage.content.title">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/#howItWorks" id="btn-how-it-works"
+                 title="So funktioniert es">
+                So funktioniert es
+              </a>
+            </li>
+            <li>
+              <a href="/app" title="Android und iOS App">
+                App
+              </a>
+            </li>
+            <li class="submenu">
+              <a href="/deals/flights"
+                 title="Alle Deals">
+                Alle Deals
+              </a>
+              <ul>
+                <li>
+                  <a href="/deals/flights">Alle Deals</a>
+                </li>
+                <li class="d-none">
+                  <a href="/flights/economy-class-deals" target="_self">Economy Class Deals</a>
+                </li>
+                <li class="d-none">
+                  <a href="/flights/business-class-deals" target="_self">Business Class Deals</a>
+                </li>
+                <li class="d-none">
+                  <a href="/flights/first-class-deals" target="_self">First Class Deals</a>
+                </li>
+                <!-- <li>
+                                    <a href="/deals/pauschalreisen" target="_self">Pauschalreisen</a>
+                                </li> -->
+                <li>
+                  <a href="/hotelsuche" target="_self">Hotelsuche</a>
+                </li>
+                <!--                <li>-->
+                <!--                  <a href="/mietwagensuche" target="_self">Mietwagensuche</a>-->
+                <!--                </li>-->
+                <!--                <li class=>-->
+                <!--                  <a href="/flugsuche" target="_self">Flugsuche</a>-->
+                <!--                </li>-->
+              </ul>
+            </li>
+            <li class="submenu">
+              <a class="show-submenu">
+                Alle Guides <i class="icon-down-open-mini"></i>
+              </a>
+              <ul>
+                <li class="d-none">
+                  <a href="/guides">Alle Guides</a>
+                </li>
+                <li class="d-none">
+                  <a href="/guides/airlines">Airline Guides</a>
+                </li>
+                <li class="d-none">
+                  <a href="/guides/airports" target="_self">Flughafen Guides</a>
+                </li>
+                <li class="d-none">
+                  <a href="/guides/aircraft" target="_self">Flugzeug Guides</a>
+                </li>
+                <li class="d-none">
+                  <a href="/guides/lounges" target="_self">Lounge Guides</a>
+                </li>
+                <li>
+                  <a href="/guides/travel-creditcards" target="_self">Reise Kreditkarten</a>
+                </li>
+                <li>
+                  <a href="/guides/vouchers" target="_self">Vouchers</a>
+                </li>
+              </ul>
+            </li>
+            <li class="submenu">
+              <a title="Partner">
+                Partner
+              </a>
+              <ul>
+                <li>
+                  <a href="/blog/post/erlebt-ein-unvergessliches-reiseerlebnis-dank-unserer-kooperation-mit-svenblogtde">
+                    Premium Hotel Buchung
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <div id="header_menu_lang_selector" class="d-sm-none">
+            <a href="?lang=de" target="_self">
+              <img src="/images/language/German.png">
+            </a>
+            <a href="?lang=en" target="_self">
+              <img src="/images/language/English.png">
+            </a>
+          </div>
+        </div>
+        <ul id="top_tools">
+          <li>
+            <div class="dropdown dropdown-cart">
+              
+                <a data-toggle="dropdown" class="cart_bt">
+                  <img src="/images/language/German.png">
+                  Deutsch <i class="fa fa-angle-down"></i>
+                </a>
+              
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="?lang=de" target="_self">
+                    <img src="/images/language/German.png">
+                    Deutsch
+                  </a>
+                </li>
+                <li>
+                  <div>
+                    <a href="?lang=en" target="_self">
+                      <img src="/images/language/English.png">
+                      English
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </div><!-- End dropdown-cart-->
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div><!-- container -->
+</header><!-- End Header -->
+
+<main>
+  <section class="parallax-window nopadding page" data-parallax="scroll" data-image-src="img/bg_blog.jpg"
+    data-natural-width="1400" data-natural-height="470">
+    <div class="parallax-content-1">
+      <div class="animated fadeInDown">
+        <h1>Die neuesten Error Fares und Deals</h1>
+        <p>
+          Hier findest du die aktuellsten Preisfehler und Reise Deals...
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section id="emailSignUpAnchor">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="banner colored">
+    <h4>Jetzt abonnieren</h4>
+    <p>Und keine Error Fare mehr verpassen! Alle Error Fares und Deals bequem per E-Mail bekommen.</p>
+    <form action="https://myactivities.us9.list-manage.com/subscribe/post" method="POST">
+        <fieldset>
+            <input type="hidden" name="u" value="aa43153d45fdaf3e92b2474ec">
+            <input type="hidden" name="id" value="7b95ae1d5e">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <input type="email" name="EMAIL" class="form-control no-border" placeholder="Email">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-full" type="submit">
+                        Kostenlos abonnieren
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3 newsletter-check">
+                    <input type="checkbox" class="form-check-input" id="newsletter-checkbox" required>
+                    <label for="newsletter-checkbox">
+                        Ja, ich möchte News & Deals von Error Fare Alerts abonnieren und ich habe die Hinweise zum <a href='/privacy' target='_blank' class='privacyStatementLink'>Datenschutz</a> gelesen und akzeptiert.
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-grey-light">
+  <div class="container margin_60">
+    <div class="main_title">
+      <h2>Die neuesten Error Fares und Deals</h2>
+    </div>
+    
+  <div class="row small-gutters categories_grid align-items-center">
+    <div class="col-md-12 col-lg-6">
+      <a href="/deals/flights/✈️-icelandair--von-berlin-nach-new-york-ab-303-€-–-big-apple-zum-mini-preis" target="_self">
+        <span>ab 295 EUR</span>
+        <img src="https://files.errorfarealerts.com/images/DE---New-York-Deal_oI18eITO6.jpg" alt="" class="img-fluid">
+        <div class="wrapper">
+          <h2>✈️ Icelandair: Von deutschen Airports nach New York ab 295 € – Big Apple zum Mini-Preis!</h2>
+          <div class="details d-none">
+            <i class="fa fa-plane mr-2"></i> Frankfurt nach Bangkok
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-12 col-lg-6">
+      <div class="row small-gutters mt-md-0 mt-sm-2 mt-0">
+        
+          <div class="col-md-6 mb-3">
+            <a href="/deals/flights/✈️-ethiopian-airlines--von-zuerich-nach-johannesburg-ab-475-€-–-inklusive-gepaeck" class="mb-3">
+              <span>ab 475 EUR</span>
+              <img src="https://files.errorfarealerts.com/images/ZRH---Südafrika-Deal_WqeIvaAkM.jpg" alt="" class="img-fluid">
+              <div class="wrapper">
+                <h2 class="small">✈️ Ethiopian Airlines: Von Zürich nach Johannesburg ab 475 € – inklusive Gepäck!</h2>
+                <div class="details d-none">
+                  <i class="fa fa-plane mr-2"></i> Frankfurt nach Bangkok
+                </div>
+              </div>
+            </a>
+          </div>
+        
+          <div class="col-md-6 mb-3">
+            <a href="/deals/flights/✈️-china-eastern-airlines--von-frankfurt-nach-phuket-ab-496-€-–-inklusive-gepaeck" class="mb-3">
+              <span>ab 496 EUR</span>
+              <img src="https://files.errorfarealerts.com/images/FRA---Phuket-Deal_moKlwZZrG.jpg" alt="" class="img-fluid">
+              <div class="wrapper">
+                <h2 class="small">✈️ China Eastern Airlines: Von Frankfurt nach Phuket ab 496 € – inklusive Gepäck!</h2>
+                <div class="details d-none">
+                  <i class="fa fa-plane mr-2"></i> Frankfurt nach Bangkok
+                </div>
+              </div>
+            </a>
+          </div>
+        
+          <div class="col-md-6 mb-3">
+            <a href="/deals/flights/✈️-condor--nonstop-von-frankfurt-nach-new-york-ab-393-€-–-big-apple-zum-schnaeppchenpreis" class="mb-3">
+              <span>ab 393 EUR</span>
+              <img src="https://files.errorfarealerts.com/images/FRA---NYC--non-stop_-DsMMIemk.jpg" alt="" class="img-fluid">
+              <div class="wrapper">
+                <h2 class="small">✈️ Condor: Nonstop von Frankfurt nach New York ab 393 € – Big Apple zum Schnäppchenpreis!</h2>
+                <div class="details d-none">
+                  <i class="fa fa-plane mr-2"></i> Frankfurt nach Bangkok
+                </div>
+              </div>
+            </a>
+          </div>
+        
+          <div class="col-md-6 mb-3">
+            <a href="/deals/flights/✈️-china-eastern-airlines--von-wien-nach-singapur-ab-388-€-inklusive-gepaeck-–-asien-zum-hammerpreis" class="mb-3">
+              <span>ab 388 EUR</span>
+              <img src="https://files.errorfarealerts.com/images/VIE---Singapur-Deal_CW8me99ps.jpg" alt="" class="img-fluid">
+              <div class="wrapper">
+                <h2 class="small">✈️ China Eastern Airlines: Von Wien nach Singapur ab 388 € inklusive Gepäck – Asien zum Hammerpreis!</h2>
+                <div class="details d-none">
+                  <i class="fa fa-plane mr-2"></i> Frankfurt nach Bangkok
+                </div>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 mt-5 text-center">
+      <a class="btn btn-primary" target="_self" href="/deals/flights">
+        Weitere Deals in unserem Blog
+      </a>
+    </div>
+  </div>
+
+
+  </div>
+</section>
+
+<section class="white_bg">
+  <div class="container margin_60">
+  <div class="main_title">
+    <h2>So einfach funktioniert es</h2>
+    <p class="mt-2">
+      in nur 3 Schritten
+    </p>
+  </div>
+  <div class="row feature_home_2">
+    <div class="col-md-4 text-center">
+      <img src="images/landingpage/step1.png" alt=""
+           class="wow heartBeat">
+      <h3>Trage deine <a href='/#emailSignUpAnchor'>E-Mail Adresse</a> ein oder lade unsere <a href='/app' target='_blank' class='privacyStatementLink'>App</a> herunter.</h3>
+    </div>
+    <div class="col-md-4 text-center">
+      <img src="images/landingpage/step2.png" alt=""
+           data-wow-delay="1s"
+           class="wow heartBeat">
+      <h3>Wir durchsuchen das Web automatisiert nach Error Fares und besonders günstigen Reisedeals.</h3>
+    </div>
+    <div class="col-md-4 text-center">
+      <img src="images/landingpage/step3.png" alt=""
+           data-wow-delay="2s"
+           class="wow heartBeat">
+      <h3>Immer wenn wir extrem günstige Deals finden, wirst du sofort von uns per <a href='#emailSignUpAnchor'>E-Mail</a> oder <a href='/app' target='_blank' class='privacyStatementLink'>App</a> informiert.</h3>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<section class="bg-grey-light">
+  <div class="container">
+    <div class="banner colored">
+    <h4>Jetzt abonnieren</h4>
+    <p>Und keine Error Fare mehr verpassen! Alle Error Fares und Deals bequem per E-Mail bekommen.</p>
+    <form action="https://myactivities.us9.list-manage.com/subscribe/post" method="POST">
+        <fieldset>
+            <input type="hidden" name="u" value="aa43153d45fdaf3e92b2474ec">
+            <input type="hidden" name="id" value="7b95ae1d5e">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <input type="email" name="EMAIL" class="form-control no-border" placeholder="Email">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-full" type="submit">
+                        Kostenlos abonnieren
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3 newsletter-check">
+                    <input type="checkbox" class="form-check-input" id="newsletter-checkbox" required>
+                    <label for="newsletter-checkbox">
+                        Ja, ich möchte News & Deals von Error Fare Alerts abonnieren und ich habe die Hinweise zum <a href='/privacy' target='_blank' class='privacyStatementLink'>Datenschutz</a> gelesen und akzeptiert.
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+  </div>
+</section>
+
+
+<section class="white_bg">
+      <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="main_title">
+                    <h2>ErrorFare Beispiele</h2>
+                    <br>
+                    <p>
+                        Hier siehst du einige ausgewählte Beispiele die es tatsächlich so zu buchen gab. Fast für lau in der Business Class fliegen und in den besten Hotels für fast umsonst übernachten? Kein Problem:
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-interval="3000">
+                    <div class="row">
+                        <div class="col-md-6 nopadding">
+                            <div class="features-img" style="background:url('/images/landingpage/newyork.jpg')">
+                            </div>
+                        </div>
+                        <div class="col-md-6 nopadding">
+                            <div class="features-content">
+                                <h3>Flug von Frankfurt nach New York in der Business Class?
+                                </h3>
+                                <p>
+                                    ab 55 Euro
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item" data-interval="3000">
+                    <div class="row">
+                        <div class="col-md-6 nopadding features-intro-img">
+                            <div class="features-img" style="background:url('/images/landingpage/madrid.jpg')">
+                            </div>
+                        </div>
+                        <div class="col-md-6 nopadding">
+                            <div class="features-content">
+                                <h3>Von Deutschland nach Madrid und zurück?
+                                </h3>
+                                <p>
+                                    ab 6,66 Euro
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item" data-interval="3000">
+                    <div class="row">
+                        <div class="col-md-6 nopadding features-intro-img">
+                            <div class="features-img" style="background:url('/images/landingpage/amsterdam.jpg')">
+                            </div>
+                        </div>
+                        <div class="col-md-6 nopadding">
+                            <div class="features-content">
+                                <h3>Übernachtung im 4 Sterne Hotel in Amsterdam?
+                                </h3>
+                                <p>
+                                    ab 9,50 Euro
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="known-from">
+  <div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="main_title">
+                <h2>Bekannt aus</h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 text-center">
+            <a href="https://www.merkur.de/leben/geld/diesen-fuenf-apps-sparen-richtig-viel-geld-urlaub-zr-8368953.html"
+                target="_blank" title="Zu Sat1">
+                <img src="/images/press/Sat1.png" title="Zu Sat1"
+                    alt="Sat1 Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="https://www.welt.de/print/die_welt/reise/article159604188/Wenn-der-Computer-irrt-purzeln-die-Preise.html"
+                target="_blank" title="Zu Welt.de">
+                <img src="/images/press/DieWelt.png" title="Zu Welt.de"
+                    alt="Welt.de Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.sueddeutsche.de/news/leben/tourismus-fehler-im-systemmit-error-fares-extrem-guenstig-verreisen-dpa.urn-newsml-dpa-com-20090101-161031-99-08371"
+                target="_blank" title="Zur Süd Deutschen Zeitung">
+                <img src="/images/press/SuedDeutscheZeitung.png"
+                    title="Zur Süd Deutschen Zeitung"
+                    alt="Süd Deutsche Zeitung Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://derstandard.at/2000048105332/Mit-Error-Fares-extrem-guenstig-verreisen" target="_blank"
+                title="Zu Standard.at">
+                <img src="/images/press/derStandardAt.png"
+                    title="Zu Standard.at"
+                    alt="Der Standard.at Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.pnp.de/nachrichten/ratgeber/reise_und_urlaub/reisetipps/2280813_Fuer-199-Euro-nach-China-Die-Krux-mit-Super-Schnaeppchen.html"
+                target="_blank" title="Zur Passauer Neue Presse">
+                <img src="/images/press/PassauerNeuePresse.png"
+                    title="Zur Passauer Neue Presse"
+                    alt="Passauer Neuer Presse Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.sz-online.de/ratgeber/mit-error-fares-guenstig-verreisen-3529910.html" target="_blank"
+                title="Zur Sächsische Zeitung">
+                <img src="/images/press/SaechsischeZeitung.png"
+                    title="Zur Sächsische Zeitung"
+                    alt="Sächsische Zeitung Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://zuhause.chip.de/was-ist-error-fare-bei-fluegen-einfach-erklaert_93220" target="_blank"
+                title="Zu Chip.de">
+                <img src="/images/press/Chip.png" title="Zu Chip.de"
+                    alt="Chip.de Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.investorszene.de/2016/08/22/interview-mit-antonius-gress-von-errorfarealerts-com/"
+                target="_blank" title="Zur Investorszene">
+                <img src="/images/press/InvestorSzene.png"
+                    title="Zur Investorszene"
+                    alt="Investorszene Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.meinstartup.com/errorfarealerts-so-findest-du-reisepreisfehler/"
+                title="Zu MeinStartup" target="_blank">
+                <img src="/images/press/MeinStartup.png"
+                    title="Zu MeinStartup"
+                    alt="MeinStartup Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.startupbrett.de/error-fare-alerts/"
+                title="Zu StartupBrett" target="_blank">
+                <img src="/images/press/Startupbrett.png"
+                    title="Zu StartupBrett"
+                    alt="StartupBrett Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="http://www.startupvalley.news/de/error-fare-alerts/"
+                title="Zu StartupValley" target="_blank">
+                <img src="/images/press/StartupValley.png"
+                    title="Zu StartupValley"
+                    alt="StartupValley Logo">
+            </a>
+        </div>
+        <div class="col-md-3 text-center">
+            <a href="https://www.ilsole24ore.com/art/biglietti-aerei-prezzi-ridicoli-come-scovare-online-errori-compagnie-ACipTxi"
+               title="Zu Il sole 24 ore" target="_blank">
+                <img src="/images/press/ilSole24Ore.png"
+                     title="Zu Il sole 24 ore"
+                     alt="Il sole 24 ore Logo">
+            </a>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<section class="white_bg">
+  <div class="container margin_60">
+    <div class="main_title">
+      <h2>Unsere <span>Abonnenten </span>über uns</h2>
+      <p></p>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="review_strip">
+         <!-- <img src="img/avatar1.jpg" alt="Image" class="rounded-circle"> -->
+          <h4>Malte Teichmann (Rating auf play.google.com)</h4>
+          <p>
+            "Super Projekt, dass jetzt auch noch mit seiner eigenen App an den Start geht. 
+            <br>
+            Nach meinem Südamerika Kracher bin ich schon gespannt, wo es mich als nächstes durch die Jungs und Mädels hinverschlägt :)"
+          </p>
+          <div class="rating">
+            <i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning  mr-1 ml-1"></i>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="review_strip">
+          <!-- <img src="img/avatar2.jpg" alt="Image" class="rounded-circle"> -->
+          <h4>Elguanchero (Rating auf apps.apple.com)</h4>
+          <p>
+            "Super App!
+            <br>
+            Sehr schnelle Benachrichtigung über EFs und neuerdings auch gute Premium Deals. Sehr nützlich!""
+          </p>
+          <div class="rating">
+            <i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning  mr-1 ml-1"></i>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="review_strip">
+          <!-- <img src="img/avatar3.jpg" alt="Image" class="rounded-circle"> -->
+          <h4>Tom Davin (Rating auf apps.apple.com)</h4>
+          <p>
+            "Super App. Ich bin echt begeistert!! Ich hätte für diese App auch viel Geld ausgegeben! Echt cool, dass es Sie noch umsonst gibt! Jetzt kann ich hoffentlich noch häufiger in den Urlaub fliegen als bisher :)""
+          </p>
+          <div class="rating">
+            <i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning  mr-1 ml-1"></i>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="review_strip">
+          <!-- <img src="img/avatar1.jpg" alt="Image" class="rounded-circle"> -->
+          <h4>a380-8flyer (Rating auf apps.apple.com)</h4>
+          <p>
+            "Weltklasse Super App! Hab den ein oder anderen Businessclass Deal bereits gebucht. Die Deals erscheinen weit vor dem Bekannten First Class and More newsletter! Top, bitte weiter so!""
+          </p>
+          <div class="rating">
+            <i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning mr-1 ml-1"></i><i class="fa fa-star text-warning  mr-1 ml-1"></i>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<section class="bg-grey-light">
+  <div class="container">
+    <div class="banner colored">
+    <h4>Jetzt abonnieren</h4>
+    <p>Und keine Error Fare mehr verpassen! Alle Error Fares und Deals bequem per E-Mail bekommen.</p>
+    <form action="https://myactivities.us9.list-manage.com/subscribe/post" method="POST">
+        <fieldset>
+            <input type="hidden" name="u" value="aa43153d45fdaf3e92b2474ec">
+            <input type="hidden" name="id" value="7b95ae1d5e">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <input type="email" name="EMAIL" class="form-control no-border" placeholder="Email">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-full" type="submit">
+                        Kostenlos abonnieren
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3 newsletter-check">
+                    <input type="checkbox" class="form-check-input" id="newsletter-checkbox" required>
+                    <label for="newsletter-checkbox">
+                        Ja, ich möchte News & Deals von Error Fare Alerts abonnieren und ich habe die Hinweise zum <a href='/privacy' target='_blank' class='privacyStatementLink'>Datenschutz</a> gelesen und akzeptiert.
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+  </div>
+</section>
+
+
+<footer class="revealed">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img src="/images/MyActivities.png" class="myactivities-logo"
+                         alt="img.myactivities.alt"
+                         title="img.myactivities.title">
+                </div>
+                <p>
+                    Ein Produkt der © MyActivities GmbH. Alle Rechte vorbehalten.
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h3>Apps</h3>
+               <div>
+                   <a href="https://play.google.com/store/apps/details?id=com.errorfarealerts.app"
+                      title="Zur ErrorFareAlerts App im Google Playstore"
+                      target="_blank">
+                       <img src="/images/appStore/GoogleStoreGerman.png"
+                            alt="Google Play Logo"
+                            title="Zur ErrorFareAlerts App im Google Playstore">
+                   </a>
+                   <a href="https://itunes.apple.com/de/app/error-fare-alerts/id1294421136"
+                      title="Zur ErrorFareAlerts App im Google Playstore"
+                      target="_blank">
+                       <img src="/images/appStore/AppleStoreGerman.png"
+                            alt="Apple AppStore Logo"
+                            title="Zur ErrorFareAlerts App im Apple AppStore">
+                   </a>
+               </div>
+            </div>
+            <div class="col-md-4">
+                <h3>About</h3>
+                <ul>
+                    <li>
+                        <a href="/blog"
+                           title="Blog">
+                            Blog
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/deals/flights"
+                           title="Alle Deals">
+                            Alle Deals
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/hotelsuche"
+                           title="Hotelsuche">
+                            Hotelsuche
+                        </a>
+                    </li>
+<!--                    <li>-->
+<!--                        <a href="/mietwagensuche"-->
+<!--                           title="carRetnalSearch.title">-->
+<!--                            Mietwagensuche-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="/flugsuche"-->
+<!--                           title="Flugsuche">-->
+<!--                            Flugsuche-->
+<!--                        </a>-->
+<!--                    </li>-->
+                    <li>
+                        <a href="/about"
+                           title="Über ErrorFareAlerts.com">
+                            Über uns
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/press"
+                           title="Error Fare Alerts Presse Zentrum">
+                            Presse
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/faq"
+                           title="Häufig gestellte Fragen zu ErrorFareAlerts.com">
+                           FAQ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/guide"
+                           title="Der große Error Fare Guide">
+                            Error Fare Guide
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/contact"
+                           title="Kontakt">
+                            Kontakt
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/privacy"
+                           title="Datenschutzhinweise">
+                            Datenschutz
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/imprint"
+                           title="Impressum">
+                            Impressum
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- End row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div id="social_footer">
+                    <ul>
+                        <li>
+                            <a target="_blank" href="https://www.facebook.com/errorfarealerts">
+                                <i class="fa fa-facebook-square fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="https://twitter.com/errorfarealerts">
+                                <i class="fa fa-twitter-square fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="https://www.instagram.com/errorfarealerts/">
+                                <i class="fa fa-instagram fa-2x"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="https://www.linkedin.com/company/errorfarealerts">
+                                <i class="fa fa-linkedin-square fa-2x"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <p>© MyActivities GmbH 2014-2020</p>
+                </div>
+            </div>
+        </div><!-- End row -->
+    </div><!-- End container -->
+</footer><!-- End footer -->
+<!--SCRIPTS-->
+<script src="/min/production.min.js"></script>
+<!--SCRIPTS END-->
+</body>
+</html>
