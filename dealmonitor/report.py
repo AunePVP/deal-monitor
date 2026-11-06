@@ -141,7 +141,8 @@ def render(cfg: Config, store: Store, *, demo: bool = False) -> str:
 <title>Deal-Monitor</title><style>{CSS}</style></head><body><main>
 {banner}<h1>✈️ Deal-Monitor</h1>
 <p class="sub">Stand {now} · Preise pro Person, Hin- und Rückflug (one-way wird gekennzeichnet) ·
-Rabatt nur gegen eigene Preisbeobachtung, nie gegen Werbeversprechen.</p>
+Rabatt gegen den eigenen Referenzpreis (beobachteter Median, sonst Googles Preisverlauf oder
+Normalpreis des Alarms), nie gegen Werbeangaben.</p>
 <h2>Aktive Deals ({len(active)})</h2>
 {''.join(_card(d) for d in active) or '<p class="empty">Gerade kein Deal, der die Kriterien erfüllt.</p>'}
 <h2>Deal-Alarme ({len(cfg.alerts)})</h2>

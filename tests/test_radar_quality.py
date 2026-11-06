@@ -127,7 +127,7 @@ class LiveRunTest(unittest.TestCase):
             "Bangkok: Business Class von Frankfurt ab": (
                 1208, ["Business Class ≤ 1.300 €", "Auch bei ErrorFareAlerts: 1.288 €"]),
             "Icelandair: Von deutschen Airports nach ": (
-                295, ["Economy ≤ 300 €", "Auch bei Urlaubspiraten: 297 €", "Auch bei mydealz: 298 €"]),
+                295, ["Economy ≤ 300 €", "Auch bei Urlaubspiraten: 297 €", "Auch bei mydealz: 297 €"]),
             "Condor: Oneway-Flüge nach San José del C": (210, ["Economy ≤ 300 €", "one-way"]),
         })
 

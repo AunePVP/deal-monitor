@@ -102,7 +102,13 @@ class CheckTest(unittest.TestCase):
         foreign = item("Bonaire ab 199€ mit Corendon von Amsterdam", ["Economy Class"])
         self.assertIsNone(check(foreign))
         self.assertEqual(check(foreign, RadarSettings(home_only=False)), ["Economy ≤ 300 €"])
-        self.assertIsNone(check(item("Error Fare: Tokio ab 99€ von Amsterdam", ["Economy Class"])))
+        # Error Fare Economy ab Nachbar-Hub (Langstrecke): zählt mit Zubringer (Moduldoku)
+        self.assertEqual(check(item("Error Fare: Tokio ab 99€ von Amsterdam", ["Economy Class"])),
+                         ["Error Fare laut Überschrift",
+                          "Abflug Nachbar-Hub Amsterdam (+80 € Zubringer)"])
+        # ... auf der Kurzstrecke nicht, ohne Error Fare auch nicht
+        self.assertIsNone(check(item("Error Fare: Mallorca ab 9€ von Amsterdam", ["Economy Class"])))
+        self.assertIsNone(check(item("Tokio ab 199€ von Amsterdam", ["Economy Class"])))
         self.assertEqual(check(item("Error Fare: Tokio ab 99€ von Amsterdam", ["Economy Class"]),
                                RadarSettings(home_only=False)),
                          ["Error Fare laut Überschrift", "Economy ≤ 300 €"])
@@ -142,9 +148,9 @@ class ScanTest(unittest.TestCase):
         find("Peking: Business Class von Frankfurt ab 1.123€")      # Business ≤ 1.300
         find("Bestpreis ‼️ New York Flüge mit Icelandair")          # Urlaubspiraten 297 €
         find("Frankfurt → Bangkok Business Class Round Trip 1210€")  # premium-flights 1.210 €
-        # mydealz "Flüge USA / New York … Icelandair" (298 €) ist derselbe Deal wie Urlaubspiraten
+        # mydealz "Flüge USA / New York … Icelandair" (297 € laut führendem Deal-Preis) ist derselbe Deal wie Urlaubspiraten
         # (297 €) -> einmal gemeldet, mit dem günstigeren Artikel und Hinweis auf die zweite Seite
-        self.assertIn("Auch bei mydealz: 298 €", find("Bestpreis ‼️ New York").reasons)
+        self.assertIn("Auch bei mydealz: 297 €", find("Bestpreis ‼️ New York").reasons)
         self.assertFalse(any(t.startswith("Flüge USA / New York") for t in titles))
         for bad in ("Costa Toscana", "Ryanair Blitzverkauf", "🏝️ CARIBBEAN DEAL", "Copenhagen → Mumbai",
                     "Houston", "New York ab 306€", "CHEAP 💥 Flights from several German",
@@ -153,7 +159,7 @@ class ScanTest(unittest.TestCase):
         self.assertEqual(len(deals), 3)
         d = find("Bestpreis ‼️ New York")
         self.assertEqual((d.alert.id, d.alert.name, d.rating), ("radar", "Radar: Hammer-Deals", "Radar"))
-        self.assertEqual(d.reasons, ["Economy ≤ 300 €", "Auch bei mydealz: 298 €"])
+        self.assertEqual(d.reasons, ["Economy ≤ 300 €", "Auch bei mydealz: 297 €"])
         self.assertEqual(d.offer.source, "feed:urlaubspiraten")
         self.assertEqual(d.headline, d.offer.title)
         self.assertEqual(d.fingerprint[:6], "radar:")

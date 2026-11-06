@@ -682,6 +682,8 @@ table.runs th, table.runs td { text-align: left; padding: 8px 10px; border-botto
 table.runs th { color: var(--muted); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
 table.runs tr.has-errors td { background: color-mix(in srgb, var(--danger-soft) 60%, transparent); }
 .err-list { margin: 0; padding-left: 16px; color: var(--danger); overflow-wrap: anywhere; }
+.run-issues > p { margin: 0; }
+.run-issues > * + * { margin-top: 4px; }
 
 /* ------------------------------------------------------------- Toasts */
 .toasts {
@@ -776,7 +778,7 @@ table.runs tr.has-errors td { background: color-mix(in srgb, var(--danger-soft) 
   table.runs tr { border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; padding: 6px 0; }
   table.runs td { border: 0; padding: 3px 12px; display: flex; gap: 12px; }
   table.runs td::before { content: attr(data-label); flex: 0 0 92px; color: var(--muted); font-size: 12.5px; }
-  table.runs td > * { min-width: 0; }
+  table.runs td > * { min-width: 0; flex: 1 1 auto; }
   table.runs tr.has-errors td { background: transparent; }
   table.runs tr.has-errors { border-color: var(--danger); }
 }

@@ -191,6 +191,7 @@ class OriginTest(unittest.TestCase):
             ("Copenhagen → Mumbai Business Class Round Trip from 1910€", "en"),
             ("Canada → Lisbon Business Class Round Trip from US$2350 (Nonstop)", "en"),
             ("Flights from many Polish cities to South Korea from €562", "en"),
+            ("Flights from many European cities to Miami from €347", "en"),
         ]:
             self.assertEqual(detect_origin(title, lang), "foreign", title)
 
@@ -199,7 +200,6 @@ class OriginTest(unittest.TestCase):
             ("Business Class nach China: Peking & Shanghai ab 1.799€", "de"),
             ("Erbil, Irak ab 390€ in der Eurowings „Business Class“", "de"),
             ("Condor: Oneway-Flüge nach San José del Cabo (Mexiko) ab 210€ (Abflug ab Januar)", "de"),
-            ("Flights from many European cities to Miami from €347", "en"),
         ]:
             self.assertEqual(detect_origin(title, lang), "unknown", title)
 
@@ -346,7 +346,7 @@ class MydealzFixtureTest(unittest.TestCase):
         offers = fetch(source(["mydealz-fluege"]), a)
         self.assertEqual(len(offers), 1)
         o = offers[0]
-        self.assertEqual((o.source, o.price, o.roundtrip), ("feed:mydealz-fluege", 298, True))
+        self.assertEqual((o.source, o.price, o.roundtrip), ("feed:mydealz-fluege", 297, True))
         self.assertTrue(o.title.startswith("Flüge USA / New York von München"))
 
     def test_voucher_hotel_cruise_rejected(self):

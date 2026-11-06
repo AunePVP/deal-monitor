@@ -484,6 +484,14 @@ class Store:
         self.db.commit()
         return cur.rowcount
 
+    def article_deal(self, alert_id: str, source: str, link: str) -> str | None:
+        """Fingerprint des zuletzt gesehenen Deals dieses Alarms zu einem Artikel (Quelle + Link)
+        - damit ein Artikel, dessen Überschrift sich ändert (neuer Preis), derselbe Deal bleibt."""
+        row = self.db.execute(
+            "SELECT fingerprint FROM deals WHERE alert_id=? AND source=? AND link=? "
+            "ORDER BY last_seen DESC LIMIT 1", (alert_id, source, link)).fetchone()
+        return row["fingerprint"] if row else None
+
     def has_deal(self, fingerprint: str) -> bool:
         return self._deal_row(fingerprint) is not None
 

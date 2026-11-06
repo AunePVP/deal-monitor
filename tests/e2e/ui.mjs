@@ -546,6 +546,24 @@ async function desktopFlows(browser) {
     }
   });
 
+  await step("Kaputte API-Antwort (Infinity im JSON) zeigt einen Fehler statt „Noch keine Alarme“", async () => {
+    const ectx = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: "de-DE" });
+    try {
+      const p4 = await ectx.newPage();
+      await p4.route("**/api/alerts", (route) => route.fulfill({ status: 200, contentType: "application/json",
+        body: '{"alerts": [{"id": "x", "name": "X", "max_price": Infinity}]}' }));
+      await p4.goto(base + "/#alarme");
+      await p4.waitForFunction(() => /nicht geladen werden/.test(document.querySelector("#alert-list").textContent));
+      const text = norm(await p4.locator("#alert-list").textContent());
+      assert(!/Noch keine Alarme/.test(text) && /nicht lesbar/.test(text), `Alarmliste: ${text}`);
+      // Hinweis über der Deal-Liste nennt den richtigen Referenzpreis (README → Prinzipien)
+      const lead = norm(await p4.locator("#view-deals .lead").textContent());
+      assert(/Referenzpreis/.test(lead) && !/Werbeversprechen/.test(lead), `Hinweis: ${lead}`);
+    } finally {
+      await ectx.close().catch(() => {});
+    }
+  });
+
   await step("Status: „nächster Feed-Check in …“", async () => {
     // Die Demo läuft ohne Zeitplan - Status-Antwort einmal mit einem Feed-Termin anreichern
     const local = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
@@ -1209,6 +1227,28 @@ async function mobileFlows(browser) {
     await noHScroll(page, "Quellen (mobil)");
     const nav = await page.$$eval(".main-nav a", (as) => as.map((a) => a.getBoundingClientRect().right));
     assert(nav.length === 5 && nav.every((r) => r <= 390), `Tab-Leiste: ${nav}`);
+  });
+
+  await step("Mobil: „Letzte Läufe“ – Fehler-Spalte mit Limits lesbar (390 px)", async () => {
+    const run = { id: 1, trigger: "scheduled", alert_id: null, started_at: "2026-11-06T08:00:00", finished_at: "2026-11-06T08:01:00",
+      offers: 3, deals: 1, radar: 0, notified: 1, expired: 0,
+      errors: ["[de-cn-economy] google_flights: Google Flights: 22 von 792 Abfragen (Limit)",
+               "[de-cn-business] google_flights: Google Flights: 22 von 360 Abfragen (Limit)"] };
+    await page.route("**/api/runs*", (route) => route.fulfill({ json: { runs: [run] } }));
+    try {
+      await go(page, "deals");
+      await go(page, "einstellungen");
+      await page.waitForSelector("#runs-table .run-issues .limit-list");
+      await page.locator("#runs-table").scrollIntoViewIfNeeded();
+      const [none, list] = await page.$$eval("#runs-table .run-issues > *", (els) => els.map((e) => {
+        const r = e.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, width: r.width, text: e.textContent };
+      }));
+      assert(none.text === "keine" && none.width >= 60, `„keine“ gestaucht: ${JSON.stringify(none)}`);
+      assert(list.top >= none.bottom, `Limit-Liste nicht unter „keine“: ${JSON.stringify([none, list])}`);
+      await noHScroll(page, "Letzte Läufe (mobil)");
+    } finally {
+      await page.unroute("**/api/runs*");
+    }
   });
 
   await step("Mobil: Speichern-Button nicht von der Tab-Leiste verdeckt", async () => {

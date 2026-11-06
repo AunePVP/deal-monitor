@@ -176,12 +176,17 @@
     } catch (e) {
       throw new ApiError("Keine Verbindung zum Server.", 0);
     }
-    let data = null;
-    try { data = await res.json(); } catch (e) { data = null; }
+    let data = null, text = "", unreadable = false;
+    try { text = await res.text(); } catch (e) { text = ""; }
+    if (text.trim()) {
+      try { data = JSON.parse(text); } catch (e) { data = null; unreadable = true; }
+    }
     if (!res.ok) {
       const msg = (data && typeof data.error === "string" && data.error) || `Fehler ${res.status}`;
       throw new ApiError(msg, res.status);
     }
+    // Antwort kaputt (z. B. "Infinity" im JSON): Fehler zeigen statt still "leer" anzeigen
+    if (unreadable) throw new ApiError("Antwort des Servers nicht lesbar (kein gültiges JSON).", res.status);
     return data || {};
   }
 
@@ -401,7 +406,9 @@
     try {
       const data = await api("GET", "/api/alerts");
       state.alerts = Array.isArray(data.alerts) ? data.alerts : [];
+      state.alertsError = null;
     } catch (e) {
+      state.alertsError = e.message;
       toast(`Alarme konnten nicht geladen werden: ${e.message}`, "error");
     }
   }
@@ -910,6 +917,11 @@
 
   function renderAlerts() {
     const list = $("#alert-list");
+    if (!state.alerts.length && state.alertsError) {
+      // nicht "Noch keine Alarme" zeigen, wenn sie nur nicht geladen werden konnten
+      list.replaceChildren(el("p", { class: "help", role: "alert" }, `Alarme konnten nicht geladen werden: ${state.alertsError}`));
+      return;
+    }
     if (!state.alerts.length) {
       list.replaceChildren(el("div", { class: "empty" },
         el("p", { class: "empty-title" }, "Noch keine Alarme"),
@@ -1830,8 +1842,10 @@
         td("Radar", String(r.radar ?? 0)),
         td("Gemeldet", String(r.notified ?? "")),
         td("Abgelaufen", String(r.expired ?? "")),
-        td("Fehler", errs.length ? el("ul", { class: "err-list" }, ...errs.map((x) => el("li", null, x))) : el("span", { class: "muted" }, "keine"),
-          limits.length ? el("ul", { class: "limit-list", title: "Abfrage-Budget je Lauf (Einstellungen → Google Flights) – kein Fehler" }, ...limits.map((x) => el("li", null, x))) : null));
+        // ein Block: mobil (td als Flex-Zeile) stehen "keine" und die Limits untereinander
+        td("Fehler", el("div", { class: "run-issues" },
+          errs.length ? el("ul", { class: "err-list" }, ...errs.map((x) => el("li", null, x))) : el("p", { class: "muted" }, "keine"),
+          limits.length ? el("ul", { class: "limit-list", title: "Abfrage-Budget je Lauf (Einstellungen → Google Flights) – kein Fehler" }, ...limits.map((x) => el("li", null, x))) : null)));
     });
     box.replaceChildren(el("table", { class: "runs" },
       el("thead", null, el("tr", null, ...cols.map((c) => el("th", { scope: "col" }, c)))),

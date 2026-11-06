@@ -353,6 +353,7 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
             result.errors.append(msg)
 
         result.offers += len(offers)
+        keep_article_identity(store, alert.id, offers)
         by_route: dict[str, list[Offer]] = defaultdict(list)
         for o in offers:
             by_route[o.route_key].append(o)
@@ -435,6 +436,23 @@ def run_alert(alert: Alert, sources: list, store: Store, cfg: Config,
             store.upsert_deal(d, s.renotify_drop, notify=False)
     _refresh_sources(store, merged, [d for d, _ in checked])
     return to_notify, result
+
+
+def keep_article_identity(store: Store, alert_id: str, offers: list[Offer]) -> None:
+    """Artikel, deren Überschrift sich geändert hat ("ab 449€" -> "ab 349€", gleicher Link),
+    bleiben derselbe Deal (``Offer.ident``): so meldet der Lauf eine Senkung als "billiger",
+    statt den neuen Titel als schon gemeldeten Artikel still zu speichern."""
+    for o in offers:
+        if not o.title or not o.link or o.ident:
+            continue
+        try:
+            fp = store.article_deal(alert_id, o.source, o.link)
+        except Exception:  # noqa: BLE001 - ohne Abgleich gilt der Titel
+            log.exception("Artikel %s nicht abgeglichen", o.link)
+            continue
+        prefix = f"{alert_id}:"
+        if fp and fp.startswith(prefix) and fp != prefix + o.fingerprint:
+            o.ident = fp[len(prefix):]
 
 
 def _seen_today(offers: list[Offer], today: date | None = None) -> list[Offer]:
@@ -610,6 +628,7 @@ def run_radar(sources: list, store: Store, cfg: Config, settings: radar.RadarSet
         result.errors.append(msg)
         return [], result
     result.radar = len(deals)
+    keep_article_identity(store, radar.RADAR_ALERT_ID, [d.offer for d in deals])
     # Schon von einer anderen Deal-Seite gemeldet (früherer Lauf): nur der Erstmeldung zuordnen
     kept, merged = first_reports(
         store, [(d, store.deal_status(d, s.renotify_drop)) for d in deals], sources)
@@ -650,12 +669,18 @@ def run(cfg: Config, sources: list, notifiers: list, store: Store,
     # Deals mit Abflug in der Vergangenheit ablaufen lassen - auch bei pausierten Alarmen
     # und Quellen, die gerade nicht funktionieren
     total.expired += store.expire_departed(today or date.today())
-    sent_articles: set[str] = set()   # ein Artikel passt evtl. auf mehrere Alarme
+    # ein Artikel passt evtl. auf mehrere Alarme: je Kabine und Reiseart nur einmal melden
+    # (Economy- und Business-Preis bzw. Hin/Rück und one-way desselben Artikels sind zwei Deals)
+    sent_articles: set[tuple] = set()
+
+    def article(d: Deal) -> tuple | None:
+        o = d.offer
+        return (o.link, o.cabin, o.roundtrip) if o.title and o.link else None
 
     def notify(name: str, items: list[tuple[Deal, str]]) -> None:
-        items = [(d, st) for d, st in items
-                 if not (d.offer.title and d.offer.link in sent_articles)]
-        sent_articles.update(d.offer.link for d, _ in items if d.offer.title and d.offer.link)
+        items = [(d, st) for d, st in items if article(d) not in sent_articles]
+        sent_articles.update(article(d) for d, _ in items)
+        sent_articles.discard(None)
         if not items:
             return
         for n in notifiers:

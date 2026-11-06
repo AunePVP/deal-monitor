@@ -7,6 +7,7 @@ Per Umgebungsvariable gesetzte Werte sind in der Oberfläche gesperrt.
 from __future__ import annotations
 
 import logging
+import math
 import os
 import re
 from dataclasses import dataclass, fields
@@ -165,7 +166,8 @@ def coerce(name: str, value):
                 value = float(value)
             except ValueError:
                 raise ValueError(f"{label}: bitte eine Zahl angeben") from None
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or value != value:
+        if isinstance(value, bool) or not isinstance(value, (int, float)) \
+                or not math.isfinite(value):          # NaN, ±Infinity
             raise ValueError(f"{label}: bitte eine Zahl angeben")
         if spec.kind == "int":
             if float(value) != int(value):

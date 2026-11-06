@@ -408,7 +408,11 @@ ONEWAY_RE = re.compile(r"\bone[\s-]?way\b|\beinzelflug|\bnur hinflug|\bpro (?:st
                        r"|\bper (?:leg|direction)\b|\beinfache fahrt", re.I)
 # "inkl. Rückflug (Jan - Mär) | oneway ab 19€": der zuerst genannte Reisetyp gehört zum Hauptpreis
 ROUNDTRIP_RE = re.compile(r"\binkl(?:\.|usive)?\s*r(?:ü|ue|u)ckflug|\bhin[\s-]*und[\s-]*r(?:ü|ue|u)ckflug"
+                          r"|\bhin\s*(?:und|&|\+)\s*zur(?:ü|ue|u)ck\b"
                           r"|\bround[\s-]?trip\b|\breturn\b|\bretour\b", re.I)
+# Nebenpreis für one-way: "… ab 59€ hin und zurück | oneway ab 29€"
+ONEWAY_PRICE_RE = re.compile(r"\b(?:one[\s-]?way|einzelfl(?:ug|üge|uege)|nur hinflug)\s*"
+                             r"(?:ab|from|für|fuer|for|nur|just)\s*", re.I)
 # Kabine direkt vor ihrem eigenen Preis: "… ab 99€ (Business Class ab 229€)", "(Economy ab 233€)"
 # "First" allein ist meist keine Kabine ("First Minute", "for the first time") - nur
 # "First Class", "First-Class", "First Suite", "in der First" oder "First ab 2.499€"
@@ -489,7 +493,9 @@ AIRLINE_NAMES_RE = re.compile(
     r"jetblue|play\b|wizz|air dolomiti|eurowings discover|marabu|aeroflot|air astana|"
     r"turkmenistan airlines|miat|uzbekistan airways|azerbaijan airlines|air arabia|flydubai|"
     r"skyexplorer)\b", re.I)
-FLIGHT_WORD_RE = re.compile(r"fl(?:u|ü|ue)g|\bflights?\b|\bfly\b|\bairfare|\berror ?fare|"
+# "Flug-Gameplay", "Flugsimulator", "Flight Simulator" (Spiele-Deals bei mydealz) sind kein Flug
+FLIGHT_WORD_RE = re.compile(r"fl(?:u|ü|ue)g(?![\s-]*(?:gameplay|simulat|spiel|modus|mechanik))|"
+                            r"\bflights?\b(?!\s*simulat)|\bfly\b|\bairfare|\berror ?fare|"
                             r"fehlerpreis|\bnonstop\b|\bgabelfl", re.I)
 NON_DEAL_LINK_RE = re.compile(r"/gutscheine?/|/coupons?/|/vouchers?/|/hotels?/|/pauschalreisen/|"
                               r"/cruises?/|/kreuzfahrt|/news/|/reviews?/|/guides?/|/bewertung", re.I)
@@ -592,6 +598,15 @@ def is_oneway(title: str) -> bool:
         return False
     rt = ROUNDTRIP_RE.search(title)
     return rt is None or ow.start() < rt.start()
+
+
+def oneway_price(title: str, lang: str = "de") -> float | None:
+    """Eigener one-way-Preis neben einem Hin/Rück-Hauptpreis ("| oneway ab 29€") - sonst None."""
+    m = ONEWAY_PRICE_RE.search(title)
+    if not m:
+        return None
+    pm = PRICE_RE.match(title, m.end())
+    return parse_price(title[m.end():pm.end() + 3], lang) if pm else None
 
 
 def _cabin_of(word: str) -> str:
@@ -789,6 +804,8 @@ def read_infobox(text: str, price_regex: str | None) -> dict:
             codes = place_codes(names)
             if codes:
                 out[key] = codes
+        if out.get("origin_codes") and _region_only(route.group(1)):
+            out["origin_region"] = True      # "von Deutschland nach …": ganzes Land als Abflug
     expires = _until(text[m.end():m.end() + 2000])
     if expires is not None:
         out["expires"] = expires
@@ -848,6 +865,13 @@ ORIGIN_RE = {
     "en": re.compile(rf"\b[Ff]rom\s+(?:(?:several|many|various|multiple|different|all|the)\s+)?"
                      rf"(?P<names>{_LIST})(?![\w$£])"),
 }
+#: "Flights from many European cities to …", "ab vielen europäischen Städten": Abflug irgendwo in
+#: Europa, nicht DACH (wie Secret Flying "European cities")
+MULTI_ORIGIN_RE = re.compile(
+    r"\b(?:from|ab|von|aus)\s+(?:(?:many|several|various|multiple|different|selected|numerous|"
+    r"vielen|mehreren|verschiedenen|zahlreichen)\s+)?(?:european|europäischen|europaeischen|uk|"
+    r"british|spanish|italian|french|polish|scandinavian)\s+(?:cities|airports|städten|"
+    r"staedten|flughäfen|flughaefen)\b", re.I)
 ROUTE_RE = re.compile(rf"(?P<name>{_NAME})\s*(?P<sep>→|->|–|—|↔|⇄|⇆|<->|↔︎|\s-\s)\s*(?P<dest>{_NAME})")
 #: Pfeile verbinden immer Orte; ein Gedankenstrich auch "Shanghai - Flüge inkl. Rückflug"
 ARROWS = ("→", "->", "↔", "⇄", "⇆", "<->", "↔︎")
@@ -881,7 +905,8 @@ def origin_candidates(title: str, lang: str = "de") -> list[str]:
         if not raw or _NOT_PLACE_RE.match(raw) or _is_airline(raw):
             continue
         # "New York - Flüge inkl. Rückflug": hinter dem Strich steht kein Ort -> keine Strecke
-        if m.group("sep") not in ARROWS and (_is_airline(dest) or _lookup(dest)[0] == "unknown"):
+        if m.group("sep") not in ARROWS and (_is_airline(dest) or _lookup(dest)[0] == "unknown") \
+                and not _route_chain(title, m.end()):
             continue
         found.append(raw)
         break
@@ -890,6 +915,16 @@ def origin_candidates(title: str, lang: str = "de") -> list[str]:
         if f not in out:
             out.append(f)
     return out
+
+
+_CHAIN_RE = re.compile(rf"\s*(?:→|->|–|—|\s-\s)\s*(?P<name>{_NAME})")
+
+
+def _route_chain(title: str, pos: int) -> bool:
+    """"Brüssel – Cancún – Deutschland": nach dem (unbekannten) Ziel folgt ein weiterer
+    bekannter Ort - eine Gabelflug-Strecke, der erste Ort ist der Abflug."""
+    m = _CHAIN_RE.match(title, pos)
+    return bool(m) and _lookup(m.group("name").strip(" .,"))[0] != "unknown"
 
 
 def _is_airline(name: str) -> bool:
@@ -914,7 +949,7 @@ def detect_origin(title: str, lang: str = "de") -> str:
     kinds = {_lookup(p)[0] for p in origin_candidates(title, lang)}
     if "home" in kinds:
         return "home"
-    if "foreign" in kinds:
+    if "foreign" in kinds or MULTI_ORIGIN_RE.search(title):
         return "foreign"
     return "unknown"
 
@@ -966,6 +1001,14 @@ def _word_matches(word: str, norm: str, raw: str) -> bool:
     return False
 
 
+#: Umstiegsorte sind kein Ziel: "Flüge nach Bangkok über Peking", "mit Stopover in Shanghai",
+#: "mit Zwischenstopp in Guangzhou", "via Doha"
+VIA_PLACE_RE = re.compile(
+    rf"\b(?i:über|ueber|via|(?:mit\s+(?:einem\s+|kurzem\s+)?)?(?:stop[\s-]?over|zwischenstopp?|"
+    rf"umstieg|layover)\s+(?:in|im|at)|with\s+(?:a\s+)?(?:stop[\s-]?over|layover)\s+in)"
+    rf"\s+(?:{_LIST})")
+
+
 def matches(alert: Alert, text: str, keywords: list[list[str]] | None = None, *,
             title: str | None = None, lang: str = "de") -> bool:
     """Mindestens eine Stichwort-Gruppe muss vollständig vorkommen (inkl. Synonyme/IATA-Codes).
@@ -974,7 +1017,7 @@ def matches(alert: Alert, text: str, keywords: list[list[str]] | None = None, *,
     Hamburg, Zürich" für die Gruppe Zürich+Hamburg), beschreibt kein Ziel und zählt nicht.
     """
     groups = keywords if keywords is not None else (alert.feed_keywords or auto_keywords(alert))
-    raw = AIRLINE_NOISE_RE.sub(" ", text)
+    raw = VIA_PLACE_RE.sub(" ", AIRLINE_NOISE_RE.sub(" ", text))
     norm = normalize(raw)
     departures = origin_candidates(title if title is not None else text, lang)
     for group in groups:
@@ -1026,6 +1069,8 @@ class ItemInfo:
     expires: datetime | None = None
     hot: str | None = None
     uid: str | None = None
+    #: one-way-Nebenpreis zu einem Hin/Rück-Hauptpreis ("| oneway ab 29€"), sonst None
+    oneway_price: float | None = None
 
 
 def _plain_categories(item: dict) -> list[str]:
@@ -1065,12 +1110,26 @@ def _price(item: dict, profile: Profile) -> float | None:
             text = item.get("content_text") or ""
         else:
             text = desc[:profile.description_chars]
+            if not profile.price_regex:
+                # mydealz: "103€ - AJet … ab 15€ Ticketpreis" - der führende Betrag (bzw. der
+                # Händlerpreis) ist der Deal-Preis, spätere "ab"-Beträge sind Teilpreise
+                lead = LEADING_PRICE_RE.match(text)
+                p = parse_price(lead.group("p"), profile.lang) if lead else None
+                if p is None and item.get("merchant_price"):
+                    p = parse_price(item["merchant_price"], profile.lang)
+                if p is not None:
+                    return p
         p = regex_price(text, profile) if profile.price_regex else parse_price(text, profile.lang)
         if p is not None:
             return p
     if item.get("merchant_price"):
         return parse_price(item["merchant_price"], profile.lang)
     return None
+
+
+#: Beschreibung beginnt mit dem Deal-Preis und dem Händler: "103€ - AJet …" (mydealz)
+LEADING_PRICE_RE = re.compile(
+    r"^\s*(?P<p>(?:€|EUR)\s*\d[\d.,]*|\d[\d.,]*(?:,-)?\s*(?:€|EUR\b|Euro\b))\s*[-–—|]\s", re.I)
 
 
 def _given_price(item: dict) -> float | None:
@@ -1128,13 +1187,24 @@ def analyze(item: dict, profile: Profile | None = None) -> ItemInfo:
         if origin == "unknown" and profile.default_origin == "home":
             origin = "home"
     oneway = item["oneway"] if isinstance(item.get("oneway"), bool) else is_oneway(title)
+    ow_price = oneway_price(title, profile.lang) if flight and price is not None and not oneway \
+        else None
     hot = item.get("hot") or None
     return ItemInfo(flight=flight, price=price, cabin=cabin, oneway=oneway,
                     origin=origin, origin_codes=codes, source=source, link=link,
                     origin_region=bool(codes) and item.get("origin_region") is True,
                     foreign_currency=foreign_currency, alt_prices=alt if flight else {},
                     dest_codes=_codes(item.get("dest_codes")), expires=_aware(item.get("expires")),
-                    hot=str(hot) if hot else None, uid=str(item["uid"]) if item.get("uid") else None)
+                    hot=str(hot) if hot else None, uid=str(item["uid"]) if item.get("uid") else None,
+                    oneway_price=ow_price if ow_price is not None and ow_price < price else None)
+
+
+def alert_dest_codes(alert: Alert) -> set[str]:
+    """Ziel-Codes des Alarms samt Flughäfen der Städte (BJS -> PEK, PKX; SHA -> PVG)."""
+    out = set(alert.destinations)
+    for code in alert.destinations:
+        out |= {c for c in regions.synonyms(code) if IATA_RE.match(c)}
+    return out
 
 
 def origin_ok(alert: Alert, info: ItemInfo) -> bool:
@@ -1559,7 +1629,10 @@ class FeedSource:
                 hit = matches(alert, text,
                               auto_keywords(alert, origin_required=not (implied or hub)),
                               **kw_args)
-            if not hit and info.dest_codes & set(alert.destinations):
+            dests = alert_dest_codes(alert)
+            if info.dest_codes and not info.dest_codes & dests:
+                continue     # Quelle nennt das Ziel (Hongkong, Macau …): passt nicht zum Alarm
+            if not hit and info.dest_codes & dests:
                 # Quelle nennt Ziel-Codes (Loader): Ziel passt, Abflug muss belegt sein. Ein
                 # ganzes Land als Abflug ("#Germany to …") belegt keine einzelne Stadt.
                 origin_hit = bool(info.origin_codes & set(alert.origins)) and (
@@ -1569,10 +1642,13 @@ class FeedSource:
                 continue
             if hub is None and not origin_ok(alert, info):
                 continue
-            cabin, price = info.cabin, info.price
+            cabin, price, roundtrip = info.cabin, info.price, not info.oneway
             if alert.cabin != cabin and alert.cabin in info.alt_prices:
                 # "Tokio ab 650€ (Business Class ab 1.199€)" -> für den Business-Alarm 1.199 €
                 cabin, price = alert.cabin, info.alt_prices[alert.cabin]
+            elif not alert.roundtrip and roundtrip and info.oneway_price is not None:
+                # "ab 59€ hin und zurück | oneway ab 29€" -> für den One-way-Alarm 29 €
+                price, roundtrip = info.oneway_price, False
             if price is None:
                 continue  # ohne €-Preis kein vergleichbarer Deal
             # Nachbar-Hub: Preis = Ticket + Zubringer (dagegen gilt die Grenze), Hub im Offer
@@ -1584,7 +1660,7 @@ class FeedSource:
                 origin=origin,
                 destination=alert.destinations[0] if len(alert.destinations) == 1 else "",
                 price=price,
-                roundtrip=not info.oneway,
+                roundtrip=roundtrip,
                 cabin=cabin,
                 link=it["link"],
                 title=it["title"],

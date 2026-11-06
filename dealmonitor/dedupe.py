@@ -106,6 +106,15 @@ def dest_word(title: str) -> str | None:
     return "~" + regions.normalize_name(word)
 
 
+def _route_dest(text: str) -> set[str]:
+    """Codes des Ziels einer Strecke "A – B"/"A → B" (erste Strecke im Titel), sonst leer."""
+    m = feed.ROUTE_RE.search(text)
+    if not m:
+        return set()
+    return regions.codes_for(m.group("dest").strip(" .,")) or \
+        feed._lookup(m.group("dest").strip(" .,"))[1]
+
+
 def route(title: str, origins=(), dests=(), destination: str = "") -> tuple[set[str], set[str]] | None:
     """``(Ziele, Abflug-Codes)`` einer Überschrift - ``None`` ohne erkennbares Ziel.
 
@@ -121,6 +130,8 @@ def route(title: str, origins=(), dests=(), destination: str = "") -> tuple[set[
     # Ziel nennt oder er nach "nach"/"to" steht - sonst gilt er als Abflug
     m = DEST_WORD_RE.search(text)
     hints = dest_set | (regions.codes_for(m.group(1)) if m else set())
+    if not hints:
+        hints = _route_dest(text)    # "Hamburg – Zürich": der Ort hinter dem Strich ist das Ziel
     home_dest: set[str] = set()
     for place in regions.places_in(text):
         codes = regions.codes_for(place)

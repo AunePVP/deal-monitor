@@ -169,10 +169,12 @@ def check(item: dict, settings: RadarSettings | None = None,
     if not info.flight or BLIND_RE.search(item["title"]):
         return None
     hot = hot_reason(item["title"], item.get("categories"), info.source)
-    hub = radar_hub(info, settings)
+    hub = radar_hub(info, settings, error_fare=hot in STRONG_HOT)
     if settings.home_only and info.origin == "foreign" and hub is None:
         return None
     haul = trip_haul(item["title"], info) if settings.long_haul_only else "long"
+    if hub and haul == "short" and all(c == "economy" for c in [info.cabin, *info.alt_prices]):
+        return None       # Error Fare Economy ab Hub auf der Kurzstrecke: lohnt keinen Zubringer
     if hot and hot not in STRONG_HOT and haul != "long":
         hot = None        # "Hammer"/Preissturz auf Kurzstrecke: nur über die Preisgrenze
     reasons: list[str] = []
@@ -216,15 +218,24 @@ def trip_haul(title: str, info: feed_mod.ItemInfo) -> str | None:
     return regions.haul(feed_mod.AIRLINE_NOISE_RE.sub(" ", title), info.dest_codes, origins)
 
 
-def radar_hub(info: feed_mod.ItemInfo, settings: RadarSettings) -> tuple[str, float] | None:
+def radar_hub(info: feed_mod.ItemInfo, settings: RadarSettings, *,
+              error_fare: bool = False) -> tuple[str, float] | None:
     """Nachbar-Hub eines Artikels mit fremdem Abflug, wenn ``home_only`` ihn sonst verwerfen
     würde: ``(Hub-Stadtcode, Aufschlag)`` oder ``None``. Nur mit Preis in Premium/Business/
-    First - Economy ab Amsterdam & Co. ist meist Kurzstrecke, da lohnt kein Zubringer."""
+    First oder als Error Fare/Fehlerpreis (``error_fare``) - sonst ist Economy ab Amsterdam & Co.
+    meist Kurzstrecke, da lohnt kein Zubringer."""
     if not settings.home_only or info.origin != "foreign":
         return None
-    if all(c == "economy" for c in [info.cabin, *info.alt_prices]):
+    if not error_fare and all(c == "economy" for c in [info.cabin, *info.alt_prices]):
         return None
     return hubs.cheapest(info.origin_codes, settings.hub_settings)
+
+
+def _item_hub(item: dict, info: feed_mod.ItemInfo,
+              settings: RadarSettings) -> tuple[str, float] | None:
+    """:func:`radar_hub` eines Artikels (Error Fare laut Überschrift zählt auch in Economy)."""
+    hot = hot_reason(item["title"], item.get("categories"), info.source)
+    return radar_hub(info, settings, error_fare=hot in STRONG_HOT)
 
 
 def _offer(item: dict, info: feed_mod.ItemInfo, hub: tuple[str, float] | None = None) -> Offer:
@@ -300,9 +311,9 @@ def scan(items_or_source, settings: RadarSettings | dict | None = None, *,
             twin.reasons.append(f"Auch bei {feed_mod.source_label(info.source)}: "
                                 f"{euro(info.price)}")
             if twins is not None:
-                twins.append((_offer(it, info, radar_hub(info, settings)), twin))
+                twins.append((_offer(it, info, _item_hub(it, info, settings)), twin))
             continue
-        deal = Deal(alert=RADAR_ALERT, offer=_offer(it, info, radar_hub(info, settings)),
+        deal = Deal(alert=RADAR_ALERT, offer=_offer(it, info, _item_hub(it, info, settings)),
                     rating=RATING,
                     reference_price=None, discount=None, reasons=reasons, headline=it["title"])
         kept.append((deal, dkey))

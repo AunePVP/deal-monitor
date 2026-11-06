@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 import tomllib
 import unicodedata
@@ -179,7 +180,7 @@ def _number(value, field_name: str, *, integer: bool = False, optional: bool = T
             value = float(value.strip().replace(",", "."))
         except ValueError:
             raise ValueError(f"{label} muss eine Zahl sein") from None
-    if not isinstance(value, (int, float)) or value != value:  # NaN
+    if not isinstance(value, (int, float)) or not math.isfinite(value):  # NaN, ±Infinity
         raise ValueError(f"{label} muss eine Zahl sein")
     if integer:
         if float(value) != int(value):

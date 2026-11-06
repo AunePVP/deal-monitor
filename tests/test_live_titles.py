@@ -163,7 +163,7 @@ class LiveRadarTest(unittest.TestCase):
             ("Bangkok: Business Class von Fr", 1208, "business"),
             ("Kuala Lumpur: Business Class v", 1148, "business"),
             ("Peking: Business Class von Fra", 1123, "business"),
-            ("Flüge USA / New York von Münch", 298, "economy"),
+            ("Flüge USA / New York von Münch", 297, "economy"),
         ])
         self.assertEqual(got, expected)
         # ohne "nur Langstrecke" wie früher (außer Blind Booking und Eurowings „Business“)
@@ -212,7 +212,7 @@ class LiveRadarTest(unittest.TestCase):
         # mydealz-Titel nennen den Preis oft nicht ("Flüge USA / New York … (Okt - Apr / Icelandair)")
         d = find(scan(live_items()), "Flüge USA / New York")
         text = format_text(d, "new")
-        self.assertIn("Preis: ab 298 €", text.splitlines()[1])
+        self.assertIn("Preis: ab 297 €", text.splitlines()[1])
 
 
 class LiveParserTest(unittest.TestCase):
