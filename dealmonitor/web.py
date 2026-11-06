@@ -23,7 +23,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
-from . import __version__, health, notify, radar, regions, rotation
+from . import __version__, health, notify, principles, radar, regions, rotation
 from .appsettings import SOURCE_LABELS, SOURCE_NAMES, Context
 from .config import normalize_alert, slugify
 from .models import Alert
@@ -132,17 +132,26 @@ def near_deals_json(entries: list[dict] | None) -> list[dict]:
     return list(out.values())[:NEAR_DEALS]
 
 
-#: Strecken, die keine Deal-Seite meldet (Recherche 11/2026) - dort trägt die Google-Rotation
+#: Strecken, die Deal-Seiten selten melden (Recherche 11/2026) - dort trägt die Google-Rotation
 NO_DEAL_SITE_ROUTES = (frozenset({"ZRH", "HAM"}),)
+
+
+def deal_site_routes(entries: list[dict]) -> set[frozenset]:
+    """Flughafen-Paare, für die gerade ein Artikel einer Deal-Seite vorliegt (Bestpreise oder
+    aktive Deals mit Quelle ``feed:…``) - Richtung egal."""
+    return {frozenset({e["origin"], e["destination"]}) for e in entries
+            if is_article(e) and e.get("origin") and e.get("destination")}
 
 
 def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
                   today: date, now: datetime, scan_months: int,
-                  google: bool = True) -> dict | None:
+                  google: bool = True, reported: set[frozenset] | None = None) -> dict | None:
     """Abdeckung eines Alarms durch die Google-Tagesrotation: der Alarm rotiert selbst oder ist
     ein Hin/Rück-Alarm, dessen Strecken ein aktiver Rotations-Alarm (gleiche Kabine) abdeckt
     (Kombinationen aus 2 One-ways). ``days`` = Abflugtage im Horizont mit aktuellem Preis im
-    Gedächtnis. Pausierter Alarm oder Google Flights abgewählt (``google``) -> None."""
+    Gedächtnis. Pausierter Alarm oder Google Flights abgewählt (``google``) -> None.
+    ``no_deal_sites``: Strecke aus :data:`NO_DEAL_SITE_ROUTES`, für die gerade auch kein Artikel
+    einer Deal-Seite vorliegt (``reported``, siehe :func:`deal_site_routes`)."""
     routes = rotation.routes_for(alert)
     if not google or not alert.enabled:
         return None
@@ -160,8 +169,10 @@ def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
         except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
             log.exception("Google-Rotation: Gedächtnis nicht lesbar")
     airports = {c for pair in alert.pairs for c in pair}
+    reported = reported or set()
     return {"horizon_days": horizon, "days": len(days),
-            "no_deal_sites": any(airports <= r for r in NO_DEAL_SITE_ROUTES)}
+            "no_deal_sites": any(airports <= r and not any(p <= r for p in reported)
+                                 for r in NO_DEAL_SITE_ROUTES)}
 
 
 def alert_json(raw: dict, stats: dict | None = None, cheapest: dict | None = None,
@@ -477,6 +488,10 @@ class Handler(BaseHTTPRequestHandler):
                 "radar_deals": sum(1 for d in active if d["alert_id"] == radar.RADAR_ALERT_ID),
                 "unread": store.unread_count(),
             },
+            # Schwellen der Bewertung (Tooltip "Warum Top-Deal?") - eine Quelle, kein Doppel
+            "rating_rules": {"top_deal": principles.TOP_DEAL,
+                             "very_good": principles.VERY_GOOD,
+                             "very_good_limit_share": principles.VERY_GOOD_LIMIT_SHARE},
         }
 
     def api_sources(self, store, **_):
@@ -524,8 +539,10 @@ class Handler(BaseHTTPRequestHandler):
         return store.cheapest(alert_id, today=self.ctx.today,
                               max_age=timedelta(hours=2 * hours) if hours > 0 else None)
 
-    def _rotation(self, store, rows: list[dict]) -> dict[str, dict]:
-        """Abdeckung durch die Google-Rotation je Alarm-ID (nur betroffene Alarme)."""
+    def _rotation(self, store, rows: list[dict],
+                  cheapest: dict[str, list[dict]] | None = None) -> dict[str, dict]:
+        """Abdeckung durch die Google-Rotation je Alarm-ID (nur betroffene Alarme);
+        ``cheapest``: Bestpreise je Alarm (für "meldet gerade keine Deal-Seite")."""
         alerts = []
         for raw in rows:
             try:
@@ -545,17 +562,19 @@ class Handler(BaseHTTPRequestHandler):
         except (KeyError, TypeError):
             google = True
         today, now = self.ctx.today or date.today(), datetime.now()
+        entries = [e for v in (cheapest or {}).values() for e in v or []]
+        reported = deal_site_routes(entries + store.deals(status="active", limit=1000))
         out = {}
         for a in alerts:
             if (c := rotation_json(a, alerts, memory, today=today, now=now, scan_months=months,
-                                   google=google)):
+                                   google=google, reported=reported)):
                 out[a.id] = c
         return out
 
     def api_alerts(self, store, **_):
         stats, cheapest = store.deal_stats(), self._cheapest(store)
         rows = store.alert_rows()
-        cover = self._rotation(store, rows)
+        cover = self._rotation(store, rows, cheapest)
         return 200, {"alerts": [alert_json(a, stats, cheapest, cover) for a in rows]}
 
     def api_create_alert(self, store, body, **_):

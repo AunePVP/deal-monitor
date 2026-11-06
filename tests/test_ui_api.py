@@ -10,7 +10,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
-from dealmonitor import demo, health, rotation, web
+from dealmonitor import demo, health, principles, rotation, web
 from dealmonitor.models import Alert
 from dealmonitor.scheduler import Scheduler
 from dealmonitor.store import Store
@@ -92,10 +92,38 @@ class DemoApiTest(unittest.TestCase):
                          (559, ["60 € über deiner Grenze", "7% unter typischer Spanne (600 €–1.050 €)"]))
         self.assertEqual(len(near[0]["insight"]["history"]), 62)
         cover = self.alerts["zrh-ham-oneway"]["rotation_cover"]
-        self.assertEqual((cover["horizon_days"], cover["no_deal_sites"]), (90, True))
+        # Travel-Dealz meldet in der Demo Hamburg → Zürich (79 €) -> kein "keine Deal-Seite"
+        self.assertEqual((cover["horizon_days"], cover["no_deal_sites"]), (90, False))
+        self.assertFalse(self.alerts["ham-zrh"]["rotation_cover"]["no_deal_sites"])
         self.assertGreater(cover["days"], 0)
         self.assertTrue(self.alerts["zrh-ham"]["rotation_cover"])        # Kombis aus One-ways
         self.assertIsNone(self.alerts["de-cn-economy"]["rotation_cover"])
+
+    def test_google_requests_within_budget(self):
+        """Quellen-Seite und Einstellungen passen zusammen: höchstens so viele Google-Abrufe
+        wie "Max. Abfragen pro Lauf" (früher: 1.201 Abrufe bei Einstellung 40)."""
+        budget = self.get("/api/settings")["values"]["google_max_requests"]
+        self.assertEqual(budget, demo.DEMO_SETTINGS["google_max_requests"])
+        rep = self.get("/api/sources/health")
+        google = next(s for s in rep["sources"] if s["id"] == "google_flights")
+        self.assertGreater(google["items"], 0)
+        self.assertLessEqual(google["items"], budget)
+        # die Vorzeige-Fälle bleiben trotz Budget: 39 € one-way, 92 € bestätigt, 559 € knapp
+        self.assertTrue(self.deal("zrh-ham-oneway", 39))
+        self.assertTrue(self.deal("zrh-ham", 92)["verified"])
+
+    def test_rating_rules_in_status(self):
+        rules = self.get("/api/status")["rating_rules"]
+        self.assertEqual(rules, {"top_deal": principles.TOP_DEAL,
+                                 "very_good": principles.VERY_GOOD,
+                                 "very_good_limit_share": principles.VERY_GOOD_LIMIT_SHARE})
+
+    def test_why_matches_rounded_reference(self):
+        """Begründung und Karte nennen denselben Normalpreis (112,5 € -> 113 €, wie JS)."""
+        d = self.deal("zrh-ham-oneway", 39)
+        self.assertEqual(d["reference_price"], 112.5)
+        self.assertIn("unter Referenz 113 €", d["why"])
+        self.assertIn("unter typischer Spanne", d["why"])
 
     def test_health_page(self):
         rep = self.get("/api/sources/health")
@@ -144,6 +172,24 @@ class RotationJsonTest(unittest.TestCase):
         self.assertIsNone(self.cover(self.alert(id="b", cabin="business"), [ow]))
         far = self.alert(id="far", trip="oneway", rotation=True, destinations=["PEK"])
         self.assertFalse(self.cover(far, [far])["no_deal_sites"])
+
+    def test_deal_site_reports_route(self):
+        """Meldet eine Deal-Seite die Strecke gerade (egal welche Richtung), entfällt
+        "Keine Deal-Seite meldet diese Strecke"."""
+        ow = self.alert(id="ow", trip="oneway", rotation=True, origins=["ZRH", "HAM"],
+                        destinations=["HAM", "ZRH"])
+        article = {"source": "feed:travel-dealz", "origin": "HAM", "destination": "ZRH"}
+        reported = web.deal_site_routes([article, {"source": "google_flights", "origin": "ZRH",
+                                                   "destination": "HAM"}])
+        self.assertEqual(reported, {frozenset({"HAM", "ZRH"})})
+        cover = web.rotation_json(ow, [ow], rotation.Memory(), today=self.TODAY,
+                                  now=datetime(2026, 11, 4, 12), scan_months=6, reported=reported)
+        self.assertFalse(cover["no_deal_sites"])
+        other = web.deal_site_routes([{"source": "feed:x", "origin": "FRA", "destination": "PEK"},
+                                      {"source": "feed:x"}])
+        cover = web.rotation_json(ow, [ow], rotation.Memory(), today=self.TODAY,
+                                  now=datetime(2026, 11, 4, 12), scan_months=6, reported=other)
+        self.assertTrue(cover["no_deal_sites"])
 
     def test_broken_memory_never_crashes(self):
         ow = self.alert(id="ow", trip="oneway", rotation=True)

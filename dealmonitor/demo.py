@@ -224,9 +224,14 @@ def google_fixture_page(url: str) -> str:
     return NO_FLIGHTS_PAGE
 
 
+#: Zufalls-Startwert der Strecken-Reihenfolge (Google-Scan): bei begrenztem Budget kommt
+#: Frankfurt → Peking (Beinahe-Deal) damit gleich im ersten Lauf dran
+DEMO_GOOGLE_SEED = 6
+
+
 def fixture_google(**kw) -> GoogleFlightsSource:
     opts = dict(max_requests=100_000, delay=0, today=DEMO_TODAY, fetcher=google_fixture_page,
-                seed=1)
+                seed=DEMO_GOOGLE_SEED)
     opts.update(kw)
     return GoogleFlightsSource(**opts)
 
@@ -238,7 +243,7 @@ DEMO_HISTORY = {
     "FRA-SHA-RT-economy": [690, 740, 810, 720, 765, 699, 780, 755],
 }
 #: Einstellungen, die die Demo beim ersten Start setzt (in der Oberfläche änderbar)
-DEMO_SETTINGS: dict = {}
+DEMO_SETTINGS: dict = {"google_max_requests": 120}
 
 
 def check_fixtures() -> None:
@@ -275,15 +280,24 @@ class StateStore:
 
 
 def make_sources(cfg=None, names=("travelpayouts", "google_flights", "feeds"),
-                 state_store=None) -> list:
-    """Fixture-Quellen statt echter APIs (frisch pro Lauf). Amadeus gibt es in der Demo nicht."""
+                 state_store=None, google_max_requests: int | None = None) -> list:
+    """Fixture-Quellen statt echter APIs (frisch pro Lauf). Amadeus gibt es in der Demo nicht.
+
+    ``google_max_requests``: Google-Budget wie im Betrieb (Einstellung "Max. Abfragen pro
+    Lauf", davon ein Viertel für Gegenprüfungen) - sonst unbegrenzt (Kommandozeilen-Demo)."""
     out = []
     for n in names:
         if n == "travelpayouts":
             out.append(FixtureSource(DEMO_FILES))
         elif n == "google_flights":
+            budget = {}
+            if google_max_requests is not None:
+                from .appsettings import VERIFY_RESERVE_DIVISOR
+                budget = dict(max_requests=google_max_requests,
+                              verify_reserve=google_max_requests // VERIFY_RESERVE_DIVISOR
+                              if "travelpayouts" in names else 0)
             out.append(fixture_google(scan_months=cfg.settings.scan_months if cfg else 6,
-                                      state_store=state_store))
+                                      state_store=state_store, **budget))
         elif n in ("feeds", "feed"):
             out.append(FixtureFeed(presets=DEMO_PRESETS, age_hours=DEMO_FEED_AGE_HOURS))
     return out
@@ -323,7 +337,13 @@ def server_context(config_path=None):
     env = {k: v for k, v in os.environ.items() if k not in blocked and k != "DEALMONITOR_DATA"}
     ctx = Context(tmp, config_path, demo=True, env=env, today=DEMO_TODAY)
     states = StateStore(ctx.db_path)
-    ctx.source_factory = lambda cfg, names: make_sources(cfg, names, states)
+
+    def factory(cfg, names):
+        with ctx.store() as store:      # Budget aus den Einstellungen, wie im Betrieb
+            budget = ctx.settings(store).get("google_max_requests")
+        return make_sources(cfg, names, states, google_max_requests=budget)
+
+    ctx.source_factory = factory
     return ctx
 
 

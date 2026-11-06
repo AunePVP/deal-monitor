@@ -455,7 +455,9 @@ async function desktopFlows(browser) {
     const rot = alerts.find((x) => x.rotation);
     const rotCard = await alertCard(page, rot.name);
     const hint = norm(await rotCard.locator(".rotation-hint").textContent());
-    assert(/^Keine Deal-Seite meldet diese Strecke\. Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten 90 Tage wird einzeln geprüft\./.test(hint), `Rotations-Hinweis: ${hint}`);
+    // Travel-Dealz meldet Hamburg → Zürich in der Demo -> kein „keine Deal-Seite“
+    assert(!/Deal-Seite/.test(hint), `Widersprüchlicher Hinweis: ${hint}`);
+    assert(/^Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten 90 Tage wird einzeln geprüft\./.test(hint), `Rotations-Hinweis: ${hint}`);
     assert(/Aktuell \d+ von 90 Tagen mit Preis/.test(hint), `Rotations-Stand fehlt: ${hint}`);
     assert(await card.locator(".rotation-hint").count() === 0, "Rotations-Hinweis bei China");
     await noHScroll(page, "Alarme mit Beinahe-Deals");
@@ -806,7 +808,9 @@ async function desktopFlows(browser) {
     const runs = (await api("GET", "/api/runs")).runs;
     assert(runs.length === runsBefore + 1, `Läufe ${runs.length}, vorher ${runsBefore}`);
     assert(runs[0].trigger === "manual" && runs[0].finished_at, "Lauf nicht manuell/fertig");
-    assert(runs[0].errors.length === 0, `Lauf mit Fehlern: ${runs[0].errors}`);
+    // „X von Y Abfragen (Limit)“ ist das eingestellte Google-Budget, kein Fehler
+    const errs = runs[0].errors.filter((e) => !/Abfragen \(Limit\)$/.test(e));
+    assert(errs.length === 0, `Lauf mit Fehlern: ${errs}`);
     await go(page, "einstellungen");
     await page.waitForSelector("#runs-table table");
     const rows = page.locator("#runs-table tbody tr");

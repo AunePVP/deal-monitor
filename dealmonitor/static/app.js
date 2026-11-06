@@ -38,10 +38,10 @@
     return /^https?:\/\//i.test(s) ? s : null;
   }
 
-  function extLink(href, label, cls) {
+  function extLink(href, label, cls, aria) {
     const url = safeUrl(href);
     if (!url) return null;
-    return el("a", { class: cls || "btn", href: url, target: "_blank", rel: "noopener noreferrer" }, label);
+    return el("a", { class: cls || "btn", href: url, target: "_blank", rel: "noopener noreferrer", "aria-label": aria || null }, label);
   }
 
   const euroFmt = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -98,6 +98,13 @@
     return days === 1 ? "vor 1 Tag" : `vor ${days} Tagen`;
   }
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  /** Lauf-Meldungen trennen: „X von Y Abfragen (Limit)“ ist kein Fehler, sondern das
+   *  eingestellte Abfrage-Budget (der Rest kommt in späteren Läufen dran). */
+  const LIMIT_RE = /Abfragen \(Limit\)$/;
+  function runIssues(r) {
+    const all = (r && Array.isArray(r.errors) ? r.errors : []).map(String);
+    return { errors: all.filter((e) => !LIMIT_RE.test(e)), limits: all.filter((e) => LIMIT_RE.test(e)) };
+  }
   const numDe = (v) => String(v).replace(".", ",");
 
   /** Zahl aus einem Textfeld lesen – deutsch und tolerant: "99,5", "1.299", "1.299,50 €", "0.5".
@@ -129,6 +136,8 @@
     "google_flights": "Google Flights", "amadeus-dates": "Amadeus (Monatsscan)", "amadeus-offers": "Amadeus (Angebote)",
   };
   const sourceLabel = (d) => d.source_label || SOURCE[d.source] || d.source || "unbekannt";
+  /** Deal/Preis aus einem Artikel einer Deal-Seite (wie report.is_article). */
+  const isArticle = (d) => /^feed:|-feed$/.test(String(d.source || ""));
   const RADAR_ID = "radar";
   const RADAR_NAME = "Radar: Hammer-Deals";
   const VERIFIED_RE = /^Google Flights bestätigt/;
@@ -204,6 +213,9 @@
     deleteSecrets: new Set(),
     pollTimer: null,
     connFails: 0,
+    deals: [],           // zuletzt geladene Deals (Kennzahlen)
+    maxDiscount: null,   // stärkster Rabatt aller aktiven Deals (ohne Filter ermittelt)
+    healthSummary: null, // { ok, total } aus /api/sources/health
   };
   try { state.showExpired = localStorage.getItem("dm.showExpired") === "1"; } catch (e) { /* egal */ }
 
@@ -251,22 +263,23 @@
       const lr = s.last_run;
       const when = lr.finished_at || lr.started_at;
       let t = `Letzte Prüfung ${relTime(when)}`;
-      const errs = Array.isArray(lr.errors) ? lr.errors.length : 0;
-      if (errs) t += ` (${plural(errs, "Fehler", "Fehler")})`;
+      const iss = runIssues(lr);
+      if (iss.errors.length) t += ` (${plural(iss.errors.length, "Fehler", "Fehler")})`;
+      else if (iss.limits.length) t += ` (Abfrage-Limit erreicht)`;
       parts.push(t);
     } else if (!running) {
       parts.push("Noch keine Prüfung");
     }
     // Nach einem reinen Feed-Check: Fehler der letzten vollen Prüfung (Preis-APIs, Google) nicht verstecken
     const lf = s.last_full_run;
-    const fullErrs = lf && s.last_run && lf.id !== s.last_run.id && Array.isArray(lf.errors) ? lf.errors.length : 0;
+    const fullErrs = lf && s.last_run && lf.id !== s.last_run.id ? runIssues(lf).errors.length : 0;
     if (fullErrs) parts.push(`volle Prüfung ${relTime(lf.finished_at || lf.started_at)}: ${plural(fullErrs, "Fehler", "Fehler")}`);
     if (s.next_run) parts.push(`nächste ${fmtTime(s.next_run)}`);
     else if (!running) parts.push("kein automatischer Zeitplan aktiv");
     if (s.next_feed_run) parts.push(`nächster Feed-Check ${untilTime(s.next_feed_run)}`);
     const line = $("#status-line");
     line.textContent = parts.join(" · ");
-    if ((s.last_run && s.last_run.errors && s.last_run.errors.length) || fullErrs) {
+    if ((s.last_run && s.last_run.errors && s.last_run.errors.length) || fullErrs) {   // auch beim Limit: Details
       line.append(" ", el("a", { href: "#einstellungen" }, "Details"));
     }
 
@@ -283,6 +296,7 @@
     // Radar-Chip und Zähler hängen am Status (counts.radar_deals, configured.radar)
     if (state.route === "deals" && state.alerts.length) renderDealFilters();
     renderSourceStates();
+    renderKpis();
   }
 
   async function pollStatus() {
@@ -315,11 +329,13 @@
 
   function onRunFinished(lr) {
     if (lr) {
-      const errs = Array.isArray(lr.errors) ? lr.errors.length : 0;
+      const iss = runIssues(lr);
+      const errs = iss.errors.length;
       const msg = `Prüfung fertig: ${plural(lr.offers || 0, "Angebot", "Angebote")}, ` +
         `${plural(lr.deals || 0, "Deal", "Deals")}` + (lr.radar ? `, ${lr.radar} Radar` : "") +
         `, ${lr.notified || 0} neu gemeldet` + (lr.rejected ? `, ${lr.rejected} bei Google verworfen` : "") +
-        (errs ? ` – ${plural(errs, "Fehler", "Fehler")}, siehe Einstellungen → Letzte Läufe` : "");
+        (errs ? ` – ${plural(errs, "Fehler", "Fehler")}, siehe Einstellungen → Letzte Läufe`
+          : iss.limits.length ? " – Abfrage-Limit erreicht, der Rest folgt in den nächsten Läufen" : "");
       toast(msg, errs ? "error" : "ok");
     }
     loadAlertsData().then(() => {
@@ -328,7 +344,7 @@
     });
     if (state.route === "meldungen") loadNotes();
     if (state.route === "einstellungen") loadRuns();
-    if (state.route === "quellen") loadHealth();
+    if (state.route === "quellen") loadHealth(); else loadHealthSummary();
   }
 
   async function startRun(alertId, mode) {
@@ -566,6 +582,11 @@
     if (e.kind === "live") return "Live-Preis";
     return e.confirmed ? "✓ bei Google Flights bestätigt" : "Cache-Preis, ungeprüft";
   }
+  /** „Quelle · Art“ ohne Doppelung („Travel-Dealz-Artikel · Artikel“ → „Travel-Dealz-Artikel“). */
+  function bestSource(e) {
+    const src = sourceLabel(e), note = bestNote(e);
+    return src.includes(note) ? src : `${src} · ${note}`;
+  }
   /** Alter genau dieses Eintrags (nicht des jüngsten der Liste) – Artikel: Veröffentlichung. */
   function bestAge(e) {
     if (e.kind === "article" && e.published) return `veröffentlicht ${relTime(e.published)}`;
@@ -596,17 +617,27 @@
     const sub = e.roundtrip === false ? "p. P. one-way" : "p. P. hin & zurück";
     const main = el("div", { class: "best-main" }, name,
       el("p", { class: "best-facts" }, ...joinDots(bestFacts(e))),
-      live ? el("p", { class: "best-live" }, `${live.kind === "live" ? "Live" : "✓ Bestätigt"} bei ${live.kind === "live" ? (live.source_label || "Google Flights") : "Google Flights"}: ab ${euro(live.price)}`,
-        shortDates(live) ? ` (${shortDates(live)})` : "", el("span", { class: "muted" }, ` · ${bestAge(live)}`)) : null,
-      el("p", { class: "best-meta" }, `Quelle: ${sourceLabel(e)} · ${bestNote(e)} · ${bestAge(e)}`,
+      live ? bestLive(live, e) : null,
+      el("p", { class: "best-meta" }, `Quelle: ${bestSource(e)} · ${bestAge(e)}`,
         c.route_count > 1 ? ` · Preise für ${plural(c.route_count, "Strecke", "Strecken")}` : ""),
       rotationHint(a, true));
     const priceBox = el("div", { class: "best-price" },
       el("div", { class: "price" }, euro(e.price)), el("div", { class: "price-sub" }, sub), bestGap(a, e.price));
     const actions = el("div", { class: "best-actions" },
       extLink(e.link, e.kind === "article" ? "Artikel" : "Ansehen", "btn btn-small"),
-      extLink(e.compare, "Google Flights", "btn btn-small"));
+      // Google-Preis: „Ansehen“ ist schon die Google-Suche – kein zweiter Knopf dorthin
+      e.compare && e.compare !== e.link ? extLink(e.compare, "Google Flights", "btn btn-small") : null);
     return el("div", { class: "best-row" }, main, priceBox, actions.childElementCount ? actions : null);
+  }
+
+  /** Live-/bestätigter Google-Preis neben einem günstigeren Cache-/Artikelpreis: nur grün,
+   *  wenn Google den Bestpreis stützt (≤ Bestpreis) – teurer ist ein Gegenhinweis, kein Beleg. */
+  function bestLive(live, best) {
+    const supports = num(live.price) && num(best.price) && live.price <= best.price;
+    const who = live.kind === "live" ? (live.source_label || "Google Flights") : "Google Flights";
+    const lead = live.kind === "live" ? `${who} aktuell ab ${euro(live.price)}` : `✓ Bei Google Flights bestätigt ab ${euro(live.price)}`;
+    return el("p", { class: `best-live${supports ? " is-support" : ""}` }, lead,
+      shortDates(live) ? ` (${shortDates(live)})` : "", el("span", { class: "muted" }, ` · ${bestAge(live)}`));
   }
 
   function renderBestPrices() {
@@ -662,7 +693,7 @@
     const horizon = num(c.horizon_days) ? c.horizon_days : 90;
     if (short) return el("p", { class: "rotation-hint is-short" }, `Google prüft jeden Abflugtag (${horizon} Tage)`);
     return el("p", { class: "rotation-hint" },
-      c.no_deal_sites ? el("strong", null, "Keine Deal-Seite meldet diese Strecke. ") : null,
+      c.no_deal_sites ? el("strong", null, "Aktuell meldet keine Deal-Seite diese Strecke. ") : null,
       `Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten ${horizon} Tage wird einzeln geprüft.`,
       num(c.days) && c.days > 0 ? el("span", { class: "muted" }, ` Aktuell ${c.days} von ${horizon} Tagen mit Preis.`) : null);
   }
@@ -692,10 +723,61 @@
   }
 
   const RATING_RANK = { "Top-Deal": 0, "Sehr gut": 1, "Deal": 2 };
+  /** Erklärung der Bewertung mit den echten Schwellen des Servers (/api/status → rating_rules). */
+  function ratingRule(rating) {
+    const r = state.status && state.status.rating_rules;
+    if (!r || !num(r.top_deal) || !num(r.very_good)) return null;
+    const pct = (v) => `${Math.round(v * 100)} %`;
+    if (rating === "Top-Deal") return `Top-Deal: mindestens ${pct(r.top_deal)} unter dem Referenzpreis`;
+    if (rating === "Sehr gut") {
+      return `Sehr gut: mindestens ${pct(r.very_good)} unter dem Referenzpreis`
+        + (num(r.very_good_limit_share) ? ` (ohne Referenzpreis: höchstens ${pct(r.very_good_limit_share)} deiner Preisgrenze)` : "");
+    }
+    if (rating === "Deal") return `Deal: erfüllt deine Preisgrenze bzw. den Mindestrabatt, aber weniger als ${pct(r.very_good)} unter dem Referenzpreis`;
+    return null;
+  }
+  /** Kennzahlen über der Deal-Liste – nur aus vorhandenen Daten, fehlende Werte entfallen. */
+  function renderKpis() {
+    const box = $("#kpi-strip");
+    if (!box) return;
+    const s = state.status || {};
+    const c = s.counts || {};
+    const items = [];
+    if (num(c.active_deals)) {
+      const radar = num(c.radar_deals) ? c.radar_deals : 0;
+      items.push([String(c.active_deals - radar), c.active_deals - radar === 1 ? "aktiver Deal" : "aktive Deals"]);
+      if (radar) items.push([String(radar), "Radar"]);
+    }
+    const lr = s.last_run;
+    if (lr && num(lr.offers) && lr.finished_at) items.push([lr.offers.toLocaleString("de-DE"), "Angebote im letzten Lauf"]);
+    const h = state.healthSummary;
+    if (h && h.total) items.push([`${h.ok}/${h.total}`, "Quellen OK"]);
+    const best = state.maxDiscount;
+    if (num(best) && best > 0) items.push([`−${Math.round(best * 100)} %`, "stärkster Rabatt"]);
+    box.hidden = !items.length || !c.active_deals;
+    box.replaceChildren(...items.map(([v, k]) => el("div", { class: "kpi" }, el("span", { class: "kpi-v" }, v), el("span", { class: "kpi-k" }, k))));
+  }
+  /** Zusammenfassung der Quellen-Gesundheit (wie auf der Quellen-Seite) für die Kennzahlen. */
+  function healthCounts(data) {
+    const sources = Array.isArray(data && data.sources) ? data.sources.filter((x) => x && typeof x === "object") : [];
+    return sources.length ? { ok: sources.filter((x) => x.state === "ok").length, total: sources.length } : null;
+  }
+  async function loadHealthSummary() {
+    try {
+      state.healthSummary = healthCounts(await api("GET", "/api/sources/health"));
+    } catch (e) { state.healthSummary = null; }
+    renderKpis();
+  }
   function renderDeals(deals) {
     const list = $("#deal-list");
     deals.sort((a, b) => (a.status === "expired") - (b.status === "expired") ||
       (RATING_RANK[a.rating] ?? 3) - (RATING_RANK[b.rating] ?? 3) || (a.price || 0) - (b.price || 0));
+    state.deals = deals;
+    // stärkster Rabatt nur aus der ungefilterten Liste (Filter zeigt nur einen Alarm)
+    if (!state.dealFilter) {
+      state.maxDiscount = Math.max(0, ...deals.filter((d) => d.status !== "expired" && num(d.discount)).map((d) => d.discount));
+    }
+    renderKpis();
     if (!deals.length) { list.replaceChildren(dealsEmpty()); return; }
     list.replaceChildren(...deals.map(dealCard));
   }
@@ -726,11 +808,14 @@
     const verified = d.verified === true || (Array.isArray(d.reasons) && d.reasons.some((r) => VERIFIED_RE.test(String(r))));
     const badges = el("div", { class: "badges" },
       expired ? el("span", { class: "badge r-exp" }, "Abgelaufen") : null,
-      el("span", { class: `badge ${expired ? "r-exp-soft" : ratingClass(d.rating)}` }, d.rating || "Deal"),
+      el("span", { class: `badge ${expired ? "r-exp-soft" : ratingClass(d.rating)}`, title: ratingRule(d.rating || "Deal") }, d.rating || "Deal"),
       d.cabin && d.cabin !== "economy" ? el("span", { class: "badge badge-outline" }, CABIN[d.cabin] || d.cabin) : null,
       d.roundtrip === false ? el("span", { class: "badge badge-outline" }, "one-way") : null,
       isCombo(d) ? el("span", { class: "badge badge-outline", title: COMBO_TITLE }, COMBO_LABEL) : null,
-      verified && !expired ? el("span", { class: "badge badge-verified", title: "Preis bei Google Flights gegengeprüft" }, "✓ Google Flights bestätigt") : null);
+      verified && !expired ? el("span", { class: "badge badge-verified", title: "Preis bei Google Flights gegengeprüft" }, "✓ Google Flights bestätigt") : null,
+      // Artikelpreise prüft der Monitor nicht bei Google gegen – das offen sagen
+      !verified && !expired && isArticle(d) && d.price > 0
+        ? el("span", { class: "badge badge-outline", title: "Preis aus dem Artikel der Deal-Seite – nicht bei Google Flights gegengeprüft. Vor dem Buchen vergleichen." }, "Preis laut Artikel") : null);
 
     const route = d.origin && d.destination ? `${d.origin} → ${d.destination}` : null;
     const priceBox = el("div", { class: "price-box" },
@@ -756,9 +841,15 @@
     const signals = el("div", { class: "badges signals" },
       chart ? null : levelBadge(g), chart || !g ? null : (rangeText(g) ? el("span", { class: "badge badge-soft" }, rangeText(g)) : null),
       expiresBadge(d), articleAgeBadge(d), hubBadge(d), leadBadge(d), sourcesBadge(d));
-    const shownReasons = (Array.isArray(d.reasons) ? d.reasons : []).filter((r) => !reasonShown(r, d, chart || levelBadge(g) ? g : null));
+    // Kurzbegründung des Servers (why) hervorgehoben; ihre Teile nicht noch einmal in der Liste
+    // Prozent wie auf der Karte schreiben („65 %“ statt „65%“)
+    const why = typeof d.why === "string" && d.why.trim() && !expired ? d.why.trim().replace(/(\d)%/g, "$1\u00a0%") : null;
+    const whyParts = why ? why.split(" · ") : [];
+    const inWhy = (r) => whyParts.some((p) => String(r).replace(/(\d)%/g, "$1\u00a0%").startsWith(p));
+    const whyEl = why ? el("p", { class: "deal-why" }, el("span", { class: "deal-why-k" }, "Warum ein Deal? "), why) : null;
+    const shownReasons = (Array.isArray(d.reasons) ? d.reasons : []).filter((r) => !inWhy(r) && !reasonShown(r, d, chart || levelBadge(g) ? g : null));
     const reasons = shownReasons.length
-      ? el("ul", { class: "reasons", "aria-label": "Warum ein Deal?" }, ...shownReasons.map((r) => el("li", null, r))) : null;
+      ? el("ul", { class: "reasons", "aria-label": why ? "Weitere Gründe" : "Warum ein Deal?" }, ...shownReasons.map((r) => el("li", null, r))) : null;
 
     const srcs = dealSources(d);
     const srcPart = srcs.length >= 2
@@ -769,15 +860,17 @@
       d.first_seen ? ` · gefunden am ${fmtDateTime(d.first_seen)}` : "",
       expired && d.expired_at ? ` · abgelaufen am ${fmtDateTime(d.expired_at)}` : "");
 
+    const what = d.headline || route || "Deal";
     const actions = el("div", { class: "deal-actions" },
-      extLink(d.link, "Zum Angebot", "btn btn-primary"),
-      extLink(d.compare, "Bei Google Flights gegenprüfen", "btn"));
+      extLink(d.link, "Zum Angebot", "btn btn-primary", `Zum Angebot: ${what}`),
+      // Google-Preis: der Angebotslink ist schon die Google-Suche
+      d.compare && d.compare !== d.link ? extLink(d.compare, "Bei Google Flights gegenprüfen", "btn", `Bei Google Flights gegenprüfen: ${what}`) : null);
 
     const isRadar = d.alert_id === RADAR_ID || (Array.isArray(d.alert_ids) && d.alert_ids.includes(RADAR_ID));
     return el("article", { class: `deal-card${expired ? " expired" : ""}${isRadar ? " is-radar" : ""}${verified && !expired ? " is-verified" : ""}` },
       el("div", { class: "deal-top" }, el("div", { class: "deal-top-left" }, badges, route ? el("p", { class: "route" }, route) : null), priceBox),
       el("h2", { class: "deal-title" }, d.headline || "Deal"),
-      factsEl, signals.childElementCount ? signals : null, chart, reasons, meta, actions.childElementCount ? actions : null);
+      whyEl, factsEl, signals.childElementCount ? signals : null, chart, reasons, meta, actions.childElementCount ? actions : null);
   }
 
   function setShowExpired(v) {
@@ -809,6 +902,12 @@
     return list.length > 4 ? `${shown} +${list.length - 4}` : shown || "–";
   }
 
+  /** Zwei Orte, die zugleich Abflug- und Zielorte sind. */
+  function bothWays(a) {
+    const o = Array.isArray(a.origins) ? a.origins : [], d = Array.isArray(a.destinations) ? a.destinations : [];
+    return o.length === 2 && d.length === 2 && o[0] !== o[1] && o.every((x) => d.includes(x));
+  }
+
   function renderAlerts() {
     const list = $("#alert-list");
     if (!state.alerts.length) {
@@ -827,7 +926,7 @@
     const pairs = typeof a.pairs === "number" ? a.pairs : null;
     const limit = typeof a.max_price === "number" ? `bis ${euro(a.max_price)}`
       : `≥ ${Math.round((typeof a.min_discount === "number" ? a.min_discount : 0.3) * 100)} % unter Normalpreis`;
-    const dealsText = a.active_deals ? `${plural(a.active_deals, "aktiver Deal", "aktive Deals")} · ab ${euro(a.best_price)}` : "keine aktiven Deals";
+    const dealsText = a.active_deals ? `${plural(a.active_deals, "aktiver Deal", "aktive Deals")} · ab\u00a0${euro(a.best_price)}` : "keine aktiven Deals";
 
     const PAUSED_HINT = "Prüft diesen Alarm einmalig, obwohl er pausiert ist";
     const sw = el("input", { type: "checkbox", role: "switch", checked: enabled, "aria-label": `${a.name || a.id}: aktiv` });
@@ -859,8 +958,12 @@
       el("div", { class: "alert-head" },
         el("div", { class: "alert-title-wrap" },
           el("h2", { class: "alert-title" }, a.name || a.id),
-          el("p", { class: "alert-route" }, codesLabel(a.origins), " → ", codesLabel(a.destinations),
-            pairs !== null ? el("span", { class: "muted" }, ` · ${plural(pairs, "Strecke", "Strecken")}`) : null)),
+          bothWays(a)
+            // Abflug- = Zielorte (z. B. ZRH, HAM ⇄ HAM, ZRH): als eine Strecke in beide Richtungen
+            ? el("p", { class: "alert-route" }, codeLabel(a.origins[0]), " ⇄ ", codeLabel(a.origins[1]),
+              el("span", { class: "muted" }, " · beide Richtungen"))
+            : el("p", { class: "alert-route" }, codesLabel(a.origins), " → ", codesLabel(a.destinations),
+              pairs !== null ? el("span", { class: "muted" }, ` · ${plural(pairs, "Strecke", "Strecken")}`) : null)),
         el("label", { class: "switch" }, sw, el("span", { class: "switch-track", "aria-hidden": "true" }), swLabel)),
       el("ul", { class: "facts" },
         el("li", null, el("span", { class: "fact-k" }, "Preisgrenze"), el("span", { class: "fact-v" }, limit)),
@@ -894,7 +997,7 @@
       el("span", { class: "fact-k" }, "Bestpreis jetzt"),
       el("p", { class: "alert-best-price" }, el("strong", { class: "best-inline-price" }, euro(e.price)), " ", bestGap(a, e.price)),
       el("p", { class: "alert-best-facts" }, ...joinDots(bestFacts(e)), " ", link(e)),
-      el("p", { class: "best-meta" }, `${sourceLabel(e)} · ${bestNote(e)} · ${bestAge(e)}`),
+      el("p", { class: "best-meta" }, `${bestSource(e)} · ${bestAge(e)}`),
     ];
     if (c.routes && c.routes.length > 1) {
       const more = c.route_count > c.routes.length ? el("li", { class: "muted" }, `+ ${c.route_count - c.routes.length} weitere`) : null;
@@ -1287,7 +1390,17 @@
       when ? el("p", { class: "health-when" }, when) : null);
   }
 
+  /** Hinweis, dass eingeschaltete Preis-APIs hier fehlen (nur wenn wirklich eingeschaltet). */
+  const PRICE_APIS = { travelpayouts: "Travelpayouts", amadeus: "Amadeus" };
+  function priceApiNote() {
+    const on = (state.status && Array.isArray(state.status.sources) ? state.status.sources : []).filter((n) => PRICE_APIS[n]);
+    if (!on.length) return null;
+    const names = on.map((n) => PRICE_APIS[n]).join(", ");
+    return el("p", { class: "help price-api-note" }, `Preis-APIs (${names}) liefern keine Artikel und werden hier nicht bewertet – ihre Fehler stehen unter Einstellungen → Letzte Läufe.`);
+  }
+
   function renderHealth(data) {
+    state.healthSummary = healthCounts(data);
     const sources = Array.isArray(data.sources) ? data.sources.filter((s) => s && typeof s === "object") : [];
     const list = $("#health-list");
     const summary = $("#health-summary");
@@ -1308,7 +1421,9 @@
           el("p", { class: "health-headline" }, ok === sources.length ? `Alle ${sources.length} Quellen liefern`
             : `${ok} von ${sources.length} Quellen OK`),
           el("p", { class: "help" }, (ok === sources.length ? "Keine stillen Ausfälle." : "Probleme stehen oben – die übrigen Quellen laufen normal weiter.")
-            + (latest ? ` Zuletzt geprüft ${relTime(latest)}.` : ""))));
+            + (latest ? ` Zuletzt geprüft ${relTime(latest).replace(/\.$/, "")}.` : "")),
+          // Preis-APIs (Travelpayouts, Amadeus) haben keine Artikelzahlen – hier nicht bewertet
+          priceApiNote()));
       list.replaceChildren(el("ul", { class: "health-list" }, ...sources.map(healthRow)));
     }
     const unused = Array.isArray(data.not_used) ? data.not_used.filter((x) => x && x.name) : [];
@@ -1405,7 +1520,7 @@
   // ------------------------------------------------------------------ Einstellungen
   // type: text | url | secret | int | float | percent | lines | bool | select
   const SETTINGS = [
-    { key: "travelpayouts_token", group: "travelpayouts", type: "secret", label: "Travelpayouts-Token", help: "Kostenlos – ohne Token gibt es keine Preise aus der API." },
+    { key: "travelpayouts_token", group: "travelpayouts", type: "secret", label: "Travelpayouts-Token", help: "Kostenlos erhältlich – im Betrieb nötig für Preise aus der API." },
     { key: "travelpayouts_marker", group: "travelpayouts", type: "text", label: "Travelpayouts-Marker (optional)", help: "Deine Partner-ID für Buchungslinks. Nicht nötig." },
     { key: "google_max_requests", group: "google", type: "int", label: "Max. Abfragen pro Lauf", min: 2, max: 500, help: "Gilt für alle Alarme zusammen, inkl. Gegenprüfungen (höchstens die Hälfte). Zwischen Abfragen wird 2–4 s gewartet." },
     { key: "google_verify", group: "google", type: "bool", label: "Deals aus Preis-APIs bei Google gegenprüfen", help: "Gecachte Preise (Travelpayouts, Amadeus-Monatsscan) werden mit genau diesen Daten bei Google geprüft: Ein Flug, der zu den Regeln des Alarms passt, höchstens 25 % teurer und unter der Grenze = bestätigt (gemeldet mit Google-Preis), sonst verworfen. Ist Google nicht erreichbar, wird der Deal mit Hinweis „nicht gegengeprüft“ gemeldet." },
@@ -1555,7 +1670,7 @@
     } else if (f.type === "secret") {
       const isSet = !!(secret && secret.set);
       input = el("input", { id, type: "password", autocomplete: "new-password", spellcheck: "false",
-        placeholder: isSet ? `gesetzt ${secret.hint || ""}`.trim() : "nicht gesetzt" });
+        placeholder: isSet ? `gesetzt ${secret.hint || ""}`.trim() : "Hier einfügen" });
     } else {
       const num = ["int", "float", "percent"].includes(f.type);
       // Zahlen bewusst als Textfeld: type=number verfälscht "99,5" je nach Browser still zu 995
@@ -1581,7 +1696,7 @@
     }
     if (f.type === "secret") {
       const isSet = !!(secret && secret.set);
-      wrap.append(el("p", { class: `secret-state${isSet ? " is-set" : ""}` }, isSet ? `✓ gesetzt ${secret.hint || ""} – leer lassen = unverändert` : "– nicht gesetzt"));
+      wrap.append(el("p", { class: `secret-state${isSet ? " is-set" : ""}` }, isSet ? `✓ gesetzt ${secret.hint || ""} – leer lassen = unverändert` : "Noch nicht gesetzt"));
       if (isSet && !locked) {
         const cb = el("input", { type: "checkbox", "data-delete": f.key });
         cb.addEventListener("change", () => { if (cb.checked) state.deleteSecrets.add(f.key); else state.deleteSecrets.delete(f.key); input.disabled = cb.checked; });
@@ -1694,17 +1809,17 @@
     const box = $("#runs-table");
     if (!runs.length) { box.replaceChildren(el("p", { class: "help" }, "Noch keine Prüfung gelaufen.")); return; }
     const alertName = (id) => { const a = state.alerts.find((x) => x.id === id); return a ? a.name : id; };
-    const cols = ["Start", "Auslöser", "Alarm", "Dauer", "Angebote", "Deals", "Radar", "Gemeldet", "Abgelaufen", "Fehler"];
+    const cols = ["Start", "Auslöser", "Alarm", "Dauer", "Angebote", "Deals", "Radar", "Gemeldet", "Abgelaufen", "Fehler / Hinweise"];
     const dur = (r) => {
       const a = parseIso(r.started_at), b = parseIso(r.finished_at);
       if (!a) return "";
       if (!b) return "läuft …";
       const s = Math.max(0, Math.round((b - a) / 1000));
-      return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min ${s % 60} s`;
+      return s < 1 ? "< 1 s" : s < 60 ? `${s} s` : `${Math.floor(s / 60)} min ${s % 60} s`;
     };
     const td = (label, ...content) => el("td", { "data-label": label }, ...content);
     const rows = runs.map((r) => {
-      const errs = Array.isArray(r.errors) ? r.errors : [];
+      const { errors: errs, limits } = runIssues(r);
       return el("tr", { class: errs.length ? "has-errors" : null },
         td("Start", fmtDateTime(r.started_at)),
         td("Auslöser", TRIGGER[r.trigger] || r.trigger || ""),
@@ -1715,7 +1830,8 @@
         td("Radar", String(r.radar ?? 0)),
         td("Gemeldet", String(r.notified ?? "")),
         td("Abgelaufen", String(r.expired ?? "")),
-        td("Fehler", errs.length ? el("ul", { class: "err-list" }, ...errs.map((x) => el("li", null, x))) : el("span", { class: "muted" }, "keine")));
+        td("Fehler", errs.length ? el("ul", { class: "err-list" }, ...errs.map((x) => el("li", null, x))) : el("span", { class: "muted" }, "keine"),
+          limits.length ? el("ul", { class: "limit-list", title: "Abfrage-Budget je Lauf (Einstellungen → Google Flights) – kein Fehler" }, ...limits.map((x) => el("li", null, x))) : null));
     });
     box.replaceChildren(el("table", { class: "runs" },
       el("thead", null, el("tr", null, ...cols.map((c) => el("th", { scope: "col" }, c)))),
@@ -1761,6 +1877,7 @@
 
     state.route = currentRoute();
     pollStatus();
+    if (state.route !== "quellen") loadHealthSummary();
     ensureRegions().then(() => { if (state.route === "alarme") renderAlerts(); });
     api("GET", "/api/notifications?limit=1").then((d) => {
       updateMaxNoteId(d.notifications);
