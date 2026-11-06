@@ -22,7 +22,9 @@ Sofort-Prüfung (höchstens 5 Abfragen) stuft Google nur bei FEHLER neu ein - f�
 das zu wenige Abrufe.
 
 Der Zustand liegt in ``store.kv["state:health"]``. Gemeldet (ntfy/Webhook/Telegram) wird nur
-ein **Wechsel** des Zustands, dazu einmal täglich ein Lebenszeichen mit Artikeln je Quelle.
+ein **Wechsel** des Zustands, und erst wenn er ``CONFIRM_RUNS`` Läufe hintereinander anhält
+(Entprellung, ``reported`` = zuletzt gemeldeter Zustand; ``state`` zeigt immer die letzte
+Messung), dazu einmal täglich ein Lebenszeichen mit Artikeln je Quelle.
 """
 
 from __future__ import annotations
@@ -45,6 +47,8 @@ GOOGLE_EMPTY_SHARE = 0.5
 GOOGLE = "google_flights"
 #: Lebenszeichen frühestens ab dieser Stunde (Ortszeit), einmal pro Tag
 HEARTBEAT_HOUR = 8
+#: so viele Läufe hintereinander muss ein neuer Zustand anhalten, bevor er gemeldet wird
+CONFIRM_RUNS = 2
 ERROR_CHARS = 200
 
 
@@ -275,11 +279,22 @@ def update(store, sources: list, notifiers: list | None = None, *,
         old = prev.get("state")
         if old == entry["state"]:
             entry["since"] = prev.get("since") or checked
+            streak = prev.get("streak")
+            entry["streak"] = (streak if isinstance(streak, int) and not isinstance(streak, bool)
+                               and streak > 0 else CONFIRM_RUNS) + 1
         else:
             entry["since"] = checked
-            # Erster Blick auf eine Quelle: nur melden, wenn sie nicht OK ist
-            if old is not None or entry["state"] != OK:
-                changes.append((_change_line(name, old, entry), entry["state"] == OK))
+            entry["streak"] = 1
+        # gemeldet wird erst ein Zustand, der CONFIRM_RUNS Läufe hintereinander anhält
+        # (Entprellung: ok, Fehler, ok, Fehler … ergibt keine Meldungen); alte Stände ohne
+        # "reported" gelten als gemeldet
+        reported = prev.get("reported", old) if prev else None
+        if reported is None and entry["state"] == OK:
+            reported = OK                   # erster Blick, alles gut: still
+        if entry["state"] != reported and entry["streak"] >= CONFIRM_RUNS:
+            changes.append((_change_line(name, reported, entry), entry["state"] == OK))
+            reported = entry["state"]
+        entry["reported"] = reported
         entry["checked"] = checked
         known[name] = entry
     state["sources"] = known

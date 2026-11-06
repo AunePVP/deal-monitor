@@ -5,13 +5,16 @@ schwanken die Preise aber von Tag zu Tag stark (82–174 € one-way über 10 St
 einzelner billiger Eurowings-Tag fiele durchs Raster. Die Rotation prüft deshalb reihum jeden
 Tag der nächsten ``HORIZON_DAYS`` Tage einzeln als One-way, pro Lauf ein Stück davon:
 
-* Die Einträge sind (Strecke, Tag). Jeder Tag hat einen festen Platz im Kreis (nach dem
-  Kalenderdatum), der Lauf-Index ``n`` wählt ``per_run`` Plätze ab ``(n * per_run) % Länge``;
-  ein neuer Tag am Ende des Horizonts übernimmt den Platz des vergangenen. ``n`` zählt je Lauf
-  um eins weiter (:meth:`Memory.run_number`) - aus der Uhrzeit allein (``epoch / Takt``)
-  übersprängen Läufe nahe einer Taktgrenze ganze Fenster.
+* Die Einträge sind (Strecke, Tag). Jeder Tag hat einen festen Platz im Grundkreis (nach dem
+  Kalenderdatum, feste Länge Strecken × Horizont), der Lauf-Index ``n`` wählt ``b`` Plätze ab
+  ``(n * b) % Länge``; ein neuer Tag am Ende des Horizonts übernimmt den Platz des vergangenen.
+  ``n`` zählt je vollem Lauf um eins weiter (:meth:`Memory.run_number`) - aus der Uhrzeit
+  allein (``epoch / Takt``) übersprängen Läufe nahe einer Taktgrenze ganze Fenster; Sofort-
+  und Einzelprüfungen zählen nicht weiter (``advance=False``).
 * Reicht das Budget für mehr als einen Durchgang pro ``CYCLE_HOURS``, kommen die nächsten 14
-  Tage sowie Freitage und Sonntage ein zweites Mal dran.
+  Tage sowie Freitage und Sonntage in einem eigenen Kreis ein zweites Mal dran - der
+  Grundkreis bleibt davon unberührt (sonst verschöbe die täglich schwankende Zahl der
+  Zweitbesuche den Startpunkt und ließe Tage aus).
 * ``per_run`` ist der Google-Anteil des Alarms (``GoogleFlightsSource.begin_run``) - die
   Rotation verdrängt also keine anderen Alarme. Kleines Budget = längerer Durchgang.
 
@@ -42,9 +45,10 @@ NEAR_DAYS = 14
 EXTRA_WEEKDAYS = frozenset({4, 6})
 #: Name des Quellen-Zustands im Store
 STATE_NAME = "google-rotation"
-#: Preise im Gedächtnis gelten 1,5 Durchgänge lang, aber mindestens/höchstens so lange
-MIN_KEEP_HOURS = 48
-MAX_KEEP_HOURS = 240
+#: Preise im Gedächtnis gelten einen Durchgang (+ einen Takt), aber mindestens/höchstens so
+#: lange (``report_hours``) - ältere Preise werden weder gemeldet noch kombiniert
+MIN_KEEP_HOURS = 36
+MAX_KEEP_HOURS = 48
 #: höchstens so viele Zeilen (je Airline/Umstiege die günstigste) je Strecke und Tag
 MAX_ROWS = 6
 COMBO_LABEL = "kombiniert aus 2 One-way"
@@ -75,52 +79,109 @@ def _is_extra(day: date, today: date) -> bool:
     return (day - today).days <= NEAR_DAYS or day.weekday() in EXTRA_WEEKDAYS
 
 
+def _rings(routes: list[tuple[str, str]], today: date,
+           horizon_days: int) -> tuple[list[tuple[str, str, date]], list[tuple[str, str, date]]]:
+    """(Grundkreis, Zweitbesuche): der Grundkreis enthält jeden (Strecke, Tag) genau einmal,
+    Platz nach Kalenderdatum - seine Länge ist fest (Strecken × Horizont), ein Tageswechsel
+    verschiebt nichts. Zweitbesuche (nahe Tage, Fr/So) nach Datum; ihre Zahl schwankt täglich."""
+    routes = list(dict.fromkeys(routes))
+    if not routes or horizon_days <= 0:
+        return [], []
+    days = [today + timedelta(days=i) for i in range(1, horizon_days + 1)]
+    base = sorted(((o, d, day) for day in days for o, d in routes),
+                  key=lambda x: (x[2].toordinal() % horizon_days, routes.index(x[:2])))
+    extra = [x for x in sorted(base, key=lambda x: (x[2], routes.index(x[:2])))
+             if _is_extra(x[2], today)]
+    return base, extra
+
+
 def items(routes: list[tuple[str, str]], today: date, horizon_days: int = HORIZON_DAYS, *,
           capacity: int | None = None) -> list[tuple[str, str, date]]:
     """Der Kreis der Rotation: erst jeder (Strecke, Tag) einmal - Platz nach Kalenderdatum,
     damit ein Tageswechsel nichts verschiebt -, dann die Zweitbesuche (nahe Tage, Fr/So),
     soweit ``capacity`` (Abfragen je Durchgang) über einen Durchgang hinaus reicht."""
-    routes = list(dict.fromkeys(routes))
-    if not routes or horizon_days <= 0:
-        return []
-    days = [today + timedelta(days=i) for i in range(1, horizon_days + 1)]
-    base = sorted(((o, d, day) for day in days for o, d in routes),
-                  key=lambda x: (x[2].toordinal() % horizon_days, routes.index(x[:2])))
-    extra = [x for x in sorted(base, key=lambda x: x[2]) if _is_extra(x[2], today)]
+    base, extra = _rings(routes, today, horizon_days)
     if capacity is not None:
         extra = extra[:max(capacity - len(base), 0)]
     return base + extra
+
+
+def _per_cycle(period_hours: float) -> int:
+    return max(int(CYCLE_HOURS / max(period_hours, 0.1)), 1)
+
+
+def base_share(size: int, per_run: int, period_hours: float = PERIOD_HOURS) -> int:
+    """Abfragen je Lauf für den Grundkreis (``size`` Einträge): so viele, dass er in
+    ``CYCLE_HOURS`` durch ist, höchstens ``per_run`` - der Rest geht an die Zweitbesuche."""
+    if per_run <= 0 or size <= 0:
+        return 0
+    return min(per_run, math.ceil(size / _per_cycle(period_hours)))
+
+
+def _take(picked: list, ring: list, start: int, count: int) -> int:
+    """Bis zu ``count`` Einträge aus ``ring`` ab ``start`` an ``picked`` anhängen, die dort noch
+    fehlen (Zweitbesuch = schon im Grundfenster -> nächster). Rückgabe: so viele angehängt."""
+    added, have = 0, set(picked)
+    for i in range(len(ring)):
+        if added >= count:
+            break
+        item = ring[(start + i) % len(ring)]
+        if item not in have:
+            picked.append(item)
+            have.add(item)
+            added += 1
+    return added
 
 
 def slice_for_run(now: datetime, routes: list[tuple[str, str]], horizon_days: int = HORIZON_DAYS,
                   per_run: int = PER_RUN, *, today: date | None = None,
                   period_hours: float = PERIOD_HOURS,
                   index: int | None = None) -> list[tuple[str, str, date]]:
-    """Die Abfragen dieses Laufs: ``per_run`` Einträge ``(origin, dest, tag)`` des Kreises
-    ab ``(n * per_run) % Länge`` - ohne Doppelte, nach Datum sortiert. ``n`` = ``index``,
-    ohne Angabe aus der Uhrzeit (:func:`run_index`)."""
+    """Die Abfragen dieses Laufs (ohne Doppelte, nach Datum sortiert). ``n`` = ``index``, ohne
+    Angabe aus der Uhrzeit (:func:`run_index`).
+
+    Der Grundkreis (feste Länge, :func:`_rings`) bekommt ``b`` = :func:`base_share` Plätze ab
+    ``(n * b) % Länge`` - aufeinanderfolgende Läufe schließen also lückenlos aneinander an, auch
+    über Mitternacht. Übriges Budget geht an die Zweitbesuche (eigener Kreis, höchstens so viele,
+    wie in einen Durchgang passen) und danach an die nächsten Plätze des Grundkreises."""
     if per_run <= 0:
         return []
     today = today or now.date()
-    per_cycle = max(int(CYCLE_HOURS / max(period_hours, 0.1)), 1)
-    ring = items(routes, today, horizon_days, capacity=per_run * per_cycle)
-    if not ring:
+    base, extra = _rings(routes, today, horizon_days)
+    if not base:
         return []
-    if len(set(ring)) <= per_run:
-        picked = list(dict.fromkeys(ring))
+    order = list(dict.fromkeys(routes))
+    if len(base) <= per_run:                # alles in einem Lauf (Zweitbesuche = dieselben)
+        picked = list(base)
     else:
         n = run_index(now, period_hours) if index is None else index
-        start = (n * per_run) % len(ring)
-        picked = list(dict.fromkeys(ring[(start + i) % len(ring)] for i in range(per_run)))
-    return sorted(picked, key=lambda x: (x[2], routes.index(x[:2])))
+        b = base_share(len(base), per_run, period_hours)
+        start = (n * b) % len(base)
+        picked = [base[(start + i) % len(base)] for i in range(b)]
+        rest = per_run - b
+        extra = extra[:rest * _per_cycle(period_hours)]
+        if rest and extra:
+            e = min(rest, len(extra))
+            rest -= _take(picked, extra, n * e, e)
+        _take(picked, base, start + b, rest)        # übriges Budget: die nächsten Grundplätze
+    return sorted(picked, key=lambda x: (x[2], order.index(x[:2])))
 
 
 def cycle_hours(routes, horizon_days: int, per_run: int,
                 period_hours: float = PERIOD_HOURS) -> float:
     """So lange dauert ein Durchgang (jeder Tag einmal) bei ``per_run`` Abfragen je Lauf."""
-    if per_run <= 0:
+    size = len(set(routes)) * max(horizon_days, 0)
+    b = base_share(size, per_run, period_hours)
+    if b <= 0:
         return float("inf")
-    return math.ceil(len(set(routes)) * horizon_days / per_run) * period_hours
+    return math.ceil(size / b) * period_hours
+
+
+def report_hours(cycle: float, period_hours: float = PERIOD_HOURS) -> float:
+    """So lange gilt ein gemerkter Preis (Meldung, Kombination, Bestpreis): ein Durchgang plus
+    ein Takt Puffer, mindestens ``MIN_KEEP_HOURS``, höchstens ``MAX_KEEP_HOURS`` - bei kleinem
+    Budget (langer Durchgang) fallen ältere Preise weg, statt tagealt als Deal zu gelten."""
+    return min(max(MIN_KEEP_HOURS, cycle + max(period_hours, 0)), MAX_KEEP_HOURS)
 
 
 # -- Kombination ----------------------------------------------------------------------
@@ -129,7 +190,8 @@ def combine(outbound: dict[date, dict], inbound: dict[date, dict], min_nights: i
     """Hin/Rück aus zwei One-ways: je Hinflug-Tag der günstigste Rückflug im Abstand
     ``min_nights..max_nights`` (Standard 1..30). Eingabe: Tag -> Zeile mit ``price``.
     Rückgabe: ``[(hin_tag, rück_tag, hin, rück)]`` nach Gesamtpreis sortiert."""
-    lo = 1 if min_nights is None else max(min_nights, 0)
+    # mindestens 1 Nacht: Uhrzeiten kennt das Gedächtnis nicht (Rückflug vor dem Hinflug?)
+    lo = 1 if min_nights is None else max(min_nights, 1)
     hi = 30 if max_nights is None else max_nights
     out = []
     for dep, leg in outbound.items():
@@ -214,7 +276,7 @@ class Memory:
     """Zuletzt gesehene One-way-Preise je Strecke, Kabine und Tag (JSON im Store).
 
     ``{"keep_h": 48, "legs": {"ZRH-HAM-economy": {"2027-01-14": {"at": ISO, "rows": [...],
-    "insight": {...}}}}, "runs": {alarm_id: {"n": 5, "at": ISO}}}`` - kaputte oder fremde
+    "insight": {...}}}}, "runs": {alarm_id: {"n": 5, "at": ISO, "cycle_h": 24.0}}}`` - kaputte oder fremde
     Inhalte werden ignoriert, nie ein Absturz.
     """
 
@@ -223,21 +285,26 @@ class Memory:
         legs = data.get("legs")
         self.legs: dict = legs if isinstance(legs, dict) else {}
         keep = data.get("keep_h")
-        self.keep_hours: float = float(keep) if _num(keep) and keep > 0 else MIN_KEEP_HOURS
+        self.keep_hours: float = (min(float(keep), MAX_KEEP_HOURS) if _num(keep) and keep > 0
+                                  else MIN_KEEP_HOURS)
         runs = data.get("runs")
         self.runs: dict = runs if isinstance(runs, dict) else {}
         self.changed = False
 
-    def run_number(self, name: str, now: datetime, period_hours: float = PERIOD_HOURS) -> int:
+    def run_number(self, name: str, now: datetime, period_hours: float = PERIOD_HOURS, *,
+                   advance: bool = True) -> int:
         """Lauf-Index der Rotation ``name`` (Alarm): je Lauf genau eins weiter - auch wenn
         sich der Laufbeginn um eine Taktgrenze verschiebt oder ein Lauf ausfiel. Ein Lauf
         weniger als einen halben Takt nach dem letzten bekommt denselben Index; ohne
-        gespeicherten Stand zählt die Uhrzeit (:func:`run_index`)."""
+        gespeicherten Stand zählt die Uhrzeit (:func:`run_index`). ``advance=False``
+        (Sofort-Prüfung, "Nur diesen prüfen"): nur nachsehen, nichts weiterzählen."""
         entry = self.runs.get(name)
         try:
             n, at = int(entry["n"]), datetime.fromisoformat(entry["at"])
         except (TypeError, ValueError, KeyError):
             n, at = None, None
+        if not advance:
+            return run_index(now, period_hours) if n is None else n
         if n is not None:
             if (at.tzinfo is None) != (now.tzinfo is None):
                 at, now = at.replace(tzinfo=None), now.replace(tzinfo=None)
@@ -246,9 +313,26 @@ class Memory:
             n += 1
         else:
             n = run_index(now, period_hours)
-        self.runs[name] = {"n": n, "at": now.isoformat(timespec="minutes")}
+        self.runs[name] = {**(entry if isinstance(entry, dict) else {}),
+                           "n": n, "at": now.isoformat(timespec="minutes")}
         self.changed = True
         return n
+
+    def set_cycle(self, name: str, hours: float) -> None:
+        """Dauer eines Durchgangs der Rotation ``name`` beim letzten vollen Lauf merken."""
+        entry = self.runs.get(name)
+        entry = entry if isinstance(entry, dict) else {}
+        value = round(hours, 1) if math.isfinite(hours) else None
+        if entry.get("cycle_h") != value:
+            self.runs[name] = {**entry, "cycle_h": value}
+            self.changed = True
+
+    def cycle_hours(self, name: str) -> float | None:
+        """So lange dauerte ein Durchgang (jeder Tag einmal) zuletzt - None = unbekannt bzw.
+        kein Budget. Für die Oberfläche: "täglich geprüft" nur, wenn höchstens ``CYCLE_HOURS``."""
+        entry = self.runs.get(name)
+        value = entry.get("cycle_h") if isinstance(entry, dict) else None
+        return float(value) if _num(value) and value > 0 else None
 
     @staticmethod
     def key(origin: str, dest: str, cabin: str) -> str:

@@ -172,15 +172,19 @@ class UpdateTest(unittest.TestCase):
     def test_empty_source_reports_once(self):
         night = NOW.replace(hour=2)       # vor 8 Uhr: kein Lebenszeichen dazwischen
         self.update({"feed:secretflying": stat(items=0, parsed=0)}, night)
+        self.assertEqual(self.rec.texts, [], "erst bestätigen (Entprellung)")
+        self.update({"feed:secretflying": stat(items=0, parsed=0)}, night + timedelta(minutes=10))
         self.assertEqual(len(self.rec.texts), 1)
         title, text, prio = self.rec.texts[0]
         self.assertEqual((title, prio), ("Quelle gestört", 3))
         self.assertIn(source_label("feed:secretflying"), text)
         self.assertIn("Leer – 0 Artikel geladen", text)
-        self.update({"feed:secretflying": stat(items=0, parsed=0)}, night + timedelta(minutes=10))
-        self.assertEqual(len(self.rec.texts), 1, "zweiter Lauf: keine neue Meldung")
-        # wieder OK -> eine Entwarnung
+        self.update({"feed:secretflying": stat(items=0, parsed=0)}, night + timedelta(minutes=15))
+        self.assertEqual(len(self.rec.texts), 1, "dritter Lauf: keine neue Meldung")
+        # wieder OK -> eine Entwarnung, ebenfalls erst nach zwei Läufen
         self.update({"feed:secretflying": stat(newest=night)}, night + timedelta(minutes=20))
+        self.assertEqual(len(self.rec.texts), 1)
+        self.update({"feed:secretflying": stat(newest=night)}, night + timedelta(minutes=30))
         self.assertEqual(len(self.rec.texts), 2)
         self.assertEqual(self.rec.texts[1][0], "Quelle wieder OK")
         self.assertEqual(self.rec.texts[1][2], 2)
@@ -203,11 +207,34 @@ class UpdateTest(unittest.TestCase):
 
     def test_several_changes_one_message(self):
         night = NOW.replace(hour=1)
-        self.update({"feed:a": stat(items=0, parsed=0), "feed:b": stat(items=0, error="x: 500")},
-                    night)
+        for minutes in (0, 10):
+            self.update({"feed:a": stat(items=0, parsed=0),
+                         "feed:b": stat(items=0, error="x: 500")}, night + timedelta(minutes=minutes))
         self.assertEqual(len(self.rec.texts), 1)
         self.assertEqual(self.rec.texts[0][0], "Quellen: 2 Änderungen")
         self.assertIn("Fehler – x: 500", self.rec.texts[0][1])
+
+    def test_flapping_source_is_debounced(self):
+        """ok, Fehler, ok, Fehler, ok -> keine Meldung (Review G5); Anzeige zeigt die Messung."""
+        night = NOW.replace(hour=2)
+        ok, bad = stat(newest=night), stat(items=0, parsed=0, error="Zeitüberschreitung")
+        for i, st in enumerate([ok, bad, ok, bad, ok, bad]):
+            self.update({"feed:secretflying": st}, night + timedelta(minutes=10 * i))
+        self.assertEqual(self.rec.texts, [])
+        e = self.store.source_state("health")["sources"]["feed:secretflying"]
+        self.assertEqual((e["state"], e["reported"]), ("fehler", "ok"))
+        self.update({"feed:secretflying": bad}, night + timedelta(minutes=60))
+        self.assertEqual([t[0] for t in self.rec.texts], ["Quelle gestört"])
+
+    def test_old_state_without_reported_counts_as_reported(self):
+        night = NOW.replace(hour=2)
+        self.store.set_source_state("health", {"sources": {"feed:a": {
+            "state": "leer", "since": "2026-11-01T00:00:00", "checked": "2026-11-01T00:00:00"}}})
+        self.update({"feed:a": stat(items=0, parsed=0)}, night)
+        self.assertEqual(self.rec.texts, [])
+        self.update({"feed:a": stat(newest=night)}, night + timedelta(minutes=10))
+        self.update({"feed:a": stat(newest=night)}, night + timedelta(minutes=20))
+        self.assertEqual([t[0] for t in self.rec.texts], ["Quelle wieder OK"])
 
     def test_heartbeat_once_a_day(self):
         local_morning = datetime(2026, 11, 5, 9, 0).astimezone()
@@ -226,8 +253,10 @@ class UpdateTest(unittest.TestCase):
         class Broken(Recorder):
             def send_text(self, *a, **kw):
                 raise OSError("weg")
-        errors = health.update(self.store, [FakeFeed({"feed:a": stat(items=0, parsed=0)})],
-                               [Broken(), object()], now=NOW.replace(hour=1))
+        for minutes in (0, 10):
+            errors = health.update(self.store, [FakeFeed({"feed:a": stat(items=0, parsed=0)})],
+                                   [Broken(), object()],
+                                   now=NOW.replace(hour=1) + timedelta(minutes=minutes))
         self.assertEqual(len(errors), 1)
         self.assertIn("weg", errors[0])
 

@@ -184,6 +184,9 @@ def execute(ctx: Context, alert_id: str | None = None, trigger: str = "manual", 
             sources = ctx.sources(cfg, store, names, app,
                                   lanes={"fast"} if mode == "fast" else None,
                                   google_max=HOT_GOOGLE_REQUESTS if mode == "hot" else None)
+        for src in sources:     # Rotation: nur volle Läufe aller Alarme zählen weiter
+            if hasattr(src, "advance_rotation"):
+                src.advance_rotation = mode == "full" and not alert_id
         if not sources and not res.errors:
             res.errors.append("Keine Deal-Seite ausgewählt (Einstellungen → Quellen → Deal-Seiten)"
                               if mode in ("feeds", "fast") else
