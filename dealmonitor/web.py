@@ -170,7 +170,11 @@ def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
             log.exception("Google-Rotation: Gedächtnis nicht lesbar")
     airports = {c for pair in alert.pairs for c in pair}
     reported = reported or set()
-    return {"horizon_days": horizon, "days": len(days),
+    try:
+        cycle = memory.cycle_hours(source.id)
+    except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
+        cycle = None
+    return {"horizon_days": horizon, "days": len(days), "cycle_hours": cycle,
             "no_deal_sites": any(airports <= r and not any(p <= r for p in reported)
                                  for r in NO_DEAL_SITE_ROUTES)}
 

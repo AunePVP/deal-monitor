@@ -698,10 +698,13 @@
     const c = a.rotation_cover;
     if (!c || typeof c !== "object") return null;
     const horizon = num(c.horizon_days) ? c.horizon_days : 90;
-    if (short) return el("p", { class: "rotation-hint is-short" }, `Google prüft jeden Abflugtag (${horizon} Tage)`);
+    // Dauer eines Durchgangs (jeder Tag einmal) - hängt vom Google-Budget ab
+    const h = num(c.cycle_hours) && c.cycle_hours > 0 ? c.cycle_hours : null;
+    const cycle = !h ? "" : h <= 24 ? "täglich" : h <= 48 ? `alle ${Math.round(h)} Std.` : `alle ${(h / 24).toLocaleString("de-DE", { maximumFractionDigits: 1 })} Tage`;
+    if (short) return el("p", { class: "rotation-hint is-short" }, `Google prüft reihum jeden Abflugtag (${horizon} Tage${cycle ? `, ${cycle}` : ""})`);
     return el("p", { class: "rotation-hint" },
       c.no_deal_sites ? el("strong", null, "Aktuell meldet keine Deal-Seite diese Strecke. ") : null,
-      `Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten ${horizon} Tage wird einzeln geprüft.`,
+      `Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten ${horizon} Tage wird reihum einzeln geprüft${cycle ? ` (jeder Tag ${cycle} einmal)` : ""}.`,
       num(c.days) && c.days > 0 ? el("span", { class: "muted" }, ` Aktuell ${c.days} von ${horizon} Tagen mit Preis.`) : null);
   }
 

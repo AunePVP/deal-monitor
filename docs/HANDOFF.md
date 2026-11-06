@@ -23,11 +23,12 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   - Takt: schnelle Quellen alle 10 min, Sofort-Prüfung bei schnellem Treffer, Quellen-Gesundheit mit Meldung bei Wechsel.
   - Bewertung: Google-Bezugspreis, Fehlerpreis-Verdacht, Erstmeldung über Quellen, Beinahe-Deals.
   - UI: Preisverlauf, Badges, Beinahe-Deals, Seite „Quellen“; Demo mit allen neuen Feldern.
-- Tests: `python3 -m unittest discover -s tests` → **692 grün**; `node tests/e2e/ui.mjs` → **44 Schritte grün** (mehrfach).
+- Tests: `python3 -m unittest discover -s tests` → **730 grün**; `node tests/e2e/ui.mjs` → **46 Schritte grün** (mehrfach).
+- Runde-3-Review (07.11.): 4 Prüfer (Parser live, Alarm-Logik, Betrieb+Google, Web/Sicherheit) → 25 Funde, 24 behoben
+  (Tests `tests/test_review_runde3.py`, `tests/test_review3_google.py`). Offen bewusst: erneuter Push nach Kanal-Ausfall
+  (bräuchte Zustellstatus je Kanal). Rotation: mit 40 Abfragen/Lauf ca. 90 h je Durchgang – UI nennt die echte Dauer.
 - Docker-Image lokal gebaut (healthy, PUID/PGID 99/100), Migration einer `main`-DB (Runde 1) mit eigenem Alarm geprüft.
-- Zeitfestigkeit: Suite mit +7 Tagen vorgestellter Uhr grün. Bekannt: einige Rotations-/Erstmeldungs-Tests
-  (`test_rotation.RunTest`, `test_review_runde2.FirstReportTest`) nutzen feste Daten und brechen ca. Anfang Dezember 2026 –
-  dann Fixture-Daten relativ zu „jetzt“ verschieben (Muster: `fresh()` in `tests/test_scoring.py`). Die CI baut das Image nur mit grünen Tests.
+- Zeitfestigkeit: Suite mit +7 Tagen vorgestellter Uhr grün. Rotationstests rechnen relativ zu heute; Feed-Fixtures über `feed.utcnow`/`fresh()`. Die CI baut das Image nur mit grünen Tests.
 
 ### Radar-Qualität (05.11.2026, `dealmonitor/dedupe.py`, `regions.haul`)
 Live-Probelauf mit allen 12 Quellen ergab **14 Radar-Treffer, davon 4 relevant** (einer doppelt), 7 irrelevant
@@ -147,7 +148,6 @@ Behoben dabei (mit Test): „von Westkanada“ galt als Abflug ohne Angabe → l
 - Wechselkurse von der EZB (`refresh_rates`), Datumsrotation über mehrere Läufe (nur 1 Lauf; per Test).
 
 ## Nächste Schritte (Reihenfolge)
-1. Vor Anfang Dezember: datumsfeste Fixtures in den oben genannten Tests (sonst bricht der Image-Build).
 2. Nach dem Ausrollen: im Container einen Lauf mit echtem Travelpayouts-Token prüfen.
 3. Optional: YHBU/premium-flights-Fristen per WP-REST (siehe Offene Punkte), Suche über mehr Ziele rotieren.
 

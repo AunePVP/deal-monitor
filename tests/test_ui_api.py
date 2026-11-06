@@ -162,8 +162,11 @@ class RotationJsonTest(unittest.TestCase):
             mem.put("ZRH", "HAM", "economy", date(2026, 11, day + 10), [row], None,
                     datetime(2026, 11, 4, 11))
         self.assertEqual(self.cover(ow, [ow, rt, cn], mem),
-                         {"horizon_days": 90, "days": 2, "no_deal_sites": True})
+                         {"horizon_days": 90, "days": 2, "cycle_hours": None, "no_deal_sites": True})
         self.assertEqual(self.cover(rt, [ow, rt, cn], mem)["days"], 2)
+        # Dauer eines Durchgangs kommt vom Rotations-Alarm (auch für den abgedeckten Hin/Rück)
+        mem.runs["ow"] = {"cycle_h": 90}
+        self.assertEqual(self.cover(rt, [ow, rt, cn], mem)["cycle_hours"], 90)
         self.assertIsNone(self.cover(cn, [ow, rt, cn], mem))
         # Rotations-Alarm pausiert oder andere Kabine -> Hin/Rück nicht abgedeckt
         paused = self.alert(id="ow", trip="oneway", rotation=True, enabled=False,
