@@ -6,7 +6,7 @@ import logging
 import re
 import tempfile
 import unittest
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -20,8 +20,8 @@ from dealmonitor.sources.googleflights import GoogleFlightsSource
 from dealmonitor.store import Store
 
 ROOT = Path(__file__).resolve().parent.parent
-TODAY = date(2026, 11, 4)
-NOW = datetime(2026, 11, 4, 12, 0)
+TODAY = date.today()                       # relativ zu heute: Store/Bestpreise nutzen die echte Uhr
+NOW = datetime.combine(TODAY, time(12, 0))
 ROUTES = [("ZRH", "HAM"), ("HAM", "ZRH")]
 Q_RE = re.compile(r"Flights from (\w{3}) to (\w{3}) on (\d{4}-\d\d-\d\d)( through)?")
 
