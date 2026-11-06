@@ -23,7 +23,7 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   - Takt: schnelle Quellen alle 10 min, Sofort-Prüfung bei schnellem Treffer, Quellen-Gesundheit mit Meldung bei Wechsel.
   - Bewertung: Google-Bezugspreis, Fehlerpreis-Verdacht, Erstmeldung über Quellen, Beinahe-Deals.
   - UI: Preisverlauf, Badges, Beinahe-Deals, Seite „Quellen“; Demo mit allen neuen Feldern.
-- Tests: `python3 -m unittest discover -s tests` → **730 grün**; `node tests/e2e/ui.mjs` → **46 Schritte grün** (mehrfach).
+- Tests: `python3 -m unittest discover -s tests` → **729 grün**; `node tests/e2e/ui.mjs` → **46 Schritte grün** (mehrfach).
 - Runde-3-Review (07.11.): 4 Prüfer (Parser live, Alarm-Logik, Betrieb+Google, Web/Sicherheit) → 25 Funde, 24 behoben
   (Tests `tests/test_review_runde3.py`, `tests/test_review3_google.py`). Offen bewusst: erneuter Push nach Kanal-Ausfall
   (bräuchte Zustellstatus je Kanal). Rotation: mit 40 Abfragen/Lauf ca. 90 h je Durchgang – UI nennt die echte Dauer.
