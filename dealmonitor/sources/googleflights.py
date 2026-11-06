@@ -608,6 +608,10 @@ class GoogleFlightsSource:
         self.state_store = state_store
         #: Takt der vollen Läufe - danach zählt der Lauf-Index der Rotation weiter
         self.period_hours = period_hours
+        #: nur volle geplante Läufe zählen den Lauf-Index der Rotation weiter; Sofort-Prüfung
+        #: und "Nur diesen prüfen" setzen False (``scheduler.execute``) - sonst übersprängen
+        #: die vollen Läufe danach ganze Fenster
+        self.advance_rotation = True
         self.now = now
         self._memory: rotation.Memory | None = None
         #: nach ``fetch``: None = alles abgefragt, sonst {"message": str, "routes": {(o, d), ...}}
@@ -723,12 +727,25 @@ class GoogleFlightsSource:
             second = self._second_fetch(kind, url, alternate, origin, dest, departure,
                                         return_date, cabin, roundtrip, nights)
         if second:
+            # ErrorResponse mit Flügen: die erste Seite gilt, falls der zweite Abruf nichts
+            # Besseres bringt (Fehlerseite ohne Flüge oder Netzfehler) - nur das Preisniveau fehlt
+            kept = (page, results, url, ret) if results else None
             url, ret, wait = second
             log.info("Google Flights: %s, zweiter Abruf %s", kind, url)
             self.retries += 1
-            page = self._load(url, wait=wait)
-            results = parse_results(page)
-            kind = empty_kind(page, results)
+            try:
+                page = self._load(url, wait=wait)
+            except http.HttpError:
+                if kept is None:
+                    raise
+                page = None
+            results = parse_results(page) if page is not None else []
+            kind = empty_kind(page, results) if page is not None else None
+            if kept and not results:
+                log.info("Google Flights: zweiter Abruf ohne Flüge, erste Seite gilt")
+                page, results, url, ret = kept
+                kind, second = None, None
+                self._consecutive_failures = 0
         label = self._label(origin, dest, departure, return_date, cabin)
         if not results:
             if "no_itineraries" in (first, kind) or (kind is None and NO_FLIGHTS_RE.search(page)):
@@ -982,7 +999,8 @@ class GoogleFlightsSource:
             self._now(), rotation.routes_for(alert), rotation.horizon_for(alert, self.scan_months),
             rotation.PER_RUN if share is None else share, today=self.today or date.today(),
             period_hours=self.period_hours,
-            index=self.memory.run_number(alert.id, self._now(), self.period_hours))
+            index=self.memory.run_number(alert.id, self._now(), self.period_hours,
+                                         advance=self.advance_rotation))
         return [(o, d, day, None) for o, d, day in picked]
 
     @property
@@ -999,16 +1017,20 @@ class GoogleFlightsSource:
         return self._memory
 
     def _save_memory(self, alert: Alert, per_run: int) -> None:
-        """Veraltetes entfernen und speichern. Ein Preis gilt 1,5 Durchgänge lang (mindestens
-        ``rotation.MIN_KEEP_HOURS``, höchstens ``rotation.MAX_KEEP_HOURS``)."""
-        cycle = rotation.cycle_hours(rotation.routes_for(alert),
-                                     rotation.horizon_for(alert, self.scan_months), per_run,
-                                     self.period_hours)
-        keep = min(max(rotation.MIN_KEEP_HOURS, 1.5 * cycle), rotation.MAX_KEEP_HOURS)
-        self._keep_hours = max(self._keep_hours, keep)
+        """Veraltetes entfernen und speichern. Ein Preis gilt einen Durchgang plus einen Takt
+        (``rotation.report_hours``: mindestens ``MIN_KEEP_HOURS``, höchstens ``MAX_KEEP_HOURS``).
+        Durchgangsdauer und Geltung setzen nur volle Läufe (``advance_rotation``) - eine
+        Sofort-Prüfung mit 5 Abfragen sagt nichts über den Takt der Rotation."""
         mem = self.memory
-        if mem.keep_hours != self._keep_hours:
-            mem.keep_hours, mem.changed = self._keep_hours, True
+        if self.advance_rotation:
+            cycle = rotation.cycle_hours(rotation.routes_for(alert),
+                                         rotation.horizon_for(alert, self.scan_months), per_run,
+                                         self.period_hours)
+            mem.set_cycle(alert.id, cycle)
+            self._keep_hours = max(self._keep_hours,
+                                   rotation.report_hours(cycle, self.period_hours))
+            if mem.keep_hours != self._keep_hours:
+                mem.keep_hours, mem.changed = self._keep_hours, True
         mem.prune(self.today or date.today(), self._now())
         if mem.changed and self.state_store is not None:
             try:
