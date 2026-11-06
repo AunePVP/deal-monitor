@@ -17,7 +17,7 @@ from unittest import mock
 from dealmonitor import currency, http, radar
 from dealmonitor.models import Alert
 from dealmonitor.sources import SourceError
-from dealmonitor.sources import traveldealz_rest as td
+from dealmonitor.sources import feed, traveldealz_rest as td
 from dealmonitor.sources.feed import (
     PRESETS_BY_ID, TRAVEL_DEALZ_PROFILE, FeedSource, Preset, analyze, is_current, normalize_item,
 )
@@ -149,6 +149,7 @@ class HelperTest(unittest.TestCase):
         self.assertEqual(td.term_codes("Schweiz"), [])
 
 
+@mock.patch.object(feed, "utcnow", lambda: FIXTURE_NOW)
 class FetchTest(unittest.TestCase):
     def test_full_fetch_from_live_fixture(self):
         api = live_api()

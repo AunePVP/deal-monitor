@@ -6,7 +6,7 @@ from email.utils import format_datetime
 from pathlib import Path
 
 from dealmonitor import config as config_mod
-from dealmonitor import regions
+from dealmonitor import principles, regions
 from dealmonitor.models import Alert, Offer
 from dealmonitor.monitor import run
 from dealmonitor.principles import evaluate, euro, quality_problems
@@ -91,6 +91,11 @@ class PrinciplesTest(unittest.TestCase):
     def test_euro_format(self):
         self.assertEqual(euro(1799), "1.799 €")
         self.assertEqual(euro(89.4), "89 €")
+        # kaufmännisch wie die Oberfläche (Intl/Math.round), nicht auf die gerade Zahl
+        self.assertEqual(euro(112.5), "113 €")
+        self.assertEqual(euro(246.5), "247 €")
+        self.assertEqual(euro(1799.5), "1.800 €")
+        self.assertEqual(principles._pct(0.425), "43%")      # Math.round(42.5) = 43
 
 
 class FeedTest(unittest.TestCase):

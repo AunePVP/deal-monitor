@@ -345,6 +345,9 @@ async function desktopFlows(browser) {
     // Einklappen bleibt nach Reload
     await page.click("#best-toggle > summary");
     assert(!(await page.isVisible("#best-list")), "Einklappen wirkt nicht");
+    // "toggle" feuert asynchron - erst neu laden, wenn der Zustand gespeichert ist
+    await waitFor(async () => (await page.evaluate(() => localStorage.getItem("dm.bestOpen"))) === "0",
+                  { msg: "Eingeklappt-Zustand nicht gespeichert" });
     await page.reload();
     await page.waitForSelector(".deal-card");
     assert(!(await page.isVisible("#best-list")), "Eingeklappt-Zustand nicht gemerkt");

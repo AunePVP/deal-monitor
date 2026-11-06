@@ -31,6 +31,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 from datetime import date
+from decimal import ROUND_HALF_UP, Decimal
 from statistics import median
 
 from . import hubs, regions, rotation
@@ -45,11 +46,19 @@ CABIN_LABEL = {
 
 TOP_DEAL = 0.45
 VERY_GOOD = 0.30
+#: ohne Referenzpreis: "Sehr gut", wenn der Preis höchstens diesen Anteil der Grenze kostet
+VERY_GOOD_LIMIT_SHARE = 0.75
+
+
+def _round(value: float) -> int:
+    """Kaufmännisch runden (112,5 -> 113) - wie die Oberfläche (``Intl``/``Math.round``);
+    Pythons ``round``/``format`` runden 112,5 auf die gerade Zahl 112."""
+    return int(Decimal(value).quantize(Decimal(1), rounding=ROUND_HALF_UP))
 
 
 def euro(value: float) -> str:
-    """Deutsches Preisformat: 1.799 € / 89 €."""
-    return f"{value:,.0f}".replace(",", ".") + " €"
+    """Deutsches Preisformat: 1.799 € / 89 € (kaufmännisch gerundet)."""
+    return f"{_round(value):,}".replace(",", ".") + " €"
 
 
 REF_MEDIAN = "Median der letzten Beobachtungen"
@@ -137,7 +146,8 @@ def reference_price(alert: Alert, history: list[float], min_samples: int,
 
 
 def _pct(value: float) -> str:
-    return f"{value:.0%}"
+    """Anteil als ganze Prozent, kaufmännisch gerundet wie ``Math.round`` der Oberfläche."""
+    return f"{_round(value * 100)}%"
 
 
 def market_notes(offer: Offer) -> list[str]:
@@ -312,7 +322,7 @@ def assess(alert: Alert, price: float, ref: float | None,
 
     if discount is not None and ref:
         if discount > 0:
-            reasons.append(f"{discount:.0%} unter Referenz {euro(ref)} ({ref_source})")
+            reasons.append(f"{_pct(discount)} unter Referenz {euro(ref)} ({ref_source})")
         else:
             reasons.append(f"Referenz {euro(ref)} ({ref_source}) - kein Rabatt, aber im Budget")
 
@@ -320,7 +330,7 @@ def assess(alert: Alert, price: float, ref: float | None,
         rating = "Top-Deal"
     elif discount is not None and discount >= VERY_GOOD:
         rating = "Sehr gut"
-    elif discount is None and alert.max_price and price <= 0.75 * alert.max_price:
+    elif discount is None and alert.max_price and price <= VERY_GOOD_LIMIT_SHARE * alert.max_price:
         rating = "Sehr gut"
     else:
         rating = "Deal"

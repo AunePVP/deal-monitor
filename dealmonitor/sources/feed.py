@@ -287,10 +287,15 @@ def _codes(value) -> set[str]:
         return set()
 
 
+def utcnow() -> datetime:
+    """Jetzt (UTC) - eine Stelle, damit Tests die Uhr festhalten können."""
+    return datetime.now(timezone.utc)
+
+
 def is_expired(item: dict, now: datetime | None = None) -> bool:
     """Liegt ``item["expires"]`` (Ende des Buchungszeitraums) in der Vergangenheit?"""
     expires = _aware(item.get("expires"))
-    return expires is not None and expires < (now or datetime.now(timezone.utc))
+    return expires is not None and expires < (now or utcnow())
 
 
 #: Ein Ablaufdatum weiter in der Zukunft gilt als Tippfehler/Platzhalter (= unbekannt)
@@ -305,7 +310,7 @@ def is_current(item: dict, now: datetime | None = None, max_days: float | None =
       alt der Artikel ist
     * sonst: ``published`` höchstens ``max_days`` Tage alt (ohne Datum bzw. ``max_days=None``: ja)
     """
-    now = now or datetime.now(timezone.utc)
+    now = now or utcnow()
     if EXPIRED_RE.search(str(item.get("title") or "")) \
             or any(EXPIRED_RE.search(str(c)) for c in item.get("categories") or ()):
         return False
@@ -329,7 +334,7 @@ def normalize_item(raw: dict, feed: str = "", *, max_age_days: int | None = None
     title = str(raw.get("title") or "").strip()
     if not title:
         return None
-    now = now or datetime.now(timezone.utc)
+    now = now or utcnow()
     it = dict(raw)
     link = str(raw.get("link") or "").strip()
     it["title"], it["link"] = title, link if SAFE_LINK_RE.match(link) else ""
@@ -1315,7 +1320,7 @@ class FeedSource:
     def _current(self, source: str, items: list[dict], preset: Preset | None,
                  now: datetime | None = None) -> list[dict]:
         """Nur noch gültige Artikel (:func:`is_current`); zählt sie in ``stats[...]["current"]``."""
-        now = now or datetime.now(timezone.utc)
+        now = now or utcnow()
         limit = self.age_limit(preset)
         out = [it for it in items if is_current(it, now, limit)]
         self._stat(source)["current"] += len(out)
@@ -1411,7 +1416,7 @@ class FeedSource:
         """Wie :meth:`parse_all`, aber nur noch gültige Artikel (:func:`is_current` mit dem
         Höchstalter des Presets der URL)."""
         preset = self._url_preset(url)
-        now = datetime.now(timezone.utc)
+        now = utcnow()
         limit = self.age_limit(preset)
         return [it for it in self.parse_all(xml, url, profile) if is_current(it, now, limit)]
 

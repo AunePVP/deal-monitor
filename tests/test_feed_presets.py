@@ -61,8 +61,7 @@ def alert(**kw):
 
 def at_fixture_time(test):
     """Ablauf (``expires``) gegen den Stand der Fixtures prüfen, nicht gegen heute."""
-    return mock.patch.object(feed, "is_expired",
-                             lambda item, now=None: _is_expired(item, now or NOW))(test)
+    return mock.patch.object(feed, "utcnow", lambda: NOW)(test)
 
 
 def load(preset_id: str, fixture: str | None = None) -> list[dict]:
@@ -197,6 +196,7 @@ class ReisetopiaTest(unittest.TestCase):
             info = analyze(by_title(items, part))
             self.assertTrue(not info.flight or info.price is None, part)
 
+    @at_fixture_time
     def test_booking_deadline(self):
         items = load("reisetopia")
         latam = by_title(items, "São Paulo")
@@ -208,9 +208,8 @@ class ReisetopiaTest(unittest.TestCase):
         ktm = by_title(items, "Kathmandu")                                # "Bis 5. November 2026"
         self.assertFalse(_is_expired(ktm, NOW))
         self.assertTrue(_is_expired(ktm, datetime(2026, 11, 6, 1, tzinfo=timezone.utc)))
-        with mock.patch.object(feed, "is_expired",
-                               lambda item, now=None: _is_expired(item, datetime(2026, 11, 7,
-                                                                                 tzinfo=timezone.utc))):
+        with mock.patch.object(feed, "utcnow",
+                               lambda: datetime(2026, 11, 7, tzinfo=timezone.utc)):
             self.assertFalse(analyze(ktm).flight)
 
     @at_fixture_time
@@ -240,6 +239,7 @@ class ReisetopiaTest(unittest.TestCase):
         self.assertTrue(all(analyze(it).price is None for it in items))
         self.assertTrue(all("content_text" not in it for it in items))
 
+    @at_fixture_time
     def test_content_text_is_plain_and_capped(self):
         items = load("reisetopia")
         text = by_title(items, "São Paulo")["content_text"]

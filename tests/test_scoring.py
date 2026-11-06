@@ -7,7 +7,7 @@ import logging
 import sqlite3
 import tempfile
 import unittest
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -240,8 +240,9 @@ class WhyTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, Store(Path(tmp) / "d.sqlite") as store:
             store.upsert_deal(d, 0.05)
             row = store.deals()[0]
+        # Median 246,5 € -> kaufmännisch 247 € (wie die Oberfläche)
         self.assertEqual(row["why"], "14% unter typischer Spanne (195 €–275 €) · 32% unter "
-                                     "Referenz 246 € (Median des Google-Preisverlaufs)")
+                                     "Referenz 247 € (Median des Google-Preisverlaufs)")
         self.assertEqual(row["insight"]["typical"], 235)
 
 
@@ -278,15 +279,34 @@ class HotWordTest(unittest.TestCase):
 
 # -- Erstmeldung über alle Quellen ------------------------------------------------------------
 
+#: Stand der Secret-Flying-/ErrorFareAlerts-Fixtures
+FIXTURE_NOW = datetime(2026, 11, 5, 12, tzinfo=timezone.utc)
+
+
+def fresh(items):
+    """Zeiten der Fixtures so verschieben, als wären sie gerade erst erschienen (Abstände
+    bleiben gleich) - sonst greift nach ein paar Tagen die Altersregel der Feeds."""
+    delta = datetime.now(timezone.utc) - FIXTURE_NOW
+    out = []
+    for it in items:
+        it = dict(it)
+        for key in ("published", "expires"):
+            if isinstance(it.get(key), datetime):
+                it[key] = it[key] + delta
+        out.append(it)
+    return out
+
+
 def sf_items():
     posts = []
     for name in ("bsky_secretflying.json", "bsky_secretflying_p2.json"):
         posts += sf.parse_api(json.loads((FIX / name).read_text(encoding="utf-8")))[0]
-    return [it for it in map(sf.post_item, posts) if it]
+    return fresh(it for it in map(sf.post_item, posts) if it)
 
 
 def efa_items():
-    return efa.parse((FIX / "feeds" / "errorfarealerts_flights.html").read_text(encoding="utf-8"))
+    return fresh(efa.parse((FIX / "feeds" / "errorfarealerts_flights.html")
+                           .read_text(encoding="utf-8")))
 
 
 class Collector:
