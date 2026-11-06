@@ -12,9 +12,9 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
 - Alarme: Zürich⇄Hamburg (Hin/Rück + one-way), Deutschland→China (Economy ≤ 499 €, Business ≤ 1.999 €).
 
 ## Stand
-- `main`: Runde 1 (Travelpayouts, Google Flights, Feeds, Radar, Bestpreise, Docker, Unraid). Image gebaut, öffentlich.
-- `wip/quellen-ausbau`: **Runde 2 komplett** nach `docs/handoff/RESEARCH.md` Abschnitt 3 (Pakete 0–11 + Review-Fixes),
-  Schnittstellen in `docs/handoff/RUNDE2-SCHNITTSTELLEN.md`. Lokal committet, **nicht gepusht, nicht auf `main`**.
+- `main`: **Runde 1–3** (seit 06.11.2026), Image `ghcr.io/aunepvp/deal-monitor:latest`.
+- Runde 2+3 (vorher auf `wip/quellen-ausbau`): **Runde 2 komplett** nach `docs/handoff/RESEARCH.md` Abschnitt 3 (Pakete 0–11 + Review-Fixes),
+  Schnittstellen in `docs/handoff/RUNDE2-SCHNITTSTELLEN.md`. Runde 3: Google-Leerseiten, Altersregel, Radar-Qualität, Jury-Korrekturen (Demo-Zahlen, Kennzahlen-Leiste, „Warum ein Deal?“), Tests zeitfest.
   - Neue Quellen: Secret Flying (Bluesky), Travel-Dealz WP-REST (schnell, Ablaufdatum, Abflug/Ziel-Codes),
     reisetopia (Infobox), You have been upgraded, premium-flights China-Tags, ErrorFareAlerts (Standard aus).
   - Google: Preisniveau (`ds:1`) je Angebot, Datumsrotation ZRH⇄HAM (jeder Tag), Kombi aus 2 One-way.
@@ -23,7 +23,11 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
   - Takt: schnelle Quellen alle 10 min, Sofort-Prüfung bei schnellem Treffer, Quellen-Gesundheit mit Meldung bei Wechsel.
   - Bewertung: Google-Bezugspreis, Fehlerpreis-Verdacht, Erstmeldung über Quellen, Beinahe-Deals.
   - UI: Preisverlauf, Badges, Beinahe-Deals, Seite „Quellen“; Demo mit allen neuen Feldern.
-- Tests: `python3 -m unittest discover -s tests` → **688 grün**; `node tests/e2e/ui.mjs` → **44 Schritte grün**.
+- Tests: `python3 -m unittest discover -s tests` → **692 grün**; `node tests/e2e/ui.mjs` → **44 Schritte grün** (mehrfach).
+- Docker-Image lokal gebaut (healthy, PUID/PGID 99/100), Migration einer `main`-DB (Runde 1) mit eigenem Alarm geprüft.
+- Zeitfestigkeit: Suite mit +7 Tagen vorgestellter Uhr grün. Bekannt: einige Rotations-/Erstmeldungs-Tests
+  (`test_rotation.RunTest`, `test_review_runde2.FirstReportTest`) nutzen feste Daten und brechen ca. Anfang Dezember 2026 –
+  dann Fixture-Daten relativ zu „jetzt“ verschieben (Muster: `fresh()` in `tests/test_scoring.py`). Die CI baut das Image nur mit grünen Tests.
 
 ### Radar-Qualität (05.11.2026, `dealmonitor/dedupe.py`, `regions.haul`)
 Live-Probelauf mit allen 12 Quellen ergab **14 Radar-Treffer, davon 4 relevant** (einer doppelt), 7 irrelevant
@@ -141,11 +145,9 @@ Behoben dabei (mit Test): „von Westkanada“ galt als Abflug ohne Angabe → l
 - Travelpayouts-Kalender/`latest` (kein Token in der Session), Amadeus.
 - Sofort-Prüfung nach schnellem Treffer und ntfy/Webhook-Zustellung (keine Kanäle eingerichtet; nur per Test).
 - Wechselkurse von der EZB (`refresh_rates`), Datumsrotation über mehrere Läufe (nur 1 Lauf; per Test).
-- Docker-Image mit Runde 2 nicht gebaut.
 
 ## Nächste Schritte (Reihenfolge)
-1. Nutzer-OK für Runde 2 abwarten bzw. als gegeben nehmen → `wip/quellen-ausbau` auf `main` mergen und pushen
-   (baut das Unraid-Image). Vorher Unit + E2E noch einmal laufen lassen.
+1. Vor Anfang Dezember: datumsfeste Fixtures in den oben genannten Tests (sonst bricht der Image-Build).
 2. Nach dem Ausrollen: im Container einen Lauf mit echtem Travelpayouts-Token prüfen.
 3. Optional: YHBU/premium-flights-Fristen per WP-REST (siehe Offene Punkte), Suche über mehr Ziele rotieren.
 
