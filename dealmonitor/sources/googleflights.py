@@ -47,6 +47,17 @@ Alarme mit ``rotation = true`` fragen statt zwei Terminen je Monat reihum jeden 
 einzeln als One-way ab (``dealmonitor.rotation``), im Rahmen ihres Budget-Anteils. Zwischen zwei
 Prüfungen eines Tages gilt der zuletzt gesehene Preis (Quellen-Zustand ``google-rotation``);
 Hin/Rück-Alarme bekommen daraus zusätzlich Angebote "kombiniert aus 2 One-way".
+
+Buchungsportale (OTA): Die Ergebnisseite zeigt den Preis der Airline. Günstigere Angebote von
+Portalen (Mytrip, Booking.com, …) stehen erst in den Buchungsoptionen eines Fluges. Die lädt
+die Seite per RPC ``GetBookingResults`` (``f.req`` mit den Suchangaben plus den gewählten
+Flugnummern, ``booking_request``) - ein schlichter POST ohne Cookies/Token genügt (gemessen
+08.11.2026, HAM-ZRH). Bei One-way-Abfragen holt ``query`` für den günstigsten passenden Flug
+(und einen zweiten, wenn er unter Grenze × ``OTA_LIMIT_FACTOR`` liegt) diese Optionen nach
+(zählt aufs Budget, abschaltbar per ``ota``); ist ein Portal günstiger, gilt dessen Preis und
+die Zeile trägt ``booking`` (Anbieter, Airline-Preis). Fehler dabei lassen den Airline-Preis
+stehen. Den Reiter "Am günstigsten" (``GetSolutionPrices``) beantwortet Google ohne Browser
+mit PERMISSION_DENIED - der deckt sich nicht immer mit den Buchungsoptionen.
 """
 
 from __future__ import annotations
@@ -54,6 +65,7 @@ from __future__ import annotations
 import base64
 import gzip
 import hashlib
+import json
 import html as html_mod
 import logging
 import random
@@ -79,6 +91,23 @@ HEADERS = {
     "Accept-Encoding": "gzip",
 }
 TIMEOUT = 30
+#: Buchungsoptionen eines Fluges (Airline + Portale), siehe Modul-Doku
+BOOKING_RPC = ("https://www.google.com/_/FlightsFrontendUi/data/travel.frontend.flights."
+               "FlightsFrontendService/GetBookingResults?hl=de&gl=DE&curr=EUR")
+BOOKING_HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    "Accept-Language": "de-DE,de;q=0.9",
+    "Accept-Encoding": "gzip",
+}
+MAX_BOOKING_BYTES = 2_000_000
+#: Buchungsoptionen höchstens für so viele Flüge je Abfrage nachholen
+OTA_MAX_PER_QUERY = 2
+#: ... den zweiten nur, wenn er höchstens Grenze × Faktor kostet
+OTA_LIMIT_FACTOR = 1.3
+#: höchstens 1/n des Scan-Anteils eines Alarms geht in Buchungsoptionen (Rest: Abflugtage;
+#: Anteile unter n Abfragen bekommen keine)
+OTA_SHARE_DIVISOR = 5
 BLOCKED_MESSAGE = "Google Flights blockiert gerade – später erneut"
 #: Obergrenze für eine Ergebnisseite (komprimiert; normal ~0,3 MB gzip / 2,4 MB entpackt)
 MAX_PAGE_BYTES = 8_000_000
@@ -271,6 +300,118 @@ def fetch_html(url: str, timeout: float = TIMEOUT) -> str:
     return text
 
 
+# -- Buchungsoptionen (OTA) ----------------------------------------------------------------
+def booking_request(origin: str, dest: str, departure: date, segments: list,
+                    cabin: str = "economy") -> bytes:
+    """POST-Body für ``GetBookingResults``: One-way-Suche mit den gewählten Flügen
+    (``segments`` = ``[[von, "JJJJ-MM-TT", nach, airline, nummer], …]`` aus ``ds:1``).
+    Form wie ``ds:0`` der Buchungsseite (``/travel/flights/booking?tfs=…``)."""
+    chosen = [[o, day, d, None, carrier, number] for o, day, d, carrier, number in segments]
+    leg = [[[[origin.upper(), 0]]], [[[dest.upper(), 0]]], None, 0, None, None,
+           departure.isoformat(), None, chosen, None, None, None, None, None, 3]
+    filt = [None, None, 2, None, [], TFS_CABIN.get(cabin, 1), [1, 0, 0, 0], None, None, None,
+            None, None, None, [leg], None, None, None, 1]
+    payload = json.dumps([None, json.dumps([[], filt], separators=(",", ":"))],
+                         separators=(",", ":"))
+    return ("f.req=" + quote(payload, safe="")).encode()
+
+
+def fetch_booking(body: bytes, timeout: float = TIMEOUT) -> str:
+    """Ein ``GetBookingResults``-Abruf. ``GoogleBlocked`` bei 403/429, ``HttpError`` sonst."""
+    try:
+        resp = http.request(BOOKING_RPC, data=body, headers=BOOKING_HEADERS, method="POST",
+                            timeout=timeout, retries=0, full=True, max_bytes=MAX_BOOKING_BYTES)
+    except http.HttpError as e:
+        if e.status in (403, 429):
+            raise GoogleBlocked(f"HTTP {e.status}") from e
+        raise
+    body = resp.body
+    if "gzip" in resp.header("Content-Encoding").lower():
+        body = gzip.decompress(body)
+    return body.decode("utf-8", errors="replace")
+
+
+def _frames(text: str) -> list:
+    """Die ``wrb.fr``-Antworten einer batchexecute-Antwort (``)]}'`` + JSON-Zeilen) als JSON."""
+    out = []
+    for line in (text or "").splitlines():
+        if not line.startswith('[["wrb.fr"'):
+            continue
+        try:
+            frames = json.loads(line)
+        except ValueError:
+            continue
+        for fr in frames:
+            if (isinstance(fr, list) and len(fr) > 2 and fr[0] == "wrb.fr"
+                    and isinstance(fr[2], str)):
+                try:
+                    out.append(json.loads(fr[2]))
+                except ValueError:
+                    pass
+    return out
+
+
+def parse_booking(text: str) -> list[dict]:
+    """Buchungsoptionen aus ``GetBookingResults``: ``[{seller, code, airline (bool: Airline
+    selbst), price, flight}]`` nach Preis. Je Option ``[_, [[code, name, _, ist_airline]], _,
+    [[airline, nummer]], …, (7) [[None, preis], token], …]`` (gemessen 08.11.2026 HAM-ZRH
+    EW7762: Eurowings 60 €, Mytrip 80 €, SWISS 137 €, Booking.com 159 € …). Leer, wenn
+    nicht lesbar."""
+    out = []
+    for data in _frames(text):
+        try:
+            options = data[1][0]
+        except (TypeError, IndexError, KeyError):
+            continue
+        if not isinstance(options, list):
+            continue
+        for opt in options:
+            try:
+                seller = opt[1][0]
+                price = opt[7][0][1]
+            except (TypeError, IndexError, KeyError):
+                continue
+            if not (isinstance(price, (int, float)) and not isinstance(price, bool) and price > 0
+                    and isinstance(seller, list) and len(seller) > 1
+                    and isinstance(seller[1], str)):
+                continue
+            try:
+                flight = "".join(str(x) for x in opt[3][0][:2])
+            except (TypeError, IndexError, KeyError):
+                flight = None
+            out.append({"seller": seller[1], "code": seller[0],
+                        "airline": len(seller) > 3 and seller[3] is True,
+                        "price": float(price), "flight": flight})
+    out.sort(key=lambda o: (o["price"], not o["airline"]))
+    return out
+
+
+def booking_summary(options: list[dict], airline_price: float) -> dict | None:
+    """``{"seller", "price", "airline_price", "airline_seller"}``, wenn ein Portal günstiger
+    ist als der Airline-Preis der Ergebnisseite - sonst None."""
+    if not options or options[0]["price"] >= airline_price:
+        return None
+    direct = next((o for o in options if o["airline"]), None)
+    return {"seller": options[0]["seller"], "price": options[0]["price"],
+            "airline_price": float(airline_price),
+            "airline_seller": direct["seller"] if direct else None}
+
+
+def airline_rows(results: list[dict]) -> list[dict]:
+    """Ergebniszeilen mit dem Airline-Preis statt eines Portal-Preises (``row["booking"]``)."""
+    return [{**r, "price": r["booking"]["airline_price"]} if r.get("booking") else r
+            for r in results]
+
+
+def booking_text(booking: dict | None) -> str | None:
+    """"über Mytrip, bei Eurowings 60 €" - für Gründe und Airline-Angaben."""
+    if not booking:
+        return None
+    where = f"bei {booking['airline_seller']}" if booking.get("airline_seller") else "Airline"
+    price = f"{booking['airline_price']:,.0f}".replace(",", ".")
+    return f"über {booking['seller']}, {where} {price} €"
+
+
 # -- Parser -----------------------------------------------------------------------------
 def _int(value: str) -> int:
     return int(value.replace(".", ""))
@@ -356,7 +497,42 @@ def _ds1_row(item) -> dict | None:
         "departure_airport": re.sub(r"^Flughafen\s+", "", airport) if airport else None,
         "roundtrip": None,
         "label": f"{price:g} Euro (aus ds:1)",
+        "segments": _segments(legs),
     }
+
+
+def _segments(legs: list) -> list | None:
+    """Flugnummern einer ``ds:1``-Verbindung: ``[[von, "JJJJ-MM-TT", nach, airline, nummer]]``
+    (je Strecke 3 = von, 6 = nach, 20 = [j, m, t], 22 = [airline, nummer, …]) - None, wenn
+    eine Angabe fehlt (dann keine Buchungsoptionen)."""
+    out = []
+    for leg in legs:
+        try:
+            day, flight = leg[20], leg[22]
+            item = [leg[3], f"{day[0]:04d}-{day[1]:02d}-{day[2]:02d}", leg[6], flight[0],
+                    flight[1]]
+        except (TypeError, IndexError, KeyError, ValueError):
+            return None
+        if not all(isinstance(x, str) and x for x in item):
+            return None
+        out.append(item)
+    return out or None
+
+
+def attach_segments(results: list[dict], html: str) -> None:
+    """Flugnummern aus ``ds:1`` an die HTML-Zeilen hängen (gleicher Preis, Abflug, Umstiege)."""
+    if all(r.get("segments") for r in results):
+        return
+    known: dict[tuple, list] = {}
+    for row in ds1_results(html):
+        if row.get("segments"):
+            known.setdefault((row["price"], row["departure_time"], row["stops"]),
+                             row["segments"])
+    for row in results:
+        if not row.get("segments"):
+            seg = known.get((row["price"], row.get("departure_time"), row.get("stops")))
+            if seg:
+                row["segments"] = seg
 
 
 def ds1_results(html: str) -> list[dict]:
@@ -592,8 +768,15 @@ class GoogleFlightsSource:
         state_store=None,
         period_hours: float = rotation.PERIOD_HOURS,
         now: datetime | None = None,
+        ota: bool = True,
+        booking_fetcher=None,
     ) -> None:
         self.max_requests = max(int(max_requests), 0)
+        #: Buchungsoptionen (Portale wie Mytrip/Booking.com) für die günstigsten Flüge nachholen
+        self.ota = ota
+        #: ``booking_fetcher(body) -> text`` (Standard: ``fetch_booking``); mit eigenem
+        #: ``fetcher`` und ohne ``booking_fetcher`` (Tests/Demo) gibt es keine Nachfrage
+        self.booking_fetcher = booking_fetcher
         #: so viele Abfragen lässt der Scan für die Gegenprüfung übrig
         self.verify_reserve = min(max(int(verify_reserve), 0), self.max_requests)
         self.delay = max(float(delay), 0.0)
@@ -650,6 +833,10 @@ class GoogleFlightsSource:
         self._shares: dict[str, int] = {}
         #: so lange gelten Preise im Rotations-Gedächtnis (längster Durchgang dieses Laufs)
         self._keep_hours = 0.0
+        #: Buchungsoptionen: nachgefragt / Portal günstiger / Grund, warum aus (Sperre)
+        self.ota_checked = 0
+        self.ota_cheaper = 0
+        self._ota_off: str | None = None
 
     @property
     def scan_budget(self) -> int:
@@ -697,8 +884,14 @@ class GoogleFlightsSource:
 
     def query(self, origin: str, dest: str, departure: date, return_date: date | None,
               cabin: str = "economy", roundtrip: bool = True, *, retry: bool = True,
-              nights: tuple[int | None, int | None] | None = None) -> list[dict]:
+              nights: tuple[int | None, int | None] | None = None,
+              ota: dict | None = None) -> list[dict]:
         """Eine Google-Abfrage (gecacht pro Lauf, zählt auf ``max_requests``).
+
+        ``ota`` = ``{"criteria": alert_criteria(…), "limit": Grenze/None, "budget": n}``:
+        bei One-way danach die Buchungsoptionen der günstigsten passenden Flüge nachholen
+        (``_add_booking``; ``budget`` = so viele Abrufe dürfen Seite, zweiter Abruf und
+        Nachfragen zusammen höchstens kosten).
 
         Wirft ``GoogleBlocked`` (und setzt den Schutzschalter), ``http.HttpError`` bei
         Netzwerkfehlern, ``ParseError`` wenn keine Ergebnisse erkennbar sind (``EmptyPage``:
@@ -717,6 +910,7 @@ class GoogleFlightsSource:
             raise GoogleBlocked(self._down)
         if self.requests_made >= self.max_requests:
             raise SourceError(f"Google Flights: Limit von {self.max_requests} Abfragen erreicht")
+        start = self.requests_made
         url, alternate = search_urls(origin, dest, departure, return_date, cabin, roundtrip)
         ret = return_date
         page = self._load(url)
@@ -780,10 +974,75 @@ class GoogleFlightsSource:
                                                    else "tfs-Link nicht, per Suchtext geprüft"))
             best = f" ab {results[0]['price']:,.0f} €".replace(",", ".") if results else ""
             self._note(f"{label}: {what} – {len(results)} Flüge{best}")
+        if ota and not roundtrip and results:
+            budget = ota.get("budget", 0) - (self.requests_made - start)
+            self._add_booking(results, page, origin, dest, departure, cabin, budget,
+                              ota.get("criteria") or {}, ota.get("limit"), label)
         self._insights[key] = google_insights.parse(page)
         self._cache[key] = results
         self._loaded[key] = (url, ret)
         return results
+
+    def _add_booking(self, results: list[dict], page: str, origin: str, dest: str,
+                     departure: date, cabin: str, budget: int, criteria: dict,
+                     limit: float | None, label: str) -> None:
+        """Buchungsoptionen nachholen: ohne Grenze für den günstigsten passenden Flug, mit
+        Grenze für die (höchstens ``OTA_MAX_PER_QUERY``) günstigsten passenden Flüge bis
+        ``limit`` × ``OTA_LIMIT_FACTOR`` - je ein Abruf aufs
+        Budget. Ist ein Portal günstiger, gilt dessen Preis (``row["booking"]`` behält Anbieter
+        und Airline-Preis). Fehler lassen den Airline-Preis stehen, nie den Abruf scheitern."""
+        if not self.ota or self._ota_off or self._down or budget <= 0:
+            return
+        if self.fetcher is not None and self.booking_fetcher is None:
+            return      # Testseiten ohne eigenen Buchungs-Abruf: nie ins Netz
+        try:
+            attach_segments(results, page)
+        except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
+            log.exception("Google Flights: Flugnummern nicht lesbar")
+            return
+        fitting = [r for r in results if row_problem(r, **criteria) is None]
+        if limit:       # mit Grenze: nur Flüge, die ein Portal unter die Grenze bringen könnte
+            picked = [r for r in fitting[:OTA_MAX_PER_QUERY]
+                      if r["price"] <= limit * OTA_LIMIT_FACTOR]
+        else:           # ohne Grenze (Rabatt zum Normalpreis): der günstigste
+            picked = fitting[:1]
+        changed = False
+        for row in picked:
+            if (budget <= 0 or self.requests_made >= self.max_requests or not row.get("segments")
+                    or row.get("booking")):
+                continue
+            budget -= 1
+            try:
+                body = booking_request(origin, dest, departure, row["segments"], cabin)
+            except (TypeError, ValueError):
+                continue
+            self._pause()
+            self.requests_made += 1
+            self.ota_checked += 1
+            try:
+                text = (self.booking_fetcher or (lambda b: fetch_booking(b, self.timeout)))(body)
+                summary = booking_summary(parse_booking(text), row["price"])
+            except GoogleBlocked as e:
+                self._ota_off = f"Buchungsoptionen gesperrt ({e})"
+                log.warning("Google Flights: %s – Airline-Preise gelten", self._ota_off)
+                return
+            except Exception as e:  # noqa: BLE001 - nie den Abruf scheitern lassen
+                log.warning("Google Flights %s: Buchungsoptionen nicht ladbar (%s)", label, e)
+                continue
+            finally:
+                self._last_request_at = time.monotonic()
+            if summary:
+                row["booking"] = summary
+                row["price"] = summary["price"]
+                row["label"] = f"{row.get('label') or ''} – {booking_text(summary)}"
+                self.ota_cheaper += 1
+                changed = True
+                self._note(f"{label}: {summary['seller']} {summary['price']:,.0f} € statt "
+                           f"{summary['airline_seller'] or 'Airline'} "
+                           f"{summary['airline_price']:,.0f} €".replace(",", "."))
+        if changed:
+            results.sort(key=lambda r: (r["price"], r["stops"] if r["stops"] is not None else 9,
+                                        r["duration_min"] or 0))
 
     def _second_fetch(self, kind: str, url: str, alternate: str, origin: str, dest: str,
                       departure: date, return_date: date | None, cabin: str, roundtrip: bool,
@@ -932,6 +1191,9 @@ class GoogleFlightsSource:
         used = 0
         roundtrip = alert.roundtrip and not alert.rotation      # Rotation: immer One-ways
         fresh: set[tuple[str, str, date]] = set()
+        criteria = alert_criteria(alert)
+        ota_start = self.ota_checked
+        ota_cap = (share if share is not None else self.scan_budget) // OTA_SHARE_DIVISOR
         for origin, dest, dep, ret in plan:
             url = build_url(origin, dest, dep, ret, alert.cabin, roundtrip)
             cached = url in self._cache
@@ -947,9 +1209,16 @@ class GoogleFlightsSource:
             before = self.requests_made
             # zweiter Abruf nur aus dem eigenen Anteil, nie aus Reserve oder fremdem Anteil
             retry = self.scans_made < self.scan_budget and (share is None or used < share)
+            # Buchungsoptionen aus demselben Anteil, höchstens 1/OTA_SHARE_DIVISOR davon
+            extra = min(self.scan_budget - self.scans_made,
+                        (share - used) if share is not None else self.scan_budget,
+                        ota_cap - (self.ota_checked - ota_start))
+            ota = ({"criteria": criteria, "limit": alert.max_price, "budget": 1 + extra}
+                   if self.ota and not cached and extra > 0 else None)
             try:
                 results = self.query(origin, dest, dep, ret, alert.cabin, roundtrip,
-                                     retry=retry, nights=(alert.min_nights, alert.max_nights))
+                                     retry=retry, nights=(alert.min_nights, alert.max_nights),
+                                     ota=ota)
             except GoogleBlocked:
                 self._release_share(share)
                 if alert.rotation:      # schon abgefragte Tage nicht verlieren
@@ -972,8 +1241,9 @@ class GoogleFlightsSource:
                 used += retried
                 self.scans_made += retried
             if alert.rotation:
-                self.memory.put(origin, dest, alert.cabin, dep, results, self.insight(url),
-                                self._now())
+                # das Gedächtnis kennt keinen Anbieter: dort gilt der Airline-Preis
+                self.memory.put(origin, dest, alert.cabin, dep, airline_rows(results),
+                                self.insight(url), self._now())
                 fresh.add((origin, dest, dep))
             if roundtrip == alert.roundtrip:      # Rotation bei Hin/Rück: nur kombiniert
                 # Link und Rückflug der tatsächlich geladenen Seite (tfs-Link, 7 Nächte)
@@ -1156,6 +1426,7 @@ class GoogleFlightsSource:
                 duration_back_min=None,
                 link=link,
                 insight=dict(insight) if insight else None,
+                booking=dict(row["booking"]) if row.get("booking") else None,
             ))
         return offers
 
@@ -1192,8 +1463,13 @@ class GoogleFlightsSource:
                 self.last_error = ("Google Flights: Rest-Budget für die Preis-Suche der übrigen "
                                    "Alarme reserviert")
                 return None
+        criteria = {"max_stops": max_stops, "max_minutes": max_minutes,
+                    "exclude_airlines": exclude_airlines}
+        # Seite + Buchungsoptionen des günstigsten passenden Flugs, nie aus fremdem Scan-Anteil
+        budget = min(2, self.max_requests - self._scan_pending - self.requests_made)
+        ota = {"criteria": criteria, "limit": None, "budget": budget} if self.ota else None
         try:
-            results = self.query(origin, dest, departure, return_date, cabin, roundtrip)
+            results = self.query(origin, dest, departure, return_date, cabin, roundtrip, ota=ota)
         except EmptyPage as e:
             self.last_error = self._down or f"Google Flights: {e}"
             log.warning("Google Flights Gegenprüfung %s-%s %s: %s", origin, dest, departure, e)
@@ -1208,8 +1484,6 @@ class GoogleFlightsSource:
         if not results:
             self.last_error = "Google Flights: keine Flüge für diese Daten gefunden"
             return None
-        criteria = {"max_stops": max_stops, "max_minutes": max_minutes,
-                    "exclude_airlines": exclude_airlines}
         best = next((r for r in results if row_problem(r, **criteria) is None), None)
         insight = self.insight(url)
         extra = {"insight": dict(insight)} if insight else {}
@@ -1219,7 +1493,10 @@ class GoogleFlightsSource:
             return {"price": None, "cheapest": float(first["price"]), "link": url,
                     "reason": f"kein passender Flug (günstigster: {row_problem(first, **criteria)})",
                     **extra}
-        return {"price": float(best["price"]),
-                "airline": best.get("airline") or best.get("airline_code"),
+        airline = best.get("airline") or best.get("airline_code")
+        if best.get("booking"):     # Portal günstiger: in der Airline-Angabe sichtbar machen
+            extra["booking"] = dict(best["booking"])
+            airline = " ".join(x for x in (airline, booking_text(best["booking"])) if x)
+        return {"price": float(best["price"]), "airline": airline,
                 "airline_code": best.get("airline_code"), "stops": best.get("stops"),
                 "duration_min": best.get("duration_min"), "link": url, **extra}
