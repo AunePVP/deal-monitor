@@ -58,6 +58,16 @@ Flugnummern, ``booking_request``) - ein schlichter POST ohne Cookies/Token genü
 die Zeile trägt ``booking`` (Anbieter, Airline-Preis). Fehler dabei lassen den Airline-Preis
 stehen. Den Reiter "Am günstigsten" (``GetSolutionPrices``) beantwortet Google ohne Browser
 mit PERMISSION_DENIED - der deckt sich nicht immer mit den Buchungsoptionen.
+
+Preiskalender (``google_calendar``, Einstellung ``google_calendar``): Statt 2 Terminen je Monat
+holt ein Abruf je Strecke (bzw. je Aufenthaltsdauer, wenn Rückflug-Wochentage sie vorgeben)
+den günstigsten Preis jedes Abflugtags bis ``months_ahead``. Bestätigt werden per normaler
+Abfrage nur die vielversprechenden Tage (``google_calendar.candidates``: alles bis Grenze × 1,3,
+dann die günstigsten 20 % je Monat; heiße Tage zuerst); nur diese Ergebnisse werden Offers.
+Kalenderpreise selbst stehen nur als Hinweis ("Kalenderpreis, unbestätigt") in
+``calendar_hints``/``notes``. One-way-Alarme mit Rotation nutzen den Kalender ebenfalls (ein
+Abruf je Richtung); die Rotation bleibt Rückfall. Kalender-Fehler -> alte Planung für den Lauf,
+429/403 -> Schutzschalter wie bei der Ergebnisseite.
 """
 
 from __future__ import annotations
@@ -77,7 +87,7 @@ from urllib.parse import quote, urlsplit
 
 from .. import http, regions, rotation
 from ..models import Alert, Offer
-from . import SourceError, google_insights
+from . import SourceError, google_calendar, google_insights
 
 log = logging.getLogger(__name__)
 
@@ -770,8 +780,16 @@ class GoogleFlightsSource:
         now: datetime | None = None,
         ota: bool = True,
         booking_fetcher=None,
+        calendar: bool = True,
+        calendar_fetcher=None,
     ) -> None:
         self.max_requests = max(int(max_requests), 0)
+        #: Preiskalender als Vorfilter (``google_calendar``): je Strecke ein Abruf für alle Tage,
+        #: dann nur die günstigsten per normaler Abfrage bestätigen
+        self.calendar = calendar
+        #: ``calendar_fetcher(body) -> text`` (Standard: ``google_calendar.fetch``); mit eigenem
+        #: ``fetcher`` und ohne ``calendar_fetcher`` (Tests/Demo) gilt die alte Planung
+        self.calendar_fetcher = calendar_fetcher
         #: Buchungsoptionen (Portale wie Mytrip/Booking.com) für die günstigsten Flüge nachholen
         self.ota = ota
         #: ``booking_fetcher(body) -> text`` (Standard: ``fetch_booking``); mit eigenem
@@ -837,6 +855,13 @@ class GoogleFlightsSource:
         self.ota_checked = 0
         self.ota_cheaper = 0
         self._ota_off: str | None = None
+        #: Preiskalender: Abrufe / gelesene Tage / Grund, warum für diesen Lauf aus
+        self.calendar_calls = 0
+        self.calendar_days = 0
+        self._calendar_off: str | None = None
+        #: je Alarm die günstigsten Kalenderpreise je Strecke (nur Hinweis, nie ein Deal):
+        #: ``[{origin, destination, departure, return_date, price, label}]``
+        self.calendar_hints: dict[str, list[dict]] = {}
 
     @property
     def scan_budget(self) -> int:
@@ -850,7 +875,7 @@ class GoogleFlightsSource:
         self._shares = {}
         if self.verify_only:
             return
-        needs = sorted((len(self.plan(a)), a.id) for a in alerts)
+        needs = sorted((self.need(a), a.id) for a in alerts)
         budget = self.scan_budget
         for k, (need, alert_id) in enumerate(needs):
             given = min(need, budget // (len(needs) - k))   # kleinster Bedarf zuerst
@@ -1108,10 +1133,16 @@ class GoogleFlightsSource:
 
     def _load(self, url: str, wait: tuple | float = 0.0) -> str:
         """Ein Abruf (zählt auf ``max_requests``) mit Pause, Sperre und Netzfehler-Zähler."""
+        return self._call(lambda: self.fetcher(url) if self.fetcher
+                          else fetch_html(url, self.timeout), wait)
+
+    def _call(self, get, wait: tuple | float = 0.0) -> str:
+        """``get()`` als ein Abruf: Pause, zählt auf ``max_requests``, Sperre -> Schutzschalter,
+        Netzfehler hintereinander -> Pause bis zum nächsten Lauf."""
         self._pause(wait)
         self.requests_made += 1
         try:
-            return self.fetcher(url) if self.fetcher else fetch_html(url, self.timeout)
+            return get()
         except GoogleBlocked as e:
             self._down = f"{BLOCKED_MESSAGE} ({e})"
             raise
@@ -1180,8 +1211,6 @@ class GoogleFlightsSource:
             return []
         if self._down:
             raise SourceError(self._down)
-        plan = self.plan(alert)
-        total = len(plan)
         offers: list[Offer] = []
         errors = 0
         empty = 0
@@ -1189,6 +1218,23 @@ class GoogleFlightsSource:
         affected: set[tuple[str, str]] = set()
         share = self._shares.get(alert.id)
         used = 0
+        total = 0
+        plan = None
+        via_calendar = False
+        if self.calendar_active(alert):
+            try:
+                plan, cal = self._calendar_plan(alert, share, affected)
+            except GoogleBlocked:
+                self._release_share(share)
+                raise SourceError(self._down or BLOCKED_MESSAGE) from None
+            used, skipped, errors, total = cal["used"], cal["skipped"], cal["errors"], cal["total"]
+            via_calendar = plan is not None
+        if plan is None:        # ohne Kalender bzw. Rückfall: 2 Termine je Monat / Rotation
+            plan = self.plan(alert)
+        total += len(plan)
+        # Rotation: Durchgangsdauer nach dem Rotations-Anteil, nicht nach den Bestätigungen
+        per_run = (len(plan) if not via_calendar
+                   else share if share is not None else rotation.PER_RUN)
         roundtrip = alert.roundtrip and not alert.rotation      # Rotation: immer One-ways
         fresh: set[tuple[str, str, date]] = set()
         criteria = alert_criteria(alert)
@@ -1222,7 +1268,7 @@ class GoogleFlightsSource:
             except GoogleBlocked:
                 self._release_share(share)
                 if alert.rotation:      # schon abgefragte Tage nicht verlieren
-                    self._save_memory(alert, total)
+                    self._save_memory(alert, per_run)
                 raise SourceError(self._down or BLOCKED_MESSAGE) from None
             except EmptyPage as e:
                 errors += 1
@@ -1253,7 +1299,7 @@ class GoogleFlightsSource:
         self._release_share(share)
         if alert.rotation:
             offers += self._remembered(alert, fresh)
-            self._save_memory(alert, total)
+            self._save_memory(alert, per_run)
         if alert.roundtrip:
             offers += self.combined(alert)
         if total and errors == total:
@@ -1267,6 +1313,170 @@ class GoogleFlightsSource:
                              + (f" (davon {empty} leer)" if empty else ""))
             self.incomplete = {"message": "; ".join(parts), "routes": affected}
         return offers
+
+    # -- Preiskalender (``google_calendar``) ------------------------------------
+    def calendar_active(self, alert: Alert) -> bool:
+        """Kalender als Vorfilter für diesen Alarm? Nicht für Rotation mit Hin/Rück (die setzt
+        sich aus One-ways zusammen), nicht mit Test-``fetcher`` ohne ``calendar_fetcher``, nicht
+        nach einem Kalender-Fehler in diesem Lauf."""
+        if not self.calendar or self._calendar_off or self.verify_only:
+            return False
+        if self.fetcher is not None and self.calendar_fetcher is None:
+            return False
+        return not (alert.rotation and alert.roundtrip)
+
+    def need(self, alert: Alert) -> int:
+        """Abfragen, die ein Alarm für einen vollständigen Lauf bräuchte (für ``begin_run``)."""
+        if self.calendar_active(alert):
+            return (len(self.calendar_calls_for(alert))
+                    + google_calendar.CONFIRM_PER_ROUTE * len(alert.pairs))
+        return len(self.plan(alert))
+
+    def _calendar_span(self, alert: Alert) -> tuple[date, date]:
+        """Abflug-Zeitraum: übermorgen bis Ende des letzten Monats (``months_ahead``)."""
+        today = self.today or date.today()
+        y, m = _months(today, alert.months_ahead or self.scan_months or 1)[-1]
+        last = (date(y + (m == 12), m % 12 + 1, 1) - timedelta(days=1))
+        return today + timedelta(days=2), last
+
+    def _nights_groups(self, alert: Alert, origin: str, dest: str,
+                       start: date) -> dict[int | None, frozenset[int]]:
+        """Aufenthalt -> Abflug-Wochentage. One-way: ``{None: Wochentage}``. Hin/Rück: der
+        Kalender kennt nur eine feste Dauer, mit Rückflug-Wochentagen hängt sie vom Abflugtag
+        ab (``rotation.return_on``, wie in der alten Planung) - je Dauer ein Abruf."""
+        out_days = alert.weekdays_for(origin, dest) or frozenset(range(7))
+        if not alert.roundtrip:
+            return {None: frozenset(out_days)}
+        base = stay_nights(alert, origin, dest)
+        back = alert.weekdays_for(dest, origin)
+        groups: dict[int | None, set[int]] = {}
+        for wd in sorted(out_days):
+            dep = start + timedelta(days=(wd - start.weekday()) % 7)
+            ret = rotation.return_on(dep, base, back, alert.min_nights, alert.max_nights)
+            if ret is not None:
+                groups.setdefault((ret - dep).days, set()).add(wd)
+        return {n: frozenset(w) for n, w in groups.items()}
+
+    def calendar_calls_for(self, alert: Alert) -> list[tuple]:
+        """Kalender-Abrufe eines Alarms: ``(von, nach, Beginn, Ende, Nächte|None, Wochentage)``
+        je Strecke, Zeitfenster (höchstens ``google_calendar.MAX_DAYS``) und Aufenthaltsdauer."""
+        start, end = self._calendar_span(alert)
+        out = []
+        for origin, dest in alert.pairs:
+            groups = self._nights_groups(alert, origin, dest, start)
+            for lo, hi in google_calendar.windows(start, end):
+                for nights, wds in sorted(groups.items(), key=lambda g: (g[0] is None, g[0])):
+                    out.append((origin, dest, lo, hi, nights, wds))
+        return out
+
+    def _fetch_calendar(self, body: bytes) -> str:
+        if self.calendar_fetcher is not None:
+            return self.calendar_fetcher(body)
+        return google_calendar.fetch(body, self.timeout, BOOKING_HEADERS, GoogleBlocked)
+
+    def _calendar_plan(self, alert: Alert, share: int | None,
+                       affected: set) -> tuple[list | None, dict]:
+        """Kalender je Strecke abrufen (zählt aufs Budget wie eine Scan-Abfrage) und die zu
+        bestätigenden Tage planen: je Strecke höchstens ``CONFIRM_PER_ROUTE``
+        (``google_calendar.candidates``). Vorrang: Tage bis Grenze × 1,3 ("heiß", Runde für
+        Runde über die Strecken), dann die übrigen Kandidaten ebenso. Eine Strecke bekommt
+        ihren Kalender nur, wenn danach noch je heißer Strecke eine Bestätigung (mindestens
+        eine) ins Budget passt - ohne heiße Tage geht der Anteil also vor allem in weitere
+        Kalender (mehr Strecken je Lauf). ``(None, …)`` = Kalender gestört -> alte Planung.
+        ``GoogleBlocked`` geht durch (Schutzschalter)."""
+        cal = {"used": 0, "skipped": 0, "errors": 0, "total": 0}
+        by_route: dict[tuple[str, str], list[tuple]] = {}
+        for call in self.calendar_calls_for(alert):
+            by_route.setdefault((call[0], call[1]), []).append(call)
+        routes = list(by_route)
+        self.rng.shuffle(routes)
+        picks: dict[tuple[str, str], list[tuple[float, date, date | None]]] = {}
+        hints: list[dict] = []
+        limit = self._calendar_limit(alert)
+        hot_line = limit * google_calendar.LIMIT_FACTOR if limit else None
+        reserved = 1
+        for route in routes:
+            calls = by_route[route]
+            cal["total"] += len(calls)
+            room = min(self.scan_budget - self.scans_made, self.max_requests - self.requests_made,
+                       share - cal["used"] if share is not None else self.max_requests)
+            if room - reserved < len(calls):
+                cal["skipped"] += len(calls)
+                affected.add(route)
+                continue
+            prices: dict[date, tuple[float, date | None]] = {}
+            failed = False
+            for origin, dest, lo, hi, nights, wds in calls:
+                body = google_calendar.request_body(origin, dest, lo, hi, alert.cabin, nights,
+                                                    alert.max_stops)
+                cal["used"] += 1
+                self.scans_made += 1
+                self.calendar_calls += 1
+                try:
+                    days = google_calendar.parse(
+                        self._call(lambda b=body: self._fetch_calendar(b)), nights)
+                except http.HttpError as e:
+                    if e.network:   # Netz: Strecke fehlt, der Schutzschalter zählt mit
+                        log.warning("Google-Kalender %s-%s: %s", origin, dest, e)
+                        cal["errors"] += 1
+                        affected.add(route)
+                        failed = True
+                        break
+                    return self._calendar_failed(alert, str(e)), cal
+                except (google_calendar.CalendarError, ValueError) as e:
+                    return self._calendar_failed(alert, str(e)), cal
+                self._consecutive_failures = 0
+                for day, price in days.items():
+                    if lo <= day <= hi and day.weekday() in wds and (
+                            day not in prices or price < prices[day][0]):
+                        prices[day] = (price, day + timedelta(days=nights)
+                                       if nights is not None else None)
+            if failed:
+                continue
+            self.calendar_days += len(prices)
+            if not prices:
+                log.info("Google-Kalender %s-%s: keine Preise", *route)
+                continue
+            chosen = google_calendar.candidates({d: p for d, (p, _) in prices.items()}, limit)
+            if hot_line is None or prices[chosen[0]][0] <= hot_line:
+                reserved += 1   # diese Strecke braucht sicher eine Bestätigung
+            picks[route] = [(prices[d][0], d, prices[d][1]) for d in chosen]
+            best = min(prices, key=lambda d: (prices[d][0], d))
+            hints.append({"origin": route[0], "destination": route[1], "departure": best,
+                          "return_date": prices[best][1], "price": prices[best][0],
+                          "label": google_calendar.LABEL})
+        hints.sort(key=lambda h: h["price"])
+        self.calendar_hints[alert.id] = hints
+        if hints:
+            h = hints[0]
+            days = (f"{h['departure']:%d.%m.}–{h['return_date']:%d.%m.%Y}" if h["return_date"]
+                    else f"{h['departure']:%d.%m.%Y}")
+            price = f"{h['price']:,.0f}".replace(",", ".")
+            self._note(f"{alert.name}: Kalender {len(picks)} Strecken – günstigster Tag "
+                       f"{h['origin']}–{h['destination']} {days} ab {price} € "
+                       f"({google_calendar.LABEL})")
+        def hot(price: float) -> bool:
+            return hot_line is not None and price <= hot_line
+        order = sorted(((not hot(price), rank, price, route, dep, ret)
+                        for route, p in picks.items()
+                        for rank, (price, dep, ret) in enumerate(p)), key=lambda x: x[:4])
+        return [(route[0], route[1], dep, ret) for *_, route, dep, ret in order], cal
+
+    @staticmethod
+    def _calendar_limit(alert: Alert) -> float | None:
+        """Preis, ab dem ein Kalendertag "heiß" ist: die Grenze, sonst Normalpreis − Rabatt."""
+        if alert.max_price:
+            return float(alert.max_price)
+        if alert.baseline_price:
+            return float(alert.baseline_price) * (1 - (alert.min_discount or 0))
+        return None
+
+    def _calendar_failed(self, alert: Alert, reason: str) -> None:
+        """Kalender gestört: für den Rest des Laufs die alte Planung (2 Termine/Monat, Rotation)."""
+        self._calendar_off = f"Google-Kalender nicht nutzbar ({reason}) – alte Planung"
+        log.warning("Google Flights [%s]: %s", alert.id, self._calendar_off)
+        self._note(self._calendar_off)
+        return None
 
     # -- Datumsrotation (``dealmonitor.rotation``) -----------------------------
     def _now(self) -> datetime:
