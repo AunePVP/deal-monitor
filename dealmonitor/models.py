@@ -58,7 +58,8 @@ class Alert:
 
 
 #: optionale Offer-Felder, die ``Offer.extras`` ausgibt (Reihenfolge = Ausgabe)
-EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "published", "hot", "uid", "legs")
+EXTRA_FIELDS = ("insight", "via_hub", "surcharge", "expires", "published", "hot", "uid", "legs",
+                "booking")
 
 
 @dataclass
@@ -102,6 +103,10 @@ class Offer:
     #: Hin/Rück aus zwei One-ways (Google-Rotation): je Teilstrecke ``{origin, destination,
     #: departure, price, airline, stops, link, seen}`` - JSON-tauglich
     legs: list | None = field(default=None, repr=False, compare=False)
+    #: Google: ein Buchungsportal ist günstiger als die Airline - ``{seller, price,
+    #: airline_price, airline_seller}`` (``price`` = ``Offer.price``), z. B. Mytrip 52 € statt
+    #: Eurowings 60 €
+    booking: dict | None = field(default=None, repr=False, compare=False)
 
     @property
     def nights(self) -> int | None:
