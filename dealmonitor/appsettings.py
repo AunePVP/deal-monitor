@@ -96,6 +96,8 @@ VALUES: dict[str, Spec] = {
     "google_max_requests": Spec("int", 40, "Google Flights: Abfragen pro Lauf", 2, 500),
     "google_verify": Spec("bool", True, "Google Flights: Deals gegenprüfen"),
     "google_ota": Spec("bool", True, "Google Flights: günstigere Buchungsportale (OTA) nachholen"),
+    "google_calendar": Spec("bool", True, "Google Flights: Preiskalender als Vorfilter "
+                            "(günstigste Tage per normaler Suche bestätigen)"),
     # Amadeus Self-Service
     "amadeus_env": Spec("str", "test", "Amadeus-Umgebung", choices=("test", "production"),
                         required=True),
@@ -627,7 +629,7 @@ class Context:
                     today=self.today,
                     verify_reserve=max_requests // VERIFY_RESERVE_DIVISOR if verifies else 0,
                     state_store=store, period_hours=app.get("interval_hours"),
-                    ota=app.get("google_ota")))
+                    ota=app.get("google_ota"), calendar=app.get("google_calendar")))
             elif n == "feeds":
                 presets = app.get("feed_presets")
                 if presets or s.feeds:   # ohne Deal-Seiten und eigene Feeds gibt es nichts zu lesen
