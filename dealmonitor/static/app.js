@@ -541,6 +541,14 @@
     return el("span", { class: "badge badge-soft sig-info", title: "Abflug ab einem Flughafen in der Nachbarschaft – Anreise ist im Preis eingerechnet" },
       `Abflug Nachbar-Hub ${name}${extra}`);
   }
+  /** Google: ein Buchungsportal ist günstiger als die Airline selbst. */
+  function bookingBadge(d) {
+    const b = d.booking;
+    if (!b || typeof b !== "object" || !b.seller || !num(b.airline_price)) return null;
+    const where = b.airline_seller ? `bei ${b.airline_seller}` : "direkt bei der Airline";
+    return el("span", { class: "badge badge-soft sig-info", title: "Preis laut Google-Buchungsoptionen – Portalpreise können Gebühren oder andere Gepäckregeln haben" },
+      `über ${b.seller} · ${where} ${euro(b.airline_price)}`);
+  }
   /** Quellen eines Deals (früheste zuerst), nur gültige Einträge. */
   function dealSources(d) {
     return (Array.isArray(d.sources) ? d.sources : []).filter((x) => x && typeof x === "object" && (x.label || x.source));
@@ -853,7 +861,7 @@
     const chart = expired ? null : sparkline(d.insight, d.price);
     const signals = el("div", { class: "badges signals" },
       chart ? null : levelBadge(g), chart || !g ? null : (rangeText(g) ? el("span", { class: "badge badge-soft" }, rangeText(g)) : null),
-      expiresBadge(d), articleAgeBadge(d), hubBadge(d), leadBadge(d), sourcesBadge(d));
+      expiresBadge(d), articleAgeBadge(d), hubBadge(d), bookingBadge(d), leadBadge(d), sourcesBadge(d));
     // Kurzbegründung des Servers (why) hervorgehoben; ihre Teile nicht noch einmal in der Liste
     // Prozent wie auf der Karte schreiben („65 %“ statt „65%“)
     const why = typeof d.why === "string" && d.why.trim() && !expired ? d.why.trim().replace(/(\d)%/g, "$1\u00a0%") : null;
@@ -1596,6 +1604,7 @@
     { key: "travelpayouts_token", group: "travelpayouts", type: "secret", label: "Travelpayouts-Token", help: "Kostenlos erhältlich – im Betrieb nötig für Preise aus der API." },
     { key: "travelpayouts_marker", group: "travelpayouts", type: "text", label: "Travelpayouts-Marker (optional)", help: "Deine Partner-ID für Buchungslinks. Nicht nötig." },
     { key: "google_max_requests", group: "google", type: "int", label: "Max. Abfragen pro Lauf", min: 2, max: 500, help: "Gilt für alle Alarme zusammen, inkl. Gegenprüfungen (höchstens die Hälfte). Zwischen Abfragen wird 2–4 s gewartet." },
+    { key: "google_ota", group: "google", type: "bool", label: "Günstigere Buchungsportale einbeziehen", help: "Für die günstigsten Flüge einer Abfrage holt der Monitor zusätzlich Googles Buchungsoptionen (z. B. Mytrip, Booking.com). Ist ein Portal günstiger als die Airline, zählt dessen Preis. Kostet höchstens 2 Zusatzabrufe pro Abfrage." },
     { key: "google_verify", group: "google", type: "bool", label: "Deals aus Preis-APIs bei Google gegenprüfen", help: "Gecachte Preise (Travelpayouts, Amadeus-Monatsscan) werden mit genau diesen Daten bei Google geprüft: Ein Flug, der zu den Regeln des Alarms passt, höchstens 25 % teurer und unter der Grenze = bestätigt (gemeldet mit Google-Preis), sonst verworfen. Ist Google nicht erreichbar, wird der Deal mit Hinweis „nicht gegengeprüft“ gemeldet." },
     { key: "amadeus_api_key", group: "amadeus", type: "secret", label: "Amadeus API Key" },
     { key: "amadeus_api_secret", group: "amadeus", type: "secret", label: "Amadeus API Secret" },
