@@ -33,7 +33,7 @@ from datetime import date, datetime, timedelta
 log = logging.getLogger(__name__)
 
 #: so viele Tage voraus wird rotiert
-HORIZON_DAYS = 90
+HORIZON_DAYS = 45
 #: höchstens so viele Abfragen je Lauf (der tatsächliche Anteil kommt aus dem Google-Budget)
 PER_RUN = 23
 #: Takt, in dem der Lauf-Index weiterzählt (Standard-Prüfintervall)

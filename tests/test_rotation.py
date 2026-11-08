@@ -150,7 +150,7 @@ class SliceTest(unittest.TestCase):
     def test_routes_and_horizon(self):
         self.assertEqual(rotation.routes_for(oneway()), ROUTES)
         self.assertEqual(rotation.routes_for(roundtrip(rotation=True)), ROUTES)
-        self.assertEqual(rotation.horizon_for(oneway(months_ahead=4), 6), 90)
+        self.assertEqual(rotation.horizon_for(oneway(months_ahead=4), 6), 45)
         self.assertEqual(rotation.horizon_for(oneway(months_ahead=1), 6), 30)
 
 
@@ -281,9 +281,9 @@ class RunTest(unittest.TestCase):
         d, status = next(x for x in items if x[0].offer.price == 39)
         self.assertEqual(status, "new")
         self.assertIn("one-way", d.headline)
-        # nächster Lauf fragt andere Tage ab: der Deal bleibt aktiv, nichts neu gemeldet
+        # nächster Lauf (anderes Stück der Rotation, nahe Tage evtl. erneut): der Deal bleibt
+        # aktiv, nichts neu gemeldet
         src, (items2, res2) = self.run_at(now + timedelta(hours=3), a)
-        self.assertNotIn(self.cheap[2], {c[2] for c in src.fetcher.calls})
         self.assertEqual(res2.expired, 0)
         self.assertEqual(items2, [])
         active = self.store.deals(status="active")

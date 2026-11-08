@@ -93,7 +93,7 @@ class DemoApiTest(unittest.TestCase):
         self.assertEqual(len(near[0]["insight"]["history"]), 62)
         cover = self.alerts["zrh-ham-oneway"]["rotation_cover"]
         # Travel-Dealz meldet in der Demo Hamburg → Zürich (79 €) -> kein "keine Deal-Seite"
-        self.assertEqual((cover["horizon_days"], cover["no_deal_sites"]), (90, False))
+        self.assertEqual((cover["horizon_days"], cover["no_deal_sites"]), (45, False))
         self.assertFalse(self.alerts["ham-zrh"]["rotation_cover"]["no_deal_sites"])
         self.assertGreater(cover["days"], 0)
         self.assertTrue(self.alerts["zrh-ham"]["rotation_cover"])        # Kombis aus One-ways
@@ -162,7 +162,7 @@ class RotationJsonTest(unittest.TestCase):
             mem.put("ZRH", "HAM", "economy", date(2026, 11, day + 10), [row], None,
                     datetime(2026, 11, 4, 11))
         self.assertEqual(self.cover(ow, [ow, rt, cn], mem),
-                         {"horizon_days": 90, "days": 2, "cycle_hours": None, "no_deal_sites": True})
+                         {"horizon_days": 45, "days": 2, "cycle_hours": None, "no_deal_sites": True})
         self.assertEqual(self.cover(rt, [ow, rt, cn], mem)["days"], 2)
         # Dauer eines Durchgangs kommt vom Rotations-Alarm (auch für den abgedeckten Hin/Rück)
         mem.runs["ow"] = {"cycle_h": 90}

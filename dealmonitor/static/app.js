@@ -697,7 +697,7 @@
   function rotationHint(a, short) {
     const c = a.rotation_cover;
     if (!c || typeof c !== "object") return null;
-    const horizon = num(c.horizon_days) ? c.horizon_days : 90;
+    const horizon = num(c.horizon_days) ? c.horizon_days : 45;
     // Dauer eines Durchgangs (jeder Tag einmal) - hängt vom Google-Budget ab
     const h = num(c.cycle_hours) && c.cycle_hours > 0 ? c.cycle_hours : null;
     const cycle = !h ? "" : h <= 24 ? "täglich" : h <= 48 ? `alle ${Math.round(h)} Std.` : `alle ${(h / 24).toLocaleString("de-DE", { maximumFractionDigits: 1 })} Tage`;

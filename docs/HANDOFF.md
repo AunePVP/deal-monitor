@@ -26,7 +26,7 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
 - Tests: `python3 -m unittest discover -s tests` → **729 grün**; `node tests/e2e/ui.mjs` → **46 Schritte grün** (mehrfach).
 - Runde-3-Review (07.11.): 4 Prüfer (Parser live, Alarm-Logik, Betrieb+Google, Web/Sicherheit) → 25 Funde, 24 behoben
   (Tests `tests/test_review_runde3.py`, `tests/test_review3_google.py`). Offen bewusst: erneuter Push nach Kanal-Ausfall
-  (bräuchte Zustellstatus je Kanal). Rotation: mit 40 Abfragen/Lauf ca. 90 h je Durchgang – UI nennt die echte Dauer.
+  (bräuchte Zustellstatus je Kanal). Rotation: 45 Tage voraus (08.11. auf Wunsch von 90 reduziert), mit 40 Abfragen/Lauf ca. 45 h je Durchgang – UI nennt die echte Dauer.
 - Docker-Image lokal gebaut (healthy, PUID/PGID 99/100), Migration einer `main`-DB (Runde 1) mit eigenem Alarm geprüft.
 - Zeitfestigkeit: Suite mit +7 Tagen vorgestellter Uhr grün. Rotationstests rechnen relativ zu heute; Feed-Fixtures über `feed.utcnow`/`fresh()`. Die CI baut das Image nur mit grünen Tests.
 

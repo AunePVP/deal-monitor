@@ -210,7 +210,7 @@ class AgeLimitTest(unittest.TestCase):
             t += timedelta(hours=3)
         mem = rotation.Memory(store[rotation.STATE_NAME])
         self.assertEqual(mem.keep_hours, 48)
-        self.assertEqual(mem.cycle_hours(alert.id), 90)
+        self.assertEqual(mem.cycle_hours(alert.id), 45)
 
     def test_cycle_info_full_budget(self):
         store = {}

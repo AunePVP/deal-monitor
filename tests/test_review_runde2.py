@@ -461,7 +461,7 @@ class RunCounterTest(unittest.TestCase):
             src = rot.source(state_store=store, now=now, today=rot.TODAY)
             asked |= {(o, d, day) for o, d, day, _ in src.plan(alert)}
             src._save_memory(alert, 23)
-        self.assertEqual(asked, set(rotation.items(rot.ROUTES, rot.TODAY, 90)))
+        self.assertEqual(asked, set(rotation.items(rot.ROUTES, rot.TODAY, rotation.HORIZON_DAYS)))
 
 
 class HealthRulesTest(unittest.TestCase):
