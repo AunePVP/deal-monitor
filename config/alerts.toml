@@ -93,7 +93,8 @@ return_weekdays = [5, 6, 0]
 [[alert]]
 id = "de-cn-economy"
 name = "Deutschland → China (Economy)"
-origins = ["@DE"]
+# Abflug nur ab Frankfurt, Hamburg, München und Zürich (weniger Google-Abfragen je Lauf)
+origins = ["FRA", "HAM", "MUC", "ZRH"]
 destinations = ["@CN_MAJOR"]
 trip = "roundtrip"
 cabin = "economy"
@@ -109,7 +110,7 @@ feed_keywords = [["China"], ["Peking"], ["Beijing"], ["Shanghai"], ["Guangzhou"]
 [[alert]]
 id = "de-cn-business"
 name = "Deutschland → China (Business Class)"
-origins = ["@DE_HUBS"]
+origins = ["FRA", "HAM", "MUC", "ZRH"]
 destinations = ["@CN_MAJOR"]
 trip = "roundtrip"
 cabin = "business"

@@ -154,7 +154,14 @@ class CantonTest(unittest.TestCase):
         self.assertFalse(regions.places_in("YES YOU CAN") & {"Guangzhou"})
 
     def test_swiss_departure_not_for_german_alert(self):
+        # Seit 11/2026 startet der China-Alarm ab FRA, HAM, MUC und ZRH - Genf bleibt draußen
+        offers = offers_for("de-cn-economy", item("Peking ab 449€ von Genf",
+                                                  cats=["Economy Class"]))
+        self.assertEqual(offers, [])
         offers = offers_for("de-cn-economy", item("Peking ab 449€ von Zürich",
+                                                  cats=["Economy Class"]))
+        self.assertEqual([o.price for o in offers], [449])
+        offers = offers_for("de-cn-economy", item("Peking ab 449€ von Berlin",
                                                   cats=["Economy Class"]))
         self.assertEqual(offers, [])
         offers = offers_for("de-cn-economy", item("Peking ab 449€ von Frankfurt",

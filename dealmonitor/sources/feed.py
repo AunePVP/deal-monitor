@@ -1214,12 +1214,10 @@ def origin_ok(alert: Alert, info: ItemInfo) -> bool:
     if info.origin == "foreign":
         return bool(info.origin_codes & set(alert.origins))
     if info.origin == "home" and info.origin_codes:
-        if info.origin_codes & set(alert.origins):
-            return True
-        countries = {regions.country(c) for c in info.origin_codes} - {None}
-        alert_countries = {regions.country(c) for c in alert.origins} - {None}
-        if countries and alert_countries and not countries & alert_countries:
-            return False
+        # Abflug genannt (Stadt, Land oder Region): mindestens einer der Flughäfen muss zum
+        # Alarm gehören - "ab Berlin" passt nicht zum Alarm ab FRA/HAM/MUC/ZRH, "ab
+        # Deutschland" (alle deutschen Flughäfen) schon
+        return bool(info.origin_codes & set(alert.origins))
     return True
 
 

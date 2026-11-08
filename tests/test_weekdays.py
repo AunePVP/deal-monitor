@@ -295,6 +295,25 @@ class MigrationTest(unittest.TestCase):
                 self.assertEqual(st.get_alert("zrh-ham")["depart_weekdays"], [])
 
 
+class ChinaOriginsMigrationTest(unittest.TestCase):
+    def test_old_default_origins_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = Context(tmp, ROOT / "config" / "alerts.toml", env={})
+            ctx.seed()
+            new = ["FRA", "HAM", "MUC", "ZRH"]
+            with ctx.store() as st:
+                self.assertEqual(st.get_alert("de-cn-economy")["origins"], new)   # aus TOML
+                # alte Datenbank: Standard-Abflüge von früher, Business vom Nutzer geändert
+                st.update_alert({**st.get_alert("de-cn-economy"), "origins": ["@DE"]})
+                st.update_alert({**st.get_alert("de-cn-business"), "origins": ["BER"]})
+                st.kv_set("settings_version", 5)
+                self.assertEqual(migrate_settings(st), ["origins:de-cn-economy"])
+                self.assertEqual(st.get_alert("de-cn-economy")["origins"], new)
+                self.assertEqual(st.get_alert("de-cn-business")["origins"], ["BER"])
+                Alert(**st.get_alert("de-cn-economy"))
+                self.assertEqual(migrate_settings(st), [])       # genau einmal
+
+
 class ApiTest(tw.ServerTest):
     def test_create_update_validate(self):
         body = {"name": "Basel → Berlin", "origins": ["BSL"], "destinations": ["BER"],

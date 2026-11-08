@@ -410,7 +410,11 @@ def ensure_seeded(store: Store, path: str | Path) -> bool:
 
 
 #: Stand der gespeicherten Einstellungen; ältere Datenbanken werden einmal angepasst
-SETTINGS_VERSION = 5
+SETTINGS_VERSION = 6
+#: Standard-Alarme, die mit Version 6 nur noch ab Frankfurt, Hamburg, München und Zürich
+#: starten (nur, wenn die Abflughäfen noch dem alten Standard entsprechen)
+ORIGINS_V6 = {"de-cn-economy": (["@DE"], ["FRA", "HAM", "MUC", "ZRH"]),
+              "de-cn-business": (["@DE_HUBS"], ["FRA", "HAM", "MUC", "ZRH"])}
 #: Standard-Alarme, die mit Version 5 Wochentage bekommen: Hinflug ab Zürich Mi-Fr,
 #: Rückflug Sa-Mo (nur, wenn beide Felder noch nie gespeichert wurden)
 WEEKDAY_ALERTS_V5 = {"zrh-ham": ([2, 3, 4], [0, 5, 6]),
@@ -438,6 +442,9 @@ def migrate_settings(store: Store) -> list[str]:
 
     Version 4: die Standard-Alarme :data:`WEEKDAY_ALERTS_V5` bekommen ihre Wochentage (nur,
     wenn ``depart_weekdays`` und ``return_weekdays`` noch fehlen); ``rotation`` bleibt.
+
+    Version 5: die China-Alarme :data:`ORIGINS_V6` starten nur noch ab FRA, HAM, MUC und ZRH
+    (nur, wenn die Abflughäfen noch dem alten Standard entsprechen).
     Jeder Schritt läuft genau einmal (``settings_version``) - spätere Änderungen bleiben.
     """
     version = store.kv_get("settings_version") or 1
@@ -455,6 +462,13 @@ def migrate_settings(store: Store) -> list[str]:
                                     "return_weekdays": list(back)})
                 store.delete_cheapest(alert_id)     # Bestpreise anderer Tage passen nicht mehr
                 changes.append(f"weekdays:{alert_id}")
+    if version < 6:
+        for alert_id, (old, new) in ORIGINS_V6.items():
+            raw = store.get_alert(alert_id)
+            if isinstance(raw, dict) and list(raw.get("origins") or []) == old:
+                store.update_alert({**raw, "origins": list(new)})
+                store.delete_cheapest(alert_id)     # Bestpreise anderer Abflughäfen
+                changes.append(f"origins:{alert_id}")
     store.kv_set("settings_version", SETTINGS_VERSION)
     if changes:
         log.info("Einstellungen aus älterer Version übernommen: %s", ", ".join(changes))
