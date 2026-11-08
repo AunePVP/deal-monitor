@@ -701,11 +701,14 @@
     // Dauer eines Durchgangs (jeder Tag einmal) - hängt vom Google-Budget ab
     const h = num(c.cycle_hours) && c.cycle_hours > 0 ? c.cycle_hours : null;
     const cycle = !h ? "" : h <= 24 ? "täglich" : h <= 48 ? `alle ${Math.round(h)} Std.` : `alle ${(h / 24).toLocaleString("de-DE", { maximumFractionDigits: 1 })} Tage`;
-    if (short) return el("p", { class: "rotation-hint is-short" }, `Google prüft reihum jeden Abflugtag (${horizon} Tage${cycle ? `, ${cycle}` : ""})`);
+    // Wochentage gesetzt: nur die passenden Abflugtage (z. B. 36 von 42)
+    const which = c.weekdays ? "passende Abflugtag" : "Abflugtag";
+    const total = num(c.check_days) && c.check_days > 0 ? c.check_days : horizon;
+    if (short) return el("p", { class: "rotation-hint is-short" }, `Google prüft reihum jeden ${which} (${horizon} Tage${cycle ? `, ${cycle}` : ""})`);
     return el("p", { class: "rotation-hint" },
       c.no_deal_sites ? el("strong", null, "Aktuell meldet keine Deal-Seite diese Strecke. ") : null,
-      `Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten ${horizon} Tage wird reihum einzeln geprüft${cycle ? ` (jeder Tag ${cycle} einmal)` : ""}.`,
-      num(c.days) && c.days > 0 ? el("span", { class: "muted" }, ` Aktuell ${c.days} von ${horizon} Tagen mit Preis.`) : null);
+      `Abdeckung über die Google-Rotation: Jeder ${which} der nächsten ${horizon} Tage wird reihum einzeln geprüft${cycle ? ` (jeder Tag ${cycle} einmal)` : ""}.`,
+      num(c.days) && c.days > 0 ? el("span", { class: "muted" }, ` Aktuell ${c.days} von ${total} Tagen mit Preis.`) : null);
   }
 
   function renderDealFilters() {
@@ -918,6 +921,55 @@
     return o.length === 2 && d.length === 2 && o[0] !== o[1] && o.every((x) => d.includes(x));
   }
 
+  // ------------------------------------------------------------------ Wochentage (Mo = 0 … So = 6)
+  const WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+  const weekdayList = (v) => (Array.isArray(v) ? [...new Set(v.filter((d) => Number.isInteger(d) && d >= 0 && d <= 6))].sort((x, y) => x - y) : []);
+  /** Kurzform über das Wochenende hinweg: [2,3,4] -> "Mi–Fr", [0,5,6] -> "Sa–Mo", [0,2] -> "Mo, Mi". */
+  function weekdaysLabel(v) {
+    const days = weekdayList(v);
+    if (!days.length || days.length === 7) return "";
+    // Beginn nach der größten Lücke, damit Sa, So, Mo zusammenhängen
+    let start = 0, gap = -1;
+    days.forEach((d, i) => {
+      const g = (d - days[(i + days.length - 1) % days.length] + 7) % 7 || 7;
+      if (g > gap) { gap = g; start = i; }
+    });
+    const seq = [...days.slice(start), ...days.slice(0, start)];
+    const runs = [];
+    for (const d of seq) {
+      const last = runs[runs.length - 1];
+      if (last && (last[last.length - 1] + 1) % 7 === d) last.push(d); else runs.push([d]);
+    }
+    return runs.map((r) => (r.length >= 3 ? `${WEEKDAYS[r[0]]}–${WEEKDAYS[r[r.length - 1]]}` : r.map((d) => WEEKDAYS[d]).join(", "))).join(", ");
+  }
+  /** "Hin Mi–Fr · Rück Sa–Mo" (nur gesetzte Richtungen) oder "". */
+  function weekdaysText(a) {
+    const roundtrip = (a.trip || "roundtrip") === "roundtrip";
+    const hin = weekdaysLabel(a.depart_weekdays), back = weekdaysLabel(a.return_weekdays);
+    const parts = [];
+    if (hin) parts.push(`Hin ${hin}`);
+    if (back && (roundtrip || a.rotation || bothWays(a))) parts.push(`Rück ${back}`);
+    return parts.join(" · ");
+  }
+  /** Sieben Tages-Chips (Toggle) in ``box``; ``get()`` liefert die gewählten Tage. */
+  function weekdayChips(box) {
+    const buttons = WEEKDAYS.map((label, d) => el("button", {
+      type: "button", class: "chip chip-day", "aria-pressed": "false", dataset: { day: String(d) },
+      onclick: (e) => { const b = e.currentTarget; b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true")); },
+    }, label));
+    box.replaceChildren(...buttons);
+    return {
+      set(v) { const days = weekdayList(v); buttons.forEach((b, d) => b.setAttribute("aria-pressed", String(days.includes(d)))); },
+      get() { return buttons.flatMap((b, d) => (b.getAttribute("aria-pressed") === "true" ? [d] : [])); },
+    };
+  }
+  let chipsDepart = null, chipsReturn = null;
+  /** "Rückflug an" nur bei Hin/Rück oder Tagesrotation. */
+  function syncReturnRow() {
+    const trip = ($("input[name=trip]:checked") || {}).value || "roundtrip";
+    $("#f-return-weekdays-row").hidden = !(trip === "roundtrip" || $("#f-rotation").checked);
+  }
+
   function renderAlerts() {
     const list = $("#alert-list");
     if (!state.alerts.length && state.alertsError) {
@@ -985,6 +1037,7 @@
         typeof a.baseline_price === "number" ? el("li", null, el("span", { class: "fact-k" }, "Normalpreis"), el("span", { class: "fact-v" }, euro(a.baseline_price))) : null,
         el("li", null, el("span", { class: "fact-k" }, "Kabine"), el("span", { class: "fact-v" }, CABIN[a.cabin || "economy"] || a.cabin)),
         el("li", null, el("span", { class: "fact-k" }, "Reiseart"), el("span", { class: "fact-v" }, roundtrip ? "Hin- und Rückflug" : "one-way")),
+        weekdaysText(a) ? el("li", { class: "fact-weekdays" }, el("span", { class: "fact-k" }, "Tage"), el("span", { class: "fact-v" }, weekdaysText(a))) : null,
         el("li", null, el("span", { class: "fact-k" }, "Deals"), el("span", { class: `fact-v${a.active_deals ? " good" : ""}` }, dealsText))),
       rotationHint(a),
       alertBest(a),
@@ -1250,6 +1303,9 @@
     $("#f-keywords").value = (v.feed_keywords || []).map((g) => (Array.isArray(g) ? g : [g]).join(", ")).join("\n");
     $("#f-enabled").checked = v.enabled !== false;
     $("#f-rotation").checked = v.rotation === true;
+    chipsDepart.set(v.depart_weekdays);
+    chipsReturn.set(v.return_weekdays);
+    syncReturnRow();
 
     $("#alert-dialog").showModal();
     $("#f-name").focus();
@@ -1282,6 +1338,8 @@
         .map((line) => line.split(",").map((w) => w.trim()).filter(Boolean)).filter((g) => g.length),
       enabled: $("#f-enabled").checked,
       rotation: $("#f-rotation").checked,
+      depart_weekdays: chipsDepart.get(),
+      return_weekdays: chipsReturn.get(),
     });
     if (data.max_price === null && data.baseline_price === null) throw new Error("Bitte eine Preisgrenze und/oder einen Normalpreis angeben.");
     if (data.max_price !== null && data.max_price <= 0) throw new Error("Die Preisgrenze muss größer als 0 sein.");
@@ -1874,6 +1932,10 @@
     });
     $("#new-alert-btn").addEventListener("click", () => openAlertForm(null));
     $("#alert-form").addEventListener("submit", submitAlert);
+    chipsDepart = weekdayChips($("#f-depart-weekdays"));
+    chipsReturn = weekdayChips($("#f-return-weekdays"));
+    for (const r of $$("#alert-form input[name=trip]")) r.addEventListener("change", syncReturnRow);
+    $("#f-rotation").addEventListener("change", syncReturnRow);
     for (const b of $$("#alert-dialog [data-close]")) b.addEventListener("click", () => $("#alert-dialog").close());
     $("#mark-all-read-btn").addEventListener("click", () => markRead(null));
     $("#desktop-notify-btn").addEventListener("click", async () => {

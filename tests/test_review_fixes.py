@@ -357,7 +357,7 @@ class ExpiryTest(unittest.TestCase):
         tp = evaluate(ALERTS["zrh-ham"], Offer(source="travelpayouts", origin="ZRH",
                                                 destination="HAM", price=89, stops=0,
                                                 departure=date(2027, 1, 15),
-                                                return_date=date(2027, 1, 19)), [],
+                                                return_date=date(2027, 1, 17)), [],
                       today=date(2026, 11, 5))
         self.store.upsert_deal(tp, 0.05, now=old)
         self.assertEqual(self.store.expire_stale_articles(14), 1)

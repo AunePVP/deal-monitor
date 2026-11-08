@@ -12,7 +12,7 @@ Quellen der Demo (kein Netz):
   für die Ampel der Quellen-Gesundheit
 
 Die Google-Gegenprüfung ist an (wie im Betrieb): Für den erfundenen 89-€-Deal
-Zürich ⇄ Hamburg (15.–19.01.2027) antwortet die Demo mit einer Kopie der echten Seite, deren
+Zürich ⇄ Hamburg (Fr 15.–So 17.01.2027) antwortet die Demo mit einer Kopie der echten Seite, deren
 Bestpreis auf 92 € gesetzt ist - so zeigt die Demo eine "Google Flights bestätigt"-Karte.
 Alle anderen Gegenprüfungen bekommen "keine Flüge" und erscheinen als "nicht gegengeprüft".
 Diese Seite trägt zusätzlich ein erfundenes Google-Preisniveau ("niedrig", 62 Tage Verlauf).
@@ -46,7 +46,7 @@ FIXTURES = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
 DEMO_TODAY = date(2026, 11, 4)
 GOOGLE_FIXTURE = "google_flights_zrh_ham.html"
 #: Gegenprüfungen, die die Demo bestätigt: Suchanfrage -> (echter Bestpreis, Demo-Preis)
-DEMO_VERIFIED = {"Flights from ZRH to HAM on 2027-01-15 through 2027-01-19": ("168", "92")}
+DEMO_VERIFIED = {"Flights from ZRH to HAM on 2027-01-15 through 2027-01-17": ("168", "92")}
 NO_FLIGHTS_PAGE = ('<html><head><title>Google Flights</title></head><body>'
                    '<div>Für diese Suche wurden keine Flüge gefunden.</div></body></html>')
 

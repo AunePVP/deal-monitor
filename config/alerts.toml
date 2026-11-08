@@ -17,6 +17,9 @@
 #
 # rotation = true: Google Flights prüft jeden Abflugtag einzeln (siehe dealmonitor/rotation.py)
 #
+# depart_weekdays / return_weekdays: nur an diesen Wochentagen (0 = Mo … 6 = So, leer = alle).
+#   Hinflug = ab dem ersten Abflugort (Zuhause), Rückflug = zurück dorthin.
+#
 # feed_keywords: Stichwort-Gruppen für die Deal-Seiten (Feeds). Innerhalb einer Gruppe
 #   müssen alle Wörter vorkommen (UND), zwischen den Gruppen reicht eine (ODER).
 
@@ -49,6 +52,8 @@ max_stops = 1
 max_duration_hours = 6
 min_nights = 1
 max_nights = 21
+depart_weekdays = [2, 3, 4]    # Hinflug Mi, Do, Fr
+return_weekdays = [5, 6, 0]    # Rückflug Sa, So, Mo
 feed_keywords = [["Zürich", "Hamburg"]]
 
 [[alert]]
@@ -66,9 +71,9 @@ max_nights = 21
 feed_keywords = [["Hamburg", "Zürich"]]
 
 # Einzelflüge lohnen sich auf der Kurzstrecke oft - eigener Alarm, klar als one-way markiert.
-# rotation = true: Google Flights prüft reihum jeden Tag der nächsten 45 Tage einzeln (statt
-# zwei Terminen je Monat). Die Hin/Rück-Alarme oben bekommen daraus zusätzlich Angebote
-# "kombiniert aus 2 One-way".
+# rotation = true: Google Flights prüft reihum jeden passenden Tag der nächsten Wochen einzeln
+# (statt zwei Terminen je Monat): ZRH→HAM nur Mi/Do/Fr, HAM→ZRH nur Sa/So/Mo. Die Hin/Rück-
+# Alarme oben bekommen daraus zusätzlich Angebote "kombiniert aus 2 One-way".
 [[alert]]
 id = "zrh-ham-oneway"
 name = "Zürich ⇄ Hamburg one-way"
@@ -80,6 +85,8 @@ baseline_price = 95
 max_stops = 0
 months_ahead = 4
 rotation = true
+depart_weekdays = [2, 3, 4]
+return_weekdays = [5, 6, 0]
 
 
 # --- Deutschland → China ------------------------------------------------------

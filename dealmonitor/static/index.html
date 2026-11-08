@@ -380,6 +380,18 @@
         </div>
       </div>
 
+      <div class="field weekday-field">
+        <div class="weekday-row">
+          <span class="field-label" id="wd-depart-label">Hinflug an</span>
+          <div class="weekday-chips" id="f-depart-weekdays" role="group" aria-labelledby="wd-depart-label"></div>
+        </div>
+        <div class="weekday-row" id="f-return-weekdays-row">
+          <span class="field-label" id="wd-return-label">Rückflug an</span>
+          <div class="weekday-chips" id="f-return-weekdays" role="group" aria-labelledby="wd-return-label"></div>
+        </div>
+        <p class="help">Nur an diesen Wochentagen prüfen und melden. Keiner gewählt = alle Tage. Hinflug = ab dem ersten „Von“-Ort, Rückflug = zurück dorthin.</p>
+      </div>
+
       <div class="field">
         <label for="f-keywords">Stichwörter für die Deal-Seiten (Feeds)</label>
         <textarea id="f-keywords" name="feed_keywords" rows="3" placeholder="Zürich, Hamburg&#10;China, Business"></textarea>
@@ -388,7 +400,7 @@
 
       <label class="check">
         <input type="checkbox" id="f-rotation" name="rotation"> Jeden Tag einzeln prüfen
-        <span class="help-inline">(Google Flights prüft reihum jeden Abflugtag der nächsten 45 Tage als One-way – gut bei stark schwankenden Preisen)</span>
+        <span class="help-inline">(Google Flights prüft reihum jeden passenden Abflugtag der nächsten Wochen als One-way – gut bei stark schwankenden Preisen)</span>
       </label>
 
       <label class="check">

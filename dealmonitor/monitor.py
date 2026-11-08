@@ -215,7 +215,8 @@ ARTICLE_ROUTE = "artikel"
 CONFIRMED_SUFFIX = "|bestätigt"
 #: Felder eines Alarms, die die Bestpreise bestimmen (Preisgrenze/Normalpreis gehören nicht dazu)
 CHEAPEST_RULES = ("origins", "destinations", "trip", "cabin", "max_stops", "max_duration_hours",
-                  "min_nights", "max_nights", "exclude_airlines", "feed_keywords")
+                  "min_nights", "max_nights", "exclude_airlines", "feed_keywords",
+                  "depart_weekdays", "return_weekdays")
 
 
 def _entry(o: Offer, confirmed: bool, near: list[str] | None = None) -> dict:

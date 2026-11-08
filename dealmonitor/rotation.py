@@ -15,6 +15,9 @@ Tag der nächsten ``HORIZON_DAYS`` Tage einzeln als One-way, pro Lauf ein Stück
   Tage sowie Freitage und Sonntage in einem eigenen Kreis ein zweites Mal dran - der
   Grundkreis bleibt davon unberührt (sonst verschöbe die täglich schwankende Zahl der
   Zweitbesuche den Startpunkt und ließe Tage aus).
+* Wochentage des Alarms (``depart_weekdays`` ab Zuhause, ``return_weekdays`` zurück): nur
+  diese Tage kommen in den Kreis, der Horizont wird dafür auf ganze Wochen gekürzt
+  (:func:`horizon_for`) - weniger Einträge, kürzerer Durchgang, Länge bleibt fest.
 * ``per_run`` ist der Google-Anteil des Alarms (``GoogleFlightsSource.begin_run``) - die
   Rotation verdrängt also keine anderen Alarme. Kleines Budget = längerer Durchgang.
 
@@ -66,9 +69,30 @@ def routes_for(alert) -> list[tuple[str, str]]:
 
 
 def horizon_for(alert, scan_months: int) -> int:
-    """Tage voraus: ``HORIZON_DAYS``, höchstens so weit wie ``months_ahead`` reicht."""
+    """Tage voraus: ``HORIZON_DAYS``, höchstens so weit wie ``months_ahead`` reicht. Mit
+    Wochentagen (``depart_weekdays``/``return_weekdays``) auf ganze Wochen abgerundet (45 -> 42):
+    dann liegt jeder Wochentag gleich oft im Horizont und der Kreis behält seine feste Länge."""
     months = alert.months_ahead or scan_months or 1
-    return max(min(HORIZON_DAYS, months * 30), 1)
+    days = max(min(HORIZON_DAYS, months * 30), 1)
+    if getattr(alert, "has_weekdays", False) and days >= 7:
+        days -= days % 7
+    return days
+
+
+def route_weekdays(alert) -> dict[tuple[str, str], frozenset[int]]:
+    """Erlaubte Abflug-Wochentage je Strecke der Rotation (fehlt = alle Tage): ab Zuhause
+    ``depart_weekdays``, Gegenrichtung ``return_weekdays`` (``Alert.weekdays_for``)."""
+    out = {}
+    for route in routes_for(alert):
+        days = alert.weekdays_for(*route)
+        if days:
+            out[route] = days
+    return out
+
+
+def _allowed(route, day: date, weekdays) -> bool:
+    days = weekdays.get(route) if weekdays else None
+    return not days or day.weekday() in days
 
 
 def run_index(now: datetime, period_hours: float = PERIOD_HOURS) -> int:
@@ -79,16 +103,19 @@ def _is_extra(day: date, today: date) -> bool:
     return (day - today).days <= NEAR_DAYS or day.weekday() in EXTRA_WEEKDAYS
 
 
-def _rings(routes: list[tuple[str, str]], today: date,
-           horizon_days: int) -> tuple[list[tuple[str, str, date]], list[tuple[str, str, date]]]:
+def _rings(routes: list[tuple[str, str]], today: date, horizon_days: int,
+           weekdays=None) -> tuple[list[tuple[str, str, date]], list[tuple[str, str, date]]]:
     """(Grundkreis, Zweitbesuche): der Grundkreis enthält jeden (Strecke, Tag) genau einmal,
     Platz nach Kalenderdatum - seine Länge ist fest (Strecken × Horizont), ein Tageswechsel
-    verschiebt nichts. Zweitbesuche (nahe Tage, Fr/So) nach Datum; ihre Zahl schwankt täglich."""
+    verschiebt nichts. Zweitbesuche (nahe Tage, Fr/So) nach Datum; ihre Zahl schwankt täglich.
+    ``weekdays`` ({Strecke: Wochentage}, :func:`route_weekdays`): nur diese Tage der Strecke -
+    bei ganzen Wochen im Horizont bleibt die Länge fest (neuer Tag = gleicher Wochentag)."""
     routes = list(dict.fromkeys(routes))
     if not routes or horizon_days <= 0:
         return [], []
     days = [today + timedelta(days=i) for i in range(1, horizon_days + 1)]
-    base = sorted(((o, d, day) for day in days for o, d in routes),
+    base = sorted(((o, d, day) for day in days for o, d in routes
+                   if _allowed((o, d), day, weekdays)),
                   key=lambda x: (x[2].toordinal() % horizon_days, routes.index(x[:2])))
     extra = [x for x in sorted(base, key=lambda x: (x[2], routes.index(x[:2])))
              if _is_extra(x[2], today)]
@@ -96,11 +123,11 @@ def _rings(routes: list[tuple[str, str]], today: date,
 
 
 def items(routes: list[tuple[str, str]], today: date, horizon_days: int = HORIZON_DAYS, *,
-          capacity: int | None = None) -> list[tuple[str, str, date]]:
+          capacity: int | None = None, weekdays=None) -> list[tuple[str, str, date]]:
     """Der Kreis der Rotation: erst jeder (Strecke, Tag) einmal - Platz nach Kalenderdatum,
     damit ein Tageswechsel nichts verschiebt -, dann die Zweitbesuche (nahe Tage, Fr/So),
     soweit ``capacity`` (Abfragen je Durchgang) über einen Durchgang hinaus reicht."""
-    base, extra = _rings(routes, today, horizon_days)
+    base, extra = _rings(routes, today, horizon_days, weekdays)
     if capacity is not None:
         extra = extra[:max(capacity - len(base), 0)]
     return base + extra
@@ -135,8 +162,8 @@ def _take(picked: list, ring: list, start: int, count: int) -> int:
 
 def slice_for_run(now: datetime, routes: list[tuple[str, str]], horizon_days: int = HORIZON_DAYS,
                   per_run: int = PER_RUN, *, today: date | None = None,
-                  period_hours: float = PERIOD_HOURS,
-                  index: int | None = None) -> list[tuple[str, str, date]]:
+                  period_hours: float = PERIOD_HOURS, index: int | None = None,
+                  weekdays=None) -> list[tuple[str, str, date]]:
     """Die Abfragen dieses Laufs (ohne Doppelte, nach Datum sortiert). ``n`` = ``index``, ohne
     Angabe aus der Uhrzeit (:func:`run_index`).
 
@@ -147,7 +174,7 @@ def slice_for_run(now: datetime, routes: list[tuple[str, str]], horizon_days: in
     if per_run <= 0:
         return []
     today = today or now.date()
-    base, extra = _rings(routes, today, horizon_days)
+    base, extra = _rings(routes, today, horizon_days, weekdays)
     if not base:
         return []
     order = list(dict.fromkeys(routes))
@@ -167,10 +194,20 @@ def slice_for_run(now: datetime, routes: list[tuple[str, str]], horizon_days: in
     return sorted(picked, key=lambda x: (x[2], order.index(x[:2])))
 
 
+def ring_size(routes, horizon_days: int, weekdays=None) -> int:
+    """Einträge im Grundkreis: je Strecke die (passenden) Tage im Horizont."""
+    size = 0
+    for route in set(routes):
+        days = weekdays.get(route) if weekdays else None
+        weeks, rest = divmod(max(horizon_days, 0), 7)     # ganze Wochen: exakt
+        size += weeks * 7 + rest if not days else weeks * len(days) + min(rest, len(days))
+    return size
+
+
 def cycle_hours(routes, horizon_days: int, per_run: int,
-                period_hours: float = PERIOD_HOURS) -> float:
+                period_hours: float = PERIOD_HOURS, weekdays=None) -> float:
     """So lange dauert ein Durchgang (jeder Tag einmal) bei ``per_run`` Abfragen je Lauf."""
-    size = len(set(routes)) * max(horizon_days, 0)
+    size = ring_size(routes, horizon_days, weekdays)
     b = base_share(size, per_run, period_hours)
     if b <= 0:
         return float("inf")
@@ -184,12 +221,57 @@ def report_hours(cycle: float, period_hours: float = PERIOD_HOURS) -> float:
     return min(max(MIN_KEEP_HOURS, cycle + max(period_hours, 0)), MAX_KEEP_HOURS)
 
 
+# -- Wochentage im normalen Google-Scan (zwei Termine je Monat) -----------------------
+#: Vorrang der Wochentage, wenn mehr als zwei erlaubt sind (wie bisher: Freitag, Dienstag)
+SCAN_PREFERENCE = (4, 1, 2, 3, 0, 6, 5)
+
+
+def scan_dates_on(year: int, month: int, today: date, weekdays, *,
+                  min_lead_days: int = 2) -> list[date]:
+    """Wie ``googleflights.scan_dates`` (zwei Termine um die Monatsmitte), aber nur an
+    ``weekdays``: die zwei bevorzugten erlaubten Wochentage (:data:`SCAN_PREFERENCE`), bei nur
+    einem erlaubten Tag dieser in zwei aufeinanderfolgenden Wochen."""
+    wanted = [w for w in SCAN_PREFERENCE if w in weekdays][:2]
+    if len(wanted) == 1:
+        wanted = [wanted[0], wanted[0]]
+    out: list[date] = []
+    anchor = date(year, month, 12)
+    for k, weekday in enumerate(wanted):
+        day = anchor + timedelta(days=(weekday - anchor.weekday()) % 7)
+        while day.month == month and (day < today + timedelta(days=min_lead_days) or day in out):
+            day += timedelta(days=7)
+        if day.month == month and day.year == year:
+            out.append(day)
+    return sorted(out)
+
+
+def return_on(departure: date, nights: int, weekdays, min_nights: int | None = None,
+              max_nights: int | None = None) -> date | None:
+    """Rückflug zum Hinflug ``departure``: ``nights`` Nächte später, ohne ``weekdays`` genau so;
+    sonst die nächstgelegene Nächte-Zahl in ``min_nights..max_nights`` (Standard 1..30), deren
+    Rückflug auf einen erlaubten Wochentag fällt (Fr -> So statt Fr -> Fr). None = keine passt."""
+    if not weekdays:
+        return departure + timedelta(days=nights)
+    lo = 1 if min_nights is None else max(min_nights, 1)
+    hi = max(30, nights) if max_nights is None else max_nights
+    fits = [n for n in range(lo, hi + 1) if (departure + timedelta(days=n)).weekday() in weekdays]
+    if not fits:
+        return None
+    return departure + timedelta(days=min(fits, key=lambda n: (abs(n - nights), -n)))
+
+
 # -- Kombination ----------------------------------------------------------------------
 def combine(outbound: dict[date, dict], inbound: dict[date, dict], min_nights: int | None = None,
-            max_nights: int | None = None) -> list[tuple[date, date, dict, dict]]:
+            max_nights: int | None = None, *, depart_weekdays=None,
+            return_weekdays=None) -> list[tuple[date, date, dict, dict]]:
     """Hin/Rück aus zwei One-ways: je Hinflug-Tag der günstigste Rückflug im Abstand
     ``min_nights..max_nights`` (Standard 1..30). Eingabe: Tag -> Zeile mit ``price``.
+    ``depart_weekdays``/``return_weekdays``: nur diese Wochentage (leer/None = alle).
     Rückgabe: ``[(hin_tag, rück_tag, hin, rück)]`` nach Gesamtpreis sortiert."""
+    if depart_weekdays:
+        outbound = {k: v for k, v in outbound.items() if k.weekday() in depart_weekdays}
+    if return_weekdays:
+        inbound = {k: v for k, v in inbound.items() if k.weekday() in return_weekdays}
     # mindestens 1 Nacht: Uhrzeiten kennt das Gedächtnis nicht (Rückflug vor dem Hinflug?)
     lo = 1 if min_nights is None else max(min_nights, 1)
     hi = 30 if max_nights is None else max_nights

@@ -147,7 +147,7 @@ class TravelpayoutsTest(unittest.TestCase):
         src = TravelpayoutsSource(token="x", marker="12345")
         o = src.parse_v3(rows[0], alert())
         self.assertEqual((o.origin, o.destination, o.price, o.stops), ("ZRH", "HAM", 89, 0))
-        self.assertEqual(o.nights, 4)
+        self.assertEqual(o.nights, 2)
         self.assertTrue(o.link.startswith("https://www.aviasales.com/search/"))
         self.assertIn("marker=12345", o.link)
 

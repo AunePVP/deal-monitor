@@ -605,7 +605,8 @@ class RotationCoverTest(unittest.TestCase):
             mem.put("ZRH", "HAM", "economy", TODAY + timedelta(days=n), [row], None,
                     datetime(2026, 11, 4, 11))
         self.assertEqual(self.cover(self.alert(months_ahead=1), mem),
-                         {"horizon_days": 30, "days": 30, "cycle_hours": None, "no_deal_sites": True})
+                         {"horizon_days": 30, "days": 30, "check_days": 30, "weekdays": False,
+                          "cycle_hours": None, "no_deal_sites": True})
 
     def test_api_respects_google_setting(self):
         with tempfile.TemporaryDirectory() as tmp:

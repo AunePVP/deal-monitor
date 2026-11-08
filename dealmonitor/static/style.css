@@ -250,6 +250,12 @@ main:focus-visible { outline: none; }   /* Fokus nach Seitenwechsel (Screenreade
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 .chip[aria-pressed="true"] .chip-count { background: rgba(255, 255, 255, .25); color: inherit; }
 .chip-small { min-height: 32px; padding: 4px 10px; font-size: 13px; }
+/* Wochentage im Alarm-Formular: 7 kleine Toggle-Chips je Zeile */
+.weekday-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 8px; }
+.weekday-row[hidden] { display: none; }
+.weekday-row .field-label { min-width: 92px; margin: 0; }
+.weekday-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-day { min-height: 34px; min-width: 40px; padding: 4px 8px; justify-content: center; font-size: 13px; }
 /* Radar-Chip: Amber-Punkt, gedrückt in Amber */
 .chip[data-id="radar"]::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--radar); }
 .chip[data-id="radar"][aria-pressed="true"] { background: var(--radar-bg); border-color: var(--radar-bg); color: #fff; }

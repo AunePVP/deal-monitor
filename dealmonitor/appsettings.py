@@ -409,7 +409,11 @@ def ensure_seeded(store: Store, path: str | Path) -> bool:
 
 
 #: Stand der gespeicherten Einstellungen; ältere Datenbanken werden einmal angepasst
-SETTINGS_VERSION = 4
+SETTINGS_VERSION = 5
+#: Standard-Alarme, die mit Version 5 Wochentage bekommen: Hinflug ab Zürich Mi-Fr,
+#: Rückflug Sa-Mo (nur, wenn beide Felder noch nie gespeichert wurden)
+WEEKDAY_ALERTS_V5 = {"zrh-ham": ([2, 3, 4], [0, 5, 6]),
+                     "zrh-ham-oneway": ([2, 3, 4], [0, 5, 6])}
 #: Standard-Alarme, die mit Version 4 die Google-Tagesrotation bekommen (``rotation.py``)
 ROTATION_ALERTS_V4 = ("zrh-ham-oneway",)
 #: Deal-Seiten, die mit Version 3 neu und standardmäßig an sind: wer seine Auswahl schon
@@ -430,12 +434,35 @@ def migrate_settings(store: Store) -> list[str]:
 
     Version 3: die Standard-Alarme :data:`ROTATION_ALERTS_V4` kennen ``rotation`` noch nicht ->
     einmal einschalten (nur, wenn das Feld noch fehlt).
+
+    Version 4: die Standard-Alarme :data:`WEEKDAY_ALERTS_V5` bekommen ihre Wochentage (nur,
+    wenn ``depart_weekdays`` und ``return_weekdays`` noch fehlen); ``rotation`` bleibt.
+    Jeder Schritt läuft genau einmal (``settings_version``) - spätere Änderungen bleiben.
     """
-    from .sources.feed import PRESETS_BY_ID, normalize_link
     version = store.kv_get("settings_version") or 1
     if version >= SETTINGS_VERSION:
         return []
     changes = []
+    if version < 4:
+        _migrate_v1_to_v4(store, changes)
+    if version < 5:
+        for alert_id, (depart, back) in WEEKDAY_ALERTS_V5.items():
+            raw = store.get_alert(alert_id)
+            if (isinstance(raw, dict) and "depart_weekdays" not in raw
+                    and "return_weekdays" not in raw):
+                store.update_alert({**raw, "depart_weekdays": list(depart),
+                                    "return_weekdays": list(back)})
+                store.delete_cheapest(alert_id)     # Bestpreise anderer Tage passen nicht mehr
+                changes.append(f"weekdays:{alert_id}")
+    store.kv_set("settings_version", SETTINGS_VERSION)
+    if changes:
+        log.info("Einstellungen aus älterer Version übernommen: %s", ", ".join(changes))
+    return changes
+
+
+def _migrate_v1_to_v4(store: Store, changes: list[str]) -> None:
+    """Schritte bis Version 4 (siehe :func:`migrate_settings`)."""
+    from .sources.feed import PRESETS_BY_ID, normalize_link
     saved = store.kv_get("feed_presets")
     if isinstance(saved, list):
         added = [p for p in NEW_PRESETS_V3 if p in PRESETS_BY_ID and p not in saved]
@@ -462,10 +489,6 @@ def migrate_settings(store: Store) -> list[str]:
         if isinstance(raw, dict) and "rotation" not in raw:
             store.update_alert({**raw, "rotation": True})
             changes.append(f"rotation:{alert_id}")
-    store.kv_set("settings_version", SETTINGS_VERSION)
-    if changes:
-        log.info("Einstellungen aus älterer Version übernommen: %s", ", ".join(changes))
-    return changes
 
 
 # -- Laufzeit-Kontext -------------------------------------------------------------

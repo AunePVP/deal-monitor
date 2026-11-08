@@ -35,7 +35,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from statistics import median
 
 from . import hubs, regions, rotation
-from .models import Alert, Deal, Offer
+from .models import WEEKDAY_NAMES, Alert, Deal, Offer, weekday_text
 
 CABIN_LABEL = {
     "economy": "Economy",
@@ -278,7 +278,26 @@ def quality_problems(alert: Alert, offer: Offer, today: date | None = None) -> l
             problems.append(f"{nights} Nächte (max. {alert.max_nights})")
     if offer.airline and offer.airline.upper() in alert.exclude_airlines:
         problems.append(f"Airline {offer.airline} ausgeschlossen")
+    problems += weekday_problems(alert, offer)
     return problems
+
+
+def weekday_problems(alert: Alert, offer: Offer) -> list[str]:
+    """Abflug/Rückflug nicht an den gewünschten Wochentagen (``depart_weekdays``,
+    ``return_weekdays``) - nur bei bekanntem Datum; Artikel der Deal-Seiten bleiben unberührt."""
+    if offer.title or not alert.has_weekdays or not (offer.origin and offer.destination):
+        return []
+    legs = [(offer.departure, offer.origin, offer.destination)]
+    if offer.roundtrip:
+        legs.append((offer.return_date, offer.destination, offer.origin))
+    out = []
+    for day, o, d in legs:
+        allowed = alert.weekdays_for(o, d) if day else None
+        if allowed and day.weekday() not in allowed:
+            label = "Abflug" if alert.leg_kind(o, d) == "depart" else "Rückflug"
+            out.append(f"{label} {WEEKDAY_NAMES[day.weekday()]} – nur {weekday_text(allowed)} "
+                       "gewünscht")
+    return out
 
 
 def headline(alert: Alert, offer: Offer) -> str:

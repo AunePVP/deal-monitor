@@ -9,7 +9,7 @@ import unicodedata
 from dataclasses import MISSING, dataclass, field, fields
 from pathlib import Path
 
-from .models import Alert
+from .models import Alert, weekday_list
 
 
 @dataclass
@@ -126,6 +126,7 @@ FIELD_LABELS = {
     "max_stops": "Max. Umstiege", "max_duration_hours": "Max. Flugdauer",
     "min_nights": "Nächte von", "max_nights": "Nächte bis", "months_ahead": "Monate voraus",
     "exclude_airlines": "Ausgeschlossene Airlines", "feed_keywords": "Stichwörter",
+    "depart_weekdays": "Hinflug an", "return_weekdays": "Rückflug an",
 }
 
 
@@ -272,6 +273,8 @@ def normalize_alert(data: dict, existing: dict | None = None) -> dict:
         raise ValueError("'enabled' muss true oder false sein")
     if not isinstance(out["rotation"], bool):
         raise ValueError("„Jeden Tag prüfen“ muss true oder false sein")
+    for key in ("depart_weekdays", "return_weekdays"):
+        out[key] = weekday_list(out.get(key), _label(key))
     for key in ("trip", "cabin"):
         if not isinstance(out[key], str):
             raise ValueError(f"'{key}' muss ein Text sein")

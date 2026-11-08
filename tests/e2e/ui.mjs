@@ -457,8 +457,8 @@ async function desktopFlows(browser) {
     const hint = norm(await rotCard.locator(".rotation-hint").textContent());
     // Travel-Dealz meldet Hamburg → Zürich in der Demo -> kein „keine Deal-Seite“
     assert(!/Deal-Seite/.test(hint), `Widersprüchlicher Hinweis: ${hint}`);
-    assert(/^Abdeckung über die Google-Rotation: Jeder Abflugtag der nächsten 45 Tage wird reihum einzeln geprüft( \(jeder Tag (täglich|alle [0-9,]+ (Std\.|Tage)) einmal\))?\./.test(hint), `Rotations-Hinweis: ${hint}`);
-    assert(/Aktuell \d+ von 45 Tagen mit Preis/.test(hint), `Rotations-Stand fehlt: ${hint}`);
+    assert(/^Abdeckung über die Google-Rotation: Jeder passende Abflugtag der nächsten 42 Tage wird reihum einzeln geprüft( \(jeder Tag (täglich|alle [0-9,]+ (Std\.|Tage)) einmal\))?\./.test(hint), `Rotations-Hinweis: ${hint}`);
+    assert(/Aktuell \d+ von 36 Tagen mit Preis/.test(hint), `Rotations-Stand fehlt: ${hint}`);
     assert(await card.locator(".rotation-hint").count() === 0, "Rotations-Hinweis bei China");
     await noHScroll(page, "Alarme mit Beinahe-Deals");
   });
@@ -727,6 +727,47 @@ async function desktopFlows(browser) {
     assert(a.baseline_price === null || a.baseline_price === undefined, `Normalpreis nicht geleert: ${a.baseline_price}`);
     assert(a.min_nights === 5, "Andere Felder verloren");
     assert(a.rotation === true, "Tagesrotation nicht gespeichert");
+  });
+
+  await step("Wochentage: Tages-Chips setzen, speichern, Karte zeigt sie", async () => {
+    // Standard aus der TOML: Zürich → Hamburg nur Hin Mi–Fr, Rück Sa–Mo
+    const zrh = await alertCard(page, "Zürich → Hamburg (und zurück)");
+    assert(/Hin Mi–Fr · Rück Sa–Mo/.test(norm(await zrh.textContent())), `Wochentage fehlen: ${norm(await zrh.textContent())}`);
+    const card = await alertCard(page, "Wien → Peking");
+    assert(!/Hin |Rück /.test(norm(await card.locator(".facts").textContent())), "Wochentage ungefragt gesetzt");
+    await card.locator("button:has-text('Bearbeiten')").click();
+    await page.waitForSelector("#alert-dialog[open]");
+    const pressed = (box) => page.$$eval(`${box} button[aria-pressed=true]`, (els) => els.map((e) => e.textContent));
+    assert((await pressed("#f-depart-weekdays")).length === 0, "Hinflug-Chips nicht leer");
+    assert(await page.isVisible("#f-return-weekdays-row"), "Rückflug-Zeile fehlt bei Hin/Rück");
+    await page.click("#f-depart-weekdays button[data-day='3']");
+    await page.click("#f-depart-weekdays button[data-day='4']");
+    await page.click("#f-depart-weekdays button[data-day='0']");
+    await page.click("#f-depart-weekdays button[data-day='0']");   // wieder ab
+    for (const d of ["5", "6", "0"]) await page.click(`#f-return-weekdays button[data-day='${d}']`);
+    // one-way ohne Rotation: Rückflug-Zeile ausgeblendet, Hin/Rück: wieder da
+    await page.uncheck("#f-rotation");
+    await page.click("label:has(input[name=trip][value=oneway]) span");
+    assert(await page.isHidden("#f-return-weekdays-row"), "Rückflug-Zeile bei one-way sichtbar");
+    await page.check("#f-rotation");
+    assert(await page.isVisible("#f-return-weekdays-row"), "Rückflug-Zeile bei Rotation unsichtbar");
+    await page.click("label:has(input[name=trip][value=roundtrip]) span");
+    await shot(page, "desktop-form-weekdays", false);
+    await page.click("#alert-save");
+    await page.waitForSelector("#alert-dialog[open]", { state: "detached" });
+    await waitToast(page, /gespeichert/);
+    const a = (await api("GET", "/api/alerts")).alerts.find((x) => x.name === "Wien → Peking");
+    assert(JSON.stringify(a.depart_weekdays) === "[3,4]" && JSON.stringify(a.return_weekdays) === "[0,5,6]",
+      `Wochentage: ${JSON.stringify([a.depart_weekdays, a.return_weekdays])}`);
+    assert(a.trip === "roundtrip" && a.rotation === true, "Reiseart/Rotation verändert");
+    const c2 = await alertCard(page, "Wien → Peking");
+    await waitFor(async () => /Hin Do, Fr · Rück Sa–Mo/.test(norm(await c2.textContent())), { msg: "Karte zeigt die Wochentage nicht" });
+    await c2.locator("button:has-text('Bearbeiten')").click();
+    await page.waitForSelector("#alert-dialog[open]");
+    assert(JSON.stringify(await pressed("#f-depart-weekdays")) === '["Do","Fr"]', `Vorbelegung Hin: ${await pressed("#f-depart-weekdays")}`);
+    assert(JSON.stringify(await pressed("#f-return-weekdays")) === '["Mo","Sa","So"]', `Vorbelegung Rück: ${await pressed("#f-return-weekdays")}`);
+    await page.click("#alert-dialog .dialog-foot [data-close]");
+    await page.waitForSelector("#alert-dialog[open]", { state: "detached" });
   });
 
   await step("Deutsche Zahlen und Airline-Codes im Formular", async () => {

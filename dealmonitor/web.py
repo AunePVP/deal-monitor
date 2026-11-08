@@ -25,7 +25,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 from . import __version__, health, notify, principles, radar, regions, rotation
 from .appsettings import SOURCE_LABELS, SOURCE_NAMES, Context
-from .config import normalize_alert, slugify
+from .config import ALERT_DEFAULTS, normalize_alert, slugify
 from .models import Alert
 from .monitor import CHEAPEST_RULES, VERIFIED_PREFIX
 from .report import _gf_link, _merge_articles, is_article
@@ -148,8 +148,8 @@ def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
                   google: bool = True, reported: set[frozenset] | None = None) -> dict | None:
     """Abdeckung eines Alarms durch die Google-Tagesrotation: der Alarm rotiert selbst oder ist
     ein Hin/Rück-Alarm, dessen Strecken ein aktiver Rotations-Alarm (gleiche Kabine) abdeckt
-    (Kombinationen aus 2 One-ways). ``days`` = Abflugtage im Horizont mit aktuellem Preis im
-    Gedächtnis. Pausierter Alarm oder Google Flights abgewählt (``google``) -> None.
+    (Kombinationen aus 2 One-ways). ``days`` = (passende) Abflugtage im Horizont mit aktuellem
+    Preis im Gedächtnis, ``check_days`` = passende Abflugtage im Horizont (Wochentage). Pausierter Alarm oder Google Flights abgewählt (``google``) -> None.
     ``no_deal_sites``: Strecke aus :data:`NO_DEAL_SITE_ROUTES`, für die gerade auch kein Artikel
     einer Deal-Seite vorliegt (``reported``, siehe :func:`deal_site_routes`)."""
     routes = rotation.routes_for(alert)
@@ -163,9 +163,15 @@ def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
     horizon = rotation.horizon_for(source, scan_months)
     last = today + timedelta(days=horizon)
     days: set[date] = set()
+    wanted: set[date] = set()       # passende Abflugtage im Horizont (Wochentage des Alarms)
     for o, d in routes:
+        allowed = alert.weekdays_for(o, d)
+        fits = (lambda day, allowed=allowed: not allowed or day.weekday() in allowed)
+        wanted |= {today + timedelta(days=i) for i in range(1, horizon + 1)
+                   if fits(today + timedelta(days=i))}
         try:
-            days |= {day for day in memory.get(o, d, alert.cabin, today, now) if day <= last}
+            days |= {day for day in memory.get(o, d, alert.cabin, today, now)
+                     if day <= last and fits(day)}
         except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
             log.exception("Google-Rotation: Gedächtnis nicht lesbar")
     airports = {c for pair in alert.pairs for c in pair}
@@ -174,7 +180,8 @@ def rotation_json(alert: Alert, alerts: list[Alert], memory: rotation.Memory, *,
         cycle = memory.cycle_hours(source.id)
     except Exception:  # noqa: BLE001 - Zusatzinfo, nie fatal
         cycle = None
-    return {"horizon_days": horizon, "days": len(days), "cycle_hours": cycle,
+    return {"horizon_days": horizon, "days": len(days), "check_days": len(wanted),
+            "weekdays": alert.has_weekdays, "cycle_hours": cycle,
             "no_deal_sites": any(airports <= r and not any(p <= r for p in reported)
                                  for r in NO_DEAL_SITE_ROUTES)}
 
@@ -617,7 +624,7 @@ class Handler(BaseHTTPRequestHandler):
         store.update_alert(raw)
         # Andere Regeln (Strecken, Kabine, Umstiege …) -> alte Bestpreise passen nicht mehr;
         # Preisgrenze/Normalpreis spielen für Bestpreise keine Rolle
-        if any(raw.get(k) != existing.get(k) for k in CHEAPEST_RULES):
+        if any(raw.get(k) != existing.get(k, ALERT_DEFAULTS.get(k)) for k in CHEAPEST_RULES):
             store.delete_cheapest(id)
         return 200, {"alert": alert_json(raw, store.deal_stats(), self._cheapest(store, id))}
 

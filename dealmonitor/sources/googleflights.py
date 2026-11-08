@@ -888,7 +888,9 @@ class GoogleFlightsSource:
     # -- Scan (Source-Protokoll) --------------------------------------------
     def plan(self, alert: Alert) -> list[tuple[str, str, date, date | None]]:
         """Abfragen für einen Alarm: Strecken zufällig, Monate nah -> fern, 2 Termine je Monat.
-        Mit ``alert.rotation``: das Stück der Tagesrotation für diesen Lauf (One-ways)."""
+        Mit ``alert.rotation``: das Stück der Tagesrotation für diesen Lauf (One-ways).
+        Wochentage des Alarms: Abflug nur an ``depart_weekdays``, Rückflug auf einem Tag aus
+        ``return_weekdays`` innerhalb min/max_nights (``rotation.scan_dates_on``/``return_on``)."""
         if alert.rotation:
             return self._rotation_plan(alert)
         today = self.today or date.today()
@@ -898,9 +900,18 @@ class GoogleFlightsSource:
         out = []
         for origin, dest in pairs:
             nights = stay_nights(alert, origin, dest)
+            out_days = alert.weekdays_for(origin, dest)
+            back_days = alert.weekdays_for(dest, origin)
             for y, m in months:
-                for dep in scan_dates(y, m, today):
-                    ret = dep + timedelta(days=nights) if alert.roundtrip else None
+                days = (rotation.scan_dates_on(y, m, today, out_days) if out_days
+                        else scan_dates(y, m, today))
+                for dep in days:
+                    ret = None
+                    if alert.roundtrip:
+                        ret = rotation.return_on(dep, nights, back_days, alert.min_nights,
+                                                 alert.max_nights)
+                        if ret is None:
+                            continue
                     out.append((origin, dest, dep, ret))
         return out
 
@@ -1000,7 +1011,8 @@ class GoogleFlightsSource:
             rotation.PER_RUN if share is None else share, today=self.today or date.today(),
             period_hours=self.period_hours,
             index=self.memory.run_number(alert.id, self._now(), self.period_hours,
-                                         advance=self.advance_rotation))
+                                         advance=self.advance_rotation),
+            weekdays=rotation.route_weekdays(alert))
         return [(o, d, day, None) for o, d, day in picked]
 
     @property
@@ -1025,7 +1037,7 @@ class GoogleFlightsSource:
         if self.advance_rotation:
             cycle = rotation.cycle_hours(rotation.routes_for(alert),
                                          rotation.horizon_for(alert, self.scan_months), per_run,
-                                         self.period_hours)
+                                         self.period_hours, rotation.route_weekdays(alert))
             mem.set_cycle(alert.id, cycle)
             self._keep_hours = max(self._keep_hours,
                                    rotation.report_hours(cycle, self.period_hours))
@@ -1048,8 +1060,9 @@ class GoogleFlightsSource:
         last = today + timedelta(days=rotation.horizon_for(alert, self.scan_months))
         out: list[Offer] = []
         for o, d in alert.pairs:
+            allowed = alert.weekdays_for(o, d)
             for day, entry in sorted(self.memory.get(o, d, alert.cabin, today, now).items()):
-                if (o, d, day) in fresh or day > last:
+                if (o, d, day) in fresh or day > last or (allowed and day.weekday() not in allowed):
                     continue
                 recalled = self.to_offers(entry["rows"], alert, o, d, day, None,
                                           search_urls(o, d, day, None, alert.cabin, False)[0],
@@ -1082,7 +1095,9 @@ class GoogleFlightsSource:
             there = self._legs(o, d, alert, today, now)
             back = self._legs(d, o, alert, today, now) if there else {}
             for dep, ret, a, b in rotation.combine(there, back, alert.min_nights,
-                                                   alert.max_nights):
+                                                   alert.max_nights,
+                                                   depart_weekdays=alert.weekdays_for(o, d),
+                                                   return_weekdays=alert.weekdays_for(d, o)):
                 out.append(self._combo(alert, o, d, dep, ret, a, b))
         return out
 

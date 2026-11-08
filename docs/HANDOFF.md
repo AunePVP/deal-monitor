@@ -27,6 +27,7 @@ und ab **„Nächste Schritte“** weitermachen. Nicht fragen – der Nutzer hat
 - Runde-3-Review (07.11.): 4 Prüfer (Parser live, Alarm-Logik, Betrieb+Google, Web/Sicherheit) → 25 Funde, 24 behoben
   (Tests `tests/test_review_runde3.py`, `tests/test_review3_google.py`). Offen bewusst: erneuter Push nach Kanal-Ausfall
   (bräuchte Zustellstatus je Kanal). Rotation: 45 Tage voraus (08.11. auf Wunsch von 90 reduziert), mit 40 Abfragen/Lauf ca. 45 h je Durchgang – UI nennt die echte Dauer.
+- Wochentage je Alarm (08.11.): `depart_weekdays`/`return_weekdays` (0 = Mo, leer = alle; Hinflug = ab `origins[0]`). ZRH⇄HAM: Hin Mi–Fr, Rück Sa–Mo (TOML + einmalige Migration `settings_version` 5, `rotation` unberührt). Wirkt auf Google-Planung (2 Termine/Monat, Rückflug auf passendem Tag), Rotation (Horizont auf ganze Wochen: 42 Tage, 36 statt 90 Einträge → ca. 24 h je Durchgang bei 40 Abfragen), Kombis, Regel-Filter (Grund z. B. „Abflug Dienstag – nur Mi/Do/Fr gewünscht“) und Bestpreise; Artikel ohne Datum unberührt. Tests `tests/test_weekdays.py`.
 - Docker-Image lokal gebaut (healthy, PUID/PGID 99/100), Migration einer `main`-DB (Runde 1) mit eigenem Alarm geprüft.
 - Zeitfestigkeit: Suite mit +7 Tagen vorgestellter Uhr grün. Rotationstests rechnen relativ zu heute; Feed-Fixtures über `feed.utcnow`/`fresh()`. Die CI baut das Image nur mit grünen Tests.
 

@@ -9,6 +9,42 @@ from datetime import date, datetime
 from . import regions
 
 
+WEEKDAY_SHORT = ("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
+WEEKDAY_NAMES = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")
+
+
+def weekday_list(value, where: str = "Wochentage") -> list[int]:
+    """Wochentage prüfen: Liste aus 0-6 (Mo = 0), sortiert ohne Doppelte; None = leer."""
+    if value is None:
+        return []
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{where}: bitte eine Liste von Wochentagen 0–6 (Mo = 0)")
+    out = set()
+    for v in value:
+        if isinstance(v, str) and v.strip().isdigit():
+            v = int(v.strip())
+        if isinstance(v, bool) or not isinstance(v, int) or not 0 <= v <= 6:
+            raise ValueError(f"{where}: Wochentage müssen Zahlen von 0 (Mo) bis 6 (So) sein")
+        out.add(v)
+    return sorted(out)
+
+
+def weekday_order(days) -> list[int]:
+    """Wochentage in Wochenfolge, über das Wochenende hinweg zusammenhängend:
+    {0, 5, 6} -> [5, 6, 0] (Sa, So, Mo)."""
+    days = sorted(set(days))
+    if len(days) < 2:
+        return days
+    gaps = [(days[i] - days[i - 1]) % 7 for i in range(len(days))]
+    start = max(range(len(days)), key=lambda i: (gaps[i], -i))
+    return days[start:] + days[:start]
+
+
+def weekday_text(days) -> str:
+    """"Mi/Do/Fr" bzw. "Sa/So/Mo" - für Ablehnungsgründe."""
+    return "/".join(WEEKDAY_SHORT[d] for d in weekday_order(days))
+
+
 @dataclass
 class Alert:
     """Ein Deal-Alarm, z. B. "Zürich ⇄ Hamburg unter 120 €"."""
@@ -32,6 +68,10 @@ class Alert:
     enabled: bool = True
     #: Google Flights prüft reihum jeden Abflugtag einzeln (one-way), siehe ``rotation.py``
     rotation: bool = False
+    #: Wochentage (0 = Montag … 6 = Sonntag), leer = alle Tage: Abflug ab Zuhause
+    #: (``origins[0]``) bzw. Rückflug dorthin - siehe :meth:`weekdays_for`
+    depart_weekdays: list[int] = field(default_factory=list)
+    return_weekdays: list[int] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         self.origins = regions.expand(self.origins)
@@ -47,6 +87,28 @@ class Alert:
         self.exclude_airlines = [a.upper() for a in self.exclude_airlines]
         if not isinstance(self.rotation, bool):
             raise ValueError(f"[{self.id}] rotation muss true oder false sein")
+        for name in ("depart_weekdays", "return_weekdays"):
+            setattr(self, name, weekday_list(getattr(self, name), f"[{self.id}] {name}"))
+
+    def leg_kind(self, origin: str, dest: str) -> str:
+        """"depart" (Hinflug) oder "return" (Rückflug) für eine Flugrichtung: ab Zuhause
+        (``origins[0]``) = Hinflug, nach Hause = Rückflug; sonst ab einem Abflugort = Hinflug."""
+        home = self.origins[0] if self.origins else None
+        if origin == home:
+            return "depart"
+        if dest == home or origin not in self.origins:
+            return "return"
+        return "depart"
+
+    def weekdays_for(self, origin: str, dest: str) -> frozenset[int] | None:
+        """Erlaubte Abflug-Wochentage für diese Richtung (None = alle Tage)."""
+        days = (self.depart_weekdays if self.leg_kind(origin, dest) == "depart"
+                else self.return_weekdays)
+        return frozenset(days) if days else None
+
+    @property
+    def has_weekdays(self) -> bool:
+        return bool(self.depart_weekdays or self.return_weekdays)
 
     @property
     def roundtrip(self) -> bool:
